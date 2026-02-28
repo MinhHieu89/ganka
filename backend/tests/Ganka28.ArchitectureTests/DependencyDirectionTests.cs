@@ -5,10 +5,12 @@ using NetArchTest.Rules;
 namespace Ganka28.ArchitectureTests;
 
 /// <summary>
-/// Tests that verify the 4-layer dependency direction is correct.
+/// Tests that verify the 5-layer dependency direction is correct.
 /// The dependency arrow must always point inward:
+///   Presentation -> Application -> Domain
 ///   Infrastructure -> Application -> Domain
 ///   Contracts stands alone (references only Shared.Contracts)
+///   Presentation must NOT depend on Infrastructure
 ///
 /// These tests analyze ALL module assemblies to verify the pattern
 /// is consistently applied across the entire codebase.
@@ -129,6 +131,74 @@ public class DependencyDirectionTests
     }
 
     [Fact]
+    public void Presentation_Should_Not_Depend_On_Infrastructure()
+    {
+        // Arrange
+        var presentationAssemblies = GetLayerAssemblies("Presentation");
+
+        // Skip if no Presentation assemblies exist yet (scaffold modules don't have them)
+        if (presentationAssemblies.Length == 0)
+            return;
+
+        // Act & Assert
+        foreach (var assembly in presentationAssemblies)
+        {
+            var moduleName = assembly.GetName().Name!.Replace(".Presentation", "");
+            var infrastructureNamespaces = ModuleNames
+                .Select(m => $"{m}.Infrastructure")
+                .Concat(["Shared.Infrastructure"])
+                .ToArray();
+
+            var result = Types
+                .InAssembly(assembly)
+                .ShouldNot()
+                .HaveDependencyOnAny(infrastructureNamespaces)
+                .GetResult();
+
+            result.IsSuccessful.Should().BeTrue(
+                $"{moduleName}.Presentation should not depend on any Infrastructure layer. " +
+                $"Presentation depends only on Application. " +
+                $"Violating types: {FormatFailingTypes(result)}");
+        }
+    }
+
+    [Fact]
+    public void Presentation_Should_Not_Depend_On_Domain_Directly()
+    {
+        // Arrange
+        var presentationAssemblies = GetLayerAssemblies("Presentation");
+
+        // Skip if no Presentation assemblies exist yet
+        if (presentationAssemblies.Length == 0)
+            return;
+
+        // Act & Assert
+        foreach (var assembly in presentationAssemblies)
+        {
+            var moduleName = assembly.GetName().Name!.Replace(".Presentation", "");
+
+            // Presentation should go through Application, not Domain directly
+            // (transitive references through Application are OK at the assembly level,
+            // but Presentation code should not import Domain namespaces directly)
+            var domainNamespaces = ModuleNames
+                .Select(m => $"{m}.Domain")
+                .Concat(["Shared.Domain"])
+                .ToArray();
+
+            var result = Types
+                .InAssembly(assembly)
+                .ShouldNot()
+                .HaveDependencyOnAny(domainNamespaces)
+                .GetResult();
+
+            result.IsSuccessful.Should().BeTrue(
+                $"{moduleName}.Presentation should not depend on any Domain layer directly. " +
+                $"Use Application-layer DTOs and interfaces instead. " +
+                $"Violating types: {FormatFailingTypes(result)}");
+        }
+    }
+
+    [Fact]
     public void Contracts_Should_Be_Independent()
     {
         // Arrange
@@ -140,14 +210,15 @@ public class DependencyDirectionTests
         {
             var moduleName = assembly.GetName().Name!.Replace(".Contracts", "");
 
-            // Contracts should not depend on Domain, Application, or Infrastructure
+            // Contracts should not depend on Domain, Application, Infrastructure, or Presentation
             // Exception: Shared.Contracts is allowed (filtered out below)
             var forbiddenNamespaces = ModuleNames
                 .SelectMany(m => new[]
                 {
                     $"{m}.Domain",
                     $"{m}.Application",
-                    $"{m}.Infrastructure"
+                    $"{m}.Infrastructure",
+                    $"{m}.Presentation"
                 })
                 .Concat(["Shared.Domain", "Shared.Application", "Shared.Infrastructure"])
                 .ToArray();
@@ -159,7 +230,7 @@ public class DependencyDirectionTests
                 .GetResult();
 
             result.IsSuccessful.Should().BeTrue(
-                $"{moduleName}.Contracts should be independent of Domain, Application, and Infrastructure. " +
+                $"{moduleName}.Contracts should be independent of Domain, Application, Infrastructure, and Presentation. " +
                 $"Only Shared.Contracts references are allowed. " +
                 $"Violating types: {FormatFailingTypes(result)}");
         }

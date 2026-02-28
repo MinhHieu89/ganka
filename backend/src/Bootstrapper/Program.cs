@@ -27,10 +27,19 @@ using Optical.Infrastructure;
 using Billing.Infrastructure;
 using Treatment.Infrastructure;
 
-// Auth services
+// Auth services (old -- kept until Plans 03-04 migrate features)
 using Auth.Application.Services;
 using Auth.Infrastructure.Services;
 using Auth.Infrastructure.Seeding;
+
+// New repository/UoW interfaces and implementations
+using Auth.Application.Interfaces;
+using Auth.Infrastructure.Repositories;
+using Audit.Application.Interfaces;
+
+// Presentation layer endpoint extensions
+using Auth.Presentation;
+using Audit.Presentation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,8 +58,10 @@ builder.Services.AddDbContext<AuditDbContext>(options =>
     options.UseSqlServer(connectionString),
     optionsLifetime: ServiceLifetime.Singleton);
 
-// Register IAuditReadContext for Application layer query access
-builder.Services.AddScoped<IAuditReadContext>(sp => sp.GetRequiredService<AuditDbContext>());
+// Register IAuditReadRepository for Application layer query access (new canonical interface)
+builder.Services.AddScoped<IAuditReadRepository>(sp => sp.GetRequiredService<AuditDbContext>());
+// Backward-compatible alias for existing Wolverine endpoints (until Plan 02 migrates them)
+builder.Services.AddScoped<IAuditReadContext>(sp => (IAuditReadContext)sp.GetRequiredService<AuditDbContext>());
 
 // All other module DbContexts get the AuditInterceptor for automatic audit logging
 void ConfigureDbContext<TContext>(IServiceCollection services) where TContext : DbContext
@@ -111,12 +122,24 @@ builder.Services.AddAuthorization();
 // ---------------------------------------------------------------------------
 builder.Services.AddSingleton<PasswordHasher>();
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<Auth.Application.Services.IJwtService, JwtService>();
 builder.Services.AddScoped<JwtService>(); // Concrete type for AuthService injection
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddHostedService<AuthDataSeeder>();
+
+// ---------------------------------------------------------------------------
+// Auth module repositories and UoW (new vertical slice infrastructure)
+// Coexists with old service registrations above until Plans 03-04 migrate features.
+// ---------------------------------------------------------------------------
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
+builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+builder.Services.AddScoped<ISystemSettingRepository, SystemSettingRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddSingleton<Auth.Application.Interfaces.IPasswordHasher, PasswordHasher>();
 
 // ---------------------------------------------------------------------------
 // Shared services
@@ -241,6 +264,10 @@ app.MapWolverineEndpoints(opts =>
 {
     opts.UseFluentValidationProblemDetailMiddleware();
 });
+
+// Minimal API endpoints (new vertical slice pattern -- coexists with Wolverine endpoints)
+app.MapAuthApiEndpoints();
+app.MapAuditApiEndpoints();
 
 app.Run();
 

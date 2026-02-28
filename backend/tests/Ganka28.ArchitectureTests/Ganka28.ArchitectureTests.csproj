@@ -30,11 +30,13 @@
     <ProjectReference Include="..\..\src\Modules\Auth\Auth.Contracts\Auth.Contracts.csproj" />
     <ProjectReference Include="..\..\src\Modules\Auth\Auth.Application\Auth.Application.csproj" />
     <ProjectReference Include="..\..\src\Modules\Auth\Auth.Infrastructure\Auth.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Auth\Auth.Presentation\Auth.Presentation.csproj" />
 
     <ProjectReference Include="..\..\src\Modules\Audit\Audit.Domain\Audit.Domain.csproj" />
     <ProjectReference Include="..\..\src\Modules\Audit\Audit.Contracts\Audit.Contracts.csproj" />
     <ProjectReference Include="..\..\src\Modules\Audit\Audit.Application\Audit.Application.csproj" />
     <ProjectReference Include="..\..\src\Modules\Audit\Audit.Infrastructure\Audit.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Audit\Audit.Presentation\Audit.Presentation.csproj" />
 
     <ProjectReference Include="..\..\src\Modules\Patient\Patient.Domain\Patient.Domain.csproj" />
     <ProjectReference Include="..\..\src\Modules\Patient\Patient.Contracts\Patient.Contracts.csproj" />
