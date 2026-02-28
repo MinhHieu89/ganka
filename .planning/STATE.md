@@ -10,31 +10,31 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 ## Current Position
 
 Phase: 1 of 9 (Foundation & Infrastructure)
-Plan: 5 of 7 in current phase
+Plan: 6 of 7 in current phase
 Status: Executing
-Last activity: 2026-02-28 -- Completed 01-04 audit module and architecture foundations
+Last activity: 2026-02-28 -- Completed 01-05 auth UI (login, session, user/role admin)
 
-Progress: [####......] 14%
+Progress: [#####.....] 17%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 4
-- Average duration: 13min
-- Total execution time: 0.87 hours
+- Total plans completed: 5
+- Average duration: 12min
+- Total execution time: 1.02 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 1 | 4 | 52min | 13min |
+| 1 | 5 | 61min | 12min |
 
 **Recent Trend:**
-- Last 5 plans: 10min, 17min, 10min, 15min
+- Last 5 plans: 10min, 17min, 10min, 15min, 9min
 - Trend: stable
 
 *Updated after each plan completion*
-| Phase 01 P04 | 15min | 2 tasks | 32 files |
+| Phase 01 P05 | 9min | 2 tasks | 36 files |
 
 ## Accumulated Context
 
@@ -61,6 +61,10 @@ Recent decisions affecting current work:
 - [Phase 01]: [01-03]: Service interfaces in Application, implementations in Infrastructure to avoid circular dependency
 - [Phase 01]: [01-03]: Argon2id via Konscious.Security.Cryptography with 64MB memory, 4 parallelism, 3 iterations
 - [Phase 01]: [01-03]: 8 system roles with preset permission templates (Admin, Doctor, Technician, Nurse, Cashier, OpticalStaff, Manager, Accountant)
+- [Phase 01]: [01-05]: Dialog component extended with hideCloseButton prop for non-dismissible session warning modal
+- [Phase 01]: [01-05]: Session timeout: 30 min inactivity, 2-min warning, activity throttled to 30s intervals
+- [Phase 01]: [01-05]: Admin sidebar conditionally rendered based on Auth.Manage or Auth.View permission
+- [Phase 01]: [01-05]: Separate React Hook Form instances for create vs edit mode to avoid union type issues
 
 ### Pending Todos
 
@@ -76,5 +80,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-28
-Stopped at: Completed 01-04-PLAN.md (audit module and architecture foundations)
-Resume file: .planning/phases/01-foundation-infrastructure/01-04-SUMMARY.md
+Stopped at: Completed 01-05-PLAN.md (auth UI: login, session, user/role admin)
+Resume file: .planning/phases/01-foundation-infrastructure/01-05-SUMMARY.md
