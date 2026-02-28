@@ -36,7 +36,7 @@ public static class AuthApiEndpoints
             HttpContext httpContext) =>
         {
             var enriched = command with { IpAddress = httpContext.Connection.RemoteIpAddress?.ToString() };
-            var result = await bus.InvokeAsync<Result<Auth.Application.Features.LoginResponse>>(enriched);
+            var result = await bus.InvokeAsync<Result<LoginResponse>>(enriched);
 
             if (result.IsFailure)
             {
