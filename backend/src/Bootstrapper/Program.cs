@@ -14,7 +14,6 @@ using Wolverine.SqlServer;
 
 // Module DbContexts
 using Auth.Infrastructure;
-using Audit.Application;
 using Audit.Infrastructure;
 using Audit.Infrastructure.Interceptors;
 using Audit.Infrastructure.Middleware;
@@ -58,10 +57,8 @@ builder.Services.AddDbContext<AuditDbContext>(options =>
     options.UseSqlServer(connectionString),
     optionsLifetime: ServiceLifetime.Singleton);
 
-// Register IAuditReadRepository for Application layer query access (new canonical interface)
+// Register IAuditReadRepository for Application layer query access
 builder.Services.AddScoped<IAuditReadRepository>(sp => sp.GetRequiredService<AuditDbContext>());
-// Backward-compatible alias for existing Wolverine endpoints (until Plan 02 migrates them)
-builder.Services.AddScoped<IAuditReadContext>(sp => (IAuditReadContext)sp.GetRequiredService<AuditDbContext>());
 
 // All other module DbContexts get the AuditInterceptor for automatic audit logging
 void ConfigureDbContext<TContext>(IServiceCollection services) where TContext : DbContext
