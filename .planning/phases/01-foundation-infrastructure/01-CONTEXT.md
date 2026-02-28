@@ -40,7 +40,7 @@ Deliver a deployed modular monolith skeleton with authentication (login, session
 - "Remember me" checkbox controls refresh token duration — both durations admin-configurable in DB SystemSettings table
 
 ### Error handling
-- Result pattern — commands/queries return `Result<T>` with typed errors, no throwing for expected failures
+- Custom Result pattern — implement our own `Result<T>` in Shared.Domain (no Ardalis.Result dependency), with typed errors and no throwing for expected failures
 - Wolverine maps Result.Failure to ProblemDetails automatically
 
 ### Testing strategy
