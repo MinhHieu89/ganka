@@ -52,10 +52,10 @@ Plans:
 **Plans:** 5 plans in 3 waves
 
 Plans:
-- [ ] 01.1-01-PLAN.md — Auth repository foundation: IAuthRepository, IPasswordHasher interfaces, AuthRepository implementation, DI wiring
-- [ ] 01.1-02-PLAN.md — Audit module restructuring: 3 feature files, rename IAuditReadContext to IAuditReadRepository
-- [ ] 01.1-03-PLAN.md — Auth features (auth flow): Login, Logout, RefreshToken, GetCurrentUser, UpdateLanguage vertical slice migration
-- [ ] 01.1-04-PLAN.md — Auth features (admin flow): GetUsers, CreateUser, UpdateUser, AssignRoles, GetRoles, CreateRole, UpdateRolePermissions, GetPermissions
+- [ ] 01.1-01-PLAN.md — Foundation: Presentation projects, repository interfaces per aggregate root, UnitOfWork, Infrastructure implementations, Bootstrapper DI wiring
+- [ ] 01.1-02-PLAN.md — Audit module restructuring: 3 feature files (GetAuditLogs, ExportAuditLogs, GetAccessLogs), Minimal API endpoints, rename IAuditReadContext to IAuditReadRepository
+- [ ] 01.1-03-PLAN.md — Auth features (auth flow): Login, Logout, RefreshToken, GetCurrentUser, UpdateLanguage vertical slice migration with Minimal API endpoints
+- [ ] 01.1-04-PLAN.md — Auth features (admin flow): GetUsers, CreateUser, UpdateUser, AssignRoles, GetRoles, CreateRole, UpdateRolePermissions, GetPermissions with Minimal API endpoints
 - [ ] 01.1-05-PLAN.md — Unit tests: Auth.Unit.Tests project + tests for all 13 Auth and 3 Audit feature handlers
 
 ### Phase 2: Patient Management & Scheduling
