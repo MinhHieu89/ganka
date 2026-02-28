@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 ## Current Position
 
 Phase: 01.1 of 9 (Change the current code structure of the backend)
-Plan: 2 of 5 in current phase
+Plan: 3 of 5 in current phase
 Status: Executing
-Last activity: 2026-02-28 -- Completed 01.1-01 foundation infrastructure (repositories, Presentation projects, DI wiring)
+Last activity: 2026-02-28 -- Completed 01.1-02 Audit module restructuring (3 features, Minimal API, HTTP-free Application)
 
-Progress: [######....] 22%
+Progress: [######....] 26%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 7
-- Average duration: 12min
-- Total execution time: 1.38 hours
+- Total plans completed: 8
+- Average duration: 11min
+- Total execution time: 1.43 hours
 
 **By Phase:**
 
@@ -30,12 +30,13 @@ Progress: [######....] 22%
 | 1 | 6 | 73min | 12min |
 
 **Recent Trend:**
-- Last 5 plans: 10min, 15min, 9min, 12min, 10min
+- Last 5 plans: 15min, 9min, 12min, 10min, 3min
 - Trend: stable
 
 *Updated after each plan completion*
 | Phase 01 P06 | 12min | 2 tasks | 15 files |
 | Phase 01.1 P01 | 10min | 2 tasks | 30 files |
+| Phase 01.1 P02 | 3min | 2 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -73,6 +74,9 @@ Recent decisions affecting current work:
 - [Phase 01.1]: [01.1-01]: Presentation layer with Minimal API extension methods (MapXxxApiEndpoints pattern)
 - [Phase 01.1]: [01.1-01]: Backward-compatible interface aliases during incremental migration (IAuditReadContext -> IAuditReadRepository, Services.IJwtService -> Interfaces.IJwtService)
 - [Phase 01.1]: [01.1-01]: Kept WolverineFx.Http in Application csproj until endpoints migrated to Presentation (Plans 03-04)
+- [Phase 01.1]: [01.1-02]: Removed IAuditReadContext backward-compat alias after old endpoints deleted
+- [Phase 01.1]: [01.1-02]: Removed WolverineFx.Http and FrameworkReference from Audit.Application.csproj -- Application layer now HTTP-free
+- [Phase 01.1]: [01.1-02]: [AsParameters] attribute for query string binding on Minimal API GET endpoints
 
 ### Roadmap Evolution
 
@@ -92,5 +96,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-28
-Stopped at: Completed 01.1-01-PLAN.md
-Resume file: .planning/phases/01.1-change-the-current-code-structure-of-the-backend/01.1-02-PLAN.md
+Stopped at: Completed 01.1-02-PLAN.md
+Resume file: .planning/phases/01.1-change-the-current-code-structure-of-the-backend/01.1-03-PLAN.md
