@@ -19,6 +19,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/shared/components/ui/sidebar"
+import { useAuthStore } from "@/shared/stores/authStore"
 
 interface NavItem {
   titleKey: string
@@ -30,6 +31,17 @@ export function AppSidebar() {
   const { t } = useTranslation("common")
   const routerState = useRouterState()
   const currentPath = routerState.location.pathname
+  const user = useAuthStore((s) => s.user)
+
+  // Check if user has admin permissions
+  const hasAdminAccess =
+    user?.permissions?.some(
+      (p) =>
+        p.startsWith("Auth.Manage") ||
+        p.startsWith("Auth.View") ||
+        p === "Auth.Manage" ||
+        p === "Auth.View",
+    ) ?? false
 
   const mainItems: NavItem[] = [
     {
@@ -110,12 +122,14 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarGroup>
-          <SidebarGroupLabel>{t("sidebar.admin")}</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>{renderNavItems(adminItems)}</SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {hasAdminAccess && (
+          <SidebarGroup>
+            <SidebarGroupLabel>{t("sidebar.admin")}</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>{renderNavItems(adminItems)}</SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
 
         <SidebarGroup>
           <SidebarGroupContent>
