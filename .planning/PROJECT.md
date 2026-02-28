@@ -17,32 +17,54 @@ Doctors can manage chronic eye disease patients (Dry Eye, Myopia Control) with s
 ### Active
 
 - [ ] HIS — electronic medical records with customizable templates per disease group
-- [ ] HIS — chronic disease management (Dry Eye template with OSDI, TBUT, Schirmer tracking)
-- [ ] HIS — medical image management (Fluorescein, Meibography, OCT, side-by-side comparison)
+- [ ] HIS — chronic disease management (Dry Eye template with OSDI, TBUT, Schirmer, Meibomian grading, Tear meniscus, Staining score)
+- [ ] HIS — medical image and video management (Fluorescein, Meibography, OCT, lacrimal duct video, side-by-side comparison)
 - [ ] HIS — ICD-10 code lookup in diagnosis workflow
-- [ ] HIS — appointment scheduling (walk-in + pre-booked, no double booking)
+- [ ] HIS — appointment scheduling (walk-in + pre-booked + patient self-booking via website/Zalo with staff confirmation, no double booking)
 - [ ] HIS — refraction data (SPH, CYL, AXIS, ADD, PD, VA, IOP, Axial Length)
-- [ ] Treatment Protocols — IPL/LLLT/lid care packages (1-6 sessions, flexible pricing)
-- [ ] Treatment Protocols — session tracking, OSDI per session, auto-complete
+- [ ] HIS — prescription writing from drug catalog + off-catalog drugs, auto stock deduction for catalog items
+- [ ] HIS — MOH prescription compliance (required fields, format, dosage rules per Bộ Y tế regulations)
+- [ ] HIS — configurable required patient fields (Address, CCCD become mandatory for referrals, legal export, Sở Y tế)
+- [ ] HIS — export per-patient treatment progress report (for patient or referring doctor)
+- [ ] Treatment Protocols — IPL/LLLT/lid care packages (1-6 sessions, flexible pricing per-session and per-package)
+- [ ] Treatment Protocols — session tracking, OSDI per session, auto-complete, track remaining sessions
 - [ ] Treatment Protocols — minimum interval enforcement between sessions
-- [ ] Pharmacy — inventory management (import/export/stock, expiry alerts, min stock)
+- [ ] Treatment Protocols — multiple concurrent treatment courses per patient (e.g., IPL + LLLT simultaneously)
+- [ ] Treatment Protocols — mid-course protocol modification and course switching (e.g., IPL→LLLT) with doctor approval
+- [ ] Treatment Protocols — cancellation with configurable refund (minus 10-20% fee, manager approval)
+- [ ] Treatment Protocols — only doctors can create/modify treatment protocols
+- [ ] Treatment Protocols — track consumables per session (IPL gel, eye shields, etc.) linked to consumables warehouse
+- [ ] Pharmacy — inventory management (import via supplier invoice or Excel, expiry alerts, min stock per drug)
 - [ ] Pharmacy — prescription dispensing linked to HIS + walk-in sales
 - [ ] Pharmacy — prescription validity (7 days) with expiry warnings
-- [ ] Optical Center — frame management with barcode, lens by prescription, contact lenses
-- [ ] Optical Center — glasses order tracking (ordered → processing → ready → delivered)
-- [ ] Optical Center — combo pricing (frame + lens), warranty management
-- [ ] Reporting — revenue dashboard by department (medical, optical, pharmacy, treatment)
-- [ ] Reporting — gross margin analysis, doctor performance, treatment effectiveness (OSDI trends)
-- [ ] Reporting — data export (Excel/CSV) for research, anonymized
-- [ ] Finance — unified billing (single invoice for mixed services), payment methods (cash, bank, QR, card)
-- [ ] Finance — VIP membership program (tier-based, auto-upgrade, configurable discounts)
-- [ ] Finance — treatment package payments (full upfront or 50/50 split)
-- [ ] Auth — role-based access (Doctor, Technician, Nurse, Cashier, Optical Staff, Manager) with granular configurable permissions
+- [ ] Consumables — separate warehouse for treatment supplies (IPL gel, eye shields, etc.), independent from pharmacy stock
+- [ ] Optical Center — frame management with barcode, lens by prescription, contact lenses, trial lens inventory for Ortho-K
+- [ ] Optical Center — glasses order tracking (ordered → processing → received → ready → delivered), full payment required before processing
+- [ ] Optical Center — combo pricing (preset + custom combos), warranty management (replace/repair/discount by case with supporting documents)
+- [ ] Optical Center — lens prescription history per patient, year-over-year comparison, lens replacement history
+- [ ] Optical Center — barcode-based stocktaking (physical inventory count with discrepancy report)
+- [ ] Reporting — revenue dashboard by department, by employee (all staff), by brand, by doctor
+- [ ] Reporting — gross margin analysis per product and per segment, treatment effectiveness (OSDI trends)
+- [ ] Reporting — data export (Excel/CSV) for research, anonymized, must handle ≥1000 patients without error
+- [ ] Finance — unified billing (single invoice with internal department revenue allocation), payment methods (cash, bank, QR, card)
+- [ ] Finance — e-invoice generation (hóa đơn điện tử) per Vietnamese tax law
+- [ ] Finance — VIP membership program (tier-based, auto-upgrade, tier change history, configurable discounts, family linkage)
+- [ ] Finance — treatment package payments (full upfront or 50/50 split, 2nd payment enforced before mid-course session)
+- [ ] Finance — price change audit log (who changed, when, old/new values)
+- [ ] Finance — shift management with revenue tracking and cash reconciliation per shift
+- [ ] Auth — role-based access (Doctor, Technician, Nurse, Cashier, Optical Staff, Manager, Accountant) with granular configurable permissions
 - [ ] Notifications — Zalo OA integration (appointment reminders, post-visit summary, treatment reminders, glasses ready)
 - [ ] Printing — prescriptions, optical Rx, invoices, referral letters, consent forms, pharmacy labels
 - [ ] Clinical Safety — allergy tracking with prescribing alerts
 - [ ] Audit — full audit trail (field-level) for all medical record changes
-- [ ] Bilingual UI — Vietnamese and English
+- [ ] Audit — access logging (login history, record access tracking) for legal compliance
+- [ ] Bilingual UI — Vietnamese and English, mobile-responsive design for tablet use during exams
+- [ ] Architecture — ACL adapters for all external systems (Zalo OA, MISA, payment gateways, ICD-10, Sở Y tế)
+- [ ] Architecture — tenant-aware from Day 1 (BranchId on all entities, EF Core global query filters) for future multi-branch
+- [ ] Architecture — extensible template system (add new disease templates without code rewrite, config/plugin-driven)
+- [ ] Architecture — open API (documented REST endpoints for third-party and future device integration)
+- [ ] Infrastructure — automatic daily backup (Azure SQL PITR + Azure Blob versioning)
+- [ ] Infrastructure — data ownership by Ganka28 (full data export capability, no vendor lock-in)
 
 ### Out of Scope
 
@@ -108,6 +130,8 @@ Doctors can manage chronic eye disease patients (Dry Eye, Myopia Control) with s
 - **Language**: Bilingual Vietnamese-English UI
 - **Budget**: Start minimal (~$50-80/month infra), scale as clinic grows
 - **Cross-module Communication**: Domain Events + Outbox via Wolverine FX with SQL Server transport
+- **External System Integration**: ACL adapters for all external systems — domain-defined ports (interfaces) with infrastructure adapters that translate between domain models and external API models
+- **Multi-tenancy**: BranchId on all aggregate roots from Day 1 with EF Core global query filters. No multi-branch UI/logic for v1, but data model supports it
 
 ## Key Decisions
 
@@ -126,6 +150,9 @@ Doctors can manage chronic eye disease patients (Dry Eye, Myopia Control) with s
 | Dry Eye template first | Clinic's primary differentiator. Myopia Control and other templates follow post-launch | — Pending |
 | Online sales deferred | Not critical for clinic launch. Reduces v1 scope significantly | — Pending |
 | MISA manual export first | Auto-sync adds complexity. Manual export proves the data model before investing in API integration | — Pending |
+| ACL adapters for external systems | External API models must not leak into domain. Adapters in Infrastructure implement domain-defined ports | — Pending |
+| Tenant-aware from Day 1 | Retrofitting multi-tenancy is extremely painful. BranchId + global query filters cost minimal now, save weeks later | — Pending |
+| No formal ACL between internal modules | .Contracts + Wolverine handlers already translate between bounded contexts. Extra ACL layer would be redundant | — Pending |
 
 ---
-*Last updated: 2026-02-28 after initialization*
+*Last updated: 2026-02-28 after requirements gap analysis (32 items added)*
