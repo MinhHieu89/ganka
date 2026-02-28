@@ -21,10 +21,4 @@
     <ProjectReference Include="..\Shared.Domain\Shared.Domain.csproj" />
   </ItemGroup>
 
-  <!-- Exclude Audit interceptor/middleware until Plan 01-04 adds proper Audit module references -->
-  <ItemGroup>
-    <Compile Remove="Interceptors\AuditInterceptor.cs" />
-    <Compile Remove="Middleware\AccessLoggingMiddleware.cs" />
-  </ItemGroup>
-
 </Project>

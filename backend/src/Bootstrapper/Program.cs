@@ -12,7 +12,10 @@ using Wolverine.SqlServer;
 
 // Module DbContexts
 using Auth.Infrastructure;
+using Audit.Application;
 using Audit.Infrastructure;
+using Audit.Infrastructure.Interceptors;
+using Audit.Infrastructure.Middleware;
 using Patient.Infrastructure;
 using Clinical.Infrastructure;
 using Scheduling.Infrastructure;
@@ -30,15 +33,29 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 // EF Core DbContexts -- one per module, all sharing the same SQL Server
 // connection but using schema-per-module isolation.
 // ---------------------------------------------------------------------------
+// Register AuditInterceptor as a singleton so it can be shared across DbContexts
+builder.Services.AddSingleton<AuditInterceptor>();
+
+// AuditDbContext does NOT get the AuditInterceptor (prevents infinite recursion)
+builder.Services.AddDbContext<AuditDbContext>(options =>
+    options.UseSqlServer(connectionString),
+    optionsLifetime: ServiceLifetime.Singleton);
+
+// Register IAuditReadContext for Application layer query access
+builder.Services.AddScoped<IAuditReadContext>(sp => sp.GetRequiredService<AuditDbContext>());
+
+// All other module DbContexts get the AuditInterceptor for automatic audit logging
 void ConfigureDbContext<TContext>(IServiceCollection services) where TContext : DbContext
 {
-    services.AddDbContext<TContext>(options =>
-        options.UseSqlServer(connectionString),
-        optionsLifetime: ServiceLifetime.Singleton);
+    services.AddDbContext<TContext>((sp, options) =>
+    {
+        options.UseSqlServer(connectionString);
+        options.AddInterceptors(sp.GetRequiredService<AuditInterceptor>());
+    },
+    optionsLifetime: ServiceLifetime.Singleton);
 }
 
 ConfigureDbContext<AuthDbContext>(builder.Services);
-ConfigureDbContext<AuditDbContext>(builder.Services);
 ConfigureDbContext<PatientDbContext>(builder.Services);
 ConfigureDbContext<ClinicalDbContext>(builder.Services);
 ConfigureDbContext<SchedulingDbContext>(builder.Services);
@@ -165,6 +182,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Access logging middleware -- logs all API requests to audit.AccessLogs
+app.UseMiddleware<AccessLoggingMiddleware>();
 
 // Wolverine HTTP endpoints with FluentValidation middleware
 app.MapWolverineEndpoints(opts =>
