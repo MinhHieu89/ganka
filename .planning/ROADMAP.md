@@ -47,9 +47,9 @@ Plans:
 
 ### Phase 01.1: Change the current code structure of the backend (INSERTED)
 
-**Goal:** Backend Application layer uses vertical slice feature-based organization with business logic in handlers, thin repository interfaces for data access, and unit tests for all feature handlers
+**Goal:** Backend Application layer uses vertical slice feature-based organization with business logic in handlers, thin repository interfaces for data access, and unit tests for all feature handlers. Shared Presentation extensions, per-layer DI registration, and Central Package Management.
 **Depends on:** Phase 1
-**Plans:** 5/5 plans complete
+**Plans:** 5/9 plans complete
 
 Plans:
 - [x] 01.1-01-PLAN.md — Foundation: Presentation projects, repository interfaces per aggregate root, UnitOfWork, Infrastructure implementations, Bootstrapper DI wiring
@@ -57,6 +57,10 @@ Plans:
 - [x] 01.1-03-PLAN.md — Auth features (auth flow): Login, Logout, RefreshToken, GetCurrentUser, UpdateLanguage vertical slice migration with Minimal API endpoints
 - [x] 01.1-04-PLAN.md — Auth features (admin flow): GetUsers, CreateUser, UpdateUser, AssignRoles, GetRoles, CreateRole, UpdateRolePermissions, GetPermissions with Minimal API endpoints
 - [x] 01.1-05-PLAN.md — Unit tests: Auth.Unit.Tests project + tests for all 13 Auth and 3 Audit feature handlers
+- [ ] 01.1-06-PLAN.md — Shared.Presentation project with ResultExtensions (ToHttpResult) and HttpContextExtensions (TryGetUserId)
+- [ ] 01.1-07-PLAN.md — Presentation layer cleanup: route groups, ResultExtensions, HttpContextExtensions for all endpoints
+- [ ] 01.1-08-PLAN.md — Per-layer IoC.cs DI registration for Auth, Audit, and Shared modules
+- [ ] 01.1-09-PLAN.md — Central Package Management: Directory.Packages.props for all NuGet packages
 
 ### Phase 2: Patient Management & Scheduling
 **Goal**: Staff can register patients, manage their profiles, and book appointments with no double-booking
@@ -202,7 +206,7 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Infrastructure | 6/7 | In Progress | - |
-| 1.1 Backend Restructuring | 5/5 | Complete | 2026-03-01 |
+| 1.1 Backend Restructuring | 5/9 | In Progress | - |
 | 2. Patient Management & Scheduling | 0/3 | Not started | - |
 | 3. Clinical Workflow & Examination | 0/3 | Not started | - |
 | 4. Dry Eye Template & Medical Imaging | 0/2 | Not started | - |
