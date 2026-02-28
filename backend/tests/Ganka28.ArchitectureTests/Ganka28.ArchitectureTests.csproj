@@ -22,6 +22,7 @@
     <ProjectReference Include="..\..\src\Shared\Shared.Contracts\Shared.Contracts.csproj" />
     <ProjectReference Include="..\..\src\Shared\Shared.Application\Shared.Application.csproj" />
     <ProjectReference Include="..\..\src\Shared\Shared.Infrastructure\Shared.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Shared\Shared.Presentation\Shared.Presentation.csproj" />
   </ItemGroup>
 
   <!-- All module assemblies for architecture analysis -->
