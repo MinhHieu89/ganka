@@ -25,7 +25,10 @@ public static class LoginEndpoint
         {
             return result.Error.Code switch
             {
-                "Error.Unauthorized" => Results.Unauthorized(),
+                "Error.Unauthorized" => Results.Problem(
+                    detail: result.Error.Description,
+                    title: "Unauthorized",
+                    statusCode: 401),
                 _ => Results.Problem(result.Error.Description, statusCode: 400)
             };
         }

@@ -40,9 +40,9 @@ async function login(data: LoginRequest): Promise<LoginResponse> {
   const res = await api.POST("/api/auth/login" as never, {
     body: data as never,
   })
-  if (res.error) {
-    const err = res.error as { detail?: string; title?: string }
-    throw new Error(err.detail || err.title || "Login failed")
+  if (res.error || !res.data) {
+    const err = res.error as { detail?: string; title?: string } | undefined
+    throw new Error(err?.detail || err?.title || "Login failed")
   }
   return res.data as LoginResponse
 }

@@ -22,7 +22,8 @@ public sealed class UserService : IUserService
 
     public async Task<Result<(List<UserDto> Users, int TotalCount)>> GetUsersAsync(int page, int pageSize)
     {
-        pageSize = Math.Clamp(pageSize, 1, 100);
+        page = page <= 0 ? 1 : page;
+        pageSize = pageSize <= 0 ? 20 : Math.Min(pageSize, 100);
         var skip = (page - 1) * pageSize;
 
         var totalCount = await _dbContext.Users.CountAsync();

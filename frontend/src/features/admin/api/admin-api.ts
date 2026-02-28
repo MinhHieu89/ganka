@@ -66,7 +66,8 @@ async function getUsers(): Promise<UserDto[]> {
     const err = res.error as { detail?: string; title?: string }
     throw new Error(err.detail || err.title || "Failed to fetch users")
   }
-  return res.data as UserDto[]
+  const body = res.data as { data: UserDto[] } | UserDto[]
+  return Array.isArray(body) ? body : body.data
 }
 
 async function createUser(data: CreateUserCommand): Promise<UserDto> {
@@ -145,7 +146,16 @@ async function getPermissions(): Promise<PermissionDto[]> {
     const err = res.error as { detail?: string; title?: string }
     throw new Error(err.detail || err.title || "Failed to fetch permissions")
   }
-  return res.data as PermissionDto[]
+  const data = res.data as
+    | PermissionDto[]
+    | { module: string; permissions: PermissionDto[] }[]
+  // API returns grouped by module — flatten if needed
+  if (Array.isArray(data) && data.length > 0 && "permissions" in data[0]) {
+    return (data as { module: string; permissions: PermissionDto[] }[]).flatMap(
+      (g) => g.permissions,
+    )
+  }
+  return data as PermissionDto[]
 }
 
 // ---- TanStack Query hooks ----
