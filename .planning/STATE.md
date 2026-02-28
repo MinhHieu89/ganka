@@ -12,16 +12,16 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 Phase: 01.1 of 9 (Change the current code structure of the backend)
 Plan: 5 of 5 in current phase
 Status: Executing
-Last activity: 2026-03-01 -- Completed 01.1-04 admin-flow feature migration (8 handlers, 13 Auth routes, old services removed)
+Last activity: 2026-03-01 -- Completed 01.1-03 auth-flow feature migration (5 handlers, 5 Minimal API routes, AuthService eliminated)
 
 Progress: [######....] 26%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 8
-- Average duration: 11min
-- Total execution time: 1.43 hours
+- Total plans completed: 10
+- Average duration: 10min
+- Total execution time: 1.62 hours
 
 **By Phase:**
 
@@ -38,6 +38,7 @@ Progress: [######....] 26%
 | Phase 01.1 P01 | 10min | 2 tasks | 30 files |
 | Phase 01.1 P02 | 3min | 2 tasks | 10 files |
 | Phase 01.1 P04 | 9min | 2 tasks | 34 files |
+| Phase 01.1 P03 | 11min | 2 tasks | 13 files |
 
 ## Accumulated Context
 
@@ -81,6 +82,10 @@ Recent decisions affecting current work:
 - [Phase 01.1]: Allowed Shared.Domain in Presentation layer for Result<T>/Error HTTP response mapping (arch test updated)
 - [Phase 01.1]: Combined Plan 03+04 deletions in single Task 2 commit due to concurrent execution
 - [Phase 01.1]: Added Microsoft.Extensions.Logging.Abstractions to Auth.Application for handler ILogger<> after FrameworkReference removal
+- [Phase 01.1]: Used Contracts LoginResponse for handler return types (canonical cross-module DTO location)
+- [Phase 01.1]: Logout handler revokes ALL user tokens (RevokeAllByUserIdAsync) -- simpler than single-token revocation
+- [Phase 01.1]: Handler-invoked FluentValidation via IValidator<T> injection and manual ValidateAsync in Handle method
+- [Phase 01.1]: Removed WolverineFx.Http and FrameworkReference from Auth.Application -- no HTTP concerns in Application layer
 
 ### Roadmap Evolution
 
@@ -100,5 +105,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-01
-Stopped at: Completed 01.1-04-PLAN.md
+Stopped at: Completed 01.1-03-PLAN.md
 Resume file: .planning/phases/01.1-change-the-current-code-structure-of-the-backend/01.1-05-PLAN.md
