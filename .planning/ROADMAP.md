@@ -38,7 +38,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 Plans:
 - [x] 01-01-PLAN.md — Backend scaffolding: .NET 10 solution, shared kernel, all module .csproj files, Bootstrapper host
-- [ ] 01-02-PLAN.md — Frontend scaffolding: TanStack Start SPA, shadcn/ui, i18next bilingual, app shell layout
+- [x] 01-02-PLAN.md — Frontend scaffolding: TanStack Start SPA, shadcn/ui, i18next bilingual, app shell layout
 - [ ] 01-03-PLAN.md — Auth module: domain entities, JWT auth, login/refresh endpoints, RBAC, data seeding
 - [ ] 01-04-PLAN.md — Audit module + architecture foundations: audit interceptor, access logging, Azure Blob, ACL adapters, ICD-10 seeding
 - [ ] 01-05-PLAN.md — Auth UI: login page, session management, user/role admin pages, permission matrix
@@ -188,7 +188,7 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Infrastructure | 0/7 | Planned | - |
+| 1. Foundation & Infrastructure | 2/7 | In Progress | - |
 | 2. Patient Management & Scheduling | 0/3 | Not started | - |
 | 3. Clinical Workflow & Examination | 0/3 | Not started | - |
 | 4. Dry Eye Template & Medical Imaging | 0/2 | Not started | - |

@@ -142,8 +142,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### User Interface
 
-- [ ] **UI-01**: All UI text, labels, menus, and reports available in Vietnamese and English (Vietnamese primary)
-- [ ] **UI-02**: Staff can switch language preference per user session
+- [x] **UI-01**: All UI text, labels, menus, and reports available in Vietnamese and English (Vietnamese primary)
+- [x] **UI-02**: Staff can switch language preference per user session
 
 ### Architecture & Infrastructure
 
@@ -314,8 +314,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUD-02 | Phase 1 | Pending |
 | AUD-03 | Phase 1 | Pending |
 | AUD-04 | Phase 1 | Pending |
-| UI-01 | Phase 1 | Pending |
-| UI-02 | Phase 1 | Pending |
+| UI-01 | Phase 1 | Complete |
+| UI-02 | Phase 1 | Complete |
 | ARC-01 | Phase 1 | Pending |
 | ARC-02 | Phase 1 | Complete |
 | ARC-03 | Phase 1 | Pending |

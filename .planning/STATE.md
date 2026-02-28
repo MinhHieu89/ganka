@@ -10,27 +10,27 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 ## Current Position
 
 Phase: 1 of 9 (Foundation & Infrastructure)
-Plan: 1 of 7 in current phase
+Plan: 2 of 7 in current phase
 Status: Executing
-Last activity: 2026-02-28 -- Completed 01-01 backend scaffolding
+Last activity: 2026-02-28 -- Completed 01-02 frontend scaffolding
 
-Progress: [#.........] 3%
+Progress: [##........] 7%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 1
-- Average duration: 10min
-- Total execution time: 0.17 hours
+- Total plans completed: 2
+- Average duration: 14min
+- Total execution time: 0.45 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 1 | 1 | 10min | 10min |
+| 1 | 2 | 27min | 14min |
 
 **Recent Trend:**
-- Last 5 plans: 10min
+- Last 5 plans: 10min, 17min
 - Trend: baseline
 
 *Updated after each plan completion*
@@ -49,6 +49,9 @@ Recent decisions affecting current work:
 - [01-01]: Custom Result<T> with implicit T conversion, no Ardalis.Result dependency
 - [01-01]: Assembly Marker pattern for Wolverine handler discovery across modules
 - [01-01]: FrameworkReference Microsoft.AspNetCore.App on Shared.Infrastructure for claim reading
+- [01-02]: TanStack Start v1.163 uses Vite plugin (no vinxi) -- getRouter() export, vite.config.ts
+- [01-02]: Stone base + Green accent theme, zero border radius per user decision
+- [01-02]: Vietnamese as default language, @tabler/icons-react for all icons
 
 ### Pending Todos
 
@@ -64,5 +67,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-28
-Stopped at: Completed 01-01-PLAN.md (backend scaffolding)
-Resume file: .planning/phases/01-foundation-infrastructure/01-01-SUMMARY.md
+Stopped at: Completed 01-02-PLAN.md (frontend scaffolding)
+Resume file: .planning/phases/01-foundation-infrastructure/01-02-SUMMARY.md
