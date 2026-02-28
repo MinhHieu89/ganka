@@ -2,10 +2,6 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Shared.Application;
-using Shared.Application.Services;
-using Shared.Infrastructure;
-using Shared.Infrastructure.Services;
 using Wolverine;
 using Wolverine.Http;
 using Wolverine.Http.FluentValidation;
@@ -17,7 +13,6 @@ using Auth.Infrastructure;
 using Audit.Infrastructure;
 using Audit.Infrastructure.Interceptors;
 using Audit.Infrastructure.Middleware;
-using Audit.Infrastructure.Seeding;
 using Patient.Infrastructure;
 using Clinical.Infrastructure;
 using Scheduling.Infrastructure;
@@ -26,19 +21,12 @@ using Optical.Infrastructure;
 using Billing.Infrastructure;
 using Treatment.Infrastructure;
 
-// Auth Infrastructure services and seeding
-using Auth.Infrastructure.Services;
-using Auth.Infrastructure.Seeding;
-using FluentValidation;
-
-// New repository/UoW interfaces and implementations
-using Auth.Application.Interfaces;
-using Auth.Infrastructure.Repositories;
-using Audit.Application.Interfaces;
-
-// Presentation layer endpoint extensions
+// Module IoC extension methods
+using Auth.Application;
 using Auth.Presentation;
+using Audit.Application;
 using Audit.Presentation;
+using Shared.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,21 +34,26 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
 // ---------------------------------------------------------------------------
-// EF Core DbContexts -- one per module, all sharing the same SQL Server
-// connection but using schema-per-module isolation.
+// Module DI registrations (IoC extension methods)
 // ---------------------------------------------------------------------------
-// Register AuditInterceptor as a singleton so it can be shared across DbContexts
-builder.Services.AddSingleton<AuditInterceptor>();
 
-// AuditDbContext does NOT get the AuditInterceptor (prevents infinite recursion)
-builder.Services.AddDbContext<AuditDbContext>(options =>
-    options.UseSqlServer(connectionString),
-    optionsLifetime: ServiceLifetime.Singleton);
+// Shared services (must come first -- provides HttpContextAccessor etc.)
+builder.Services.AddSharedInfrastructure();
 
-// Register IAuditReadRepository for Application layer query access
-builder.Services.AddScoped<IAuditReadRepository>(sp => sp.GetRequiredService<AuditDbContext>());
+// Audit module (must come before Auth -- AuditInterceptor needed by other DbContexts)
+builder.Services.AddAuditApplication();
+builder.Services.AddAuditInfrastructure(connectionString);
+builder.Services.AddAuditPresentation();
 
-// All other module DbContexts get the AuditInterceptor for automatic audit logging
+// Auth module
+builder.Services.AddAuthApplication();
+builder.Services.AddAuthInfrastructure();
+builder.Services.AddAuthPresentation();
+
+// ---------------------------------------------------------------------------
+// EF Core DbContexts -- module DbContexts with AuditInterceptor
+// (AuditInterceptor registered above by AddAuditInfrastructure)
+// ---------------------------------------------------------------------------
 void ConfigureDbContext<TContext>(IServiceCollection services) where TContext : DbContext
 {
     services.AddDbContext<TContext>((sp, options) =>
@@ -113,40 +106,6 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddAuthorization();
-
-// ---------------------------------------------------------------------------
-// Auth module infrastructure services and seeding
-// ---------------------------------------------------------------------------
-builder.Services.AddSingleton<PasswordHasher>();
-builder.Services.AddScoped<Auth.Application.Interfaces.IJwtService, JwtService>();
-builder.Services.AddHostedService<AuthDataSeeder>();
-
-// ---------------------------------------------------------------------------
-// Auth module repositories and UoW (vertical slice infrastructure)
-// ---------------------------------------------------------------------------
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IRoleRepository, RoleRepository>();
-builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
-builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
-builder.Services.AddScoped<ISystemSettingRepository, SystemSettingRepository>();
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddSingleton<Auth.Application.Interfaces.IPasswordHasher, PasswordHasher>();
-
-// FluentValidation -- register validators from Auth.Application for handler injection
-builder.Services.AddValidatorsFromAssembly(typeof(Auth.Application.Marker).Assembly, ServiceLifetime.Scoped);
-
-// ---------------------------------------------------------------------------
-// Shared services
-// ---------------------------------------------------------------------------
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<ICurrentUser, CurrentUser>();
-builder.Services.AddScoped<IBranchContext, BranchContext>();
-
-// Azure Blob Storage service for medical images and documents
-builder.Services.AddScoped<IAzureBlobService, AzureBlobService>();
-
-// ICD-10 ophthalmology code seeder (runs on startup, idempotent)
-builder.Services.AddHostedService<Icd10Seeder>();
 
 // ---------------------------------------------------------------------------
 // CORS -- allow frontend dev server
