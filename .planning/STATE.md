@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 ## Current Position
 
 Phase: 01.1 of 9 (Change the current code structure of the backend)
-Plan: 5 of 5 in current phase
-Status: Executing
-Last activity: 2026-03-01 -- Completed 01.1-03 auth-flow feature migration (5 handlers, 5 Minimal API routes, AuthService eliminated)
+Plan: 5 of 5 in current phase (PHASE COMPLETE)
+Status: Phase 01.1 Complete
+Last activity: 2026-03-01 -- Completed 01.1-05 unit test verification (47 tests across 16 handlers, 102 total tests passing)
 
-Progress: [######....] 26%
+Progress: [######....] 28%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 10
+- Total plans completed: 11
 - Average duration: 10min
-- Total execution time: 1.62 hours
+- Total execution time: 1.75 hours
 
 **By Phase:**
 
@@ -30,7 +30,7 @@ Progress: [######....] 26%
 | 1 | 6 | 73min | 12min |
 
 **Recent Trend:**
-- Last 5 plans: 15min, 9min, 12min, 10min, 3min
+- Last 5 plans: 9min, 12min, 10min, 3min, 8min
 - Trend: stable
 
 *Updated after each plan completion*
@@ -39,6 +39,7 @@ Progress: [######....] 26%
 | Phase 01.1 P02 | 3min | 2 tasks | 10 files |
 | Phase 01.1 P04 | 9min | 2 tasks | 34 files |
 | Phase 01.1 P03 | 11min | 2 tasks | 13 files |
+| Phase 01.1 P05 | 8min | 2 tasks | 21 files |
 
 ## Accumulated Context
 
@@ -86,6 +87,9 @@ Recent decisions affecting current work:
 - [Phase 01.1]: Logout handler revokes ALL user tokens (RevokeAllByUserIdAsync) -- simpler than single-token revocation
 - [Phase 01.1]: Handler-invoked FluentValidation via IValidator<T> injection and manual ValidateAsync in Handle method
 - [Phase 01.1]: Removed WolverineFx.Http and FrameworkReference from Auth.Application -- no HTTP concerns in Application layer
+- [Phase 01.1]: [01.1-05]: Reflection-based navigation property wiring in TestHelpers for domain entities with private setters
+- [Phase 01.1]: [01.1-05]: Custom TestAsyncQueryable for EF Core IQueryable ToListAsync in unit tests (no MockQueryable NuGet)
+- [Phase 01.1]: [01.1-05]: Two handler test patterns -- CreateSut() for instance handlers, direct Handle() for Wolverine static handlers
 
 ### Roadmap Evolution
 
@@ -105,5 +109,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-01
-Stopped at: Completed 01.1-03-PLAN.md
-Resume file: .planning/phases/01.1-change-the-current-code-structure-of-the-backend/01.1-05-PLAN.md
+Stopped at: Completed 01.1-05-PLAN.md (Phase 01.1 complete -- all 5 plans executed)
+Resume file: Next phase

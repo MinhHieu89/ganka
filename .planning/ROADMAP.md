@@ -49,14 +49,14 @@ Plans:
 
 **Goal:** Backend Application layer uses vertical slice feature-based organization with business logic in handlers, thin repository interfaces for data access, and unit tests for all feature handlers
 **Depends on:** Phase 1
-**Plans:** 4/5 plans executed
+**Plans:** 5/5 plans executed (PHASE COMPLETE)
 
 Plans:
-- [ ] 01.1-01-PLAN.md — Foundation: Presentation projects, repository interfaces per aggregate root, UnitOfWork, Infrastructure implementations, Bootstrapper DI wiring
-- [ ] 01.1-02-PLAN.md — Audit module restructuring: 3 feature files (GetAuditLogs, ExportAuditLogs, GetAccessLogs), Minimal API endpoints, rename IAuditReadContext to IAuditReadRepository
-- [ ] 01.1-03-PLAN.md — Auth features (auth flow): Login, Logout, RefreshToken, GetCurrentUser, UpdateLanguage vertical slice migration with Minimal API endpoints
-- [ ] 01.1-04-PLAN.md — Auth features (admin flow): GetUsers, CreateUser, UpdateUser, AssignRoles, GetRoles, CreateRole, UpdateRolePermissions, GetPermissions with Minimal API endpoints
-- [ ] 01.1-05-PLAN.md — Unit tests: Auth.Unit.Tests project + tests for all 13 Auth and 3 Audit feature handlers
+- [x] 01.1-01-PLAN.md — Foundation: Presentation projects, repository interfaces per aggregate root, UnitOfWork, Infrastructure implementations, Bootstrapper DI wiring
+- [x] 01.1-02-PLAN.md — Audit module restructuring: 3 feature files (GetAuditLogs, ExportAuditLogs, GetAccessLogs), Minimal API endpoints, rename IAuditReadContext to IAuditReadRepository
+- [x] 01.1-03-PLAN.md — Auth features (auth flow): Login, Logout, RefreshToken, GetCurrentUser, UpdateLanguage vertical slice migration with Minimal API endpoints
+- [x] 01.1-04-PLAN.md — Auth features (admin flow): GetUsers, CreateUser, UpdateUser, AssignRoles, GetRoles, CreateRole, UpdateRolePermissions, GetPermissions with Minimal API endpoints
+- [x] 01.1-05-PLAN.md — Unit tests: Auth.Unit.Tests project + tests for all 13 Auth and 3 Audit feature handlers
 
 ### Phase 2: Patient Management & Scheduling
 **Goal**: Staff can register patients, manage their profiles, and book appointments with no double-booking
@@ -202,6 +202,7 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Infrastructure | 6/7 | In Progress | - |
+| 1.1 Backend Restructuring | 5/5 | Complete | 2026-03-01 |
 | 2. Patient Management & Scheduling | 0/3 | Not started | - |
 | 3. Clinical Workflow & Examination | 0/3 | Not started | - |
 | 4. Dry Eye Template & Medical Imaging | 0/2 | Not started | - |
