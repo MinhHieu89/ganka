@@ -22,4 +22,8 @@
     <ProjectReference Include="..\..\..\Shared\Shared.Infrastructure\Shared.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="Seeding\icd10-ophthalmology.json" />
+  </ItemGroup>
+
 </Project>

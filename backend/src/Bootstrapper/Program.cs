@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Shared.Application;
+using Shared.Application.Services;
 using Shared.Infrastructure;
+using Shared.Infrastructure.Services;
 using Wolverine;
 using Wolverine.Http;
 using Wolverine.Http.FluentValidation;
@@ -16,6 +18,7 @@ using Audit.Application;
 using Audit.Infrastructure;
 using Audit.Infrastructure.Interceptors;
 using Audit.Infrastructure.Middleware;
+using Audit.Infrastructure.Seeding;
 using Patient.Infrastructure;
 using Clinical.Infrastructure;
 using Scheduling.Infrastructure;
@@ -23,6 +26,11 @@ using Pharmacy.Infrastructure;
 using Optical.Infrastructure;
 using Billing.Infrastructure;
 using Treatment.Infrastructure;
+
+// Auth services
+using Auth.Application.Services;
+using Auth.Infrastructure.Services;
+using Auth.Infrastructure.Seeding;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -64,6 +72,11 @@ ConfigureDbContext<OpticalDbContext>(builder.Services);
 ConfigureDbContext<BillingDbContext>(builder.Services);
 ConfigureDbContext<TreatmentDbContext>(builder.Services);
 
+// ReferenceDbContext for cross-module reference data (ICD-10 codes, etc.)
+builder.Services.AddDbContext<ReferenceDbContext>(options =>
+    options.UseSqlServer(connectionString),
+    optionsLifetime: ServiceLifetime.Singleton);
+
 // ---------------------------------------------------------------------------
 // Authentication -- JWT Bearer
 // ---------------------------------------------------------------------------
@@ -94,11 +107,29 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 
 // ---------------------------------------------------------------------------
+// Auth module services
+// ---------------------------------------------------------------------------
+builder.Services.AddSingleton<PasswordHasher>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<JwtService>(); // Concrete type for AuthService injection
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<IPermissionService, PermissionService>();
+builder.Services.AddHostedService<AuthDataSeeder>();
+
+// ---------------------------------------------------------------------------
 // Shared services
 // ---------------------------------------------------------------------------
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 builder.Services.AddScoped<IBranchContext, BranchContext>();
+
+// Azure Blob Storage service for medical images and documents
+builder.Services.AddScoped<IAzureBlobService, AzureBlobService>();
+
+// ICD-10 ophthalmology code seeder (runs on startup, idempotent)
+builder.Services.AddHostedService<Icd10Seeder>();
 
 // ---------------------------------------------------------------------------
 // Swagger / OpenAPI (development only)

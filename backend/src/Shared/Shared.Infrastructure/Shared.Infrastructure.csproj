@@ -21,12 +21,4 @@
     <ProjectReference Include="..\Shared.Domain\Shared.Domain.csproj" />
   </ItemGroup>
 
-  <!-- Exclude files with unresolved dependencies until their respective plans complete -->
-  <ItemGroup>
-    <Compile Remove="Interceptors\AuditInterceptor.cs" />
-    <Compile Remove="Middleware\AccessLoggingMiddleware.cs" />
-    <Compile Remove="Services\AzureBlobService.cs" />
-    <Compile Remove="ReferenceDbContext.cs" />
-  </ItemGroup>
-
 </Project>
