@@ -6,6 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <!-- FrameworkReference and WolverineFx.Http kept temporarily for existing
+       Wolverine.Http endpoints in Endpoints/ folder. Plans 03-04 will remove
+       these when endpoints migrate to Auth.Presentation. -->
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>

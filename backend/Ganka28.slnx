@@ -8,12 +8,14 @@
     <Project Path="src/Modules/Audit/Audit.Contracts/Audit.Contracts.csproj" />
     <Project Path="src/Modules/Audit/Audit.Domain/Audit.Domain.csproj" />
     <Project Path="src/Modules/Audit/Audit.Infrastructure/Audit.Infrastructure.csproj" />
+    <Project Path="src/Modules/Audit/Audit.Presentation/Audit.Presentation.csproj" />
   </Folder>
   <Folder Name="/src/Modules/Auth/">
     <Project Path="src/Modules/Auth/Auth.Application/Auth.Application.csproj" />
     <Project Path="src/Modules/Auth/Auth.Contracts/Auth.Contracts.csproj" />
     <Project Path="src/Modules/Auth/Auth.Domain/Auth.Domain.csproj" />
     <Project Path="src/Modules/Auth/Auth.Infrastructure/Auth.Infrastructure.csproj" />
+    <Project Path="src/Modules/Auth/Auth.Presentation/Auth.Presentation.csproj" />
   </Folder>
   <Folder Name="/src/Modules/Billing/">
     <Project Path="src/Modules/Billing/Billing.Application/Billing.Application.csproj" />

@@ -1,16 +1,13 @@
-using Audit.Domain.Entities;
+// This file is kept for backward compatibility during migration.
+// The canonical interface has moved to Audit.Application.Interfaces.IAuditReadRepository.
+// Existing Wolverine.Http endpoints referencing IAuditReadContext continue to compile
+// via this type-forwarding alias. Plan 02 will remove this file.
+
+using Audit.Application.Interfaces;
 
 namespace Audit.Application;
 
 /// <summary>
-/// Read-only query interface for the Audit module's data.
-/// Used by endpoints in the Application layer to query audit/access logs
-/// without creating a circular dependency with the Infrastructure layer.
-/// Implemented by AuditDbContext in Audit.Infrastructure.
+/// Backward-compatible alias. See <see cref="IAuditReadRepository"/>.
 /// </summary>
-public interface IAuditReadContext
-{
-    IQueryable<AuditLog> AuditLogs { get; }
-    IQueryable<AccessLog> AccessLogs { get; }
-    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
-}
+public interface IAuditReadContext : IAuditReadRepository;

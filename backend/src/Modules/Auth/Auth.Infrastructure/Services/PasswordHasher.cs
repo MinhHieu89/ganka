@@ -1,4 +1,5 @@
 using System.Security.Cryptography;
+using Auth.Application.Interfaces;
 using Konscious.Security.Cryptography;
 
 namespace Auth.Infrastructure.Services;
@@ -8,7 +9,7 @@ namespace Auth.Infrastructure.Services;
 /// Params: DegreeOfParallelism=4, MemorySize=65536 (64MB), Iterations=3.
 /// Output format: Base64(salt:hash) for storage.
 /// </summary>
-public sealed class PasswordHasher
+public sealed class PasswordHasher : IPasswordHasher
 {
     private const int SaltSize = 16;
     private const int HashSize = 32;

@@ -1,14 +1,13 @@
-using Auth.Domain.Entities;
-using System.Security.Claims;
+// This file is kept for backward compatibility during migration.
+// The canonical IJwtService interface has moved to Auth.Application.Interfaces.
+// Existing code referencing Auth.Application.Services.IJwtService continues to compile
+// via this type-forwarding alias. Plans 03-04 will remove this file.
+
+using Auth.Application.Interfaces;
 
 namespace Auth.Application.Services;
 
 /// <summary>
-/// JWT token generation and validation service.
+/// Backward-compatible alias. See <see cref="Auth.Application.Interfaces.IJwtService"/>.
 /// </summary>
-public interface IJwtService
-{
-    (string Token, DateTime ExpiresAt) GenerateAccessToken(User user, IEnumerable<string> permissions);
-    string GenerateRefreshToken();
-    ClaimsPrincipal? GetPrincipalFromExpiredToken(string token);
-}
+public interface IJwtService : Interfaces.IJwtService;

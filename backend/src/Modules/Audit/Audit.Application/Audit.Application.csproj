@@ -6,6 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <!-- FrameworkReference and WolverineFx.Http kept temporarily for existing
+       Wolverine.Http endpoints in Endpoints/ folder. Plan 02 will remove
+       these when endpoints migrate to Audit.Presentation. -->
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="12.*" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.*-*" />

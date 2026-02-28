@@ -1,4 +1,5 @@
 using Audit.Application;
+using Audit.Application.Interfaces;
 using Audit.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,7 +9,8 @@ namespace Audit.Infrastructure;
 /// EF Core DbContext for the Audit module.
 /// Uses schema-per-module isolation with the "audit" schema.
 /// NO global query filters -- audit logs are immutable and must be queryable across all branches.
-/// Implements IAuditReadContext for clean Application-layer query access.
+/// Implements IAuditReadRepository for clean Application-layer query access.
+/// Also implements IAuditReadContext (backward-compatible alias) until Plan 02 removes it.
 /// </summary>
 public class AuditDbContext : DbContext, IAuditReadContext
 {
@@ -20,8 +22,8 @@ public class AuditDbContext : DbContext, IAuditReadContext
     public DbSet<AccessLog> AccessLogs => Set<AccessLog>();
 
     // Explicit interface implementation for IQueryable access
-    IQueryable<AuditLog> IAuditReadContext.AuditLogs => AuditLogs.AsNoTracking();
-    IQueryable<AccessLog> IAuditReadContext.AccessLogs => AccessLogs.AsNoTracking();
+    IQueryable<AuditLog> IAuditReadRepository.AuditLogs => AuditLogs.AsNoTracking();
+    IQueryable<AccessLog> IAuditReadRepository.AccessLogs => AccessLogs.AsNoTracking();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
