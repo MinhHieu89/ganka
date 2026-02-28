@@ -1,1 +1,28 @@
-{}
+{
+  "title": "Nhat ky hoat dong",
+  "actor": "Nguoi thuc hien",
+  "action": "Hanh dong",
+  "entity": "Thuc the",
+  "details": "Chi tiet",
+  "timestamp": "Thoi gian",
+  "filter": "Loc",
+  "export": "Xuat bao cao",
+  "actions": {
+    "login": "Dang nhap",
+    "logout": "Dang xuat",
+    "create": "Tao moi",
+    "update": "Cap nhat",
+    "delete": "Xoa",
+    "view": "Xem",
+    "export": "Xuat du lieu"
+  },
+  "filters": {
+    "user": "Nguoi dung",
+    "actionType": "Loai hanh dong",
+    "dateRange": "Khoang thoi gian",
+    "from": "Tu ngay",
+    "to": "Den ngay",
+    "apply": "Ap dung",
+    "clear": "Xoa bo loc"
+  }
+}

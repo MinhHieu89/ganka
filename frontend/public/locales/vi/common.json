@@ -1,3 +1,58 @@
 {
-  "appName": "Ganka28"
+  "appName": "Ganka28",
+  "sidebar": {
+    "dashboard": "Trang chu",
+    "admin": "Quan tri",
+    "users": "Quan tri nguoi dung",
+    "roles": "Quan tri vai tro",
+    "auditLogs": "Nhat ky hoat dong",
+    "settings": "Cai dat",
+    "patients": "Benh nhan",
+    "scheduling": "Lich hen",
+    "clinical": "Kham benh",
+    "pharmacy": "Nha thuoc",
+    "optical": "Kinh mat",
+    "billing": "Thu ngan",
+    "treatment": "Dieu tri"
+  },
+  "topbar": {
+    "logout": "Dang xuat",
+    "language": "Ngon ngu",
+    "profile": "Ho so",
+    "notifications": "Thong bao"
+  },
+  "table": {
+    "noData": "Khong co du lieu",
+    "page": "Trang",
+    "total": "Tong",
+    "exportCsv": "Xuat CSV",
+    "rowsPerPage": "So dong moi trang",
+    "of": "cua"
+  },
+  "buttons": {
+    "save": "Luu",
+    "cancel": "Huy",
+    "delete": "Xoa",
+    "add": "Them moi",
+    "search": "Tim kiem",
+    "edit": "Sua",
+    "close": "Dong",
+    "confirm": "Xac nhan",
+    "back": "Quay lai",
+    "next": "Tiep theo",
+    "previous": "Truoc do",
+    "refresh": "Lam moi"
+  },
+  "validation": {
+    "required": "Bat buoc",
+    "invalidEmail": "Email khong hop le",
+    "minLength": "Toi thieu {{min}} ky tu",
+    "maxLength": "Toi da {{max}} ky tu"
+  },
+  "status": {
+    "loading": "Dang tai...",
+    "error": "Da xay ra loi",
+    "success": "Thanh cong",
+    "notFound": "Khong tim thay"
+  }
 }

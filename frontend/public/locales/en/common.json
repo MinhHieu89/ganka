@@ -1,3 +1,58 @@
 {
-  "appName": "Ganka28"
+  "appName": "Ganka28",
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "admin": "Administration",
+    "users": "User Management",
+    "roles": "Role Management",
+    "auditLogs": "Audit Logs",
+    "settings": "Settings",
+    "patients": "Patients",
+    "scheduling": "Scheduling",
+    "clinical": "Clinical",
+    "pharmacy": "Pharmacy",
+    "optical": "Optical Center",
+    "billing": "Billing",
+    "treatment": "Treatment"
+  },
+  "topbar": {
+    "logout": "Logout",
+    "language": "Language",
+    "profile": "Profile",
+    "notifications": "Notifications"
+  },
+  "table": {
+    "noData": "No data available",
+    "page": "Page",
+    "total": "Total",
+    "exportCsv": "Export CSV",
+    "rowsPerPage": "Rows per page",
+    "of": "of"
+  },
+  "buttons": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "add": "Add New",
+    "search": "Search",
+    "edit": "Edit",
+    "close": "Close",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "refresh": "Refresh"
+  },
+  "validation": {
+    "required": "Required",
+    "invalidEmail": "Invalid email address",
+    "minLength": "Minimum {{min}} characters",
+    "maxLength": "Maximum {{max}} characters"
+  },
+  "status": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success",
+    "notFound": "Not found"
+  }
 }

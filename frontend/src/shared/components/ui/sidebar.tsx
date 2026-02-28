@@ -1,7 +1,7 @@
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
-import { IconPanelLeftClose } from "@tabler/icons-react"
+import { IconLayoutSidebarLeftCollapse } from "@tabler/icons-react"
 
 import { cn } from "@/shared/lib/utils"
 import { Button } from "@/shared/components/ui/button"
@@ -266,7 +266,7 @@ const SidebarTrigger = React.forwardRef<
       }}
       {...props}
     >
-      <IconPanelLeftClose />
+      <IconLayoutSidebarLeftCollapse />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   )
