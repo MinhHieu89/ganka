@@ -9,10 +9,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Authentication & Security
 
-- [ ] **AUTH-01**: Staff can log in with credentials and receive JWT token with role-based claims
-- [ ] **AUTH-02**: System supports roles: Doctor, Technician, Nurse, Cashier, Optical Staff, Manager, Accountant
-- [ ] **AUTH-03**: Admin can configure granular permissions per role (CRUD per entity/action)
-- [ ] **AUTH-04**: User session persists with token refresh, times out after inactivity, supports logout
+- [x] **AUTH-01**: Staff can log in with credentials and receive JWT token with role-based claims
+- [x] **AUTH-02**: System supports roles: Doctor, Technician, Nurse, Cashier, Optical Staff, Manager, Accountant
+- [x] **AUTH-03**: Admin can configure granular permissions per role (CRUD per entity/action)
+- [x] **AUTH-04**: User session persists with token refresh, times out after inactivity, supports logout
 - [x] **AUTH-05**: System logs all login attempts, record access, and data views (access logging)
 
 ### Patient Management
@@ -226,10 +226,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 | Phase 1 | Pending |
-| AUTH-02 | Phase 1 | Pending |
-| AUTH-03 | Phase 1 | Pending |
-| AUTH-04 | Phase 1 | Pending |
+| AUTH-01 | Phase 1 | Complete |
+| AUTH-02 | Phase 1 | Complete |
+| AUTH-03 | Phase 1 | Complete |
+| AUTH-04 | Phase 1 | Complete |
 | AUTH-05 | Phase 1 | Complete |
 | PAT-01 | Phase 2 | Pending |
 | PAT-02 | Phase 2 | Pending |

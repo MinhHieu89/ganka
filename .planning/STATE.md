@@ -58,6 +58,9 @@ Recent decisions affecting current work:
 - [01-04]: StorageBlobInfo renamed to avoid Azure.Storage.Blobs.Models.BlobInfo collision
 - [01-04]: ReferenceDbContext with "reference" schema for cross-module ICD-10 reference data
 - [01-04]: ICD-10 seed data as EmbeddedResource in Audit.Infrastructure assembly
+- [Phase 01]: [01-03]: Service interfaces in Application, implementations in Infrastructure to avoid circular dependency
+- [Phase 01]: [01-03]: Argon2id via Konscious.Security.Cryptography with 64MB memory, 4 parallelism, 3 iterations
+- [Phase 01]: [01-03]: 8 system roles with preset permission templates (Admin, Doctor, Technician, Nurse, Cashier, OpticalStaff, Manager, Accountant)
 
 ### Pending Todos
 
