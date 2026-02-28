@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-28)
 
 **Core value:** Doctors can manage chronic eye disease patients (Dry Eye, Myopia Control) with structured data tracking, image comparison across visits, and treatment progress reporting
-**Current focus:** Phase 1: Foundation & Infrastructure
+**Current focus:** Phase 01.1: Change the current code structure of the backend
 
 ## Current Position
 
-Phase: 1 of 9 (Foundation & Infrastructure)
-Plan: 7 of 7 in current phase
+Phase: 01.1 of 9 (Change the current code structure of the backend)
+Plan: 2 of 5 in current phase
 Status: Executing
-Last activity: 2026-02-28 -- Completed 01-06 audit UI and architecture tests
+Last activity: 2026-02-28 -- Completed 01.1-01 foundation infrastructure (repositories, Presentation projects, DI wiring)
 
-Progress: [######....] 19%
+Progress: [######....] 22%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 6
+- Total plans completed: 7
 - Average duration: 12min
-- Total execution time: 1.22 hours
+- Total execution time: 1.38 hours
 
 **By Phase:**
 
@@ -30,11 +30,12 @@ Progress: [######....] 19%
 | 1 | 6 | 73min | 12min |
 
 **Recent Trend:**
-- Last 5 plans: 17min, 10min, 15min, 9min, 12min
+- Last 5 plans: 10min, 15min, 9min, 12min, 10min
 - Trend: stable
 
 *Updated after each plan completion*
 | Phase 01 P06 | 12min | 2 tasks | 15 files |
+| Phase 01.1 P01 | 10min | 2 tasks | 30 files |
 
 ## Accumulated Context
 
@@ -68,6 +69,10 @@ Recent decisions affecting current work:
 - [Phase 01]: [01-06]: NetArchTest.eNhancedEdition uses ResideInNamespaceContaining (not ResideInNamespaceStartingWith)
 - [Phase 01]: [01-06]: Architecture tests gracefully skip scaffold-only modules via Assembly.Load try-catch
 - [Phase 01]: [01-06]: IAuditable heuristic uses relaxed threshold for early phases
+- [Phase 01.1]: [01.1-01]: Repository-per-aggregate pattern with IUnitOfWork for explicit persistence
+- [Phase 01.1]: [01.1-01]: Presentation layer with Minimal API extension methods (MapXxxApiEndpoints pattern)
+- [Phase 01.1]: [01.1-01]: Backward-compatible interface aliases during incremental migration (IAuditReadContext -> IAuditReadRepository, Services.IJwtService -> Interfaces.IJwtService)
+- [Phase 01.1]: [01.1-01]: Kept WolverineFx.Http in Application csproj until endpoints migrated to Presentation (Plans 03-04)
 
 ### Roadmap Evolution
 
@@ -87,5 +92,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-28
-Stopped at: Phase 01.1 context gathered
-Resume file: .planning/phases/01.1-change-the-current-code-structure-of-the-backend/01.1-CONTEXT.md
+Stopped at: Completed 01.1-01-PLAN.md
+Resume file: .planning/phases/01.1-change-the-current-code-structure-of-the-backend/01.1-02-PLAN.md
