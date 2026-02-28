@@ -13,7 +13,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **AUTH-02**: System supports roles: Doctor, Technician, Nurse, Cashier, Optical Staff, Manager, Accountant
 - [ ] **AUTH-03**: Admin can configure granular permissions per role (CRUD per entity/action)
 - [ ] **AUTH-04**: User session persists with token refresh, times out after inactivity, supports logout
-- [ ] **AUTH-05**: System logs all login attempts, record access, and data views (access logging)
+- [x] **AUTH-05**: System logs all login attempts, record access, and data views (access logging)
 
 ### Patient Management
 
@@ -135,10 +135,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Audit & Compliance
 
-- [ ] **AUD-01**: System records field-level audit trail for all medical record changes (who, when, what changed, old/new values)
-- [ ] **AUD-02**: System records access log for all user logins, logouts, and medical record views
-- [ ] **AUD-03**: Audit logs are immutable and retained for minimum 10 years
-- [ ] **AUD-04**: System supports ICD-10 coding from Day 1 for So Y te data readiness (deadline 31/12/2026)
+- [x] **AUD-01**: System records field-level audit trail for all medical record changes (who, when, what changed, old/new values)
+- [x] **AUD-02**: System records access log for all user logins, logouts, and medical record views
+- [x] **AUD-03**: Audit logs are immutable and retained for minimum 10 years
+- [x] **AUD-04**: System supports ICD-10 coding from Day 1 for So Y te data readiness (deadline 31/12/2026)
 
 ### User Interface
 
@@ -147,12 +147,12 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Architecture & Infrastructure
 
-- [ ] **ARC-01**: All external system integrations use ACL adapter pattern (domain ports + infrastructure adapters)
+- [x] **ARC-01**: All external system integrations use ACL adapter pattern (domain ports + infrastructure adapters)
 - [x] **ARC-02**: All aggregate roots include BranchId for future multi-branch support (EF Core global query filters)
-- [ ] **ARC-03**: Template engine supports adding new disease templates without application code changes (config/plugin-driven)
-- [ ] **ARC-04**: Azure SQL automatic daily backup with point-in-time recovery (35 days retention)
-- [ ] **ARC-05**: Azure Blob Storage with soft delete and versioning for medical images
-- [ ] **ARC-06**: Full data export capability ensuring data ownership by Ganka28 (no vendor lock-in)
+- [x] **ARC-03**: Template engine supports adding new disease templates without application code changes (config/plugin-driven)
+- [x] **ARC-04**: Azure SQL automatic daily backup with point-in-time recovery (35 days retention)
+- [x] **ARC-05**: Azure Blob Storage with soft delete and versioning for medical images
+- [x] **ARC-06**: Full data export capability ensuring data ownership by Ganka28 (no vendor lock-in)
 
 ## v2 Requirements
 
@@ -230,7 +230,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUTH-02 | Phase 1 | Pending |
 | AUTH-03 | Phase 1 | Pending |
 | AUTH-04 | Phase 1 | Pending |
-| AUTH-05 | Phase 1 | Pending |
+| AUTH-05 | Phase 1 | Complete |
 | PAT-01 | Phase 2 | Pending |
 | PAT-02 | Phase 2 | Pending |
 | PAT-03 | Phase 2 | Pending |
@@ -310,18 +310,18 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PRT-04 | Phase 5 | Pending |
 | PRT-05 | Phase 5 | Pending |
 | PRT-06 | Phase 5 | Pending |
-| AUD-01 | Phase 1 | Pending |
-| AUD-02 | Phase 1 | Pending |
-| AUD-03 | Phase 1 | Pending |
-| AUD-04 | Phase 1 | Pending |
+| AUD-01 | Phase 1 | Complete |
+| AUD-02 | Phase 1 | Complete |
+| AUD-03 | Phase 1 | Complete |
+| AUD-04 | Phase 1 | Complete |
 | UI-01 | Phase 1 | Complete |
 | UI-02 | Phase 1 | Complete |
-| ARC-01 | Phase 1 | Pending |
+| ARC-01 | Phase 1 | Complete |
 | ARC-02 | Phase 1 | Complete |
-| ARC-03 | Phase 1 | Pending |
-| ARC-04 | Phase 1 | Pending |
-| ARC-05 | Phase 1 | Pending |
-| ARC-06 | Phase 1 | Pending |
+| ARC-03 | Phase 1 | Complete |
+| ARC-04 | Phase 1 | Complete |
+| ARC-05 | Phase 1 | Complete |
+| ARC-06 | Phase 1 | Complete |
 
 **Coverage:**
 - v1 requirements: 96 total
