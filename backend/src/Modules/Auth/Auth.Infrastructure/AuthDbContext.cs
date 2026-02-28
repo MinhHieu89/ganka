@@ -1,3 +1,4 @@
+using Auth.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Auth.Infrastructure;
@@ -5,10 +6,18 @@ namespace Auth.Infrastructure;
 /// <summary>
 /// EF Core DbContext for the Auth module.
 /// Uses schema-per-module isolation with the "auth" schema.
-/// Entity configurations will be added in plan 01-03 (Auth domain entities).
+/// Includes named query filters for BranchId tenant isolation and soft delete.
 /// </summary>
 public class AuthDbContext : DbContext
 {
+    public DbSet<User> Users => Set<User>();
+    public DbSet<Role> Roles => Set<Role>();
+    public DbSet<Permission> Permissions => Set<Permission>();
+    public DbSet<UserRole> UserRoles => Set<UserRole>();
+    public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
+    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+    public DbSet<SystemSetting> SystemSettings => Set<SystemSetting>();
+
     public AuthDbContext(DbContextOptions<AuthDbContext> options) : base(options)
     {
     }
@@ -17,8 +26,13 @@ public class AuthDbContext : DbContext
     {
         modelBuilder.HasDefaultSchema("auth");
 
-        // Auth entity configurations (Users, Roles, Permissions, RefreshTokens)
-        // will be added in plan 01-03.
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AuthDbContext).Assembly);
+
+        // Global query filter: soft delete on User
+        modelBuilder.Entity<User>().HasQueryFilter(u => !u.IsDeleted);
+
+        // Global query filter: soft delete on Role
+        modelBuilder.Entity<Role>().HasQueryFilter(r => !r.IsDeleted);
 
         base.OnModelCreating(modelBuilder);
     }
