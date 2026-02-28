@@ -2,8 +2,14 @@ import { Outlet } from "@tanstack/react-router"
 import { SidebarProvider, SidebarInset } from "@/shared/components/ui/sidebar"
 import { AppSidebar } from "@/shared/components/AppSidebar"
 import { TopBar } from "@/shared/components/TopBar"
+import { SessionWarningModal } from "@/features/auth/components/SessionWarningModal"
+import { useSession } from "@/features/auth/hooks/useSession"
+import { useAuth } from "@/features/auth/hooks/useAuth"
 
 export function AppShell() {
+  const { showWarning, remainingSeconds, extendSession } = useSession()
+  const { logout } = useAuth()
+
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -13,6 +19,13 @@ export function AppShell() {
           <Outlet />
         </main>
       </SidebarInset>
+
+      <SessionWarningModal
+        open={showWarning}
+        remainingSeconds={remainingSeconds}
+        onExtend={extendSession}
+        onLogout={logout}
+      />
     </SidebarProvider>
   )
 }

@@ -5,6 +5,7 @@ import { SidebarTrigger } from "@/shared/components/ui/sidebar"
 import { Separator } from "@/shared/components/ui/separator"
 import { LanguageToggle } from "@/shared/components/LanguageToggle"
 import { useAuthStore } from "@/shared/stores/authStore"
+import { useAuth } from "@/features/auth/hooks/useAuth"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,12 +17,8 @@ import {
 
 export function TopBar() {
   const { t } = useTranslation("common")
-  const { user, clearAuth } = useAuthStore()
-
-  const handleLogout = () => {
-    clearAuth()
-    window.location.href = "/login"
-  }
+  const user = useAuthStore((s) => s.user)
+  const { logout } = useAuth()
 
   return (
     <header className="flex h-14 shrink-0 items-center border-b bg-background px-4 gap-2">
@@ -46,7 +43,7 @@ export function TopBar() {
             {user?.email ?? t("topbar.profile")}
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={handleLogout}>
+          <DropdownMenuItem onClick={() => logout()}>
             <IconLogout className="h-4 w-4 mr-2" />
             {t("topbar.logout")}
           </DropdownMenuItem>

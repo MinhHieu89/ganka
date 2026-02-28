@@ -6,16 +6,26 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/shared/components/ui/tooltip"
+import { useUpdateLanguageMutation } from "@/features/auth/api/auth-api"
+import { useAuthStore } from "@/shared/stores/authStore"
 
 export function LanguageToggle() {
   const { i18n, t } = useTranslation("common")
+  const updateLanguage = useUpdateLanguageMutation()
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
 
   const currentLang = i18n.language
   const nextLang = currentLang === "vi" ? "en" : "vi"
   const displayLabel = currentLang === "vi" ? "EN" : "VI"
 
   const handleToggle = () => {
+    // Instant UI update
     i18n.changeLanguage(nextLang)
+
+    // Persist to backend if authenticated (fire-and-forget)
+    if (isAuthenticated) {
+      updateLanguage.mutate({ language: nextLang })
+    }
   }
 
   return (
