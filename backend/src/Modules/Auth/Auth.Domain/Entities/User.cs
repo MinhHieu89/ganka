@@ -81,6 +81,20 @@ public class User : AggregateRoot, IAuditable
             .AsReadOnly();
     }
 
+    /// <summary>
+    /// Records a successful login event on this user.
+    /// </summary>
+    public void RecordLogin(string? ipAddress)
+    {
+        AddDomainEvent(new UserLoggedInEvent
+        {
+            UserId = Id,
+            Email = Email,
+            Timestamp = DateTime.UtcNow,
+            IpAddress = ipAddress
+        });
+    }
+
     public void Deactivate()
     {
         IsActive = false;
