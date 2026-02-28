@@ -1,6 +1,7 @@
 import { tanstackStart } from '@tanstack/react-start/plugin/vite'
 import viteTsConfigPaths from 'vite-tsconfig-paths'
 import tailwindcss from '@tailwindcss/vite'
+import viteReact from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import path from 'node:path'
 
@@ -23,5 +24,6 @@ export default defineConfig({
         enabled: true,
       },
     }),
+    viteReact(),
   ],
 })

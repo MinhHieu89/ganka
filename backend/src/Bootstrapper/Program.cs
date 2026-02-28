@@ -132,6 +132,22 @@ builder.Services.AddScoped<IAzureBlobService, AzureBlobService>();
 builder.Services.AddHostedService<Icd10Seeder>();
 
 // ---------------------------------------------------------------------------
+// CORS -- allow frontend dev server
+// ---------------------------------------------------------------------------
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins(
+                "http://localhost:3000",
+                "http://localhost:3001")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
+
+// ---------------------------------------------------------------------------
 // Swagger / OpenAPI (development only)
 // ---------------------------------------------------------------------------
 builder.Services.AddEndpointsApiExplorer();
@@ -213,6 +229,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 

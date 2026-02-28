@@ -1,7 +1,7 @@
 import { useQuery, useMutation } from "@tanstack/react-query"
 import { useAuthStore } from "@/shared/stores/authStore"
 
-const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:5000"
+const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:5255"
 
 export interface AuditLogQuery {
   userId?: string

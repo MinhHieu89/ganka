@@ -9,6 +9,7 @@ i18n
   .use(initReactI18next)
   .init({
     fallbackLng: 'vi',
+    load: 'languageOnly',
     defaultNS: 'common',
     ns: ['common', 'auth', 'audit'],
     interpolation: {
