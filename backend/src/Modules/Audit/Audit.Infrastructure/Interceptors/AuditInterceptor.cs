@@ -81,10 +81,22 @@ public sealed class AuditInterceptor : SaveChangesInterceptor
         var entries = new List<AuditEntry>();
 
         // Get current user info for the audit record
-        var currentUser = _serviceProvider.GetService<ICurrentUser>();
-        var userId = currentUser?.UserId ?? Guid.Empty;
-        var userEmail = currentUser?.Email ?? "system";
-        var branchId = currentUser?.BranchId ?? Guid.Empty;
+        // Use a try/catch because during startup seeding there is no HTTP scope
+        Guid userId = Guid.Empty;
+        string userEmail = "system";
+        Guid branchId = Guid.Empty;
+        try
+        {
+            using var scope = _serviceProvider.CreateScope();
+            var currentUser = scope.ServiceProvider.GetService<ICurrentUser>();
+            userId = currentUser?.UserId ?? Guid.Empty;
+            userEmail = currentUser?.Email ?? "system";
+            branchId = currentUser?.BranchId ?? Guid.Empty;
+        }
+        catch
+        {
+            // Swallow — during startup seeding, scoped services may not be available
+        }
 
         foreach (var entry in changeTracker.Entries())
         {

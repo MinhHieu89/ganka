@@ -174,6 +174,8 @@ builder.Services.AddSwaggerGen(options =>
 // ---------------------------------------------------------------------------
 // Wolverine -- message bus, HTTP endpoints, transactional outbox
 // ---------------------------------------------------------------------------
+builder.Services.AddWolverineHttp();
+
 builder.Host.UseWolverine(opts =>
 {
     // Persist messages with SQL Server (transactional outbox)
