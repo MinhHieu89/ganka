@@ -42,7 +42,7 @@ Plans:
 - [x] 01-03-PLAN.md — Auth module: domain entities, JWT auth, login/refresh endpoints, RBAC, data seeding
 - [x] 01-04-PLAN.md — Audit module + architecture foundations: audit interceptor, access logging, Azure Blob, ACL adapters, ICD-10 seeding
 - [x] 01-05-PLAN.md — Auth UI: login page, session management, user/role admin pages, permission matrix
-- [ ] 01-06-PLAN.md — Audit UI + architecture tests: audit log viewer with filters/export, NetArchTest rules
+- [x] 01-06-PLAN.md — Audit UI + architecture tests: audit log viewer with filters/export, NetArchTest rules
 - [ ] 01-07-PLAN.md — End-to-end verification checkpoint
 
 ### Phase 2: Patient Management & Scheduling
@@ -188,7 +188,7 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Infrastructure | 5/7 | In Progress | - |
+| 1. Foundation & Infrastructure | 6/7 | In Progress | - |
 | 2. Patient Management & Scheduling | 0/3 | Not started | - |
 | 3. Clinical Workflow & Examination | 0/3 | Not started | - |
 | 4. Dry Eye Template & Medical Imaging | 0/2 | Not started | - |
