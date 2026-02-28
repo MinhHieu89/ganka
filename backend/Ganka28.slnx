@@ -66,5 +66,6 @@
   <Folder Name="/tests/">
     <Project Path="tests/Audit.Unit.Tests/Audit.Unit.Tests.csproj" />
     <Project Path="tests/Auth.Integration.Tests/Auth.Integration.Tests.csproj" />
+    <Project Path="tests/Ganka28.ArchitectureTests/Ganka28.ArchitectureTests.csproj" />
   </Folder>
 </Solution>
