@@ -1,10 +1,10 @@
-using System.Security.Claims;
 using Auth.Application.Features;
 using Auth.Contracts.Dtos;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Shared.Domain;
+using Shared.Presentation;
 using Wolverine;
 
 namespace Auth.Presentation;
@@ -12,263 +12,124 @@ namespace Auth.Presentation;
 /// <summary>
 /// Extension methods for mapping Auth module Minimal API endpoints.
 /// Auth-flow endpoints (login, logout, refresh, me, language) and admin-flow endpoints.
+/// Uses route groups to consolidate shared concerns (prefixes, authorization).
 /// </summary>
 public static class AuthApiEndpoints
 {
     /// <summary>
-    /// Maps all Auth module Minimal API endpoints.
+    /// Maps all Auth module Minimal API endpoints using route groups.
     /// </summary>
     public static IEndpointRouteBuilder MapAuthApiEndpoints(this IEndpointRouteBuilder app)
     {
-        MapAuthFlowEndpoints(app);
-        MapAdminUserEndpoints(app);
-        MapAdminRoleEndpoints(app);
-        MapAdminPermissionEndpoints(app);
+        var authGroup = app.MapGroup("/api/auth");
+        var adminGroup = app.MapGroup("/api/admin").RequireAuthorization();
+
+        MapAuthFlowEndpoints(authGroup);
+        MapAdminUserEndpoints(adminGroup);
+        MapAdminRoleEndpoints(adminGroup);
+        MapAdminPermissionEndpoints(adminGroup);
 
         return app;
     }
 
-    private static void MapAuthFlowEndpoints(IEndpointRouteBuilder app)
+    private static void MapAuthFlowEndpoints(RouteGroupBuilder authGroup)
     {
-        app.MapPost("/api/auth/login", async (
-            LoginCommand command,
-            IMessageBus bus,
-            HttpContext httpContext) =>
+        authGroup.MapPost("/login", async (LoginCommand command, IMessageBus bus, HttpContext ctx) =>
         {
-            var enriched = command with { IpAddress = httpContext.Connection.RemoteIpAddress?.ToString() };
+            var enriched = command with { IpAddress = ctx.Connection.RemoteIpAddress?.ToString() };
             var result = await bus.InvokeAsync<Result<LoginResponse>>(enriched);
-
-            if (result.IsFailure)
-            {
-                return result.Error.Code switch
-                {
-                    "Error.Unauthorized" => Results.Problem(
-                        detail: result.Error.Description,
-                        title: "Unauthorized",
-                        statusCode: 401),
-                    _ => Results.Problem(result.Error.Description, statusCode: 400)
-                };
-            }
-
-            return Results.Ok(result.Value);
+            return result.ToHttpResult();
         });
 
-        app.MapPost("/api/auth/logout", async (
-            IMessageBus bus,
-            HttpContext httpContext) =>
+        authGroup.MapPost("/logout", async (IMessageBus bus, HttpContext ctx) =>
         {
-            var userIdClaim = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (!Guid.TryParse(userIdClaim, out var userId))
+            if (!ctx.TryGetUserId(out var userId))
                 return Results.Unauthorized();
 
             var result = await bus.InvokeAsync<Result>(new LogoutCommand(userId));
+            return result.ToHttpResult();
+        }).RequireAuthorization();
 
-            if (result.IsFailure)
-                return Results.Problem(result.Error.Description, statusCode: 400);
-
-            return Results.Ok();
-        })
-        .RequireAuthorization();
-
-        app.MapPost("/api/auth/refresh", async (
-            RefreshTokenCommand command,
-            IMessageBus bus) =>
+        authGroup.MapPost("/refresh", async (RefreshTokenCommand command, IMessageBus bus) =>
         {
             var result = await bus.InvokeAsync<Result<RefreshTokenResponse>>(command);
-
-            if (result.IsFailure)
-            {
-                return result.Error.Code switch
-                {
-                    "Error.Unauthorized" => Results.Unauthorized(),
-                    _ => Results.Problem(result.Error.Description, statusCode: 400)
-                };
-            }
-
-            return Results.Ok(result.Value);
+            return result.ToHttpResult();
         });
 
-        app.MapGet("/api/auth/me", async (
-            IMessageBus bus,
-            HttpContext httpContext) =>
+        authGroup.MapGet("/me", async (IMessageBus bus, HttpContext ctx) =>
         {
-            var userIdClaim = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (!Guid.TryParse(userIdClaim, out var userId))
+            if (!ctx.TryGetUserId(out var userId))
                 return Results.Unauthorized();
 
             var result = await bus.InvokeAsync<Result<UserDto>>(new GetCurrentUserQuery(userId));
+            return result.ToHttpResult();
+        }).RequireAuthorization();
 
-            if (result.IsFailure)
-                return Results.NotFound();
-
-            return Results.Ok(result.Value);
-        })
-        .RequireAuthorization();
-
-        app.MapPut("/api/auth/language", async (
-            UpdateLanguageCommand command,
-            IMessageBus bus,
-            HttpContext httpContext) =>
+        authGroup.MapPut("/language", async (UpdateLanguageCommand command, IMessageBus bus, HttpContext ctx) =>
         {
-            var userIdClaim = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (!Guid.TryParse(userIdClaim, out var userId))
+            if (!ctx.TryGetUserId(out var userId))
                 return Results.Unauthorized();
 
             var enriched = command with { UserId = userId };
             var result = await bus.InvokeAsync<Result>(enriched);
-
-            if (result.IsFailure)
-                return Results.Problem(result.Error.Description, statusCode: 400);
-
-            return Results.Ok();
-        })
-        .RequireAuthorization();
+            return result.ToHttpResult();
+        }).RequireAuthorization();
     }
 
-    private static void MapAdminUserEndpoints(IEndpointRouteBuilder app)
+    private static void MapAdminUserEndpoints(RouteGroupBuilder adminGroup)
     {
-        app.MapGet("/api/admin/users", async (
-            IMessageBus bus,
-            int page = 1,
-            int pageSize = 20,
-            CancellationToken cancellationToken = default) =>
+        adminGroup.MapGet("/users", async (IMessageBus bus, int page = 1, int pageSize = 20, CancellationToken ct = default) =>
         {
-            var response = await bus.InvokeAsync<GetUsersResponse>(
-                new GetUsersQuery(page, pageSize), cancellationToken);
-
+            var response = await bus.InvokeAsync<GetUsersResponse>(new GetUsersQuery(page, pageSize), ct);
             return Results.Ok(new { data = response.Users, totalCount = response.TotalCount, page = response.Page, pageSize = response.PageSize });
-        })
-        .RequireAuthorization();
+        });
 
-        app.MapPost("/api/admin/users", async (
-            CreateUserCommand command,
-            IMessageBus bus,
-            CancellationToken cancellationToken = default) =>
+        adminGroup.MapPost("/users", async (CreateUserCommand command, IMessageBus bus, CancellationToken ct = default) =>
         {
-            var result = await bus.InvokeAsync<Result<Guid>>(command, cancellationToken);
+            var result = await bus.InvokeAsync<Result<Guid>>(command, ct);
+            return result.ToCreatedHttpResult("/api/admin/users");
+        });
 
-            if (result.IsFailure)
-            {
-                return result.Error.Code switch
-                {
-                    "Error.Conflict" => Results.Conflict(new { error = result.Error.Description }),
-                    _ => Results.Problem(result.Error.Description, statusCode: 400)
-                };
-            }
-
-            return Results.Created($"/api/admin/users/{result.Value}", new { Id = result.Value });
-        })
-        .RequireAuthorization();
-
-        app.MapPut("/api/admin/users/{id}", async (
-            Guid id,
-            UpdateUserCommand command,
-            IMessageBus bus,
-            CancellationToken cancellationToken = default) =>
+        adminGroup.MapPut("/users/{id}", async (Guid id, UpdateUserCommand command, IMessageBus bus, CancellationToken ct = default) =>
         {
-            var commandWithId = command with { UserId = id };
-            var result = await bus.InvokeAsync<Result>(commandWithId, cancellationToken);
+            var result = await bus.InvokeAsync<Result>(command with { UserId = id }, ct);
+            return result.ToHttpResult();
+        });
 
-            if (result.IsFailure)
-            {
-                return result.Error.Code switch
-                {
-                    "Error.NotFound" => Results.NotFound(),
-                    _ => Results.Problem(result.Error.Description, statusCode: 400)
-                };
-            }
-
-            return Results.Ok();
-        })
-        .RequireAuthorization();
-
-        app.MapPut("/api/admin/users/{id}/roles", async (
-            Guid id,
-            AssignRolesCommand command,
-            IMessageBus bus,
-            CancellationToken cancellationToken = default) =>
+        adminGroup.MapPut("/users/{id}/roles", async (Guid id, AssignRolesCommand command, IMessageBus bus, CancellationToken ct = default) =>
         {
-            var commandWithId = command with { UserId = id };
-            var result = await bus.InvokeAsync<Result>(commandWithId, cancellationToken);
-
-            if (result.IsFailure)
-            {
-                return result.Error.Code switch
-                {
-                    "Error.NotFound" => Results.NotFound(),
-                    _ => Results.Problem(result.Error.Description, statusCode: 400)
-                };
-            }
-
-            return Results.Ok();
-        })
-        .RequireAuthorization();
+            var result = await bus.InvokeAsync<Result>(command with { UserId = id }, ct);
+            return result.ToHttpResult();
+        });
     }
 
-    private static void MapAdminRoleEndpoints(IEndpointRouteBuilder app)
+    private static void MapAdminRoleEndpoints(RouteGroupBuilder adminGroup)
     {
-        app.MapGet("/api/admin/roles", async (
-            IMessageBus bus,
-            CancellationToken cancellationToken = default) =>
+        adminGroup.MapGet("/roles", async (IMessageBus bus, CancellationToken ct = default) =>
         {
-            var roles = await bus.InvokeAsync<List<RoleDto>>(new GetRolesQuery(), cancellationToken);
+            var roles = await bus.InvokeAsync<List<RoleDto>>(new GetRolesQuery(), ct);
             return Results.Ok(roles);
-        })
-        .RequireAuthorization();
+        });
 
-        app.MapPost("/api/admin/roles", async (
-            CreateRoleCommand command,
-            IMessageBus bus,
-            CancellationToken cancellationToken = default) =>
+        adminGroup.MapPost("/roles", async (CreateRoleCommand command, IMessageBus bus, CancellationToken ct = default) =>
         {
-            var result = await bus.InvokeAsync<Result<Guid>>(command, cancellationToken);
+            var result = await bus.InvokeAsync<Result<Guid>>(command, ct);
+            return result.ToCreatedHttpResult("/api/admin/roles");
+        });
 
-            if (result.IsFailure)
-            {
-                return result.Error.Code switch
-                {
-                    "Error.Conflict" => Results.Conflict(new { error = result.Error.Description }),
-                    _ => Results.Problem(result.Error.Description, statusCode: 400)
-                };
-            }
-
-            return Results.Created($"/api/admin/roles/{result.Value}", new { Id = result.Value });
-        })
-        .RequireAuthorization();
-
-        app.MapPut("/api/admin/roles/{id}/permissions", async (
-            Guid id,
-            UpdateRolePermissionsCommand command,
-            IMessageBus bus,
-            CancellationToken cancellationToken = default) =>
+        adminGroup.MapPut("/roles/{id}/permissions", async (Guid id, UpdateRolePermissionsCommand command, IMessageBus bus, CancellationToken ct = default) =>
         {
-            var commandWithId = command with { RoleId = id };
-            var result = await bus.InvokeAsync<Result>(commandWithId, cancellationToken);
-
-            if (result.IsFailure)
-            {
-                return result.Error.Code switch
-                {
-                    "Error.NotFound" => Results.NotFound(),
-                    _ => Results.Problem(result.Error.Description, statusCode: 400)
-                };
-            }
-
-            return Results.Ok();
-        })
-        .RequireAuthorization();
+            var result = await bus.InvokeAsync<Result>(command with { RoleId = id }, ct);
+            return result.ToHttpResult();
+        });
     }
 
-    private static void MapAdminPermissionEndpoints(IEndpointRouteBuilder app)
+    private static void MapAdminPermissionEndpoints(RouteGroupBuilder adminGroup)
     {
-        app.MapGet("/api/admin/permissions", async (
-            IMessageBus bus,
-            CancellationToken cancellationToken = default) =>
+        adminGroup.MapGet("/permissions", async (IMessageBus bus, CancellationToken ct = default) =>
         {
-            var permissions = await bus.InvokeAsync<List<PermissionGroupDto>>(
-                new GetPermissionsQuery(), cancellationToken);
+            var permissions = await bus.InvokeAsync<List<PermissionGroupDto>>(new GetPermissionsQuery(), ct);
             return Results.Ok(permissions);
-        })
-        .RequireAuthorization();
+        });
     }
 }
