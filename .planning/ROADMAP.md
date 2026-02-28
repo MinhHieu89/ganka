@@ -45,6 +45,19 @@ Plans:
 - [x] 01-06-PLAN.md — Audit UI + architecture tests: audit log viewer with filters/export, NetArchTest rules
 - [ ] 01-07-PLAN.md — End-to-end verification checkpoint
 
+### Phase 01.1: Change the current code structure of the backend (INSERTED)
+
+**Goal:** Backend Application layer uses vertical slice feature-based organization with business logic in handlers, thin repository interfaces for data access, and unit tests for all feature handlers
+**Depends on:** Phase 1
+**Plans:** 5 plans in 3 waves
+
+Plans:
+- [ ] 01.1-01-PLAN.md — Auth repository foundation: IAuthRepository, IPasswordHasher interfaces, AuthRepository implementation, DI wiring
+- [ ] 01.1-02-PLAN.md — Audit module restructuring: 3 feature files, rename IAuditReadContext to IAuditReadRepository
+- [ ] 01.1-03-PLAN.md — Auth features (auth flow): Login, Logout, RefreshToken, GetCurrentUser, UpdateLanguage vertical slice migration
+- [ ] 01.1-04-PLAN.md — Auth features (admin flow): GetUsers, CreateUser, UpdateUser, AssignRoles, GetRoles, CreateRole, UpdateRolePermissions, GetPermissions
+- [ ] 01.1-05-PLAN.md — Unit tests: Auth.Unit.Tests project + tests for all 13 Auth and 3 Audit feature handlers
+
 ### Phase 2: Patient Management & Scheduling
 **Goal**: Staff can register patients, manage their profiles, and book appointments with no double-booking
 **Depends on**: Phase 1
@@ -197,3 +210,4 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 | 7. Billing & Finance | 0/3 | Not started | - |
 | 8. Optical Center | 0/3 | Not started | - |
 | 9. Treatment Protocols | 0/3 | Not started | - |
+
