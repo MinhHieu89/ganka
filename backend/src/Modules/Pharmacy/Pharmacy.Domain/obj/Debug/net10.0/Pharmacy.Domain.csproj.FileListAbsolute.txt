@@ -1,0 +1,15 @@
+D:\projects\ganka\backend\src\Modules\Pharmacy\Pharmacy.Domain\bin\Debug\net10.0\Pharmacy.Domain.deps.json
+D:\projects\ganka\backend\src\Modules\Pharmacy\Pharmacy.Domain\bin\Debug\net10.0\Pharmacy.Domain.dll
+D:\projects\ganka\backend\src\Modules\Pharmacy\Pharmacy.Domain\bin\Debug\net10.0\Pharmacy.Domain.pdb
+D:\projects\ganka\backend\src\Modules\Pharmacy\Pharmacy.Domain\bin\Debug\net10.0\Shared.Domain.dll
+D:\projects\ganka\backend\src\Modules\Pharmacy\Pharmacy.Domain\bin\Debug\net10.0\Shared.Domain.pdb
+D:\projects\ganka\backend\src\Modules\Pharmacy\Pharmacy.Domain\obj\Debug\net10.0\Pharmacy.Domain.csproj.AssemblyReference.cache
+D:\projects\ganka\backend\src\Modules\Pharmacy\Pharmacy.Domain\obj\Debug\net10.0\Pharmacy.Domain.GeneratedMSBuildEditorConfig.editorconfig
+D:\projects\ganka\backend\src\Modules\Pharmacy\Pharmacy.Domain\obj\Debug\net10.0\Pharmacy.Domain.AssemblyInfoInputs.cache
+D:\projects\ganka\backend\src\Modules\Pharmacy\Pharmacy.Domain\obj\Debug\net10.0\Pharmacy.Domain.AssemblyInfo.cs
+D:\projects\ganka\backend\src\Modules\Pharmacy\Pharmacy.Domain\obj\Debug\net10.0\Pharmacy.Domain.csproj.CoreCompileInputs.cache
+D:\projects\ganka\backend\src\Modules\Pharmacy\Pharmacy.Domain\obj\Debug\net10.0\Pharmacy.665AD3BA.Up2Date
+D:\projects\ganka\backend\src\Modules\Pharmacy\Pharmacy.Domain\obj\Debug\net10.0\Pharmacy.Domain.dll
+D:\projects\ganka\backend\src\Modules\Pharmacy\Pharmacy.Domain\obj\Debug\net10.0\refint\Pharmacy.Domain.dll
+D:\projects\ganka\backend\src\Modules\Pharmacy\Pharmacy.Domain\obj\Debug\net10.0\Pharmacy.Domain.pdb
+D:\projects\ganka\backend\src\Modules\Pharmacy\Pharmacy.Domain\obj\Debug\net10.0\ref\Pharmacy.Domain.dll

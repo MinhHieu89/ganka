@@ -1,0 +1,15 @@
+D:\projects\ganka\backend\src\Modules\Audit\Audit.Domain\bin\Debug\net10.0\Audit.Domain.deps.json
+D:\projects\ganka\backend\src\Modules\Audit\Audit.Domain\bin\Debug\net10.0\Audit.Domain.dll
+D:\projects\ganka\backend\src\Modules\Audit\Audit.Domain\bin\Debug\net10.0\Audit.Domain.pdb
+D:\projects\ganka\backend\src\Modules\Audit\Audit.Domain\bin\Debug\net10.0\Shared.Domain.dll
+D:\projects\ganka\backend\src\Modules\Audit\Audit.Domain\bin\Debug\net10.0\Shared.Domain.pdb
+D:\projects\ganka\backend\src\Modules\Audit\Audit.Domain\obj\Debug\net10.0\Audit.Domain.csproj.AssemblyReference.cache
+D:\projects\ganka\backend\src\Modules\Audit\Audit.Domain\obj\Debug\net10.0\Audit.Domain.GeneratedMSBuildEditorConfig.editorconfig
+D:\projects\ganka\backend\src\Modules\Audit\Audit.Domain\obj\Debug\net10.0\Audit.Domain.AssemblyInfoInputs.cache
+D:\projects\ganka\backend\src\Modules\Audit\Audit.Domain\obj\Debug\net10.0\Audit.Domain.AssemblyInfo.cs
+D:\projects\ganka\backend\src\Modules\Audit\Audit.Domain\obj\Debug\net10.0\Audit.Domain.csproj.CoreCompileInputs.cache
+D:\projects\ganka\backend\src\Modules\Audit\Audit.Domain\obj\Debug\net10.0\Audit.Do.C3959B11.Up2Date
+D:\projects\ganka\backend\src\Modules\Audit\Audit.Domain\obj\Debug\net10.0\Audit.Domain.dll
+D:\projects\ganka\backend\src\Modules\Audit\Audit.Domain\obj\Debug\net10.0\refint\Audit.Domain.dll
+D:\projects\ganka\backend\src\Modules\Audit\Audit.Domain\obj\Debug\net10.0\Audit.Domain.pdb
+D:\projects\ganka\backend\src\Modules\Audit\Audit.Domain\obj\Debug\net10.0\ref\Audit.Domain.dll

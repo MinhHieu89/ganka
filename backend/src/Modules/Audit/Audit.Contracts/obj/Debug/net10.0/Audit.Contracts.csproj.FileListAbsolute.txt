@@ -1,0 +1,15 @@
+D:\projects\ganka\backend\src\Modules\Audit\Audit.Contracts\bin\Debug\net10.0\Audit.Contracts.deps.json
+D:\projects\ganka\backend\src\Modules\Audit\Audit.Contracts\bin\Debug\net10.0\Audit.Contracts.dll
+D:\projects\ganka\backend\src\Modules\Audit\Audit.Contracts\bin\Debug\net10.0\Audit.Contracts.pdb
+D:\projects\ganka\backend\src\Modules\Audit\Audit.Contracts\bin\Debug\net10.0\Shared.Contracts.dll
+D:\projects\ganka\backend\src\Modules\Audit\Audit.Contracts\bin\Debug\net10.0\Shared.Contracts.pdb
+D:\projects\ganka\backend\src\Modules\Audit\Audit.Contracts\obj\Debug\net10.0\Audit.Contracts.csproj.AssemblyReference.cache
+D:\projects\ganka\backend\src\Modules\Audit\Audit.Contracts\obj\Debug\net10.0\Audit.Contracts.GeneratedMSBuildEditorConfig.editorconfig
+D:\projects\ganka\backend\src\Modules\Audit\Audit.Contracts\obj\Debug\net10.0\Audit.Contracts.AssemblyInfoInputs.cache
+D:\projects\ganka\backend\src\Modules\Audit\Audit.Contracts\obj\Debug\net10.0\Audit.Contracts.AssemblyInfo.cs
+D:\projects\ganka\backend\src\Modules\Audit\Audit.Contracts\obj\Debug\net10.0\Audit.Contracts.csproj.CoreCompileInputs.cache
+D:\projects\ganka\backend\src\Modules\Audit\Audit.Contracts\obj\Debug\net10.0\Audit.Co.7A772A4A.Up2Date
+D:\projects\ganka\backend\src\Modules\Audit\Audit.Contracts\obj\Debug\net10.0\Audit.Contracts.dll
+D:\projects\ganka\backend\src\Modules\Audit\Audit.Contracts\obj\Debug\net10.0\refint\Audit.Contracts.dll
+D:\projects\ganka\backend\src\Modules\Audit\Audit.Contracts\obj\Debug\net10.0\Audit.Contracts.pdb
+D:\projects\ganka\backend\src\Modules\Audit\Audit.Contracts\obj\Debug\net10.0\ref\Audit.Contracts.dll

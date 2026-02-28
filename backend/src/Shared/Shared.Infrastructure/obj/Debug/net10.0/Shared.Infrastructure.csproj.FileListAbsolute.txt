@@ -1,0 +1,17 @@
+D:\projects\ganka\backend\src\Shared\Shared.Infrastructure\bin\Debug\net10.0\Shared.Infrastructure.deps.json
+D:\projects\ganka\backend\src\Shared\Shared.Infrastructure\bin\Debug\net10.0\Shared.Infrastructure.dll
+D:\projects\ganka\backend\src\Shared\Shared.Infrastructure\bin\Debug\net10.0\Shared.Infrastructure.pdb
+D:\projects\ganka\backend\src\Shared\Shared.Infrastructure\bin\Debug\net10.0\Shared.Application.dll
+D:\projects\ganka\backend\src\Shared\Shared.Infrastructure\bin\Debug\net10.0\Shared.Domain.dll
+D:\projects\ganka\backend\src\Shared\Shared.Infrastructure\bin\Debug\net10.0\Shared.Application.pdb
+D:\projects\ganka\backend\src\Shared\Shared.Infrastructure\bin\Debug\net10.0\Shared.Domain.pdb
+D:\projects\ganka\backend\src\Shared\Shared.Infrastructure\obj\Debug\net10.0\Shared.Infrastructure.csproj.AssemblyReference.cache
+D:\projects\ganka\backend\src\Shared\Shared.Infrastructure\obj\Debug\net10.0\Shared.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+D:\projects\ganka\backend\src\Shared\Shared.Infrastructure\obj\Debug\net10.0\Shared.Infrastructure.AssemblyInfoInputs.cache
+D:\projects\ganka\backend\src\Shared\Shared.Infrastructure\obj\Debug\net10.0\Shared.Infrastructure.AssemblyInfo.cs
+D:\projects\ganka\backend\src\Shared\Shared.Infrastructure\obj\Debug\net10.0\Shared.Infrastructure.csproj.CoreCompileInputs.cache
+D:\projects\ganka\backend\src\Shared\Shared.Infrastructure\obj\Debug\net10.0\Shared.I.E63B7492.Up2Date
+D:\projects\ganka\backend\src\Shared\Shared.Infrastructure\obj\Debug\net10.0\Shared.Infrastructure.dll
+D:\projects\ganka\backend\src\Shared\Shared.Infrastructure\obj\Debug\net10.0\refint\Shared.Infrastructure.dll
+D:\projects\ganka\backend\src\Shared\Shared.Infrastructure\obj\Debug\net10.0\Shared.Infrastructure.pdb
+D:\projects\ganka\backend\src\Shared\Shared.Infrastructure\obj\Debug\net10.0\ref\Shared.Infrastructure.dll

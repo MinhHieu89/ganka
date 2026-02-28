@@ -1,0 +1,15 @@
+D:\projects\ganka\backend\src\Modules\Clinical\Clinical.Contracts\bin\Debug\net10.0\Clinical.Contracts.deps.json
+D:\projects\ganka\backend\src\Modules\Clinical\Clinical.Contracts\bin\Debug\net10.0\Clinical.Contracts.dll
+D:\projects\ganka\backend\src\Modules\Clinical\Clinical.Contracts\bin\Debug\net10.0\Clinical.Contracts.pdb
+D:\projects\ganka\backend\src\Modules\Clinical\Clinical.Contracts\bin\Debug\net10.0\Shared.Contracts.dll
+D:\projects\ganka\backend\src\Modules\Clinical\Clinical.Contracts\bin\Debug\net10.0\Shared.Contracts.pdb
+D:\projects\ganka\backend\src\Modules\Clinical\Clinical.Contracts\obj\Debug\net10.0\Clinical.Contracts.csproj.AssemblyReference.cache
+D:\projects\ganka\backend\src\Modules\Clinical\Clinical.Contracts\obj\Debug\net10.0\Clinical.Contracts.GeneratedMSBuildEditorConfig.editorconfig
+D:\projects\ganka\backend\src\Modules\Clinical\Clinical.Contracts\obj\Debug\net10.0\Clinical.Contracts.AssemblyInfoInputs.cache
+D:\projects\ganka\backend\src\Modules\Clinical\Clinical.Contracts\obj\Debug\net10.0\Clinical.Contracts.AssemblyInfo.cs
+D:\projects\ganka\backend\src\Modules\Clinical\Clinical.Contracts\obj\Debug\net10.0\Clinical.Contracts.csproj.CoreCompileInputs.cache
+D:\projects\ganka\backend\src\Modules\Clinical\Clinical.Contracts\obj\Debug\net10.0\Clinical.58775389.Up2Date
+D:\projects\ganka\backend\src\Modules\Clinical\Clinical.Contracts\obj\Debug\net10.0\Clinical.Contracts.dll
+D:\projects\ganka\backend\src\Modules\Clinical\Clinical.Contracts\obj\Debug\net10.0\refint\Clinical.Contracts.dll
+D:\projects\ganka\backend\src\Modules\Clinical\Clinical.Contracts\obj\Debug\net10.0\Clinical.Contracts.pdb
+D:\projects\ganka\backend\src\Modules\Clinical\Clinical.Contracts\obj\Debug\net10.0\ref\Clinical.Contracts.dll

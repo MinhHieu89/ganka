@@ -1,0 +1,15 @@
+D:\projects\ganka\backend\src\Modules\Patient\Patient.Contracts\bin\Debug\net10.0\Patient.Contracts.deps.json
+D:\projects\ganka\backend\src\Modules\Patient\Patient.Contracts\bin\Debug\net10.0\Patient.Contracts.dll
+D:\projects\ganka\backend\src\Modules\Patient\Patient.Contracts\bin\Debug\net10.0\Patient.Contracts.pdb
+D:\projects\ganka\backend\src\Modules\Patient\Patient.Contracts\bin\Debug\net10.0\Shared.Contracts.dll
+D:\projects\ganka\backend\src\Modules\Patient\Patient.Contracts\bin\Debug\net10.0\Shared.Contracts.pdb
+D:\projects\ganka\backend\src\Modules\Patient\Patient.Contracts\obj\Debug\net10.0\Patient.Contracts.csproj.AssemblyReference.cache
+D:\projects\ganka\backend\src\Modules\Patient\Patient.Contracts\obj\Debug\net10.0\Patient.Contracts.GeneratedMSBuildEditorConfig.editorconfig
+D:\projects\ganka\backend\src\Modules\Patient\Patient.Contracts\obj\Debug\net10.0\Patient.Contracts.AssemblyInfoInputs.cache
+D:\projects\ganka\backend\src\Modules\Patient\Patient.Contracts\obj\Debug\net10.0\Patient.Contracts.AssemblyInfo.cs
+D:\projects\ganka\backend\src\Modules\Patient\Patient.Contracts\obj\Debug\net10.0\Patient.Contracts.csproj.CoreCompileInputs.cache
+D:\projects\ganka\backend\src\Modules\Patient\Patient.Contracts\obj\Debug\net10.0\Patient..E996DB50.Up2Date
+D:\projects\ganka\backend\src\Modules\Patient\Patient.Contracts\obj\Debug\net10.0\Patient.Contracts.dll
+D:\projects\ganka\backend\src\Modules\Patient\Patient.Contracts\obj\Debug\net10.0\refint\Patient.Contracts.dll
+D:\projects\ganka\backend\src\Modules\Patient\Patient.Contracts\obj\Debug\net10.0\Patient.Contracts.pdb
+D:\projects\ganka\backend\src\Modules\Patient\Patient.Contracts\obj\Debug\net10.0\ref\Patient.Contracts.dll

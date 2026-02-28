@@ -1,0 +1,15 @@
+D:\projects\ganka\backend\src\Modules\Billing\Billing.Contracts\bin\Debug\net10.0\Billing.Contracts.deps.json
+D:\projects\ganka\backend\src\Modules\Billing\Billing.Contracts\bin\Debug\net10.0\Billing.Contracts.dll
+D:\projects\ganka\backend\src\Modules\Billing\Billing.Contracts\bin\Debug\net10.0\Billing.Contracts.pdb
+D:\projects\ganka\backend\src\Modules\Billing\Billing.Contracts\bin\Debug\net10.0\Shared.Contracts.dll
+D:\projects\ganka\backend\src\Modules\Billing\Billing.Contracts\bin\Debug\net10.0\Shared.Contracts.pdb
+D:\projects\ganka\backend\src\Modules\Billing\Billing.Contracts\obj\Debug\net10.0\Billing.Contracts.csproj.AssemblyReference.cache
+D:\projects\ganka\backend\src\Modules\Billing\Billing.Contracts\obj\Debug\net10.0\Billing.Contracts.GeneratedMSBuildEditorConfig.editorconfig
+D:\projects\ganka\backend\src\Modules\Billing\Billing.Contracts\obj\Debug\net10.0\Billing.Contracts.AssemblyInfoInputs.cache
+D:\projects\ganka\backend\src\Modules\Billing\Billing.Contracts\obj\Debug\net10.0\Billing.Contracts.AssemblyInfo.cs
+D:\projects\ganka\backend\src\Modules\Billing\Billing.Contracts\obj\Debug\net10.0\Billing.Contracts.csproj.CoreCompileInputs.cache
+D:\projects\ganka\backend\src\Modules\Billing\Billing.Contracts\obj\Debug\net10.0\Billing..25798F17.Up2Date
+D:\projects\ganka\backend\src\Modules\Billing\Billing.Contracts\obj\Debug\net10.0\Billing.Contracts.dll
+D:\projects\ganka\backend\src\Modules\Billing\Billing.Contracts\obj\Debug\net10.0\refint\Billing.Contracts.dll
+D:\projects\ganka\backend\src\Modules\Billing\Billing.Contracts\obj\Debug\net10.0\Billing.Contracts.pdb
+D:\projects\ganka\backend\src\Modules\Billing\Billing.Contracts\obj\Debug\net10.0\ref\Billing.Contracts.dll

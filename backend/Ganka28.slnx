@@ -1,0 +1,70 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Bootstrapper/Bootstrapper.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/" />
+  <Folder Name="/src/Modules/Audit/">
+    <Project Path="src/Modules/Audit/Audit.Application/Audit.Application.csproj" />
+    <Project Path="src/Modules/Audit/Audit.Contracts/Audit.Contracts.csproj" />
+    <Project Path="src/Modules/Audit/Audit.Domain/Audit.Domain.csproj" />
+    <Project Path="src/Modules/Audit/Audit.Infrastructure/Audit.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Auth/">
+    <Project Path="src/Modules/Auth/Auth.Application/Auth.Application.csproj" />
+    <Project Path="src/Modules/Auth/Auth.Contracts/Auth.Contracts.csproj" />
+    <Project Path="src/Modules/Auth/Auth.Domain/Auth.Domain.csproj" />
+    <Project Path="src/Modules/Auth/Auth.Infrastructure/Auth.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Billing/">
+    <Project Path="src/Modules/Billing/Billing.Application/Billing.Application.csproj" />
+    <Project Path="src/Modules/Billing/Billing.Contracts/Billing.Contracts.csproj" />
+    <Project Path="src/Modules/Billing/Billing.Domain/Billing.Domain.csproj" />
+    <Project Path="src/Modules/Billing/Billing.Infrastructure/Billing.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Clinical/">
+    <Project Path="src/Modules/Clinical/Clinical.Application/Clinical.Application.csproj" />
+    <Project Path="src/Modules/Clinical/Clinical.Contracts/Clinical.Contracts.csproj" />
+    <Project Path="src/Modules/Clinical/Clinical.Domain/Clinical.Domain.csproj" />
+    <Project Path="src/Modules/Clinical/Clinical.Infrastructure/Clinical.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Optical/">
+    <Project Path="src/Modules/Optical/Optical.Application/Optical.Application.csproj" />
+    <Project Path="src/Modules/Optical/Optical.Contracts/Optical.Contracts.csproj" />
+    <Project Path="src/Modules/Optical/Optical.Domain/Optical.Domain.csproj" />
+    <Project Path="src/Modules/Optical/Optical.Infrastructure/Optical.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Patient/">
+    <Project Path="src/Modules/Patient/Patient.Application/Patient.Application.csproj" />
+    <Project Path="src/Modules/Patient/Patient.Contracts/Patient.Contracts.csproj" />
+    <Project Path="src/Modules/Patient/Patient.Domain/Patient.Domain.csproj" />
+    <Project Path="src/Modules/Patient/Patient.Infrastructure/Patient.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Pharmacy/">
+    <Project Path="src/Modules/Pharmacy/Pharmacy.Application/Pharmacy.Application.csproj" />
+    <Project Path="src/Modules/Pharmacy/Pharmacy.Contracts/Pharmacy.Contracts.csproj" />
+    <Project Path="src/Modules/Pharmacy/Pharmacy.Domain/Pharmacy.Domain.csproj" />
+    <Project Path="src/Modules/Pharmacy/Pharmacy.Infrastructure/Pharmacy.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Scheduling/">
+    <Project Path="src/Modules/Scheduling/Scheduling.Application/Scheduling.Application.csproj" />
+    <Project Path="src/Modules/Scheduling/Scheduling.Contracts/Scheduling.Contracts.csproj" />
+    <Project Path="src/Modules/Scheduling/Scheduling.Domain/Scheduling.Domain.csproj" />
+    <Project Path="src/Modules/Scheduling/Scheduling.Infrastructure/Scheduling.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Treatment/">
+    <Project Path="src/Modules/Treatment/Treatment.Application/Treatment.Application.csproj" />
+    <Project Path="src/Modules/Treatment/Treatment.Contracts/Treatment.Contracts.csproj" />
+    <Project Path="src/Modules/Treatment/Treatment.Domain/Treatment.Domain.csproj" />
+    <Project Path="src/Modules/Treatment/Treatment.Infrastructure/Treatment.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/Shared/">
+    <Project Path="src/Shared/Shared.Application/Shared.Application.csproj" />
+    <Project Path="src/Shared/Shared.Contracts/Shared.Contracts.csproj" />
+    <Project Path="src/Shared/Shared.Domain/Shared.Domain.csproj" />
+    <Project Path="src/Shared/Shared.Infrastructure/Shared.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Audit.Unit.Tests/Audit.Unit.Tests.csproj" />
+    <Project Path="tests/Auth.Integration.Tests/Auth.Integration.Tests.csproj" />
+  </Folder>
+</Solution>

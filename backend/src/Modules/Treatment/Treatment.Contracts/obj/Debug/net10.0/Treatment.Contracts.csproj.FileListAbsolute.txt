@@ -1,0 +1,15 @@
+D:\projects\ganka\backend\src\Modules\Treatment\Treatment.Contracts\bin\Debug\net10.0\Treatment.Contracts.deps.json
+D:\projects\ganka\backend\src\Modules\Treatment\Treatment.Contracts\bin\Debug\net10.0\Treatment.Contracts.dll
+D:\projects\ganka\backend\src\Modules\Treatment\Treatment.Contracts\bin\Debug\net10.0\Treatment.Contracts.pdb
+D:\projects\ganka\backend\src\Modules\Treatment\Treatment.Contracts\bin\Debug\net10.0\Shared.Contracts.dll
+D:\projects\ganka\backend\src\Modules\Treatment\Treatment.Contracts\bin\Debug\net10.0\Shared.Contracts.pdb
+D:\projects\ganka\backend\src\Modules\Treatment\Treatment.Contracts\obj\Debug\net10.0\Treatment.Contracts.csproj.AssemblyReference.cache
+D:\projects\ganka\backend\src\Modules\Treatment\Treatment.Contracts\obj\Debug\net10.0\Treatment.Contracts.GeneratedMSBuildEditorConfig.editorconfig
+D:\projects\ganka\backend\src\Modules\Treatment\Treatment.Contracts\obj\Debug\net10.0\Treatment.Contracts.AssemblyInfoInputs.cache
+D:\projects\ganka\backend\src\Modules\Treatment\Treatment.Contracts\obj\Debug\net10.0\Treatment.Contracts.AssemblyInfo.cs
+D:\projects\ganka\backend\src\Modules\Treatment\Treatment.Contracts\obj\Debug\net10.0\Treatment.Contracts.csproj.CoreCompileInputs.cache
+D:\projects\ganka\backend\src\Modules\Treatment\Treatment.Contracts\obj\Debug\net10.0\Treatmen.4CF0E9B2.Up2Date
+D:\projects\ganka\backend\src\Modules\Treatment\Treatment.Contracts\obj\Debug\net10.0\Treatment.Contracts.dll
+D:\projects\ganka\backend\src\Modules\Treatment\Treatment.Contracts\obj\Debug\net10.0\refint\Treatment.Contracts.dll
+D:\projects\ganka\backend\src\Modules\Treatment\Treatment.Contracts\obj\Debug\net10.0\Treatment.Contracts.pdb
+D:\projects\ganka\backend\src\Modules\Treatment\Treatment.Contracts\obj\Debug\net10.0\ref\Treatment.Contracts.dll
