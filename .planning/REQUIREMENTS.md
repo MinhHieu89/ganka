@@ -19,20 +19,20 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [ ] **PAT-01**: Staff can register medical patient with name, phone, DOB, gender; system auto-generates GK-YYYY-NNNN ID
 - [ ] **PAT-02**: Staff can register walk-in pharmacy customer with name + phone only (lightweight record, no full medical profile)
-- [ ] **PAT-03**: System supports configurable mandatory fields (Address, CCCD) that become required for referrals, legal export, or Sở Y tế reporting
-- [ ] **PAT-04**: Staff can search patients by name, phone, or patient ID with results in ≤3 seconds
+- [ ] **PAT-03**: System supports configurable mandatory fields (Address, CCCD) that become required for referrals, legal export, or So Y te reporting
+- [ ] **PAT-04**: Staff can search patients by name, phone, or patient ID with results in <=3 seconds
 - [ ] **PAT-05**: System stores structured allergy list per patient and displays allergy alerts during prescribing
 
 ### Clinical Workflow
 
-- [ ] **CLN-01**: Doctor can create electronic visit record (bệnh án) linked to patient and doctor, immutable after sign-off
+- [ ] **CLN-01**: Doctor can create electronic visit record (benh an) linked to patient and doctor, immutable after sign-off
 - [ ] **CLN-02**: Corrections to signed visit records create amendment records with reason, field-level changes, and original preserved
-- [ ] **CLN-03**: Staff can track visit workflow status (reception → refraction/VA → doctor exam → diagnostics → doctor reads → Rx → cashier → pharmacy/optical)
+- [ ] **CLN-03**: Staff can track visit workflow status (reception -> refraction/VA -> doctor exam -> diagnostics -> doctor reads -> Rx -> cashier -> pharmacy/optical)
 - [ ] **CLN-04**: Dashboard shows all active patients and their current workflow stage in real-time
 
 ### Dry Eye Template
 
-- [ ] **DRY-01**: Doctor can record Dry Eye exam with structured fields: OSDI score, TBUT, Schirmer, Meibomian gland grading, Tear meniscus, Staining score — all per eye (left/right)
+- [ ] **DRY-01**: Doctor can record Dry Eye exam with structured fields: OSDI score, TBUT, Schirmer, Meibomian gland grading, Tear meniscus, Staining score -- all per eye (left/right)
 - [ ] **DRY-02**: System calculates and displays OSDI severity classification (Normal 0-12, Mild 13-22, Moderate 23-32, Severe 33-100) with color coding
 - [ ] **DRY-03**: Doctor can view OSDI trend chart across visits for a patient
 - [ ] **DRY-04**: Doctor can compare TBUT, Schirmer, and other metrics between visits side-by-side
@@ -57,7 +57,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **RX-01**: Doctor can write drug prescription by selecting from pharmacy catalog or adding off-catalog drugs
 - [ ] **RX-02**: Catalog-linked prescriptions auto-deduct stock when dispensed; off-catalog drugs flagged as manual
 - [ ] **RX-03**: Doctor can write glasses prescription (optical Rx) with full refraction parameters
-- [ ] **RX-04**: Prescriptions comply with MOH format requirements (required fields, dosage format per Bộ Y tế)
+- [ ] **RX-04**: Prescriptions comply with MOH format requirements (required fields, dosage format per Bo Y te)
 - [ ] **RX-05**: System warns when prescribing drugs the patient is allergic to
 
 ### Appointment Scheduling
@@ -102,8 +102,8 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Optical Center
 
 - [ ] **OPT-01**: Staff can manage frame inventory with barcode scanning (brand, model, color, size, price, stock)
-- [ ] **OPT-02**: Staff can order lenses by prescription from suppliers (Essilor, Hoya, Việt Pháp)
-- [ ] **OPT-03**: System tracks glasses order lifecycle: Ordered → Processing → Received → Ready → Delivered
+- [ ] **OPT-02**: Staff can order lenses by prescription from suppliers (Essilor, Hoya, Viet Phap)
+- [ ] **OPT-03**: System tracks glasses order lifecycle: Ordered -> Processing -> Received -> Ready -> Delivered
 - [ ] **OPT-04**: System blocks lens processing until full payment is received (no deposit model)
 - [ ] **OPT-05**: Contact lenses (Ortho-K, soft) are prescribed via HIS, not sold through optical counter
 - [ ] **OPT-06**: Staff can create combo pricing (preset combos + custom frame+lens combinations)
@@ -116,9 +116,9 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **FIN-01**: System generates single consolidated invoice per visit with charges from all departments (medical, optical, pharmacy, treatment)
 - [ ] **FIN-02**: System tracks internal revenue allocation per department on each invoice line item
 - [ ] **FIN-03**: System supports payment methods: cash, bank transfer, QR (VNPay/MoMo/ZaloPay), card (Visa/MC)
-- [ ] **FIN-04**: System generates e-invoice (hóa đơn điện tử) per Vietnamese tax law
+- [ ] **FIN-04**: System generates e-invoice (hoa don dien tu) per Vietnamese tax law
 - [ ] **FIN-05**: System supports treatment package payments: full upfront or 50/50 split
-- [ ] **FIN-06**: System enforces 50/50 split rule: 2nd payment due before mid-course session (5-session → before session 3, 3-session → before session 2)
+- [ ] **FIN-06**: System enforces 50/50 split rule: 2nd payment due before mid-course session (5-session -> before session 3, 3-session -> before session 2)
 - [ ] **FIN-07**: Manual discounts require manager approval before applying
 - [ ] **FIN-08**: Refund processing requires manager/owner approval with full audit trail
 - [ ] **FIN-09**: System maintains price change audit log (who changed, when, old/new values)
@@ -129,7 +129,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **PRT-01**: System prints drug prescriptions with clinic header, doctor name, patient info, drug list with dosage
 - [ ] **PRT-02**: System prints glasses prescriptions (optical Rx) with refraction parameters
 - [ ] **PRT-03**: System prints invoices/receipts with itemized charges and payment method
-- [ ] **PRT-04**: System prints referral letters (giấy chuyển viện) with patient info, diagnosis, reason
+- [ ] **PRT-04**: System prints referral letters (giay chuyen vien) with patient info, diagnosis, reason
 - [ ] **PRT-05**: System prints treatment consent forms with patient name, procedure type, date
 - [ ] **PRT-06**: System prints pharmacy labels with patient name, drug name, dose, frequency, expiry
 
@@ -138,7 +138,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **AUD-01**: System records field-level audit trail for all medical record changes (who, when, what changed, old/new values)
 - [ ] **AUD-02**: System records access log for all user logins, logouts, and medical record views
 - [ ] **AUD-03**: Audit logs are immutable and retained for minimum 10 years
-- [ ] **AUD-04**: System supports ICD-10 coding from Day 1 for Sở Y tế data readiness (deadline 31/12/2026)
+- [ ] **AUD-04**: System supports ICD-10 coding from Day 1 for So Y te data readiness (deadline 31/12/2026)
 
 ### User Interface
 
@@ -183,7 +183,7 @@ Deferred to post-launch (1-3 months after go-live). Tracked but not in current r
 - **RPT-05**: Doctor performance reporting (revenue, patient count per doctor)
 - **RPT-06**: Treatment effectiveness reporting (OSDI improvement trends across patients)
 - **RPT-07**: Per-patient treatment progress report export (for patient or referring doctor)
-- **RPT-08**: Research data export (Excel/CSV): exam data, treatment outcomes, refraction progression — anonymized, ≥1000 patients without error
+- **RPT-08**: Research data export (Excel/CSV): exam data, treatment outcomes, refraction progression -- anonymized, >=1000 patients without error
 
 ### UI Enhancements
 
@@ -226,108 +226,108 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 | — | Pending |
-| AUTH-02 | — | Pending |
-| AUTH-03 | — | Pending |
-| AUTH-04 | — | Pending |
-| AUTH-05 | — | Pending |
-| PAT-01 | — | Pending |
-| PAT-02 | — | Pending |
-| PAT-03 | — | Pending |
-| PAT-04 | — | Pending |
-| PAT-05 | — | Pending |
-| CLN-01 | — | Pending |
-| CLN-02 | — | Pending |
-| CLN-03 | — | Pending |
-| CLN-04 | — | Pending |
-| DRY-01 | — | Pending |
-| DRY-02 | — | Pending |
-| DRY-03 | — | Pending |
-| DRY-04 | — | Pending |
-| REF-01 | — | Pending |
-| REF-02 | — | Pending |
-| REF-03 | — | Pending |
-| IMG-01 | — | Pending |
-| IMG-02 | — | Pending |
-| IMG-03 | — | Pending |
-| IMG-04 | — | Pending |
-| DX-01 | — | Pending |
-| DX-02 | — | Pending |
-| RX-01 | — | Pending |
-| RX-02 | — | Pending |
-| RX-03 | — | Pending |
-| RX-04 | — | Pending |
-| RX-05 | — | Pending |
-| SCH-01 | — | Pending |
-| SCH-02 | — | Pending |
-| SCH-03 | — | Pending |
-| SCH-04 | — | Pending |
-| SCH-05 | — | Pending |
-| SCH-06 | — | Pending |
-| TRT-01 | — | Pending |
-| TRT-02 | — | Pending |
-| TRT-03 | — | Pending |
-| TRT-04 | — | Pending |
-| TRT-05 | — | Pending |
-| TRT-06 | — | Pending |
-| TRT-07 | — | Pending |
-| TRT-08 | — | Pending |
-| TRT-09 | — | Pending |
-| TRT-10 | — | Pending |
-| TRT-11 | — | Pending |
-| PHR-01 | — | Pending |
-| PHR-02 | — | Pending |
-| PHR-03 | — | Pending |
-| PHR-04 | — | Pending |
-| PHR-05 | — | Pending |
-| PHR-06 | — | Pending |
-| PHR-07 | — | Pending |
-| CON-01 | — | Pending |
-| CON-02 | — | Pending |
-| CON-03 | — | Pending |
-| OPT-01 | — | Pending |
-| OPT-02 | — | Pending |
-| OPT-03 | — | Pending |
-| OPT-04 | — | Pending |
-| OPT-05 | — | Pending |
-| OPT-06 | — | Pending |
-| OPT-07 | — | Pending |
-| OPT-08 | — | Pending |
-| OPT-09 | — | Pending |
-| FIN-01 | — | Pending |
-| FIN-02 | — | Pending |
-| FIN-03 | — | Pending |
-| FIN-04 | — | Pending |
-| FIN-05 | — | Pending |
-| FIN-06 | — | Pending |
-| FIN-07 | — | Pending |
-| FIN-08 | — | Pending |
-| FIN-09 | — | Pending |
-| FIN-10 | — | Pending |
-| PRT-01 | — | Pending |
-| PRT-02 | — | Pending |
-| PRT-03 | — | Pending |
-| PRT-04 | — | Pending |
-| PRT-05 | — | Pending |
-| PRT-06 | — | Pending |
-| AUD-01 | — | Pending |
-| AUD-02 | — | Pending |
-| AUD-03 | — | Pending |
-| AUD-04 | — | Pending |
-| UI-01 | — | Pending |
-| UI-02 | — | Pending |
-| ARC-01 | — | Pending |
-| ARC-02 | — | Pending |
-| ARC-03 | — | Pending |
-| ARC-04 | — | Pending |
-| ARC-05 | — | Pending |
-| ARC-06 | — | Pending |
+| AUTH-01 | Phase 1 | Pending |
+| AUTH-02 | Phase 1 | Pending |
+| AUTH-03 | Phase 1 | Pending |
+| AUTH-04 | Phase 1 | Pending |
+| AUTH-05 | Phase 1 | Pending |
+| PAT-01 | Phase 2 | Pending |
+| PAT-02 | Phase 2 | Pending |
+| PAT-03 | Phase 2 | Pending |
+| PAT-04 | Phase 2 | Pending |
+| PAT-05 | Phase 2 | Pending |
+| CLN-01 | Phase 3 | Pending |
+| CLN-02 | Phase 3 | Pending |
+| CLN-03 | Phase 3 | Pending |
+| CLN-04 | Phase 3 | Pending |
+| DRY-01 | Phase 4 | Pending |
+| DRY-02 | Phase 4 | Pending |
+| DRY-03 | Phase 4 | Pending |
+| DRY-04 | Phase 4 | Pending |
+| REF-01 | Phase 3 | Pending |
+| REF-02 | Phase 3 | Pending |
+| REF-03 | Phase 3 | Pending |
+| IMG-01 | Phase 4 | Pending |
+| IMG-02 | Phase 4 | Pending |
+| IMG-03 | Phase 4 | Pending |
+| IMG-04 | Phase 4 | Pending |
+| DX-01 | Phase 3 | Pending |
+| DX-02 | Phase 3 | Pending |
+| RX-01 | Phase 5 | Pending |
+| RX-02 | Phase 5 | Pending |
+| RX-03 | Phase 5 | Pending |
+| RX-04 | Phase 5 | Pending |
+| RX-05 | Phase 5 | Pending |
+| SCH-01 | Phase 2 | Pending |
+| SCH-02 | Phase 2 | Pending |
+| SCH-03 | Phase 2 | Pending |
+| SCH-04 | Phase 2 | Pending |
+| SCH-05 | Phase 2 | Pending |
+| SCH-06 | Phase 2 | Pending |
+| TRT-01 | Phase 9 | Pending |
+| TRT-02 | Phase 9 | Pending |
+| TRT-03 | Phase 9 | Pending |
+| TRT-04 | Phase 9 | Pending |
+| TRT-05 | Phase 9 | Pending |
+| TRT-06 | Phase 9 | Pending |
+| TRT-07 | Phase 9 | Pending |
+| TRT-08 | Phase 9 | Pending |
+| TRT-09 | Phase 9 | Pending |
+| TRT-10 | Phase 9 | Pending |
+| TRT-11 | Phase 9 | Pending |
+| PHR-01 | Phase 6 | Pending |
+| PHR-02 | Phase 6 | Pending |
+| PHR-03 | Phase 6 | Pending |
+| PHR-04 | Phase 6 | Pending |
+| PHR-05 | Phase 6 | Pending |
+| PHR-06 | Phase 6 | Pending |
+| PHR-07 | Phase 6 | Pending |
+| CON-01 | Phase 6 | Pending |
+| CON-02 | Phase 6 | Pending |
+| CON-03 | Phase 6 | Pending |
+| OPT-01 | Phase 8 | Pending |
+| OPT-02 | Phase 8 | Pending |
+| OPT-03 | Phase 8 | Pending |
+| OPT-04 | Phase 8 | Pending |
+| OPT-05 | Phase 8 | Pending |
+| OPT-06 | Phase 8 | Pending |
+| OPT-07 | Phase 8 | Pending |
+| OPT-08 | Phase 8 | Pending |
+| OPT-09 | Phase 8 | Pending |
+| FIN-01 | Phase 7 | Pending |
+| FIN-02 | Phase 7 | Pending |
+| FIN-03 | Phase 7 | Pending |
+| FIN-04 | Phase 7 | Pending |
+| FIN-05 | Phase 7 | Pending |
+| FIN-06 | Phase 7 | Pending |
+| FIN-07 | Phase 7 | Pending |
+| FIN-08 | Phase 7 | Pending |
+| FIN-09 | Phase 7 | Pending |
+| FIN-10 | Phase 7 | Pending |
+| PRT-01 | Phase 5 | Pending |
+| PRT-02 | Phase 5 | Pending |
+| PRT-03 | Phase 5 | Pending |
+| PRT-04 | Phase 5 | Pending |
+| PRT-05 | Phase 5 | Pending |
+| PRT-06 | Phase 5 | Pending |
+| AUD-01 | Phase 1 | Pending |
+| AUD-02 | Phase 1 | Pending |
+| AUD-03 | Phase 1 | Pending |
+| AUD-04 | Phase 1 | Pending |
+| UI-01 | Phase 1 | Pending |
+| UI-02 | Phase 1 | Pending |
+| ARC-01 | Phase 1 | Pending |
+| ARC-02 | Phase 1 | Pending |
+| ARC-03 | Phase 1 | Pending |
+| ARC-04 | Phase 1 | Pending |
+| ARC-05 | Phase 1 | Pending |
+| ARC-06 | Phase 1 | Pending |
 
 **Coverage:**
-- v1 requirements: 88 total
-- Mapped to phases: 0
-- Unmapped: 88 ⚠️
+- v1 requirements: 96 total
+- Mapped to phases: 96
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-28*
-*Last updated: 2026-02-28 after initial definition*
+*Last updated: 2026-02-28 after roadmap creation (traceability updated)*
