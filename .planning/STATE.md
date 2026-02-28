@@ -19,9 +19,9 @@ Progress: [######....] 28%
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 12
+- Total plans completed: 13
 - Average duration: 9min
-- Total execution time: 1.82 hours
+- Total execution time: 1.92 hours
 
 **By Phase:**
 
@@ -30,7 +30,7 @@ Progress: [######....] 28%
 | 1 | 6 | 73min | 12min |
 
 **Recent Trend:**
-- Last 5 plans: 12min, 10min, 3min, 8min, 4min
+- Last 5 plans: 10min, 3min, 8min, 6min, 4min
 - Trend: stable
 
 *Updated after each plan completion*
@@ -40,6 +40,7 @@ Progress: [######....] 28%
 | Phase 01.1 P04 | 9min | 2 tasks | 34 files |
 | Phase 01.1 P03 | 11min | 2 tasks | 13 files |
 | Phase 01.1 P05 | 8min | 2 tasks | 21 files |
+| Phase 01.1 P06 | 6min | 2 tasks | 7 files |
 | Phase 01.1 P08 | 4min | 2 tasks | 9 files |
 
 ## Accumulated Context
@@ -91,6 +92,8 @@ Recent decisions affecting current work:
 - [Phase 01.1]: [01.1-05]: Reflection-based navigation property wiring in TestHelpers for domain entities with private setters
 - [Phase 01.1]: [01.1-05]: Custom TestAsyncQueryable for EF Core IQueryable ToListAsync in unit tests (no MockQueryable NuGet)
 - [Phase 01.1]: [01.1-05]: Two handler test patterns -- CreateSut() for instance handlers, direct Handle() for Wolverine static handlers
+- [Phase 01.1]: [01.1-06]: Shared.Presentation as centralized HTTP response mapping layer (ResultExtensions + HttpContextExtensions)
+- [Phase 01.1]: [01.1-06]: Private MapError() helper to DRY error-to-IResult mapping across ToHttpResult/ToCreatedHttpResult
 - [Phase 01.1]: [01.1-08]: IoC.cs pattern -- one static class per layer, one extension method returning IServiceCollection
 - [Phase 01.1]: [01.1-08]: Module DbContexts with AuditInterceptor stay in Program.cs ConfigureDbContext helper (cross-module dependency)
 - [Phase 01.1]: [01.1-08]: Registration order: Shared first, Audit second (AuditInterceptor), Auth third
