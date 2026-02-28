@@ -69,6 +69,10 @@ Recent decisions affecting current work:
 - [Phase 01]: [01-06]: Architecture tests gracefully skip scaffold-only modules via Assembly.Load try-catch
 - [Phase 01]: [01-06]: IAuditable heuristic uses relaxed threshold for early phases
 
+### Roadmap Evolution
+
+- Phase 01.1 inserted after Phase 1: Change the current code structure of the backend (URGENT)
+
 ### Pending Todos
 
 None yet.
@@ -83,5 +87,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-28
-Stopped at: Completed 01-06-PLAN.md (audit UI and architecture tests)
-Resume file: .planning/phases/01-foundation-infrastructure/01-06-SUMMARY.md
+Stopped at: Phase 01.1 context gathered
+Resume file: .planning/phases/01.1-change-the-current-code-structure-of-the-backend/01.1-CONTEXT.md
