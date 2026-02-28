@@ -26,10 +26,10 @@ using Optical.Infrastructure;
 using Billing.Infrastructure;
 using Treatment.Infrastructure;
 
-// Auth services (old -- kept until Plans 03-04 migrate features)
-using Auth.Application.Services;
+// Auth Infrastructure services and seeding
 using Auth.Infrastructure.Services;
 using Auth.Infrastructure.Seeding;
+using FluentValidation;
 
 // New repository/UoW interfaces and implementations
 using Auth.Application.Interfaces;
@@ -115,20 +115,14 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 
 // ---------------------------------------------------------------------------
-// Auth module services
+// Auth module infrastructure services and seeding
 // ---------------------------------------------------------------------------
 builder.Services.AddSingleton<PasswordHasher>();
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<Auth.Application.Services.IJwtService, JwtService>();
-builder.Services.AddScoped<JwtService>(); // Concrete type for AuthService injection
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IRoleService, RoleService>();
-builder.Services.AddScoped<IPermissionService, PermissionService>();
+builder.Services.AddScoped<Auth.Application.Interfaces.IJwtService, JwtService>();
 builder.Services.AddHostedService<AuthDataSeeder>();
 
 // ---------------------------------------------------------------------------
-// Auth module repositories and UoW (new vertical slice infrastructure)
-// Coexists with old service registrations above until Plans 03-04 migrate features.
+// Auth module repositories and UoW (vertical slice infrastructure)
 // ---------------------------------------------------------------------------
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
@@ -137,6 +131,9 @@ builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddScoped<ISystemSettingRepository, SystemSettingRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddSingleton<Auth.Application.Interfaces.IPasswordHasher, PasswordHasher>();
+
+// FluentValidation -- register validators from Auth.Application for handler injection
+builder.Services.AddValidatorsFromAssembly(typeof(Auth.Application.Marker).Assembly, ServiceLifetime.Scoped);
 
 // ---------------------------------------------------------------------------
 // Shared services

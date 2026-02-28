@@ -177,12 +177,12 @@ public class DependencyDirectionTests
         {
             var moduleName = assembly.GetName().Name!.Replace(".Presentation", "");
 
-            // Presentation should go through Application, not Domain directly
-            // (transitive references through Application are OK at the assembly level,
-            // but Presentation code should not import Domain namespaces directly)
+            // Presentation should go through Application, not Domain directly.
+            // Shared.Domain is excluded because it contains cross-cutting primitives
+            // (Result<T>, Error, BranchId) that Presentation needs for HTTP response mapping.
+            // Module-specific Domain layers (Auth.Domain, etc.) must NOT be referenced.
             var domainNamespaces = ModuleNames
                 .Select(m => $"{m}.Domain")
-                .Concat(["Shared.Domain"])
                 .ToArray();
 
             var result = Types

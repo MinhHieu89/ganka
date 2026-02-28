@@ -14,13 +14,6 @@ public sealed record LoginCommand(
     bool RememberMe = false,
     string? IpAddress = null);
 
-// --- Response record ---
-public sealed record LoginResponse(
-    string AccessToken,
-    string RefreshToken,
-    DateTime ExpiresAt,
-    UserDto User);
-
 // --- Validator ---
 public sealed class LoginCommandValidator : AbstractValidator<LoginCommand>
 {
