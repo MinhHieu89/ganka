@@ -15,7 +15,7 @@ Deliver a deployed modular monolith skeleton with authentication (login, session
 
 ### Login & session experience
 - Split layout: branding/clinic imagery on left, login form on right
-- No "Remember me" checkbox — all sessions use admin-configured timeout period
+- "Remember me" checkbox on login — checked = longer-lived session, unchecked = shorter session (both durations admin-configurable in DB SystemSettings table)
 - Session timeout shows a warning countdown modal (e.g., "Session expires in 2 minutes") with option to extend — prevents losing unsaved clinical work
 - Password reset: admin-only for Phase 1 (admin resets passwords manually) — no self-service email flow
 - Session timeout duration is configurable via admin settings (stored in DB, not just appsettings.json)
@@ -54,7 +54,9 @@ Deliver a deployed modular monolith skeleton with authentication (login, session
 
 - Backend and frontend are separate projects in root-level folders (`backend/` and `frontend/`), deployed as two independent services
 - TDD strictly: write failing tests first, then implement to pass (red-green-refactor)
+- Use .NET 10 (not .NET 9) — user explicitly requested the latest .NET version
 - From assumptions discussion: corrections noted that session timeout must be configurable in admin settings (DB-stored), not just config files
+- From assumptions discussion: "Remember me" checkbox added (reversed earlier decision), ICD-10 ophthalmology subset only, audit logging configurable per entity (IAuditable), React Hook Form + zod, scaffold empty DbContexts for all future modules, DDD private set properties, GRASP patterns
 
 </specifics>
 
