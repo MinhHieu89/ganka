@@ -1,0 +1,38 @@
+## .NET build outputs
+bin/
+obj/
+
+## User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## NuGet Packages
+*.nupkg
+*.snupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+
+## Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+
+## Visual Studio
+.vs/
+*.sln.ide/
+
+## JetBrains Rider
+.idea/
+*.sln.iml
+
+## Test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+## OS generated files
+.DS_Store
+Thumbs.db

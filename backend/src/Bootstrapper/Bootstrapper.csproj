@@ -6,4 +6,46 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.*-*" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.*-*" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="7.*" />
+    <PackageReference Include="WolverineFx" Version="5.*" />
+    <PackageReference Include="WolverineFx.Http" Version="5.*" />
+    <PackageReference Include="WolverineFx.Http.FluentValidation" Version="5.*" />
+    <PackageReference Include="WolverineFx.EntityFrameworkCore" Version="5.*" />
+    <PackageReference Include="WolverineFx.SqlServer" Version="5.*" />
+  </ItemGroup>
+
+  <!-- Shared kernel -->
+  <ItemGroup>
+    <ProjectReference Include="..\Shared\Shared.Infrastructure\Shared.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <!-- Module Application layers (Wolverine.HTTP endpoint discovery) -->
+  <ItemGroup>
+    <ProjectReference Include="..\Modules\Auth\Auth.Application\Auth.Application.csproj" />
+    <ProjectReference Include="..\Modules\Audit\Audit.Application\Audit.Application.csproj" />
+    <ProjectReference Include="..\Modules\Patient\Patient.Application\Patient.Application.csproj" />
+    <ProjectReference Include="..\Modules\Clinical\Clinical.Application\Clinical.Application.csproj" />
+    <ProjectReference Include="..\Modules\Scheduling\Scheduling.Application\Scheduling.Application.csproj" />
+    <ProjectReference Include="..\Modules\Pharmacy\Pharmacy.Application\Pharmacy.Application.csproj" />
+    <ProjectReference Include="..\Modules\Optical\Optical.Application\Optical.Application.csproj" />
+    <ProjectReference Include="..\Modules\Billing\Billing.Application\Billing.Application.csproj" />
+    <ProjectReference Include="..\Modules\Treatment\Treatment.Application\Treatment.Application.csproj" />
+  </ItemGroup>
+
+  <!-- Module Infrastructure layers (DbContexts, repos, external services) -->
+  <ItemGroup>
+    <ProjectReference Include="..\Modules\Auth\Auth.Infrastructure\Auth.Infrastructure.csproj" />
+    <ProjectReference Include="..\Modules\Audit\Audit.Infrastructure\Audit.Infrastructure.csproj" />
+    <ProjectReference Include="..\Modules\Patient\Patient.Infrastructure\Patient.Infrastructure.csproj" />
+    <ProjectReference Include="..\Modules\Clinical\Clinical.Infrastructure\Clinical.Infrastructure.csproj" />
+    <ProjectReference Include="..\Modules\Scheduling\Scheduling.Infrastructure\Scheduling.Infrastructure.csproj" />
+    <ProjectReference Include="..\Modules\Pharmacy\Pharmacy.Infrastructure\Pharmacy.Infrastructure.csproj" />
+    <ProjectReference Include="..\Modules\Optical\Optical.Infrastructure\Optical.Infrastructure.csproj" />
+    <ProjectReference Include="..\Modules\Billing\Billing.Infrastructure\Billing.Infrastructure.csproj" />
+    <ProjectReference Include="..\Modules\Treatment\Treatment.Infrastructure\Treatment.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
