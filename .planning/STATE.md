@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 ## Current Position
 
 Phase: 01.1 of 9 (Change the current code structure of the backend)
-Plan: 3 of 5 in current phase
+Plan: 5 of 5 in current phase
 Status: Executing
-Last activity: 2026-02-28 -- Completed 01.1-02 Audit module restructuring (3 features, Minimal API, HTTP-free Application)
+Last activity: 2026-03-01 -- Completed 01.1-04 admin-flow feature migration (8 handlers, 13 Auth routes, old services removed)
 
 Progress: [######....] 26%
 
@@ -37,6 +37,7 @@ Progress: [######....] 26%
 | Phase 01 P06 | 12min | 2 tasks | 15 files |
 | Phase 01.1 P01 | 10min | 2 tasks | 30 files |
 | Phase 01.1 P02 | 3min | 2 tasks | 10 files |
+| Phase 01.1 P04 | 9min | 2 tasks | 34 files |
 
 ## Accumulated Context
 
@@ -77,6 +78,9 @@ Recent decisions affecting current work:
 - [Phase 01.1]: [01.1-02]: Removed IAuditReadContext backward-compat alias after old endpoints deleted
 - [Phase 01.1]: [01.1-02]: Removed WolverineFx.Http and FrameworkReference from Audit.Application.csproj -- Application layer now HTTP-free
 - [Phase 01.1]: [01.1-02]: [AsParameters] attribute for query string binding on Minimal API GET endpoints
+- [Phase 01.1]: Allowed Shared.Domain in Presentation layer for Result<T>/Error HTTP response mapping (arch test updated)
+- [Phase 01.1]: Combined Plan 03+04 deletions in single Task 2 commit due to concurrent execution
+- [Phase 01.1]: Added Microsoft.Extensions.Logging.Abstractions to Auth.Application for handler ILogger<> after FrameworkReference removal
 
 ### Roadmap Evolution
 
@@ -95,6 +99,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-28
-Stopped at: Completed 01.1-02-PLAN.md
-Resume file: .planning/phases/01.1-change-the-current-code-structure-of-the-backend/01.1-03-PLAN.md
+Last session: 2026-03-01
+Stopped at: Completed 01.1-04-PLAN.md
+Resume file: .planning/phases/01.1-change-the-current-code-structure-of-the-backend/01.1-05-PLAN.md
