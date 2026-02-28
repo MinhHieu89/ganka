@@ -37,7 +37,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 7 plans in 4 waves
 
 Plans:
-- [ ] 01-01-PLAN.md — Backend scaffolding: .NET 10 solution, shared kernel, all module .csproj files, Bootstrapper host
+- [x] 01-01-PLAN.md — Backend scaffolding: .NET 10 solution, shared kernel, all module .csproj files, Bootstrapper host
 - [ ] 01-02-PLAN.md — Frontend scaffolding: TanStack Start SPA, shadcn/ui, i18next bilingual, app shell layout
 - [ ] 01-03-PLAN.md — Auth module: domain entities, JWT auth, login/refresh endpoints, RBAC, data seeding
 - [ ] 01-04-PLAN.md — Audit module + architecture foundations: audit interceptor, access logging, Azure Blob, ACL adapters, ICD-10 seeding

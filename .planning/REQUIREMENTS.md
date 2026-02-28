@@ -148,7 +148,7 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Architecture & Infrastructure
 
 - [ ] **ARC-01**: All external system integrations use ACL adapter pattern (domain ports + infrastructure adapters)
-- [ ] **ARC-02**: All aggregate roots include BranchId for future multi-branch support (EF Core global query filters)
+- [x] **ARC-02**: All aggregate roots include BranchId for future multi-branch support (EF Core global query filters)
 - [ ] **ARC-03**: Template engine supports adding new disease templates without application code changes (config/plugin-driven)
 - [ ] **ARC-04**: Azure SQL automatic daily backup with point-in-time recovery (35 days retention)
 - [ ] **ARC-05**: Azure Blob Storage with soft delete and versioning for medical images
@@ -317,7 +317,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | UI-01 | Phase 1 | Pending |
 | UI-02 | Phase 1 | Pending |
 | ARC-01 | Phase 1 | Pending |
-| ARC-02 | Phase 1 | Pending |
+| ARC-02 | Phase 1 | Complete |
 | ARC-03 | Phase 1 | Pending |
 | ARC-04 | Phase 1 | Pending |
 | ARC-05 | Phase 1 | Pending |
