@@ -119,6 +119,9 @@ Recent decisions affecting current work:
 - [Phase 01.2]: [01.2-02]: NavUser in SidebarFooter following dashboard-01 convention
 - [Phase 01.2]: [01.2-02]: Disabled sidebar placeholder items with Tooltip "Coming soon" for Phases 2-9
 - [Phase 01.2]: [01.2-02]: IconSelector from @tabler/icons-react used instead of lucide ChevronsUpDown
+- [Phase 01.2]: [01.2-03]: Username field sends value as email parameter for backward compatibility with backend API contract
+- [Phase 01.2]: [01.2-03]: Zod schema defined inside component function to access i18n t() for inline error messages
+- [Phase 01.2]: [01.2-03]: AlertDialog for non-dismissible session warning -- no manual prevention workarounds needed
 - [Phase 01.2]: DataTable receives pre-configured TanStack Table instance (not raw data) -- consumers own sorting/pagination/expansion state
 - [Phase 01.2]: Field+Controller for form fields, Field+FieldLabel (without Controller) for non-form filter inputs -- consistent styling, appropriate complexity
 
