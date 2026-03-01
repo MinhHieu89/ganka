@@ -32,6 +32,7 @@ using Scheduling.Application;
 using Scheduling.Presentation;
 using Shared.Infrastructure;
 using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -256,6 +257,8 @@ app.MapWolverineEndpoints(opts =>
 app.MapAuthApiEndpoints();
 app.MapAuditApiEndpoints();
 app.MapPatientApiEndpoints();
+app.MapSchedulingApiEndpoints();
+app.MapPublicBookingEndpoints();
 
 app.Run();
 
