@@ -1,2 +1,3 @@
 - Always use Context7 MCP when I need library/API documentation, code generation, setup or configuration steps without me having to explicitly ask.
 - Use frontend design skill, vercel-react-best-practices skill and web-design-guidelines skill for any tasks UI/UX related without me having to explicitly ask.
+- Whenever you need human verification make sure you run backend at port 5255 and frontend at port 3000. Try to Kill other processes if those ports are in use.
