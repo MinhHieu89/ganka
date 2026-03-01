@@ -108,6 +108,7 @@ Recent decisions affecting current work:
 ### Roadmap Evolution
 
 - Phase 01.1 inserted after Phase 1: Change the current code structure of the backend (URGENT)
+- Phase 01.2 inserted after Phase 1: Refactor frontend to shadcn/ui with TanStack Start file-based routing (URGENT)
 
 ### Pending Todos
 
@@ -123,5 +124,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-01
-Stopped at: Completed 01.1-09-PLAN.md (Phase 01.1 complete)
-Resume file: Next phase
+Stopped at: Phase 01.2 context gathered
+Resume file: .planning/phases/01.2-refactor-frontend-to-shadcn-ui-with-tanstack-start-file-based-routing/01.2-CONTEXT.md

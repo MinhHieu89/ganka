@@ -45,6 +45,15 @@ Plans:
 - [x] 01-06-PLAN.md — Audit UI + architecture tests: audit log viewer with filters/export, NetArchTest rules
 - [ ] 01-07-PLAN.md — End-to-end verification checkpoint
 
+### Phase 01.2: Refactor frontend to shadcn/ui with TanStack Start file-based routing (INSERTED)
+
+**Goal:** [Urgent work - to be planned]
+**Depends on:** Phase 1
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd:plan-phase 01.2 to break down)
+
 ### Phase 01.1: Change the current code structure of the backend (INSERTED)
 
 **Goal:** Backend Application layer uses vertical slice feature-based organization with business logic in handlers, thin repository interfaces for data access, and unit tests for all feature handlers. Shared Presentation extensions, per-layer DI registration, and Central Package Management.
