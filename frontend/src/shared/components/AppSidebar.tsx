@@ -146,56 +146,58 @@ export function AppSidebar({ ...sidebarProps }: ComponentProps<typeof Sidebar>) 
   ]
 
   const renderNavItems = (items: NavItem[]) =>
-    items.map((item) => (
-      <SidebarMenuItem key={item.to}>
-        {item.disabled ? (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <SidebarMenuButton
-                disabled
-                className="opacity-50 cursor-not-allowed"
-                tooltip={t(item.titleKey)}
-              >
+    items.map((item) => {
+      const isActive = currentPath === item.to || currentPath.startsWith(item.to + "/")
+      return (
+        <SidebarMenuItem key={item.to}>
+          {item.disabled ? (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <SidebarMenuButton
+                  disabled
+                  className="opacity-40 cursor-not-allowed"
+                  tooltip={t(item.titleKey)}
+                >
+                  <item.icon className="h-4 w-4" />
+                  <span>{t(item.titleKey)}</span>
+                </SidebarMenuButton>
+              </TooltipTrigger>
+              <TooltipContent side="right">
+                {t("sidebar.comingSoon")}
+              </TooltipContent>
+            </Tooltip>
+          ) : (
+            <SidebarMenuButton
+              asChild
+              isActive={isActive}
+              tooltip={t(item.titleKey)}
+              className={isActive ? "font-medium" : ""}
+            >
+              <Link to={item.to}>
                 <item.icon className="h-4 w-4" />
                 <span>{t(item.titleKey)}</span>
-              </SidebarMenuButton>
-            </TooltipTrigger>
-            <TooltipContent side="right">
-              {t("sidebar.comingSoon")}
-            </TooltipContent>
-          </Tooltip>
-        ) : (
-          <SidebarMenuButton
-            asChild
-            isActive={
-              currentPath === item.to ||
-              currentPath.startsWith(item.to + "/")
-            }
-            tooltip={t(item.titleKey)}
-          >
-            <Link to={item.to}>
-              <item.icon className="h-4 w-4" />
-              <span>{t(item.titleKey)}</span>
-            </Link>
-          </SidebarMenuButton>
-        )}
-      </SidebarMenuItem>
-    ))
+              </Link>
+            </SidebarMenuButton>
+          )}
+        </SidebarMenuItem>
+      )
+    })
 
   return (
     <Sidebar collapsible="offcanvas" {...sidebarProps}>
-      <SidebarHeader className="border-b">
+      <SidebarHeader className="border-b border-sidebar-border/50">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild>
+            <SidebarMenuButton size="lg" asChild className="hover:bg-transparent">
               <Link to="/dashboard">
-                <div className="flex aspect-square size-8 items-center justify-center bg-primary text-primary-foreground text-sm font-bold">
-                  G
+                <div className="relative flex aspect-square size-9 items-center justify-center bg-primary text-primary-foreground text-sm font-bold tracking-wider shadow-sm">
+                  <span className="relative z-10">G</span>
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
                 </div>
-                <div className="flex flex-col gap-0.5 leading-none">
-                  <span className="font-semibold">{t("appName")}</span>
-                  <span className="text-xs text-muted-foreground">
-                    Clinic Management
+                <div className="flex flex-col gap-0 leading-none">
+                  <span className="font-semibold text-[15px] tracking-tight">Ganka28</span>
+                  <span className="text-[11px] text-muted-foreground/70 font-medium uppercase tracking-widest">
+                    Ophthalmology
                   </span>
                 </div>
               </Link>

@@ -76,9 +76,9 @@ export function SiteHeader() {
   const displayName = user?.fullName ?? user?.email ?? t("topbar.profile")
 
   return (
-    <header className="flex h-(--header-height) shrink-0 items-center gap-2 border-b px-4 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
+    <header className="flex h-(--header-height) shrink-0 items-center gap-2 border-b border-border/50 bg-background/80 backdrop-blur-sm px-4 lg:px-6 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
       <SidebarTrigger className="-ml-1" />
-      <Separator orientation="vertical" className="mr-2 h-4" />
+      <Separator orientation="vertical" className="mx-2 data-[orientation=vertical]:h-4" />
       <Breadcrumb>
         <BreadcrumbList>
           {breadcrumbs.map((crumb, index) => (
@@ -86,7 +86,7 @@ export function SiteHeader() {
               {index > 0 && <BreadcrumbSeparator />}
               <BreadcrumbItem>
                 {crumb.isLast ? (
-                  <BreadcrumbPage>{crumb.label}</BreadcrumbPage>
+                  <BreadcrumbPage className="font-medium">{crumb.label}</BreadcrumbPage>
                 ) : (
                   <BreadcrumbLink href={crumb.path}>{crumb.label}</BreadcrumbLink>
                 )}
@@ -98,30 +98,37 @@ export function SiteHeader() {
 
       <div className="flex-1" />
 
-      <LanguageToggle />
+      <div className="flex items-center gap-1">
+        <LanguageToggle />
 
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="sm" className="gap-2">
-            <Avatar className="h-6 w-6">
-              <AvatarFallback className="text-[10px]">{initials}</AvatarFallback>
-            </Avatar>
-            <span className="text-sm hidden sm:inline-block">
-              {displayName}
-            </span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-48">
-          <DropdownMenuLabel>
-            {user?.email ?? t("topbar.profile")}
-          </DropdownMenuLabel>
-          <DropdownSeparator />
-          <DropdownMenuItem onClick={() => logout()}>
-            <IconLogout className="h-4 w-4 mr-2" />
-            {t("topbar.logout")}
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="sm" className="gap-2 px-2">
+              <Avatar className="h-6 w-6">
+                <AvatarFallback className="text-[10px] bg-primary/10 text-primary font-semibold">{initials}</AvatarFallback>
+              </Avatar>
+              <span className="text-sm hidden sm:inline-block max-w-[120px] truncate">
+                {displayName}
+              </span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-52">
+            <DropdownMenuLabel className="font-normal">
+              <div className="flex flex-col gap-1">
+                <p className="text-sm font-medium leading-none">{displayName}</p>
+                <p className="text-xs leading-none text-muted-foreground">
+                  {user?.email ?? t("topbar.profile")}
+                </p>
+              </div>
+            </DropdownMenuLabel>
+            <DropdownSeparator />
+            <DropdownMenuItem onClick={() => logout()}>
+              <IconLogout className="h-4 w-4 mr-2" />
+              {t("topbar.logout")}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </header>
   )
 }
