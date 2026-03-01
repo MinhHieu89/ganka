@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-28)
 
 **Core value:** Doctors can manage chronic eye disease patients (Dry Eye, Myopia Control) with structured data tracking, image comparison across visits, and treatment progress reporting
-**Current focus:** Phase 01.1: Change the current code structure of the backend
+**Current focus:** Phase 01.2: Refactor frontend to shadcn/ui with TanStack Start file-based routing
 
 ## Current Position
 
-Phase: 01.1 of 9 (Change the current code structure of the backend)
-Plan: 9 of 9 in current phase (COMPLETE)
-Status: Phase 01.1 complete -- all 9 plans executed
-Last activity: 2026-03-01 -- Completed 01.1-09 NuGet Central Package Management
+Phase: 01.2 of 9 (Refactor frontend to shadcn/ui with TanStack Start file-based routing)
+Plan: 1 of 6 in current phase
+Status: Executing Phase 01.2 -- Plan 01a complete
+Last activity: 2026-03-01 -- Completed 01.2-01a shadcn/ui component installation and upgrade
 
-Progress: [######....] 28%
+Progress: [######....] 30%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 15
+- Total plans completed: 16
 - Average duration: 8min
-- Total execution time: 2.02 hours
+- Total execution time: 2.07 hours
 
 **By Phase:**
 
@@ -30,7 +30,7 @@ Progress: [######....] 28%
 | 1 | 6 | 73min | 12min |
 
 **Recent Trend:**
-- Last 5 plans: 8min, 6min, 4min, 3min, 3min
+- Last 5 plans: 6min, 4min, 3min, 3min, 3min
 - Trend: stable
 
 *Updated after each plan completion*
@@ -44,6 +44,7 @@ Progress: [######....] 28%
 | Phase 01.1 P08 | 4min | 2 tasks | 9 files |
 | Phase 01.1 P07 | 3min | 2 tasks | 2 files |
 | Phase 01.1 P09 | 3min | 1 tasks | 27 files |
+| Phase 01.2 P01a | 3min | 1 tasks | 24 files |
 
 ## Accumulated Context
 
@@ -104,6 +105,9 @@ Recent decisions affecting current work:
 - [Phase 01.1]: [01.1-07]: Kept Shared.Domain using in Auth.Presentation for Result/Result<T> types in bus.InvokeAsync calls
 - [Phase 01.1]: [01.1-09]: NuGet CPM with CentralPackageFloatingVersionsEnabled for wildcard version patterns (5.*, 12.*, 10.0.*-*)
 - [Phase 01.1]: [01.1-09]: 25 unique packages centralized in Directory.Packages.props, all .csproj use Include-only PackageReference
+- [Phase 01.2]: [01.2-01a]: Allowed sidebar overwrite -- latest shadcn sidebar includes all expected exports
+- [Phase 01.2]: [01.2-01a]: Restored hideCloseButton custom prop on DialogContent after shadcn overwrite
+- [Phase 01.2]: [01.2-01a]: lucide-react accepted as shadcn internal icon dependency alongside @tabler/icons-react
 
 ### Roadmap Evolution
 
@@ -124,5 +128,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-01
-Stopped at: Phase 01.2 context gathered
-Resume file: .planning/phases/01.2-refactor-frontend-to-shadcn-ui-with-tanstack-start-file-based-routing/01.2-CONTEXT.md
+Stopped at: Completed 01.2-01a-PLAN.md
+Resume file: .planning/phases/01.2-refactor-frontend-to-shadcn-ui-with-tanstack-start-file-based-routing/01.2-01a-SUMMARY.md
