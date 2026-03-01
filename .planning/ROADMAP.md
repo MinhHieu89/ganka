@@ -13,7 +13,7 @@ This roadmap delivers a complete ophthalmology clinic management system across 9
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [ ] **Phase 1: Foundation & Infrastructure** - Modular monolith skeleton with auth, audit, i18n, and multi-tenant scaffolding
-- [ ] **Phase 2: Patient Management & Scheduling** - Patient registration and appointment booking with calendar
+- [x] **Phase 2: Patient Management & Scheduling** - Patient registration and appointment booking with calendar
 - [ ] **Phase 3: Clinical Workflow & Examination** - Visit lifecycle, refraction recording, and ICD-10 diagnosis
 - [ ] **Phase 4: Dry Eye Template & Medical Imaging** - Structured dry eye assessment and medical image management with comparison
 - [ ] **Phase 5: Prescriptions & Document Printing** - Drug and optical prescription writing with all printable documents
@@ -92,12 +92,12 @@ Plans:
 **Plans**: 6 plans in 3 waves
 
 Plans:
-- [ ] 02-01-PLAN.md -- Patient module backend: domain entities, EF Core infrastructure, application features, Minimal API endpoints
-- [ ] 02-02-PLAN.md -- Scheduling module backend: appointments, self-booking, clinic schedule, double-booking prevention, public endpoints
-- [ ] 02-03-PLAN.md -- Frontend dependencies + shared components: FullCalendar, cmdk, shadcn wrappers, GlobalSearch, i18n translations
-- [ ] 02-04-PLAN.md -- Patient frontend: registration form, patient list, profile page with tabs, allergy management
+- [x] 02-01-PLAN.md -- Patient module backend: domain entities, EF Core infrastructure, application features, Minimal API endpoints
+- [x] 02-02-PLAN.md -- Scheduling module backend: appointments, self-booking, clinic schedule, double-booking prevention, public endpoints
+- [x] 02-03-PLAN.md -- Frontend dependencies + shared components: FullCalendar, cmdk, shadcn wrappers, GlobalSearch, i18n translations
+- [x] 02-04-PLAN.md -- Patient frontend: registration form, patient list, profile page with tabs, allergy management
 - [x] 02-05-PLAN.md -- Scheduling frontend: FullCalendar calendar, booking dialogs, public self-booking page, pending bookings panel
-- [ ] 02-06-PLAN.md -- Integration verification checkpoint: API tests + human verification of all flows
+- [x] 02-06-PLAN.md -- Integration verification checkpoint: API tests + browser verification of all flows
 
 ### Phase 3: Clinical Workflow & Examination
 **Goal**: Doctors can conduct a complete clinical visit with structured examination data, ICD-10 diagnosis, and immutable visit records
@@ -228,7 +228,7 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 | 1. Foundation & Infrastructure | 6/7 | In Progress | - |
 | 1.1 Backend Restructuring | 5/9 | In Progress | - |
 | 1.2 Frontend shadcn/ui Refactoring | 6/8 | In Progress | - |
-| 2. Patient Management & Scheduling | 0/6 | Not started | - |
+| 2. Patient Management & Scheduling | 6/6 | Complete | 2026-03-01 |
 | 3. Clinical Workflow & Examination | 0/3 | Not started | - |
 | 4. Dry Eye Template & Medical Imaging | 0/2 | Not started | - |
 | 5. Prescriptions & Document Printing | 0/2 | Not started | - |

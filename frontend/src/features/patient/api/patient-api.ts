@@ -7,6 +7,29 @@ export type PatientType = "Medical" | "WalkIn"
 export type Gender = "Male" | "Female" | "Other"
 export type AllergySeverity = "Mild" | "Moderate" | "Severe"
 
+// Backend returns enums as integers — map to string names
+const patientTypeMap: Record<number, PatientType> = { 0: "Medical", 1: "WalkIn" }
+const genderMap: Record<number, Gender> = { 0: "Male", 1: "Female", 2: "Other" }
+const severityMap: Record<number, AllergySeverity> = { 0: "Mild", 1: "Moderate", 2: "Severe" }
+
+function normalizePatient(raw: Record<string, unknown>): PatientDto {
+  const p = raw as unknown as PatientDto
+  if (typeof raw.patientType === "number") {
+    (p as Record<string, unknown>).patientType = patientTypeMap[raw.patientType as number] ?? "Medical"
+  }
+  if (typeof raw.gender === "number") {
+    (p as Record<string, unknown>).gender = genderMap[raw.gender as number] ?? null
+  }
+  if (Array.isArray(p.allergies)) {
+    for (const a of p.allergies) {
+      if (typeof (a as Record<string, unknown>).severity === "number") {
+        (a as Record<string, unknown>).severity = severityMap[(a as Record<string, unknown>).severity as number] ?? "Mild"
+      }
+    }
+  }
+  return p
+}
+
 export interface AllergyDto {
   id: string
   name: string
@@ -98,7 +121,7 @@ async function getPatientById(patientId: string): Promise<PatientDto> {
     const err = res.error as { detail?: string; title?: string }
     throw new Error(err.detail || err.title || "Failed to fetch patient")
   }
-  return res.data as PatientDto
+  return normalizePatient(res.data as Record<string, unknown>)
 }
 
 async function updatePatient(data: UpdatePatientCommand): Promise<void> {
@@ -155,7 +178,9 @@ async function getPatientList(
     const err = res.error as { detail?: string; title?: string }
     throw new Error(err.detail || err.title || "Failed to fetch patients")
   }
-  return res.data as PagedResult<PatientDto>
+  const data = res.data as PagedResult<PatientDto>
+  data.items = data.items.map((item) => normalizePatient(item as unknown as Record<string, unknown>))
+  return data
 }
 
 async function addAllergy(data: AddAllergyCommand): Promise<string> {
