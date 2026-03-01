@@ -13,7 +13,14 @@
     "pharmacy": "Pharmacy",
     "optical": "Optical Center",
     "billing": "Billing",
-    "treatment": "Treatment"
+    "treatment": "Treatment",
+    "clinic": "Clinic",
+    "operations": "Operations",
+    "appointments": "Appointments",
+    "imaging": "Imaging",
+    "prescriptions": "Prescriptions",
+    "treatments": "Treatments",
+    "comingSoon": "Coming soon"
   },
   "topbar": {
     "logout": "Logout",

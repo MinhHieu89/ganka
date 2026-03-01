@@ -5,11 +5,19 @@ import {
   IconUsers,
   IconShieldLock,
   IconFileText,
-  IconSettings,
+  IconCalendar,
+  IconStethoscope,
+  IconCamera,
+  IconPill,
+  IconMedicineSyrup,
+  IconReceipt,
+  IconEyeglass,
+  IconHeartbeat,
 } from "@tabler/icons-react"
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -19,12 +27,19 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/shared/components/Sidebar"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/shared/components/Tooltip"
+import { NavUser } from "@/shared/components/NavUser"
 import { useAuthStore } from "@/shared/stores/authStore"
 
 interface NavItem {
   titleKey: string
   to: string
   icon: React.ComponentType<{ className?: string }>
+  disabled?: boolean
 }
 
 export function AppSidebar() {
@@ -51,6 +66,66 @@ export function AppSidebar() {
     },
   ]
 
+  const clinicItems: NavItem[] = [
+    {
+      titleKey: "sidebar.patients",
+      to: "/patients",
+      icon: IconUsers,
+      disabled: true,
+    },
+    {
+      titleKey: "sidebar.appointments",
+      to: "/appointments",
+      icon: IconCalendar,
+      disabled: true,
+    },
+    {
+      titleKey: "sidebar.clinical",
+      to: "/clinical",
+      icon: IconStethoscope,
+      disabled: true,
+    },
+    {
+      titleKey: "sidebar.imaging",
+      to: "/imaging",
+      icon: IconCamera,
+      disabled: true,
+    },
+    {
+      titleKey: "sidebar.prescriptions",
+      to: "/prescriptions",
+      icon: IconPill,
+      disabled: true,
+    },
+  ]
+
+  const operationsItems: NavItem[] = [
+    {
+      titleKey: "sidebar.pharmacy",
+      to: "/pharmacy",
+      icon: IconMedicineSyrup,
+      disabled: true,
+    },
+    {
+      titleKey: "sidebar.billing",
+      to: "/billing",
+      icon: IconReceipt,
+      disabled: true,
+    },
+    {
+      titleKey: "sidebar.optical",
+      to: "/optical",
+      icon: IconEyeglass,
+      disabled: true,
+    },
+    {
+      titleKey: "sidebar.treatments",
+      to: "/treatments",
+      icon: IconHeartbeat,
+      disabled: true,
+    },
+  ]
+
   const adminItems: NavItem[] = [
     {
       titleKey: "sidebar.users",
@@ -69,27 +144,40 @@ export function AppSidebar() {
     },
   ]
 
-  const settingsItems: NavItem[] = [
-    {
-      titleKey: "sidebar.settings",
-      to: "/settings",
-      icon: IconSettings,
-    },
-  ]
-
   const renderNavItems = (items: NavItem[]) =>
     items.map((item) => (
       <SidebarMenuItem key={item.to}>
-        <SidebarMenuButton
-          asChild
-          isActive={currentPath === item.to || currentPath.startsWith(item.to + "/")}
-          tooltip={t(item.titleKey)}
-        >
-          <Link to={item.to}>
-            <item.icon className="h-4 w-4" />
-            <span>{t(item.titleKey)}</span>
-          </Link>
-        </SidebarMenuButton>
+        {item.disabled ? (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <SidebarMenuButton
+                disabled
+                className="opacity-50 cursor-not-allowed"
+                tooltip={t(item.titleKey)}
+              >
+                <item.icon className="h-4 w-4" />
+                <span>{t(item.titleKey)}</span>
+              </SidebarMenuButton>
+            </TooltipTrigger>
+            <TooltipContent side="right">
+              {t("sidebar.comingSoon")}
+            </TooltipContent>
+          </Tooltip>
+        ) : (
+          <SidebarMenuButton
+            asChild
+            isActive={
+              currentPath === item.to ||
+              currentPath.startsWith(item.to + "/")
+            }
+            tooltip={t(item.titleKey)}
+          >
+            <Link to={item.to}>
+              <item.icon className="h-4 w-4" />
+              <span>{t(item.titleKey)}</span>
+            </Link>
+          </SidebarMenuButton>
+        )}
       </SidebarMenuItem>
     ))
 
@@ -116,12 +204,30 @@ export function AppSidebar() {
       </SidebarHeader>
 
       <SidebarContent>
+        {/* Main navigation */}
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>{renderNavItems(mainItems)}</SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
 
+        {/* Clinic group -- placeholder items for future phases */}
+        <SidebarGroup>
+          <SidebarGroupLabel>{t("sidebar.clinic")}</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>{renderNavItems(clinicItems)}</SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Operations group -- placeholder items for future phases */}
+        <SidebarGroup>
+          <SidebarGroupLabel>{t("sidebar.operations")}</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>{renderNavItems(operationsItems)}</SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Admin group -- conditional on permissions */}
         {hasAdminAccess && (
           <SidebarGroup>
             <SidebarGroupLabel>{t("sidebar.admin")}</SidebarGroupLabel>
@@ -130,13 +236,15 @@ export function AppSidebar() {
             </SidebarGroupContent>
           </SidebarGroup>
         )}
-
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu>{renderNavItems(settingsItems)}</SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
       </SidebarContent>
+
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <NavUser />
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
 
       <SidebarRail />
     </Sidebar>

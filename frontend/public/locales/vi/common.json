@@ -13,7 +13,14 @@
     "pharmacy": "Nha thuoc",
     "optical": "Kinh mat",
     "billing": "Thu ngan",
-    "treatment": "Dieu tri"
+    "treatment": "Dieu tri",
+    "clinic": "Phong kham",
+    "operations": "Van hanh",
+    "appointments": "Lich hen",
+    "imaging": "Chan doan hinh anh",
+    "prescriptions": "Don thuoc",
+    "treatments": "Dieu tri",
+    "comingSoon": "Sap ra mat"
   },
   "topbar": {
     "logout": "Dang xuat",
