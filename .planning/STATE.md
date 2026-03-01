@@ -12,7 +12,7 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 Phase: 02 of 9 (Patient Management & Scheduling)
 Plan: 4 of 6 in current phase
 Status: Executing Phase 02
-Last activity: 2026-03-01 -- Completed 02-03 Shared Frontend Infrastructure
+Last activity: 2026-03-01 -- Completed 02-02 Scheduling Module Backend
 
 Progress: [#####-----] 50%
 
@@ -53,6 +53,7 @@ Progress: [#####-----] 50%
 | Phase 01.2 P07 | 2min | 2 tasks | 3 files |
 | Phase 01.2 P06 | 2min | 2 tasks | 3 files |
 | Phase 02 P01 | 14min | 2 tasks | 48 files |
+| Phase 02 P02 | 15min | 2 tasks | 54 files |
 | Phase 02 P03 | 8min | 2 tasks | 24 files |
 
 ## Accumulated Context
@@ -139,6 +140,11 @@ Recent decisions affecting current work:
 - [Phase 02]: [02-01]: RowVersion concurrency token on Patient entity for optimistic concurrency
 - [Phase 02]: [02-01]: AllergyCatalogSeeder as IHostedService with idempotent seeding (skip if data exists)
 - [Phase 02]: [02-01]: Unique constraint filter on PatientCode with HasFilter for NULL exclusion
+- [Phase 02]: [02-02]: Denormalized PatientName/DoctorName on Appointment entity to avoid cross-module joins
+- [Phase 02]: [02-02]: Microsoft.EntityFrameworkCore in Application layer for DbUpdateException catch on unique constraint
+- [Phase 02]: [02-02]: Double-booking prevention via application-level HasOverlappingAsync + DB unique filtered index
+- [Phase 02]: [02-02]: Public API pattern: /api/public/booking without RequireAuthorization, with RequireRateLimiting (5 req/min/IP)
+- [Phase 02]: [02-02]: Self-booking workflow: Submit (public) -> Pending -> Approve/Reject (staff) with reference number
 - [Phase 02]: DatePicker uses date-fns format with Vietnamese dd/MM/yyyy locale support
 - [Phase 02]: GlobalSearch uses Command+Popover pattern with Ctrl+K shortcut, recent patients on focus, deferred API search
 - [Phase 02]: Restored hideCloseButton prop on dialog.tsx after shadcn CLI overwrite (recurring risk with shadcn add --overwrite)
@@ -162,5 +168,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-01
-Stopped at: Completed 02-01-PLAN.md -- Patient Module Backend
-Resume file: .planning/phases/02-patient-management-scheduling/02-01-SUMMARY.md
+Stopped at: Completed 02-02-PLAN.md -- Scheduling Module Backend
+Resume file: .planning/phases/02-patient-management-scheduling/02-02-SUMMARY.md

@@ -62,12 +62,12 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Appointment Scheduling
 
-- [ ] **SCH-01**: Staff can book appointments for patients (walk-in registration + pre-booked slots)
-- [ ] **SCH-02**: Patients can self-book via public website/Zalo with staff confirmation workflow
-- [ ] **SCH-03**: System enforces no double-booking (1 patient per doctor per time slot)
-- [ ] **SCH-04**: System displays calendar view per doctor, color-coded by appointment type
-- [ ] **SCH-05**: Appointment durations configurable by type (default: new 30min, follow-up 20min, treatment 30-45min, Ortho-K 60-90min)
-- [ ] **SCH-06**: System respects clinic operating hours (Tue-Fri 13-20h, Sat-Sun 8-12h, closed Monday) as configurable schedule
+- [x] **SCH-01**: Staff can book appointments for patients (walk-in registration + pre-booked slots)
+- [x] **SCH-02**: Patients can self-book via public website/Zalo with staff confirmation workflow
+- [x] **SCH-03**: System enforces no double-booking (1 patient per doctor per time slot)
+- [x] **SCH-04**: System displays calendar view per doctor, color-coded by appointment type
+- [x] **SCH-05**: Appointment durations configurable by type (default: new 30min, follow-up 20min, treatment 30-45min, Ortho-K 60-90min)
+- [x] **SCH-06**: System respects clinic operating hours (Tue-Fri 13-20h, Sat-Sun 8-12h, closed Monday) as configurable schedule
 
 ### Treatment Protocols
 
@@ -258,12 +258,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | RX-03 | Phase 5 | Pending |
 | RX-04 | Phase 5 | Pending |
 | RX-05 | Phase 5 | Pending |
-| SCH-01 | Phase 2 | Pending |
-| SCH-02 | Phase 2 | Pending |
-| SCH-03 | Phase 2 | Pending |
-| SCH-04 | Phase 2 | Pending |
-| SCH-05 | Phase 2 | Pending |
-| SCH-06 | Phase 2 | Pending |
+| SCH-01 | Phase 2 | Complete |
+| SCH-02 | Phase 2 | Complete |
+| SCH-03 | Phase 2 | Complete |
+| SCH-04 | Phase 2 | Complete |
+| SCH-05 | Phase 2 | Complete |
+| SCH-06 | Phase 2 | Complete |
 | TRT-01 | Phase 9 | Pending |
 | TRT-02 | Phase 9 | Pending |
 | TRT-03 | Phase 9 | Pending |
