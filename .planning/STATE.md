@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 ## Current Position
 
 Phase: 01.2 of 9 (Refactor frontend to shadcn/ui with TanStack Start file-based routing)
-Plan: 7 of 8 in current phase
-Status: Executing Phase 01.2 -- Plan 07 complete
-Last activity: 2026-03-01 -- Completed 01.2-07 Vietnamese diacritics
+Plan: 8 of 8 in current phase
+Status: Phase 01.2 COMPLETE -- all plans executed
+Last activity: 2026-03-01 -- Completed 01.2-06 Dashboard-01 layout fidelity
 
-Progress: [#########.] 88%
+Progress: [##########] 100%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 19
-- Average duration: 8min
-- Total execution time: 2.22 hours
+- Total plans completed: 20
+- Average duration: 7min
+- Total execution time: 2.25 hours
 
 **By Phase:**
 
@@ -30,7 +30,7 @@ Progress: [#########.] 88%
 | 1 | 6 | 73min | 12min |
 
 **Recent Trend:**
-- Last 5 plans: 3min, 3min, 3min, 4min, 2min
+- Last 5 plans: 3min, 3min, 4min, 2min, 2min
 - Trend: stable
 
 *Updated after each plan completion*
@@ -51,6 +51,7 @@ Progress: [#########.] 88%
 | Phase 01.2 P04 | 5min | 2 tasks | 7 files |
 | Phase 01.2 P05 | 4min | 2 tasks | 0 files |
 | Phase 01.2 P07 | 2min | 2 tasks | 3 files |
+| Phase 01.2 P06 | 2min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -127,6 +128,8 @@ Recent decisions affecting current work:
 - [Phase 01.2]: DataTable receives pre-configured TanStack Table instance (not raw data) -- consumers own sorting/pagination/expansion state
 - [Phase 01.2]: Field+Controller for form fields, Field+FieldLabel (without Controller) for non-form filter inputs -- consistent styling, appropriate complexity
 - [Phase 01.2]: [01.2-05]: Phase 01.2 shadcn/ui refactoring verified complete -- all automated and visual checks passed
+- [Phase 01.2]: [01.2-06]: offcanvas collapsible instead of icon -- matches dashboard-01 reference for mobile-first sidebar behavior
+- [Phase 01.2]: [01.2-06]: CSS variable-driven header height via --header-height instead of hardcoded h-12 -- enables consistent sizing from SidebarProvider
 - [Phase 01.2]: [01.2-07]: Vietnamese translations must always use proper diacritics -- no unaccented Vietnamese in vi/*.json
 
 ### Roadmap Evolution
@@ -148,5 +151,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-01
-Stopped at: Completed 01.2-07-PLAN.md
-Resume file: .planning/phases/01.2-refactor-frontend-to-shadcn-ui-with-tanstack-start-file-based-routing/01.2-07-SUMMARY.md
+Stopped at: Completed 01.2-06-PLAN.md -- Phase 01.2 fully complete
+Resume file: .planning/phases/01.2-refactor-frontend-to-shadcn-ui-with-tanstack-start-file-based-routing/01.2-06-SUMMARY.md
