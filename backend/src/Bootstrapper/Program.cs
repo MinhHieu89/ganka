@@ -26,7 +26,12 @@ using Auth.Application;
 using Auth.Presentation;
 using Audit.Application;
 using Audit.Presentation;
+using Patient.Application;
+using Patient.Presentation;
+using Scheduling.Application;
+using Scheduling.Presentation;
 using Shared.Infrastructure;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +54,16 @@ builder.Services.AddAuditPresentation();
 builder.Services.AddAuthApplication();
 builder.Services.AddAuthInfrastructure();
 builder.Services.AddAuthPresentation();
+
+// Patient module
+builder.Services.AddPatientApplication();
+builder.Services.AddPatientInfrastructure();
+builder.Services.AddPatientPresentation();
+
+// Scheduling module
+builder.Services.AddSchedulingApplication();
+builder.Services.AddSchedulingInfrastructure();
+builder.Services.AddSchedulingPresentation();
 
 // ---------------------------------------------------------------------------
 // EF Core DbContexts -- module DbContexts with AuditInterceptor
@@ -121,6 +136,22 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod()
             .AllowCredentials();
     });
+});
+
+// ---------------------------------------------------------------------------
+// Rate Limiting -- public booking endpoint protection
+// ---------------------------------------------------------------------------
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddFixedWindowLimiter("public-booking", limiterOptions =>
+    {
+        limiterOptions.PermitLimit = 5;
+        limiterOptions.Window = TimeSpan.FromMinutes(1);
+        limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        limiterOptions.QueueLimit = 0;
+    });
+
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
 });
 
 // ---------------------------------------------------------------------------
@@ -209,6 +240,9 @@ app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 
+// Rate limiting for public endpoints (must be before endpoint mapping)
+app.UseRateLimiter();
+
 // Access logging middleware -- logs all API requests to audit.AccessLogs
 app.UseMiddleware<AccessLoggingMiddleware>();
 
@@ -221,6 +255,7 @@ app.MapWolverineEndpoints(opts =>
 // Minimal API endpoints (new vertical slice pattern -- coexists with Wolverine endpoints)
 app.MapAuthApiEndpoints();
 app.MapAuditApiEndpoints();
+app.MapPatientApiEndpoints();
 
 app.Run();
 

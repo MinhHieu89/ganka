@@ -40,6 +40,7 @@
     <Project Path="src/Modules/Patient/Patient.Contracts/Patient.Contracts.csproj" />
     <Project Path="src/Modules/Patient/Patient.Domain/Patient.Domain.csproj" />
     <Project Path="src/Modules/Patient/Patient.Infrastructure/Patient.Infrastructure.csproj" />
+    <Project Path="src/Modules/Patient/Patient.Presentation/Patient.Presentation.csproj" />
   </Folder>
   <Folder Name="/src/Modules/Pharmacy/">
     <Project Path="src/Modules/Pharmacy/Pharmacy.Application/Pharmacy.Application.csproj" />
@@ -52,6 +53,7 @@
     <Project Path="src/Modules/Scheduling/Scheduling.Contracts/Scheduling.Contracts.csproj" />
     <Project Path="src/Modules/Scheduling/Scheduling.Domain/Scheduling.Domain.csproj" />
     <Project Path="src/Modules/Scheduling/Scheduling.Infrastructure/Scheduling.Infrastructure.csproj" />
+    <Project Path="src/Modules/Scheduling/Scheduling.Presentation/Scheduling.Presentation.csproj" />
   </Folder>
   <Folder Name="/src/Modules/Treatment/">
     <Project Path="src/Modules/Treatment/Treatment.Application/Treatment.Application.csproj" />

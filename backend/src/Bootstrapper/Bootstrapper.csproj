@@ -40,6 +40,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Modules\Auth\Auth.Presentation\Auth.Presentation.csproj" />
     <ProjectReference Include="..\Modules\Audit\Audit.Presentation\Audit.Presentation.csproj" />
+    <ProjectReference Include="..\Modules\Patient\Patient.Presentation\Patient.Presentation.csproj" />
+    <ProjectReference Include="..\Modules\Scheduling\Scheduling.Presentation\Scheduling.Presentation.csproj" />
   </ItemGroup>
 
   <!-- Module Infrastructure layers (DbContexts, repos, external services) -->
