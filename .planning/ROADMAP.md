@@ -89,12 +89,15 @@ Plans:
   3. Staff can record allergies on a patient profile, and those allergies are visible as alerts during downstream workflows
   4. Staff can book appointments on a per-doctor calendar with configurable durations, and the system prevents double-booking with a database-level constraint
   5. Patients can self-book via a public-facing page, with staff confirmation required before the appointment is finalized
-**Plans**: TBD
+**Plans**: 6 plans in 3 waves
 
 Plans:
-- [ ] 02-01: TBD
-- [ ] 02-02: TBD
-- [ ] 02-03: TBD
+- [ ] 02-01-PLAN.md -- Patient module backend: domain entities, EF Core infrastructure, application features, Minimal API endpoints
+- [ ] 02-02-PLAN.md -- Scheduling module backend: appointments, self-booking, clinic schedule, double-booking prevention, public endpoints
+- [ ] 02-03-PLAN.md -- Frontend dependencies + shared components: FullCalendar, cmdk, shadcn wrappers, GlobalSearch, i18n translations
+- [ ] 02-04-PLAN.md -- Patient frontend: registration form, patient list, profile page with tabs, allergy management
+- [ ] 02-05-PLAN.md -- Scheduling frontend: FullCalendar calendar, booking dialogs, public self-booking page, pending bookings panel
+- [ ] 02-06-PLAN.md -- Integration verification checkpoint: API tests + human verification of all flows
 
 ### Phase 3: Clinical Workflow & Examination
 **Goal**: Doctors can conduct a complete clinical visit with structured examination data, ICD-10 diagnosis, and immutable visit records
@@ -225,7 +228,7 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 | 1. Foundation & Infrastructure | 6/7 | In Progress | - |
 | 1.1 Backend Restructuring | 5/9 | In Progress | - |
 | 1.2 Frontend shadcn/ui Refactoring | 6/8 | In Progress | - |
-| 2. Patient Management & Scheduling | 0/3 | Not started | - |
+| 2. Patient Management & Scheduling | 0/6 | Not started | - |
 | 3. Clinical Workflow & Examination | 0/3 | Not started | - |
 | 4. Dry Eye Template & Medical Imaging | 0/2 | Not started | - |
 | 5. Prescriptions & Document Printing | 0/2 | Not started | - |
