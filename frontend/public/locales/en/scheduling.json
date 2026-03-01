@@ -65,11 +65,35 @@
     "statusPending": "Pending Confirmation",
     "statusApproved": "Approved",
     "statusRejected": "Rejected",
-    "maxPendingReached": "You have reached the maximum number of pending bookings"
+    "maxPendingReached": "You have reached the maximum number of pending bookings",
+    "saveReference": "Please save this reference number to check your booking status.",
+    "bookAnother": "Book Another",
+    "email": "Email",
+    "doctorPreference": "Doctor Preference (Optional)",
+    "noPreference": "No Preference",
+    "enterReference": "Enter Reference Number",
+    "check": "Check",
+    "statusMessage": {
+      "pending": "Your booking is being reviewed by staff",
+      "approved": "Your appointment is confirmed for {{date}}",
+      "rejected": "Your booking was not approved. Reason: {{reason}}"
+    },
+    "callForAssistance": "Please call {{phone}} for assistance",
+    "morning": "Morning (8:00 - 12:00)",
+    "afternoon": "Afternoon (13:00 - 17:00)",
+    "evening": "Evening (17:00 - 20:00)",
+    "staffWillConfirm": "Staff will confirm within 24 hours."
   },
   "clinicHours": "Clinic Hours",
+  "clinicHoursSchedule": {
+    "tueFri": "Tue - Fri: 13:00 - 20:00",
+    "satSun": "Sat - Sun: 08:00 - 12:00",
+    "monClosed": "Monday: Closed"
+  },
   "closed": "Closed",
   "pendingBookings": "Pending Bookings",
   "approve": "Approve",
-  "reject": "Reject"
+  "reject": "Reject",
+  "clinicAddress": "28 Street Name, Ward, District, Ho Chi Minh City",
+  "clinicPhone": "0123 456 789"
 }

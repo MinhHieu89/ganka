@@ -65,11 +65,35 @@
     "statusPending": "Chờ xác nhận",
     "statusApproved": "Đã duyệt",
     "statusRejected": "Đã từ chối",
-    "maxPendingReached": "Bạn đã đạt số lượng yêu cầu đặt lịch tối đa"
+    "maxPendingReached": "Bạn đã đạt số lượng yêu cầu đặt lịch tối đa",
+    "saveReference": "Vui lòng ghi nhớ mã tham chiếu này để kiểm tra trạng thái đặt lịch.",
+    "bookAnother": "Đặt lịch khác",
+    "email": "Email",
+    "doctorPreference": "Bác sĩ mong muốn (Không bắt buộc)",
+    "noPreference": "Không có yêu cầu",
+    "enterReference": "Nhập mã tham chiếu",
+    "check": "Kiểm tra",
+    "statusMessage": {
+      "pending": "Yêu cầu đặt lịch của bạn đang được nhân viên xem xét",
+      "approved": "Lịch hẹn của bạn đã được xác nhận vào ngày {{date}}",
+      "rejected": "Yêu cầu đặt lịch không được duyệt. Lý do: {{reason}}"
+    },
+    "callForAssistance": "Vui lòng gọi {{phone}} để được hỗ trợ",
+    "morning": "Buổi sáng (8:00 - 12:00)",
+    "afternoon": "Buổi chiều (13:00 - 17:00)",
+    "evening": "Buổi tối (17:00 - 20:00)",
+    "staffWillConfirm": "Nhân viên sẽ xác nhận trong vòng 24 giờ."
   },
   "clinicHours": "Giờ hoạt động",
+  "clinicHoursSchedule": {
+    "tueFri": "Thứ 3 - Thứ 6: 13:00 - 20:00",
+    "satSun": "Thứ 7 - Chủ nhật: 08:00 - 12:00",
+    "monClosed": "Thứ 2: Nghỉ"
+  },
   "closed": "Đóng cửa",
   "pendingBookings": "Yêu cầu đặt lịch chờ duyệt",
   "approve": "Duyệt",
-  "reject": "Từ chối"
+  "reject": "Từ chối",
+  "clinicAddress": "28 Tên đường, Phường, Quận, Thành phố Hồ Chí Minh",
+  "clinicPhone": "0123 456 789"
 }
