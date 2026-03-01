@@ -47,6 +47,7 @@ Progress: [######....] 50%
 | Phase 01.2 P01a | 3min | 1 tasks | 24 files |
 | Phase 01.2 P01b | 3min | 1 tasks | 39 files |
 | Phase 01.2 P02 | 4min | 2 tasks | 7 files |
+| Phase 01.2 P03 | 4min | 2 tasks | 5 files |
 | Phase 01.2 P04 | 5min | 2 tasks | 7 files |
 
 ## Accumulated Context
