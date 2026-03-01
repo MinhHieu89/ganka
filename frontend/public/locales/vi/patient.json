@@ -44,5 +44,21 @@
   "hasAllergies": "Có dị ứng",
   "dateRange": "Khoảng thời gian",
   "yes": "Có",
-  "no": "Không"
+  "no": "Không",
+  "all": "Tất cả",
+  "invalidPhone": "Số điện thoại không hợp lệ (VD: 0901234567)",
+  "status": "Trạng thái",
+  "personalInfo": "Thông tin cá nhân",
+  "systemInfo": "Thông tin hệ thống",
+  "createdAt": "Ngày tạo",
+  "removeAllergy": "Xóa dị ứng",
+  "confirmRemoveAllergy": "Bạn có chắc muốn xóa dị ứng này?",
+  "confirmDeactivate": "Bạn có chắc muốn ngưng hoạt động bệnh nhân này?",
+  "confirmReactivate": "Bạn có chắc muốn kích hoạt lại bệnh nhân này?",
+  "notFound": "Không tìm thấy bệnh nhân",
+  "bookAppointment": "Đặt lịch hẹn",
+  "noAppointments": "Chưa có lịch hẹn",
+  "upcomingAppointments": "Sắp tới",
+  "pastAppointments": "Đã qua",
+  "compact_allergies": "{{count}} dị ứng"
 }

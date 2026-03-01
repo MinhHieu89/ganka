@@ -44,5 +44,21 @@
   "hasAllergies": "Has Allergies",
   "dateRange": "Date Range",
   "yes": "Yes",
-  "no": "No"
+  "no": "No",
+  "all": "All",
+  "invalidPhone": "Invalid phone number (e.g., 0901234567)",
+  "status": "Status",
+  "personalInfo": "Personal Information",
+  "systemInfo": "System Information",
+  "createdAt": "Created Date",
+  "removeAllergy": "Remove Allergy",
+  "confirmRemoveAllergy": "Are you sure you want to remove this allergy?",
+  "confirmDeactivate": "Are you sure you want to deactivate this patient?",
+  "confirmReactivate": "Are you sure you want to reactivate this patient?",
+  "notFound": "Patient not found",
+  "bookAppointment": "Book Appointment",
+  "noAppointments": "No appointments yet",
+  "upcomingAppointments": "Upcoming",
+  "pastAppointments": "Past",
+  "compact_allergies": "{{count}} allergies"
 }
