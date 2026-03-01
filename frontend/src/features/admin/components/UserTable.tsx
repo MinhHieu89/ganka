@@ -17,9 +17,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/shared/components/ui/table"
-import { Badge } from "@/shared/components/ui/badge"
-import { Button } from "@/shared/components/ui/button"
+} from "@/shared/components/Table"
+import { Badge } from "@/shared/components/Badge"
+import { Button } from "@/shared/components/Button"
 import type { UserDto } from "@/features/admin/api/admin-api"
 
 interface UserTableProps {

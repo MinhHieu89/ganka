@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next"
 import { IconLogout, IconUser } from "@tabler/icons-react"
-import { Button } from "@/shared/components/ui/button"
-import { SidebarTrigger } from "@/shared/components/ui/sidebar"
-import { Separator } from "@/shared/components/ui/separator"
+import { Button } from "@/shared/components/Button"
+import { SidebarTrigger } from "@/shared/components/Sidebar"
+import { Separator } from "@/shared/components/Separator"
 import { LanguageToggle } from "@/shared/components/LanguageToggle"
 import { useAuthStore } from "@/shared/stores/authStore"
 import { useAuth } from "@/features/auth/hooks/useAuth"
@@ -13,7 +13,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/shared/components/ui/dropdown-menu"
+} from "@/shared/components/DropdownMenu"
 
 export function TopBar() {
   const { t } = useTranslation("common")

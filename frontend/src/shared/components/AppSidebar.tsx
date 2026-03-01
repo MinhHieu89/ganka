@@ -18,7 +18,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-} from "@/shared/components/ui/sidebar"
+} from "@/shared/components/Sidebar"
 import { useAuthStore } from "@/shared/stores/authStore"
 
 interface NavItem {

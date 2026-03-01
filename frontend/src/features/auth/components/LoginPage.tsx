@@ -5,7 +5,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/shared/components/ui/card"
+} from "@/shared/components/Card"
 import { LanguageToggle } from "@/shared/components/LanguageToggle"
 import { LoginForm } from "./LoginForm"
 

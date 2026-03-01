@@ -2,9 +2,9 @@ import { useState, useMemo, useCallback } from "react"
 import { useTranslation } from "react-i18next"
 import { IconLoader2 } from "@tabler/icons-react"
 import { toast } from "sonner"
-import { Checkbox } from "@/shared/components/ui/checkbox"
-import { Button } from "@/shared/components/ui/button"
-import { Separator } from "@/shared/components/ui/separator"
+import { Checkbox } from "@/shared/components/Checkbox"
+import { Button } from "@/shared/components/Button"
+import { Separator } from "@/shared/components/Separator"
 import type {
   RoleDto,
   PermissionDto,

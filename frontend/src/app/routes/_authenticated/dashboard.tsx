@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { useTranslation } from "react-i18next"
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card"
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   component: DashboardPage,

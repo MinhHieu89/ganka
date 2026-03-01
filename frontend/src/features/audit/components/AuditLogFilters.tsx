@@ -1,14 +1,14 @@
 import { useTranslation } from "react-i18next"
-import { Button } from "@/shared/components/ui/button"
-import { Input } from "@/shared/components/ui/input"
-import { Label } from "@/shared/components/ui/label"
+import { Button } from "@/shared/components/Button"
+import { Input } from "@/shared/components/Input"
+import { Label } from "@/shared/components/Label"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/shared/components/ui/select"
+} from "@/shared/components/Select"
 import { IconFilter, IconFilterOff } from "@tabler/icons-react"
 import type { AuditLogFilters as FilterState } from "@/features/audit/hooks/useAuditLogs"
 

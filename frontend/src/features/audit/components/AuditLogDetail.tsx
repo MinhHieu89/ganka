@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next"
-import { Button } from "@/shared/components/ui/button"
+import { Button } from "@/shared/components/Button"
 import { IconCopy, IconCheck } from "@tabler/icons-react"
 import { useState, useCallback } from "react"
 import type { AuditLogDto } from "@/features/audit/api/audit-api"

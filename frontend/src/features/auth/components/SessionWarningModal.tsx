@@ -7,8 +7,8 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/shared/components/ui/dialog"
-import { Button } from "@/shared/components/ui/button"
+} from "@/shared/components/Dialog"
+import { Button } from "@/shared/components/Button"
 
 interface SessionWarningModalProps {
   open: boolean

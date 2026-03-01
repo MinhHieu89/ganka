@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next"
-import { Button } from "@/shared/components/ui/button"
+import { Button } from "@/shared/components/Button"
 import { IconDownload, IconLoader2 } from "@tabler/icons-react"
 import { useAuditLogs } from "@/features/audit/hooks/useAuditLogs"
 import { AuditLogFilters } from "./AuditLogFilters"

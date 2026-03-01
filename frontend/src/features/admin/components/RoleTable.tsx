@@ -13,8 +13,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/shared/components/ui/table"
-import { Badge } from "@/shared/components/ui/badge"
+} from "@/shared/components/Table"
+import { Badge } from "@/shared/components/Badge"
 import type { RoleDto } from "@/features/admin/api/admin-api"
 
 interface RoleTableProps {

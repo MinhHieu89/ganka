@@ -15,10 +15,10 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/shared/components/ui/table"
-import { Badge } from "@/shared/components/ui/badge"
-import { Button } from "@/shared/components/ui/button"
-import { Skeleton } from "@/shared/components/ui/skeleton"
+} from "@/shared/components/Table"
+import { Badge } from "@/shared/components/Badge"
+import { Button } from "@/shared/components/Button"
+import { Skeleton } from "@/shared/components/Skeleton"
 import {
   IconChevronDown,
   IconChevronRight,

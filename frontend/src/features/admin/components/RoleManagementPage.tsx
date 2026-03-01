@@ -5,18 +5,18 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { toast } from "sonner"
 import { IconPlus, IconLoader2 } from "@tabler/icons-react"
-import { Button } from "@/shared/components/ui/button"
-import { Input } from "@/shared/components/ui/input"
-import { Label } from "@/shared/components/ui/label"
-import { Skeleton } from "@/shared/components/ui/skeleton"
-import { Separator } from "@/shared/components/ui/separator"
+import { Button } from "@/shared/components/Button"
+import { Input } from "@/shared/components/Input"
+import { Label } from "@/shared/components/Label"
+import { Skeleton } from "@/shared/components/Skeleton"
+import { Separator } from "@/shared/components/Separator"
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/shared/components/ui/dialog"
+} from "@/shared/components/Dialog"
 import { RoleTable } from "./RoleTable"
 import { PermissionMatrix } from "./PermissionMatrix"
 import { useRoles } from "@/features/admin/hooks/useRoles"

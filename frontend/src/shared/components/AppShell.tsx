@@ -1,5 +1,5 @@
 import { Outlet } from "@tanstack/react-router"
-import { SidebarProvider, SidebarInset } from "@/shared/components/ui/sidebar"
+import { SidebarProvider, SidebarInset } from "@/shared/components/Sidebar"
 import { AppSidebar } from "@/shared/components/AppSidebar"
 import { TopBar } from "@/shared/components/TopBar"
 import { SessionWarningModal } from "@/features/auth/components/SessionWarningModal"

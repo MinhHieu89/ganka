@@ -1,11 +1,11 @@
 import { useTranslation } from "react-i18next"
-import { Button } from "@/shared/components/ui/button"
+import { Button } from "@/shared/components/Button"
 import { IconLanguage } from "@tabler/icons-react"
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/shared/components/ui/tooltip"
+} from "@/shared/components/Tooltip"
 import { useUpdateLanguageMutation } from "@/features/auth/api/auth-api"
 import { useAuthStore } from "@/shared/stores/authStore"
 
