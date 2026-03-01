@@ -18,6 +18,7 @@ public static class IoC
         // Repositories
         services.AddScoped<IPatientRepository, PatientRepository>();
         services.AddScoped<IAllergyCatalogRepository, AllergyCatalogRepository>();
+        services.AddScoped<IAllergyRepository, AllergyRepository>();
 
         // Unit of Work
         services.AddScoped<IUnitOfWork, UnitOfWork>();

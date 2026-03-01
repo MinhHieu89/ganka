@@ -25,6 +25,12 @@ public class Patient : AggregateRoot, IAuditable
     public int SequenceNumber { get; private set; }
     public bool IsActive { get; private set; } = true;
 
+    /// <summary>
+    /// Concurrency token for optimistic concurrency control.
+    /// Automatically managed by SQL Server rowversion.
+    /// </summary>
+    public byte[] RowVersion { get; private set; } = [];
+
     private readonly List<Allergy> _allergies = [];
     public IReadOnlyCollection<Allergy> Allergies => _allergies.AsReadOnly();
 

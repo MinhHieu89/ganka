@@ -1,5 +1,6 @@
 using FluentValidation;
 using Patient.Application.Interfaces;
+using Patient.Domain.Entities;
 using Patient.Domain.Enums;
 using Shared.Domain;
 
@@ -28,12 +29,15 @@ public class AddAllergyCommandValidator : AbstractValidator<AddAllergyCommand>
 
 /// <summary>
 /// Wolverine handler for adding an allergy to a patient.
+/// Uses direct repository insertion to avoid concurrency token conflicts
+/// when modifying the Patient aggregate root for child entity changes.
 /// </summary>
 public static class AddAllergyHandler
 {
     public static async Task<Result<Guid>> Handle(
         AddAllergyCommand command,
         IPatientRepository patientRepository,
+        IAllergyRepository allergyRepository,
         IUnitOfWork unitOfWork,
         IValidator<AddAllergyCommand> validator,
         CancellationToken cancellationToken)
@@ -45,11 +49,12 @@ public static class AddAllergyHandler
             return Result<Guid>.Failure(Error.Validation(errors));
         }
 
-        var patient = await patientRepository.GetByIdWithTrackingAsync(command.PatientId, cancellationToken);
-        if (patient is null)
+        var patientExists = await patientRepository.ExistsAsync(command.PatientId, cancellationToken);
+        if (!patientExists)
             return Result<Guid>.Failure(Error.NotFound("Patient", command.PatientId));
 
-        var allergy = patient.AddAllergy(command.Name, command.Severity);
+        var allergy = Allergy.Create(command.Name, command.Severity, command.PatientId);
+        allergyRepository.Add(allergy);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return allergy.Id;

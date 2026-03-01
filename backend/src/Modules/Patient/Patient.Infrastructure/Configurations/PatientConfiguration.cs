@@ -62,7 +62,7 @@ public class PatientConfiguration : IEntityTypeConfiguration<Domain.Entities.Pat
             .OnDelete(DeleteBehavior.Cascade);
 
         // Concurrency token
-        builder.Property<byte[]>("RowVersion")
+        builder.Property(p => p.RowVersion)
             .IsRowVersion();
     }
 }

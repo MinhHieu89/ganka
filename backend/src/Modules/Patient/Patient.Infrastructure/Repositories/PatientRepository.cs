@@ -109,6 +109,11 @@ public sealed class PatientRepository : IPatientRepository
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<bool> ExistsAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return await _dbContext.Patients.AnyAsync(p => p.Id == id, cancellationToken);
+    }
+
     public void Add(Domain.Entities.Patient patient)
     {
         _dbContext.Patients.Add(patient);
