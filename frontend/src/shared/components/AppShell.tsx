@@ -1,7 +1,7 @@
 import { Outlet } from "@tanstack/react-router"
 import { SidebarProvider, SidebarInset } from "@/shared/components/Sidebar"
 import { AppSidebar } from "@/shared/components/AppSidebar"
-import { TopBar } from "@/shared/components/TopBar"
+import { SiteHeader } from "@/shared/components/SiteHeader"
 import { SessionWarningModal } from "@/features/auth/components/SessionWarningModal"
 import { useSession } from "@/features/auth/hooks/useSession"
 import { useAuth } from "@/features/auth/hooks/useAuth"
@@ -14,7 +14,7 @@ export function AppShell() {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <TopBar />
+        <SiteHeader />
         <main className="flex-1 p-4 md:p-6">
           <Outlet />
         </main>
