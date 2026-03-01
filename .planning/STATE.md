@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 ## Current Position
 
 Phase: 02 of 9 (Patient Management & Scheduling)
-Plan: 4 of 6 in current phase
+Plan: 5 of 6 in current phase
 Status: Executing Phase 02
-Last activity: 2026-03-01 -- Completed 02-02 Scheduling Module Backend
+Last activity: 2026-03-01 -- Completed 02-04 Patient Frontend
 
-Progress: [#####-----] 50%
+Progress: [######----] 60%
 
 ## Performance Metrics
 
@@ -55,6 +55,7 @@ Progress: [#####-----] 50%
 | Phase 02 P01 | 14min | 2 tasks | 48 files |
 | Phase 02 P02 | 15min | 2 tasks | 54 files |
 | Phase 02 P03 | 8min | 2 tasks | 24 files |
+| Phase 02 P04 | 7min | 2 tasks | 17 files |
 
 ## Accumulated Context
 
@@ -148,6 +149,9 @@ Recent decisions affecting current work:
 - [Phase 02]: DatePicker uses date-fns format with Vietnamese dd/MM/yyyy locale support
 - [Phase 02]: GlobalSearch uses Command+Popover pattern with Ctrl+K shortcut, recent patients on focus, deferred API search
 - [Phase 02]: Restored hideCloseButton prop on dialog.tsx after shadcn CLI overwrite (recurring risk with shadcn add --overwrite)
+- [Phase 02]: [02-04]: AllergyAlert component with full banner + compact tooltip modes for downstream prescribing reuse
+- [Phase 02]: [02-04]: Photo upload via native fetch with FormData (not openapi-fetch) for multipart file support
+- [Phase 02]: [02-04]: PatientAppointmentTab uses retry:false for graceful scheduling API unavailability
 
 ### Roadmap Evolution
 
@@ -168,5 +172,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-01
-Stopped at: Completed 02-02-PLAN.md -- Scheduling Module Backend
-Resume file: .planning/phases/02-patient-management-scheduling/02-02-SUMMARY.md
+Stopped at: Completed 02-04-PLAN.md -- Patient Frontend
+Resume file: .planning/phases/02-patient-management-scheduling/02-04-SUMMARY.md
