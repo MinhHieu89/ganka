@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 ## Current Position
 
 Phase: 02 of 9 (Patient Management & Scheduling)
-Plan: 5 of 6 in current phase
+Plan: 6 of 6 in current phase
 Status: Executing Phase 02
-Last activity: 2026-03-01 -- Completed 02-04 Patient Frontend
+Last activity: 2026-03-01 -- Completed 02-05 Scheduling Frontend & Public Booking
 
-Progress: [######----] 60%
+Progress: [########--] 80%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 20
+- Total plans completed: 22
 - Average duration: 7min
-- Total execution time: 2.25 hours
+- Total execution time: 2.40 hours
 
 **By Phase:**
 
@@ -56,6 +56,7 @@ Progress: [######----] 60%
 | Phase 02 P02 | 15min | 2 tasks | 54 files |
 | Phase 02 P03 | 8min | 2 tasks | 24 files |
 | Phase 02 P04 | 7min | 2 tasks | 17 files |
+| Phase 02 P05 | 8min | 2 tasks | 21 files |
 
 ## Accumulated Context
 
@@ -152,6 +153,10 @@ Recent decisions affecting current work:
 - [Phase 02]: [02-04]: AllergyAlert component with full banner + compact tooltip modes for downstream prescribing reuse
 - [Phase 02]: [02-04]: Photo upload via native fetch with FormData (not openapi-fetch) for multipart file support
 - [Phase 02]: [02-04]: PatientAppointmentTab uses retry:false for graceful scheduling API unavailability
+- [Phase 02]: [02-05]: Separate public API client (publicApi) without auth middleware for /api/public/booking endpoints
+- [Phase 02]: [02-05]: FullCalendar CSS themed via CSS variables matching shadcn/ui design tokens
+- [Phase 02]: [02-05]: Public /book and /book/status routes outside _authenticated layout group
+- [Phase 02]: [02-05]: DoctorSelector queries auth/users filtered by Doctor role -- placeholder until dedicated endpoint
 
 ### Roadmap Evolution
 
@@ -172,5 +177,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-01
-Stopped at: Completed 02-04-PLAN.md -- Patient Frontend
-Resume file: .planning/phases/02-patient-management-scheduling/02-04-SUMMARY.md
+Stopped at: Completed 02-05-PLAN.md -- Scheduling Frontend & Public Booking
+Resume file: .planning/phases/02-patient-management-scheduling/02-05-SUMMARY.md

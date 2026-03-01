@@ -96,7 +96,7 @@ Plans:
 - [ ] 02-02-PLAN.md -- Scheduling module backend: appointments, self-booking, clinic schedule, double-booking prevention, public endpoints
 - [ ] 02-03-PLAN.md -- Frontend dependencies + shared components: FullCalendar, cmdk, shadcn wrappers, GlobalSearch, i18n translations
 - [ ] 02-04-PLAN.md -- Patient frontend: registration form, patient list, profile page with tabs, allergy management
-- [ ] 02-05-PLAN.md -- Scheduling frontend: FullCalendar calendar, booking dialogs, public self-booking page, pending bookings panel
+- [x] 02-05-PLAN.md -- Scheduling frontend: FullCalendar calendar, booking dialogs, public self-booking page, pending bookings panel
 - [ ] 02-06-PLAN.md -- Integration verification checkpoint: API tests + human verification of all flows
 
 ### Phase 3: Clinical Workflow & Examination
