@@ -1,12 +1,15 @@
-import { createFileRoute } from "@tanstack/react-router"
+import { createFileRoute, Link } from "@tanstack/react-router"
 import { useTranslation } from "react-i18next"
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card"
 import { useAuthStore } from "@/shared/stores/authStore"
+import { useRecentPatientsStore } from "@/shared/stores/recentPatientsStore"
 import {
   IconUsers,
   IconCalendar,
   IconStethoscope,
   IconActivity,
+  IconUser,
+  IconChevronRight,
 } from "@tabler/icons-react"
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
@@ -16,7 +19,9 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 function DashboardPage() {
   const { t } = useTranslation("common")
   const { t: tAuth } = useTranslation("auth")
+  const { t: tPatient } = useTranslation("patient")
   const user = useAuthStore((s) => s.user)
+  const recentPatients = useRecentPatientsStore((s) => s.recent)
   const firstName = user?.fullName?.split(" ").pop() ?? user?.fullName ?? ""
 
   return (
@@ -89,18 +94,52 @@ function DashboardPage() {
       {/* Quick info section */}
       <div className="grid gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle className="text-base">{t("sidebar.dashboard")}</CardTitle>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle className="text-base">{tPatient("recent")}</CardTitle>
+            <Link
+              to={"/patients" as string}
+              className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {tPatient("list")}
+              <IconChevronRight className="inline h-3 w-3 ml-0.5" />
+            </Link>
           </CardHeader>
           <CardContent>
-            <div className="flex flex-col items-center justify-center py-12 text-center">
-              <div className="flex size-12 items-center justify-center bg-primary/5 text-primary mb-4">
-                <IconActivity className="h-6 w-6" />
+            {recentPatients.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-12 text-center">
+                <div className="flex size-12 items-center justify-center bg-primary/5 text-primary mb-4">
+                  <IconUsers className="h-6 w-6" />
+                </div>
+                <p className="text-sm text-muted-foreground max-w-sm">
+                  {tPatient("noRecent")}
+                </p>
               </div>
-              <p className="text-sm text-muted-foreground max-w-sm">
-                Patient workflows, appointment queues, and clinical activity will appear here as modules are activated.
-              </p>
-            </div>
+            ) : (
+              <div className="space-y-1">
+                {recentPatients.slice(0, 5).map((patient) => (
+                  <Link
+                    key={patient.id}
+                    to={"/patients/$patientId" as string}
+                    params={{ patientId: patient.id } as never}
+                    className="flex items-center gap-3 p-2 -mx-2 hover:bg-muted/50 transition-colors group"
+                  >
+                    <div className="flex size-8 items-center justify-center bg-primary/5 text-primary shrink-0">
+                      <IconUser className="h-4 w-4" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium truncate group-hover:text-primary transition-colors">
+                        {patient.fullName}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {patient.patientCode}
+                        {patient.phone && <> &middot; {patient.phone}</>}
+                      </p>
+                    </div>
+                    <IconChevronRight className="h-4 w-4 text-muted-foreground/50 group-hover:text-muted-foreground transition-colors shrink-0" />
+                  </Link>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
 

@@ -72,13 +72,11 @@ export function AppSidebar({ ...sidebarProps }: ComponentProps<typeof Sidebar>) 
       titleKey: "sidebar.patients",
       to: "/patients",
       icon: IconUsers,
-      disabled: true,
     },
     {
       titleKey: "sidebar.appointments",
       to: "/appointments",
       icon: IconCalendar,
-      disabled: true,
     },
     {
       titleKey: "sidebar.clinical",

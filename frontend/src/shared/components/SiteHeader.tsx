@@ -24,6 +24,7 @@ import {
 import { Button } from "@/shared/components/Button"
 import { useAuthStore } from "@/shared/stores/authStore"
 import { useAuth } from "@/features/auth/hooks/useAuth"
+import { GlobalSearch } from "@/shared/components/GlobalSearch"
 
 /**
  * Map of route path segments to i18n keys under "sidebar.*" or "topbar.*" namespace.
@@ -98,7 +99,8 @@ export function SiteHeader() {
 
       <div className="flex-1" />
 
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-2">
+        <GlobalSearch />
         <LanguageToggle />
 
         <DropdownMenu>

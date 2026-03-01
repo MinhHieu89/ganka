@@ -61,5 +61,9 @@
     "error": "Đã xảy ra lỗi",
     "success": "Thành công",
     "notFound": "Không tìm thấy"
+  },
+  "search": {
+    "placeholder": "Tìm kiếm...",
+    "noResults": "Không tìm thấy kết quả"
   }
 }

@@ -61,5 +61,9 @@
     "error": "An error occurred",
     "success": "Success",
     "notFound": "Not found"
+  },
+  "search": {
+    "placeholder": "Search...",
+    "noResults": "No results found"
   }
 }
