@@ -2,19 +2,11 @@ import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import {
   createColumnHelper,
-  flexRender,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/shared/components/Table"
 import { Badge } from "@/shared/components/Badge"
+import { DataTable } from "@/shared/components/DataTable"
 import type { RoleDto } from "@/features/admin/api/admin-api"
 
 interface RoleTableProps {
@@ -76,55 +68,14 @@ export function RoleTable({
   })
 
   return (
-    <div className="border">
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <TableHead key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext(),
-                      )}
-                </TableHead>
-              ))}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows.length === 0 ? (
-            <TableRow>
-              <TableCell
-                colSpan={columns.length}
-                className="h-24 text-center text-muted-foreground"
-              >
-                No roles found
-              </TableCell>
-            </TableRow>
-          ) : (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                className={`cursor-pointer ${
-                  row.original.id === selectedRoleId
-                    ? "bg-accent"
-                    : "hover:bg-muted/50"
-                }`}
-                onClick={() => onSelectRole(row.original)}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
-          )}
-        </TableBody>
-      </Table>
-    </div>
+    <DataTable
+      table={table}
+      columns={columns}
+      onRowClick={(row) => onSelectRole(row)}
+      rowClassName={(row) =>
+        row.id === selectedRoleId ? "bg-accent" : "hover:bg-muted/50"
+      }
+      emptyMessage="No roles found"
+    />
   )
 }

@@ -4,21 +4,13 @@ import {
   useReactTable,
   getCoreRowModel,
   getExpandedRowModel,
-  flexRender,
   type ColumnDef,
   type ExpandedState,
 } from "@tanstack/react-table"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/shared/components/Table"
 import { Badge } from "@/shared/components/Badge"
 import { Button } from "@/shared/components/Button"
 import { Skeleton } from "@/shared/components/Skeleton"
+import { DataTable } from "@/shared/components/DataTable"
 import {
   IconChevronDown,
   IconChevronRight,
@@ -80,7 +72,10 @@ export function AuditLogTable({
             variant="ghost"
             size="icon"
             className="h-6 w-6"
-            onClick={() => row.toggleExpanded()}
+            onClick={(e) => {
+              e.stopPropagation()
+              row.toggleExpanded()
+            }}
             aria-label={t("details")}
           >
             {row.getIsExpanded() ? (
@@ -166,65 +161,16 @@ export function AuditLogTable({
 
   return (
     <div className="space-y-4">
-      <div className="border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id} style={{ width: header.getSize() !== 150 ? header.getSize() : undefined }}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows.length === 0 ? (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center text-muted-foreground"
-                >
-                  {t("noData", "No audit logs found")}
-                </TableCell>
-              </TableRow>
-            ) : (
-              table.getRowModel().rows.map((row) => (
-                <>
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsExpanded() ? "selected" : undefined}
-                    className="cursor-pointer"
-                    onClick={() => row.toggleExpanded()}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                  {row.getIsExpanded() && (
-                    <TableRow key={`${row.id}-detail`}>
-                      <TableCell colSpan={columns.length} className="p-0">
-                        <AuditLogDetail log={row.original} />
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </div>
+      <DataTable
+        table={table}
+        columns={columns}
+        onRowClick={(_row, tanstackRow) => tanstackRow.toggleExpanded()}
+        renderSubRow={(row) => <AuditLogDetail log={row} />}
+        emptyMessage={t("noData", "No audit logs found")}
+        headerStyle={(_, size) => ({
+          width: size !== 150 ? size : undefined,
+        })}
+      />
 
       {/* Pagination controls */}
       <div className="flex items-center justify-between">
