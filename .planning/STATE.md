@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-28)
 
 **Core value:** Doctors can manage chronic eye disease patients (Dry Eye, Myopia Control) with structured data tracking, image comparison across visits, and treatment progress reporting
-**Current focus:** Phase 01.2: Refactor frontend to shadcn/ui with TanStack Start file-based routing
+**Current focus:** Phase 02: Patient Management & Scheduling
 
 ## Current Position
 
-Phase: 01.2 of 9 (Refactor frontend to shadcn/ui with TanStack Start file-based routing)
-Plan: 8 of 8 in current phase
-Status: Phase 01.2 COMPLETE -- all plans executed
-Last activity: 2026-03-01 -- Completed 01.2-06 Dashboard-01 layout fidelity
+Phase: 02 of 9 (Patient Management & Scheduling)
+Plan: 4 of 6 in current phase
+Status: Executing Phase 02
+Last activity: 2026-03-01 -- Completed 02-03 Shared Frontend Infrastructure
 
-Progress: [##########] 100%
+Progress: [#####-----] 50%
 
 ## Performance Metrics
 
@@ -52,6 +52,7 @@ Progress: [##########] 100%
 | Phase 01.2 P05 | 4min | 2 tasks | 0 files |
 | Phase 01.2 P07 | 2min | 2 tasks | 3 files |
 | Phase 01.2 P06 | 2min | 2 tasks | 3 files |
+| Phase 02 P03 | 8min | 2 tasks | 24 files |
 
 ## Accumulated Context
 
@@ -131,6 +132,9 @@ Recent decisions affecting current work:
 - [Phase 01.2]: [01.2-06]: offcanvas collapsible instead of icon -- matches dashboard-01 reference for mobile-first sidebar behavior
 - [Phase 01.2]: [01.2-06]: CSS variable-driven header height via --header-height instead of hardcoded h-12 -- enables consistent sizing from SidebarProvider
 - [Phase 01.2]: [01.2-07]: Vietnamese translations must always use proper diacritics -- no unaccented Vietnamese in vi/*.json
+- [Phase 02]: DatePicker uses date-fns format with Vietnamese dd/MM/yyyy locale support
+- [Phase 02]: GlobalSearch uses Command+Popover pattern with Ctrl+K shortcut, recent patients on focus, deferred API search
+- [Phase 02]: Restored hideCloseButton prop on dialog.tsx after shadcn CLI overwrite (recurring risk with shadcn add --overwrite)
 
 ### Roadmap Evolution
 
@@ -151,5 +155,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-01
-Stopped at: Completed 01.2-06-PLAN.md -- Phase 01.2 fully complete
-Resume file: .planning/phases/01.2-refactor-frontend-to-shadcn-ui-with-tanstack-start-file-based-routing/01.2-06-SUMMARY.md
+Stopped at: Completed 02-03-PLAN.md -- Shared Frontend Infrastructure
+Resume file: .planning/phases/02-patient-management-scheduling/02-03-SUMMARY.md
