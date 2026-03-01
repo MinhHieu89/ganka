@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 ## Current Position
 
 Phase: 01.2 of 9 (Refactor frontend to shadcn/ui with TanStack Start file-based routing)
-Plan: 1 of 6 in current phase
-Status: Executing Phase 01.2 -- Plan 01a complete
-Last activity: 2026-03-01 -- Completed 01.2-01a shadcn/ui component installation and upgrade
+Plan: 2 of 6 in current phase
+Status: Executing Phase 01.2 -- Plan 01b complete
+Last activity: 2026-03-01 -- Completed 01.2-01b wrapper components and import redirect
 
-Progress: [######....] 30%
+Progress: [######....] 33%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 16
+- Total plans completed: 17
 - Average duration: 8min
-- Total execution time: 2.07 hours
+- Total execution time: 2.12 hours
 
 **By Phase:**
 
@@ -45,6 +45,7 @@ Progress: [######....] 30%
 | Phase 01.1 P07 | 3min | 2 tasks | 2 files |
 | Phase 01.1 P09 | 3min | 1 tasks | 27 files |
 | Phase 01.2 P01a | 3min | 1 tasks | 24 files |
+| Phase 01.2 P01b | 3min | 1 tasks | 39 files |
 
 ## Accumulated Context
 
@@ -108,6 +109,9 @@ Recent decisions affecting current work:
 - [Phase 01.2]: [01.2-01a]: Allowed sidebar overwrite -- latest shadcn sidebar includes all expected exports
 - [Phase 01.2]: [01.2-01a]: Restored hideCloseButton custom prop on DialogContent after shadcn overwrite
 - [Phase 01.2]: [01.2-01a]: lucide-react accepted as shadcn internal icon dependency alongside @tabler/icons-react
+- [Phase 01.2]: [01.2-01b]: Pure re-export wrappers for all 20 shadcn primitives -- enables future customization in ONE place
+- [Phase 01.2]: [01.2-01b]: Layout components (TopBar, AppShell, AppSidebar, LanguageToggle) also use wrapper imports, not direct ui/
+- [Phase 01.2]: [01.2-01b]: Wrapper import pattern enforced: @/shared/components/Button, never @/shared/components/ui/button
 
 ### Roadmap Evolution
 
@@ -128,5 +132,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-01
-Stopped at: Completed 01.2-01a-PLAN.md
-Resume file: .planning/phases/01.2-refactor-frontend-to-shadcn-ui-with-tanstack-start-file-based-routing/01.2-01a-SUMMARY.md
+Stopped at: Completed 01.2-01b-PLAN.md
+Resume file: .planning/phases/01.2-refactor-frontend-to-shadcn-ui-with-tanstack-start-file-based-routing/01.2-01b-SUMMARY.md
