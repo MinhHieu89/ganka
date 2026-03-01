@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { useForm } from "react-hook-form"
+import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { useTranslation } from "react-i18next"
@@ -17,6 +17,7 @@ import { Label } from "@/shared/components/Label"
 import { Button } from "@/shared/components/Button"
 import { Checkbox } from "@/shared/components/Checkbox"
 import { Badge } from "@/shared/components/Badge"
+import { Field, FieldLabel, FieldError } from "@/shared/components/Field"
 import {
   useRolesQuery,
   type UserDto,
@@ -181,6 +182,10 @@ export function UserFormDialog({
     return error.message
   }
 
+  const currentErrors = isEditMode
+    ? editForm.formState.errors
+    : createForm.formState.errors
+
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent className="sm:max-w-md">
@@ -199,75 +204,106 @@ export function UserFormDialog({
           className="space-y-4"
         >
           {!isEditMode && (
-            <div className="space-y-2">
-              <Label htmlFor="email">{t("admin.email")}</Label>
-              <Input
-                id="email"
-                type="email"
-                {...createForm.register("email")}
-              />
-              {createForm.formState.errors.email && (
-                <p className="text-sm text-destructive">
-                  {getErrorMessage(createForm.formState.errors.email)}
-                </p>
+            <Controller
+              name="email"
+              control={createForm.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid || undefined}>
+                  <FieldLabel htmlFor={field.name}>{t("admin.email")}</FieldLabel>
+                  <Input
+                    {...field}
+                    id={field.name}
+                    type="email"
+                    aria-invalid={fieldState.invalid || undefined}
+                  />
+                  {fieldState.error && (
+                    <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                  )}
+                </Field>
               )}
-            </div>
+            />
           )}
 
-          <div className="space-y-2">
-            <Label htmlFor="fullName">{t("admin.fullName")}</Label>
-            <Input
-              id="fullName"
-              {...(isEditMode
-                ? editForm.register("fullName")
-                : createForm.register("fullName"))}
+          {isEditMode ? (
+            <Controller
+              name="fullName"
+              control={editForm.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid || undefined}>
+                  <FieldLabel htmlFor={field.name}>{t("admin.fullName")}</FieldLabel>
+                  <Input
+                    {...field}
+                    id={field.name}
+                    aria-invalid={fieldState.invalid || undefined}
+                  />
+                  {fieldState.error && (
+                    <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                  )}
+                </Field>
+              )}
             />
-            {(isEditMode
-              ? editForm.formState.errors.fullName
-              : createForm.formState.errors.fullName) && (
-              <p className="text-sm text-destructive">
-                {getErrorMessage(
-                  isEditMode
-                    ? editForm.formState.errors.fullName
-                    : createForm.formState.errors.fullName,
-                )}
-              </p>
-            )}
-          </div>
+          ) : (
+            <Controller
+              name="fullName"
+              control={createForm.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid || undefined}>
+                  <FieldLabel htmlFor={field.name}>{t("admin.fullName")}</FieldLabel>
+                  <Input
+                    {...field}
+                    id={field.name}
+                    aria-invalid={fieldState.invalid || undefined}
+                  />
+                  {fieldState.error && (
+                    <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                  )}
+                </Field>
+              )}
+            />
+          )}
 
           {!isEditMode && (
-            <div className="space-y-2">
-              <Label htmlFor="password">{t("admin.password")}</Label>
-              <Input
-                id="password"
-                type="password"
-                {...createForm.register("password")}
-              />
-              {createForm.formState.errors.password && (
-                <p className="text-sm text-destructive">
-                  {getErrorMessage(createForm.formState.errors.password)}
-                </p>
+            <Controller
+              name="password"
+              control={createForm.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid || undefined}>
+                  <FieldLabel htmlFor={field.name}>{t("admin.password")}</FieldLabel>
+                  <Input
+                    {...field}
+                    id={field.name}
+                    type="password"
+                    aria-invalid={fieldState.invalid || undefined}
+                  />
+                  {fieldState.error && (
+                    <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                  )}
+                </Field>
               )}
-            </div>
+            />
           )}
 
           {isEditMode && (
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="isActive"
-                checked={editForm.watch("isActive")}
-                onCheckedChange={(checked) =>
-                  editForm.setValue("isActive", checked === true)
-                }
-              />
-              <Label htmlFor="isActive" className="font-normal cursor-pointer">
-                {t("admin.active")}
-              </Label>
-            </div>
+            <Controller
+              name="isActive"
+              control={editForm.control}
+              render={({ field }) => (
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="isActive"
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                  <Label htmlFor="isActive" className="font-normal cursor-pointer">
+                    {t("admin.active")}
+                  </Label>
+                </div>
+              )}
+            />
           )}
 
-          <div className="space-y-2">
-            <Label>{t("admin.selectRoles")}</Label>
+          <Field data-invalid={currentErrors.roleIds ? true : undefined}>
+            <FieldLabel>{t("admin.selectRoles")}</FieldLabel>
             <div className="border p-3 space-y-2 max-h-48 overflow-y-auto">
               {roles.map((role) => (
                 <div key={role.id} className="flex items-center space-x-2">
@@ -293,14 +329,10 @@ export function UserFormDialog({
                 </div>
               ))}
             </div>
-            {(isEditMode
-              ? editForm.formState.errors.roleIds
-              : createForm.formState.errors.roleIds) && (
-              <p className="text-sm text-destructive">
-                {tCommon("validation.required")}
-              </p>
+            {currentErrors.roleIds && (
+              <FieldError>{tCommon("validation.required")}</FieldError>
             )}
-          </div>
+          </Field>
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={onClose}>

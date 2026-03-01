@@ -1,13 +1,11 @@
-import { useState } from "react"
 import { useTranslation } from "react-i18next"
-import { useForm } from "react-hook-form"
+import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { toast } from "sonner"
 import { IconPlus, IconLoader2 } from "@tabler/icons-react"
 import { Button } from "@/shared/components/Button"
 import { Input } from "@/shared/components/Input"
-import { Label } from "@/shared/components/Label"
 import { Skeleton } from "@/shared/components/Skeleton"
 import { Separator } from "@/shared/components/Separator"
 import {
@@ -17,6 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/shared/components/Dialog"
+import { Field, FieldLabel, FieldError } from "@/shared/components/Field"
 import { RoleTable } from "./RoleTable"
 import { PermissionMatrix } from "./PermissionMatrix"
 import { useRoles } from "@/features/admin/hooks/useRoles"
@@ -123,28 +122,41 @@ export function RoleManagementPage() {
             onSubmit={form.handleSubmit(handleCreateRole)}
             className="space-y-4"
           >
-            <div className="space-y-2">
-              <Label htmlFor="roleName">{t("admin.name")}</Label>
-              <Input id="roleName" {...form.register("name")} />
-              {form.formState.errors.name && (
-                <p className="text-sm text-destructive">
-                  {tCommon("validation.required")}
-                </p>
+            <Controller
+              name="name"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid || undefined}>
+                  <FieldLabel htmlFor={field.name}>{t("admin.name")}</FieldLabel>
+                  <Input
+                    {...field}
+                    id={field.name}
+                    aria-invalid={fieldState.invalid || undefined}
+                  />
+                  {fieldState.error && (
+                    <FieldError>{tCommon("validation.required")}</FieldError>
+                  )}
+                </Field>
               )}
-            </div>
+            />
 
-            <div className="space-y-2">
-              <Label htmlFor="roleDescription">{t("admin.description")}</Label>
-              <Input
-                id="roleDescription"
-                {...form.register("description")}
-              />
-              {form.formState.errors.description && (
-                <p className="text-sm text-destructive">
-                  {tCommon("validation.required")}
-                </p>
+            <Controller
+              name="description"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid || undefined}>
+                  <FieldLabel htmlFor={field.name}>{t("admin.description")}</FieldLabel>
+                  <Input
+                    {...field}
+                    id={field.name}
+                    aria-invalid={fieldState.invalid || undefined}
+                  />
+                  {fieldState.error && (
+                    <FieldError>{tCommon("validation.required")}</FieldError>
+                  )}
+                </Field>
               )}
-            </div>
+            />
 
             <DialogFooter>
               <Button

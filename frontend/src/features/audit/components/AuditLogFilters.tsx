@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next"
 import { Button } from "@/shared/components/Button"
 import { Input } from "@/shared/components/Input"
-import { Label } from "@/shared/components/Label"
+import { Field, FieldLabel } from "@/shared/components/Field"
 import {
   Select,
   SelectContent,
@@ -51,19 +51,19 @@ export function AuditLogFilters({
     <div className="flex flex-col gap-4 p-4 border bg-card">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {/* User filter */}
-        <div className="space-y-2">
-          <Label htmlFor="filter-user">{t("filters.user")}</Label>
+        <Field>
+          <FieldLabel htmlFor="filter-user">{t("filters.user")}</FieldLabel>
           <Input
             id="filter-user"
             placeholder={t("filters.user")}
             value={filters.userId}
             onChange={(e) => updateFilter("userId", e.target.value)}
           />
-        </div>
+        </Field>
 
         {/* Action type filter */}
-        <div className="space-y-2">
-          <Label htmlFor="filter-action">{t("filters.actionType")}</Label>
+        <Field>
+          <FieldLabel htmlFor="filter-action">{t("filters.actionType")}</FieldLabel>
           <Select
             value={filters.actionType}
             onValueChange={(value) => updateFilter("actionType", value)}
@@ -79,29 +79,29 @@ export function AuditLogFilters({
               ))}
             </SelectContent>
           </Select>
-        </div>
+        </Field>
 
         {/* Date from */}
-        <div className="space-y-2">
-          <Label htmlFor="filter-date-from">{t("filters.from")}</Label>
+        <Field>
+          <FieldLabel htmlFor="filter-date-from">{t("filters.from")}</FieldLabel>
           <Input
             id="filter-date-from"
             type="date"
             value={filters.dateFrom}
             onChange={(e) => updateFilter("dateFrom", e.target.value)}
           />
-        </div>
+        </Field>
 
         {/* Date to */}
-        <div className="space-y-2">
-          <Label htmlFor="filter-date-to">{t("filters.to")}</Label>
+        <Field>
+          <FieldLabel htmlFor="filter-date-to">{t("filters.to")}</FieldLabel>
           <Input
             id="filter-date-to"
             type="date"
             value={filters.dateTo}
             onChange={(e) => updateFilter("dateTo", e.target.value)}
           />
-        </div>
+        </Field>
       </div>
 
       <div className="flex items-center gap-2">
