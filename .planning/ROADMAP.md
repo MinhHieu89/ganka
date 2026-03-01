@@ -50,13 +50,14 @@ Plans:
 **Goal:** Frontend uses shadcn/ui comprehensively with dashboard-01 layout, login-04 login page, wrapper component pattern for safe upgrades, Field+Controller forms, generic DataTable, and AlertDialog for session warning
 **Depends on:** Phase 1
 **Requirements:** UI-01, UI-02, AUTH-01, AUTH-03, AUTH-04, AUD-01, AUD-02
-**Plans:** 5 plans in 3 waves
+**Plans:** 6 plans in 3 waves
 
 Plans:
-- [ ] 01.2-01-PLAN.md -- Install/upgrade shadcn components, create wrapper components, replace all direct ui/ imports
+- [ ] 01.2-01a-PLAN.md -- Install/upgrade all 20 shadcn/ui primitives via CLI
+- [ ] 01.2-01b-PLAN.md -- Create 20 wrapper components, replace all direct ui/ imports
 - [ ] 01.2-02-PLAN.md -- Dashboard layout: SiteHeader with breadcrumbs, AppSidebar with placeholder nav items
 - [ ] 01.2-03-PLAN.md -- Login page with login-04 layout, Field+Controller forms, AlertDialog session warning
-- [ ] 01.2-04-PLAN.md -- Generic DataTable component, rebuild all tables and forms with shadcn patterns
+- [ ] 01.2-04-PLAN.md -- Generic DataTable component, rebuild all tables, forms, and filters with shadcn patterns
 - [ ] 01.2-05-PLAN.md -- Automated verification + visual verification checkpoint
 
 ### Phase 01.1: Change the current code structure of the backend (INSERTED)
@@ -221,7 +222,7 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 |-------|----------------|--------|-----------|
 | 1. Foundation & Infrastructure | 6/7 | In Progress | - |
 | 1.1 Backend Restructuring | 5/9 | In Progress | - |
-| 1.2 Frontend shadcn/ui Refactoring | 0/5 | Not started | - |
+| 1.2 Frontend shadcn/ui Refactoring | 0/6 | Not started | - |
 | 2. Patient Management & Scheduling | 0/3 | Not started | - |
 | 3. Clinical Workflow & Examination | 0/3 | Not started | - |
 | 4. Dry Eye Template & Medical Imaging | 0/2 | Not started | - |
