@@ -1,3 +1,4 @@
+import type { ComponentProps } from "react"
 import { useTranslation } from "react-i18next"
 import { Link, useRouterState } from "@tanstack/react-router"
 import {
@@ -42,7 +43,7 @@ interface NavItem {
   disabled?: boolean
 }
 
-export function AppSidebar() {
+export function AppSidebar({ ...sidebarProps }: ComponentProps<typeof Sidebar>) {
   const { t } = useTranslation("common")
   const routerState = useRouterState()
   const currentPath = routerState.location.pathname
@@ -182,7 +183,7 @@ export function AppSidebar() {
     ))
 
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar collapsible="offcanvas" {...sidebarProps}>
       <SidebarHeader className="border-b">
         <SidebarMenu>
           <SidebarMenuItem>

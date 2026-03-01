@@ -76,7 +76,7 @@ export function SiteHeader() {
   const displayName = user?.fullName ?? user?.email ?? t("topbar.profile")
 
   return (
-    <header className="flex h-12 shrink-0 items-center border-b bg-background px-4 gap-2">
+    <header className="flex h-(--header-height) shrink-0 items-center gap-2 border-b px-4 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
       <SidebarTrigger className="-ml-1" />
       <Separator orientation="vertical" className="mr-2 h-4" />
       <Breadcrumb>
