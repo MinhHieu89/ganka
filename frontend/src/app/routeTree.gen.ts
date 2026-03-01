@@ -15,6 +15,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedPatientsIndexRouteImport } from './routes/_authenticated/patients/index'
 import { Route as AuthenticatedAppointmentsIndexRouteImport } from './routes/_authenticated/appointments/index'
+import { Route as AuthenticatedPatientsPatientIdRouteImport } from './routes/_authenticated/patients/$patientId'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin/users'
 import { Route as AuthenticatedAdminRolesRouteImport } from './routes/_authenticated/admin/roles'
 import { Route as AuthenticatedAdminAuditLogsRouteImport } from './routes/_authenticated/admin/audit-logs'
@@ -50,6 +51,12 @@ const AuthenticatedAppointmentsIndexRoute =
     path: '/appointments/',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedPatientsPatientIdRoute =
+  AuthenticatedPatientsPatientIdRouteImport.update({
+    id: '/patients/$patientId',
+    path: '/patients/$patientId',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
   id: '/admin/users',
   path: '/admin/users',
@@ -74,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/admin/audit-logs': typeof AuthenticatedAdminAuditLogsRoute
   '/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/patients/$patientId': typeof AuthenticatedPatientsPatientIdRoute
   '/appointments/': typeof AuthenticatedAppointmentsIndexRoute
   '/patients/': typeof AuthenticatedPatientsIndexRoute
 }
@@ -84,6 +92,7 @@ export interface FileRoutesByTo {
   '/admin/audit-logs': typeof AuthenticatedAdminAuditLogsRoute
   '/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/patients/$patientId': typeof AuthenticatedPatientsPatientIdRoute
   '/appointments': typeof AuthenticatedAppointmentsIndexRoute
   '/patients': typeof AuthenticatedPatientsIndexRoute
 }
@@ -96,6 +105,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/audit-logs': typeof AuthenticatedAdminAuditLogsRoute
   '/_authenticated/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/_authenticated/patients/$patientId': typeof AuthenticatedPatientsPatientIdRoute
   '/_authenticated/appointments/': typeof AuthenticatedAppointmentsIndexRoute
   '/_authenticated/patients/': typeof AuthenticatedPatientsIndexRoute
 }
@@ -108,6 +118,7 @@ export interface FileRouteTypes {
     | '/admin/audit-logs'
     | '/admin/roles'
     | '/admin/users'
+    | '/patients/$patientId'
     | '/appointments/'
     | '/patients/'
   fileRoutesByTo: FileRoutesByTo
@@ -118,6 +129,7 @@ export interface FileRouteTypes {
     | '/admin/audit-logs'
     | '/admin/roles'
     | '/admin/users'
+    | '/patients/$patientId'
     | '/appointments'
     | '/patients'
   id:
@@ -129,6 +141,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/audit-logs'
     | '/_authenticated/admin/roles'
     | '/_authenticated/admin/users'
+    | '/_authenticated/patients/$patientId'
     | '/_authenticated/appointments/'
     | '/_authenticated/patients/'
   fileRoutesById: FileRoutesById
@@ -183,6 +196,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppointmentsIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/patients/$patientId': {
+      id: '/_authenticated/patients/$patientId'
+      path: '/patients/$patientId'
+      fullPath: '/patients/$patientId'
+      preLoaderRoute: typeof AuthenticatedPatientsPatientIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/admin/users': {
       id: '/_authenticated/admin/users'
       path: '/admin/users'
@@ -212,6 +232,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedAdminAuditLogsRoute: typeof AuthenticatedAdminAuditLogsRoute
   AuthenticatedAdminRolesRoute: typeof AuthenticatedAdminRolesRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
+  AuthenticatedPatientsPatientIdRoute: typeof AuthenticatedPatientsPatientIdRoute
   AuthenticatedAppointmentsIndexRoute: typeof AuthenticatedAppointmentsIndexRoute
   AuthenticatedPatientsIndexRoute: typeof AuthenticatedPatientsIndexRoute
 }
@@ -221,6 +242,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAdminAuditLogsRoute: AuthenticatedAdminAuditLogsRoute,
   AuthenticatedAdminRolesRoute: AuthenticatedAdminRolesRoute,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
+  AuthenticatedPatientsPatientIdRoute: AuthenticatedPatientsPatientIdRoute,
   AuthenticatedAppointmentsIndexRoute: AuthenticatedAppointmentsIndexRoute,
   AuthenticatedPatientsIndexRoute: AuthenticatedPatientsIndexRoute,
 }
