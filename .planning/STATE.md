@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 ## Current Position
 
 Phase: 01.2 of 9 (Refactor frontend to shadcn/ui with TanStack Start file-based routing)
-Plan: 2 of 6 in current phase
-Status: Executing Phase 01.2 -- Plan 01b complete
-Last activity: 2026-03-01 -- Completed 01.2-01b wrapper components and import redirect
+Plan: 4 of 6 in current phase
+Status: Executing Phase 01.2 -- Plan 04 complete
+Last activity: 2026-03-01 -- Completed 01.2-04 DataTable and Field+Controller migration
 
-Progress: [######....] 33%
+Progress: [######....] 50%
 
 ## Performance Metrics
 
@@ -46,6 +46,8 @@ Progress: [######....] 33%
 | Phase 01.1 P09 | 3min | 1 tasks | 27 files |
 | Phase 01.2 P01a | 3min | 1 tasks | 24 files |
 | Phase 01.2 P01b | 3min | 1 tasks | 39 files |
+| Phase 01.2 P02 | 4min | 2 tasks | 7 files |
+| Phase 01.2 P04 | 5min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -112,6 +114,12 @@ Recent decisions affecting current work:
 - [Phase 01.2]: [01.2-01b]: Pure re-export wrappers for all 20 shadcn primitives -- enables future customization in ONE place
 - [Phase 01.2]: [01.2-01b]: Layout components (TopBar, AppShell, AppSidebar, LanguageToggle) also use wrapper imports, not direct ui/
 - [Phase 01.2]: [01.2-01b]: Wrapper import pattern enforced: @/shared/components/Button, never @/shared/components/ui/button
+- [Phase 01.2]: [01.2-02]: SiteHeader replaces TopBar with route-based breadcrumbs, language toggle, and user dropdown
+- [Phase 01.2]: [01.2-02]: NavUser in SidebarFooter following dashboard-01 convention
+- [Phase 01.2]: [01.2-02]: Disabled sidebar placeholder items with Tooltip "Coming soon" for Phases 2-9
+- [Phase 01.2]: [01.2-02]: IconSelector from @tabler/icons-react used instead of lucide ChevronsUpDown
+- [Phase 01.2]: DataTable receives pre-configured TanStack Table instance (not raw data) -- consumers own sorting/pagination/expansion state
+- [Phase 01.2]: Field+Controller for form fields, Field+FieldLabel (without Controller) for non-form filter inputs -- consistent styling, appropriate complexity
 
 ### Roadmap Evolution
 
@@ -132,5 +140,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-01
-Stopped at: Completed 01.2-01b-PLAN.md
-Resume file: .planning/phases/01.2-refactor-frontend-to-shadcn-ui-with-tanstack-start-file-based-routing/01.2-01b-SUMMARY.md
+Stopped at: Completed 01.2-04-PLAN.md
+Resume file: .planning/phases/01.2-refactor-frontend-to-shadcn-ui-with-tanstack-start-file-based-routing/01.2-04-SUMMARY.md
