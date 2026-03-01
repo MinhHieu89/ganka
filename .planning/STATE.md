@@ -52,6 +52,7 @@ Progress: [#####-----] 50%
 | Phase 01.2 P05 | 4min | 2 tasks | 0 files |
 | Phase 01.2 P07 | 2min | 2 tasks | 3 files |
 | Phase 01.2 P06 | 2min | 2 tasks | 3 files |
+| Phase 02 P01 | 14min | 2 tasks | 48 files |
 | Phase 02 P03 | 8min | 2 tasks | 24 files |
 
 ## Accumulated Context
@@ -132,6 +133,12 @@ Recent decisions affecting current work:
 - [Phase 01.2]: [01.2-06]: offcanvas collapsible instead of icon -- matches dashboard-01 reference for mobile-first sidebar behavior
 - [Phase 01.2]: [01.2-06]: CSS variable-driven header height via --header-height instead of hardcoded h-12 -- enables consistent sizing from SidebarProvider
 - [Phase 01.2]: [01.2-07]: Vietnamese translations must always use proper diacritics -- no unaccented Vietnamese in vi/*.json
+- [Phase 02]: [02-01]: Removed WolverineFx.Http from Patient.Application.csproj -- Application layer HTTP-free per established pattern
+- [Phase 02]: [02-01]: Patient.Contracts references Patient.Domain for enum reuse (PatientType, Gender, AllergySeverity)
+- [Phase 02]: [02-01]: Application-level patient code generation (MAX+1 per year, not SQL Server sequence) for year-boundary reset
+- [Phase 02]: [02-01]: RowVersion concurrency token on Patient entity for optimistic concurrency
+- [Phase 02]: [02-01]: AllergyCatalogSeeder as IHostedService with idempotent seeding (skip if data exists)
+- [Phase 02]: [02-01]: Unique constraint filter on PatientCode with HasFilter for NULL exclusion
 - [Phase 02]: DatePicker uses date-fns format with Vietnamese dd/MM/yyyy locale support
 - [Phase 02]: GlobalSearch uses Command+Popover pattern with Ctrl+K shortcut, recent patients on focus, deferred API search
 - [Phase 02]: Restored hideCloseButton prop on dialog.tsx after shadcn CLI overwrite (recurring risk with shadcn add --overwrite)
@@ -155,5 +162,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-01
-Stopped at: Completed 02-03-PLAN.md -- Shared Frontend Infrastructure
-Resume file: .planning/phases/02-patient-management-scheduling/02-03-SUMMARY.md
+Stopped at: Completed 02-01-PLAN.md -- Patient Module Backend
+Resume file: .planning/phases/02-patient-management-scheduling/02-01-SUMMARY.md

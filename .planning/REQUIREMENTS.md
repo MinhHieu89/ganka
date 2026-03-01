@@ -17,11 +17,11 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Patient Management
 
-- [ ] **PAT-01**: Staff can register medical patient with name, phone, DOB, gender; system auto-generates GK-YYYY-NNNN ID
-- [ ] **PAT-02**: Staff can register walk-in pharmacy customer with name + phone only (lightweight record, no full medical profile)
-- [ ] **PAT-03**: System supports configurable mandatory fields (Address, CCCD) that become required for referrals, legal export, or So Y te reporting
+- [x] **PAT-01**: Staff can register medical patient with name, phone, DOB, gender; system auto-generates GK-YYYY-NNNN ID
+- [x] **PAT-02**: Staff can register walk-in pharmacy customer with name + phone only (lightweight record, no full medical profile)
+- [x] **PAT-03**: System supports configurable mandatory fields (Address, CCCD) that become required for referrals, legal export, or So Y te reporting
 - [x] **PAT-04**: Staff can search patients by name, phone, or patient ID with results in <=3 seconds
-- [ ] **PAT-05**: System stores structured allergy list per patient and displays allergy alerts during prescribing
+- [x] **PAT-05**: System stores structured allergy list per patient and displays allergy alerts during prescribing
 
 ### Clinical Workflow
 
@@ -231,11 +231,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUTH-03 | Phase 1 | Complete |
 | AUTH-04 | Phase 1 | Complete |
 | AUTH-05 | Phase 1 | Complete |
-| PAT-01 | Phase 2 | Pending |
-| PAT-02 | Phase 2 | Pending |
-| PAT-03 | Phase 2 | Pending |
+| PAT-01 | Phase 2 | Complete |
+| PAT-02 | Phase 2 | Complete |
+| PAT-03 | Phase 2 | Complete |
 | PAT-04 | Phase 2 | Complete |
-| PAT-05 | Phase 2 | Pending |
+| PAT-05 | Phase 2 | Complete |
 | CLN-01 | Phase 3 | Pending |
 | CLN-02 | Phase 3 | Pending |
 | CLN-03 | Phase 3 | Pending |
