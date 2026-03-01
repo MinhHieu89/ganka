@@ -1,14 +1,19 @@
 using Microsoft.EntityFrameworkCore;
+using Scheduling.Domain.Entities;
 
 namespace Scheduling.Infrastructure;
 
 /// <summary>
 /// EF Core DbContext for the Scheduling module.
 /// Uses schema-per-module isolation with the "scheduling" schema.
-/// Entity configurations and DbSets will be added as the module is implemented.
 /// </summary>
 public class SchedulingDbContext : DbContext
 {
+    public DbSet<Appointment> Appointments => Set<Appointment>();
+    public DbSet<SelfBookingRequest> SelfBookingRequests => Set<SelfBookingRequest>();
+    public DbSet<ClinicSchedule> ClinicSchedules => Set<ClinicSchedule>();
+    public DbSet<AppointmentType> AppointmentTypes => Set<AppointmentType>();
+
     public SchedulingDbContext(DbContextOptions<SchedulingDbContext> options) : base(options)
     {
     }
@@ -17,8 +22,7 @@ public class SchedulingDbContext : DbContext
     {
         modelBuilder.HasDefaultSchema("scheduling");
 
-        // Entity configurations will be added as this module is implemented
-        // in its respective phase plan.
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(SchedulingDbContext).Assembly);
 
         base.OnModelCreating(modelBuilder);
     }

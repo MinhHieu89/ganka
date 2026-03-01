@@ -1,0 +1,12 @@
+namespace Scheduling.Domain.Enums;
+
+/// <summary>
+/// Represents the lifecycle status of an appointment.
+/// </summary>
+public enum AppointmentStatus
+{
+    Pending = 0,
+    Confirmed = 1,
+    Cancelled = 2,
+    Completed = 3
+}
