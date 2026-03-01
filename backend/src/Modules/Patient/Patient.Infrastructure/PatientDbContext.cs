@@ -1,14 +1,19 @@
 using Microsoft.EntityFrameworkCore;
+using Patient.Domain.Entities;
 
 namespace Patient.Infrastructure;
 
 /// <summary>
 /// EF Core DbContext for the Patient module.
 /// Uses schema-per-module isolation with the "patient" schema.
-/// Entity configurations and DbSets will be added as the module is implemented.
+/// Includes entity configurations and global query filters.
 /// </summary>
 public class PatientDbContext : DbContext
 {
+    public DbSet<Domain.Entities.Patient> Patients => Set<Domain.Entities.Patient>();
+    public DbSet<Allergy> Allergies => Set<Allergy>();
+    public DbSet<AllergyCatalogItem> AllergyCatalogItems => Set<AllergyCatalogItem>();
+
     public PatientDbContext(DbContextOptions<PatientDbContext> options) : base(options)
     {
     }
@@ -17,8 +22,10 @@ public class PatientDbContext : DbContext
     {
         modelBuilder.HasDefaultSchema("patient");
 
-        // Entity configurations will be added as this module is implemented
-        // in its respective phase plan.
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(PatientDbContext).Assembly);
+
+        // Global query filter: soft delete on Patient
+        modelBuilder.Entity<Domain.Entities.Patient>().HasQueryFilter(p => !p.IsDeleted);
 
         base.OnModelCreating(modelBuilder);
     }
