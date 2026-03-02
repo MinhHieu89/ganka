@@ -13,7 +13,7 @@ This roadmap delivers a complete ophthalmology clinic management system across 9
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [ ] **Phase 1: Foundation & Infrastructure** - Modular monolith skeleton with auth, audit, i18n, and multi-tenant scaffolding
-- [ ] **Phase 2: Patient Management & Scheduling** - Patient registration and appointment booking with calendar
+- [x] **Phase 2: Patient Management & Scheduling** - Patient registration and appointment booking with calendar (completed 2026-03-02)
 - [ ] **Phase 3: Clinical Workflow & Examination** - Visit lifecycle, refraction recording, and ICD-10 diagnosis
 - [ ] **Phase 4: Dry Eye Template & Medical Imaging** - Structured dry eye assessment and medical image management with comparison
 - [ ] **Phase 5: Prescriptions & Document Printing** - Drug and optical prescription writing with all printable documents
@@ -112,7 +112,7 @@ Plans:
 **Goal:** Fix session persistence via HTTP-only cookie refresh tokens, reset all pages to shadcn/ui default neutral theme with rounded corners
 **Depends on:** Phase 02
 **Requirements:** AUTH-04, UI-01, UI-02
-**Plans:** 13/14 plans executed
+**Plans:** 14/14 plans complete
 
 Plans:
 - [x] 02.1-01-PLAN.md -- Backend HTTP-only cookie: TDD for Set-Cookie on login/refresh/logout, RememberMe entity column, environment-aware Secure flag
@@ -249,7 +249,7 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 | 1. Foundation & Infrastructure | 6/7 | In Progress | - |
 | 1.1 Backend Restructuring | 5/9 | In Progress | - |
 | 1.2 Frontend shadcn/ui Refactoring | 6/8 | In Progress | - |
-| 2. Patient Management & Scheduling | 14/14 | Complete | 2026-03-02 |
+| 2. Patient Management & Scheduling | 14/14 | Complete    | 2026-03-02 |
 | 2.1 Frontend Bug Fixes + Auth Security | 4/4 | Complete | 2026-03-02 |
 | 3. Clinical Workflow & Examination | 0/3 | Not started | - |
 | 4. Dry Eye Template & Medical Imaging | 0/2 | Not started | - |
