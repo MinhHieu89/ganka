@@ -13,7 +13,7 @@ This roadmap delivers a complete ophthalmology clinic management system across 9
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [ ] **Phase 1: Foundation & Infrastructure** - Modular monolith skeleton with auth, audit, i18n, and multi-tenant scaffolding
-- [x] **Phase 2: Patient Management & Scheduling** - Patient registration and appointment booking with calendar
+- [ ] **Phase 2: Patient Management & Scheduling** - Patient registration and appointment booking with calendar
 - [ ] **Phase 3: Clinical Workflow & Examination** - Visit lifecycle, refraction recording, and ICD-10 diagnosis
 - [ ] **Phase 4: Dry Eye Template & Medical Imaging** - Structured dry eye assessment and medical image management with comparison
 - [ ] **Phase 5: Prescriptions & Document Printing** - Drug and optical prescription writing with all printable documents
@@ -89,7 +89,7 @@ Plans:
   3. Staff can record allergies on a patient profile, and those allergies are visible as alerts during downstream workflows
   4. Staff can book appointments on a per-doctor calendar with configurable durations, and the system prevents double-booking with a database-level constraint
   5. Patients can self-book via a public-facing page, with staff confirmation required before the appointment is finalized
-**Plans**: 6 plans in 3 waves
+**Plans**: 9 plans (6 original + 3 gap closure)
 
 Plans:
 - [x] 02-01-PLAN.md -- Patient module backend: domain entities, EF Core infrastructure, application features, Minimal API endpoints
@@ -98,6 +98,9 @@ Plans:
 - [x] 02-04-PLAN.md -- Patient frontend: registration form, patient list, profile page with tabs, allergy management
 - [x] 02-05-PLAN.md -- Scheduling frontend: FullCalendar calendar, booking dialogs, public self-booking page, pending bookings panel
 - [x] 02-06-PLAN.md -- Integration verification checkpoint: API tests + browser verification of all flows
+- [ ] 02-07-PLAN.md -- [GAP] Fix patient registration 404, inline edit 500, pagination visibility, breadcrumb display
+- [ ] 02-08-PLAN.md -- [GAP] Fix doctor dropdown, datetime picker, textarea corners, dialog styling, booking form polish
+- [ ] 02-09-PLAN.md -- [GAP] Rewrite allergy form autocomplete with free-text support and Vietnamese categories
 
 ### Phase 02.1: I notice some bugs in frontend that I want to resolve (INSERTED)
 
@@ -241,7 +244,7 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 | 1. Foundation & Infrastructure | 6/7 | In Progress | - |
 | 1.1 Backend Restructuring | 5/9 | In Progress | - |
 | 1.2 Frontend shadcn/ui Refactoring | 6/8 | In Progress | - |
-| 2. Patient Management & Scheduling | 6/6 | Complete | 2026-03-01 |
+| 2. Patient Management & Scheduling | 6/9 | UAT Gap Closure | - |
 | 2.1 Frontend Bug Fixes + Auth Security | 4/4 | Complete | 2026-03-02 |
 | 3. Clinical Workflow & Examination | 0/3 | Not started | - |
 | 4. Dry Eye Template & Medical Imaging | 0/2 | Not started | - |
@@ -250,4 +253,3 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 | 7. Billing & Finance | 0/3 | Not started | - |
 | 8. Optical Center | 0/3 | Not started | - |
 | 9. Treatment Protocols | 0/3 | Not started | - |
-
