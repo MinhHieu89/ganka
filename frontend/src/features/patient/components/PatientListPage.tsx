@@ -69,7 +69,7 @@ export function PatientListPage() {
       </div>
 
       {/* Filters */}
-      <div className="flex flex-wrap items-end gap-4 p-4 border bg-muted/30">
+      <div className="flex flex-wrap items-end gap-4 p-4 border rounded-lg bg-muted/30">
         {/* Search */}
         <Field className="flex-1 min-w-[200px]">
           <FieldLabel>{tCommon("buttons.search")}</FieldLabel>

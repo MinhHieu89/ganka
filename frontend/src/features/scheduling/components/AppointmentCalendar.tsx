@@ -129,6 +129,8 @@ export function AppointmentCalendar({
           --fc-non-business-color: color-mix(in oklch, var(--muted) 50%, transparent);
           --fc-page-bg-color: transparent;
           font-family: var(--font-sans, 'Be Vietnam Pro', sans-serif);
+          border-radius: var(--radius);
+          overflow: hidden;
         }
         .appointment-calendar .fc .fc-toolbar-title {
           font-size: 1.125rem;

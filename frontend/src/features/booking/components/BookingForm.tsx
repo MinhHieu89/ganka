@@ -238,14 +238,14 @@ export function BookingForm({ onSubmit, isSubmitting, error }: BookingFormProps)
         <FieldLabel>{t("notes")}</FieldLabel>
         <textarea
           {...form.register("notes")}
-          className="flex min-h-[80px] w-full border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           placeholder={t("selfBooking.reason")}
         />
       </Field>
 
       {/* Error message */}
       {error && (
-        <div className="text-sm text-destructive p-3 bg-destructive/10 border border-destructive/20">
+        <div className="text-sm text-destructive p-3 bg-destructive/10 border border-destructive/20 rounded-md">
           {error.message === "RATE_LIMITED"
             ? t("selfBooking.maxPendingReached")
             : error.message === "VALIDATION_ERROR"

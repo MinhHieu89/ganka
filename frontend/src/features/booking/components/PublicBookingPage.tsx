@@ -28,7 +28,7 @@ export function PublicBookingPage() {
       <header className="bg-card border-b">
         <div className="max-w-2xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex size-10 items-center justify-center bg-primary text-primary-foreground text-sm font-bold tracking-wider shadow-sm">
+            <div className="flex size-10 items-center justify-center rounded-md bg-primary text-primary-foreground text-sm font-bold tracking-wider shadow-sm">
               <span>G</span>
             </div>
             <div>
