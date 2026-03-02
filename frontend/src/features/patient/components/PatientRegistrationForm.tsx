@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next"
 import { useNavigate } from "@tanstack/react-router"
 import { toast } from "sonner"
 import {
+  IconCheck,
   IconLoader2,
   IconPlus,
   IconTrash,
@@ -47,9 +48,13 @@ import {
   Command,
   CommandEmpty,
   CommandGroup,
+  CommandInput,
   CommandItem,
   CommandList,
 } from "@/shared/components/Command"
+import { cn } from "@/shared/lib/utils"
+import { handleServerValidationError } from "@/shared/lib/server-validation"
+import { ServerValidationAlert } from "@/shared/components/ServerValidationAlert"
 
 interface PatientRegistrationFormProps {
   open: boolean
@@ -65,6 +70,7 @@ export function PatientRegistrationForm({
   const navigate = useNavigate()
   const registerMutation = useRegisterPatient()
   const [patientType, setPatientType] = useState<PatientType>("Medical")
+  const [nonFieldError, setNonFieldError] = useState<string | null>(null)
 
   const schema = z.object({
     fullName: z.string().min(1, tCommon("validation.required")),
@@ -135,9 +141,10 @@ export function PatientRegistrationForm({
         params: { patientId } as never,
       })
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : tCommon("status.error"),
-      )
+      const nonFieldErrors = handleServerValidationError(error, form.setError)
+      if (nonFieldErrors.length > 0) {
+        setNonFieldError(nonFieldErrors[0])
+      }
     }
   }
 
@@ -146,6 +153,7 @@ export function PatientRegistrationForm({
       onClose()
       form.reset()
       setPatientType("Medical")
+      setNonFieldError(null)
     }
   }
 
@@ -175,6 +183,11 @@ export function PatientRegistrationForm({
 
         <form onSubmit={form.handleSubmit(handleSubmit)} className="flex flex-col flex-1 min-h-0">
         <div className="flex-1 overflow-y-auto space-y-4 px-1">
+
+          <ServerValidationAlert
+            error={nonFieldError}
+            onDismiss={() => setNonFieldError(null)}
+          />
 
           {/* Full Name */}
           <Controller
@@ -314,6 +327,7 @@ export function PatientRegistrationForm({
                 index={index}
                 control={form.control}
                 setValue={form.setValue}
+                watch={form.watch}
                 remove={remove}
                 t={t}
                 i18nLanguage={i18n.language}
@@ -339,10 +353,18 @@ export function PatientRegistrationForm({
   )
 }
 
+const categoryKeyMap: Record<string, string> = {
+  "Ophthalmic Drug": "allergyCategory.ophthalmicDrug",
+  "General Drug": "allergyCategory.generalDrug",
+  Material: "allergyCategory.material",
+  Environmental: "allergyCategory.environmental",
+}
+
 function AllergyRow({
   index,
   control,
   setValue,
+  watch,
   remove,
   t,
   i18nLanguage,
@@ -352,20 +374,40 @@ function AllergyRow({
   control: any
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setValue: any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  watch: any
   remove: (index: number) => void
   t: (key: string) => string
   i18nLanguage: string
 }) {
   const [popoverOpen, setPopoverOpen] = useState(false)
-  const [inputValue, setInputValue] = useState("")
+  const [searchValue, setSearchValue] = useState("")
 
   const catalogItems = ALLERGY_CATALOG_BILINGUAL.map((item) => ({
     label: i18nLanguage === "vi" ? item.vi : item.en,
     value: item.en, // always store English name for backend
+    category: item.category,
+    categoryLabel: t(categoryKeyMap[item.category] ?? item.category),
   }))
-  const filtered = catalogItems.filter((item) =>
-    item.label.toLowerCase().includes(inputValue.toLowerCase()),
+
+  const filtered = searchValue.trim()
+    ? catalogItems.filter((item) =>
+        item.label.toLowerCase().includes(searchValue.toLowerCase()),
+      )
+    : catalogItems
+
+  const hasExactMatch = catalogItems.some(
+    (item) =>
+      item.label.toLowerCase() === searchValue.toLowerCase() ||
+      item.value.toLowerCase() === searchValue.toLowerCase(),
   )
+
+  const nameValue = watch(`allergies.${index}.name`)
+
+  // Display label: find the catalog item matching the stored English name
+  const displayLabel = nameValue
+    ? (catalogItems.find((item) => item.value === nameValue)?.label ?? nameValue)
+    : ""
 
   return (
     <div className="flex items-start gap-2 p-3 border rounded-md bg-muted/30">
@@ -377,42 +419,88 @@ function AllergyRow({
             <Field data-invalid={fieldState.invalid || undefined}>
               <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
                 <PopoverTrigger asChild>
-                  <Input
-                    value={field.value as string}
-                    placeholder={t("allergyName")}
-                    aria-invalid={fieldState.invalid || undefined}
-                    onClick={() => setPopoverOpen(true)}
-                    onChange={(e) => {
-                      field.onChange(e.target.value)
-                      setInputValue(e.target.value)
-                      setPopoverOpen(true)
-                    }}
-                    autoComplete="off"
-                  />
+                  <div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      role="combobox"
+                      className={cn(
+                        "w-full justify-start text-left font-normal",
+                        !field.value && "text-muted-foreground",
+                      )}
+                      aria-invalid={fieldState.invalid || undefined}
+                    >
+                      {displayLabel || t("allergyName")}
+                    </Button>
+                  </div>
                 </PopoverTrigger>
                 <PopoverContent
                   className="w-[--radix-popover-trigger-width] p-0"
                   align="start"
                   onOpenAutoFocus={(e) => e.preventDefault()}
                 >
-                  <Command>
+                  <Command shouldFilter={false}>
+                    <CommandInput
+                      placeholder={t("allergyName")}
+                      value={searchValue}
+                      onValueChange={setSearchValue}
+                    />
                     <CommandList>
-                      <CommandEmpty>{t("noResults") || "No results"}</CommandEmpty>
-                      <CommandGroup>
-                        {filtered.slice(0, 8).map((item) => (
-                          <CommandItem
-                            key={item.value}
-                            value={item.label}
-                            onSelect={() => {
-                              setValue(`allergies.${index}.name` as never, item.value as never)
-                              setInputValue(item.label)
-                              setPopoverOpen(false)
-                            }}
-                          >
-                            {item.label}
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
+                      {filtered.length === 0 && !searchValue.trim() && (
+                        <CommandEmpty>
+                          {t("noResults") || "No results"}
+                        </CommandEmpty>
+                      )}
+                      {/* Show "Add custom" option when typed text doesn't match any item exactly */}
+                      {searchValue.trim() && !hasExactMatch && (
+                        <CommandItem
+                          value={`custom:${searchValue}`}
+                          onSelect={() => {
+                            field.onChange(searchValue.trim())
+                            setSearchValue("")
+                            setPopoverOpen(false)
+                          }}
+                        >
+                          <IconPlus className="mr-2 h-4 w-4" />
+                          {t("allergyCategory.custom") || "Add custom"}:{" "}
+                          &quot;{searchValue.trim()}&quot;
+                        </CommandItem>
+                      )}
+                      {/* Group filtered catalog items by category */}
+                      {Object.entries(
+                        filtered.reduce<Record<string, typeof filtered>>(
+                          (acc, item) => {
+                            const cat = item.categoryLabel
+                            ;(acc[cat] ??= []).push(item)
+                            return acc
+                          },
+                          {},
+                        ),
+                      ).map(([categoryLabel, items]) => (
+                        <CommandGroup key={categoryLabel} heading={categoryLabel}>
+                          {items.map((item) => (
+                            <CommandItem
+                              key={item.value}
+                              value={item.value}
+                              onSelect={() => {
+                                field.onChange(item.value)
+                                setSearchValue("")
+                                setPopoverOpen(false)
+                              }}
+                            >
+                              <IconCheck
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  nameValue === item.value
+                                    ? "opacity-100"
+                                    : "opacity-0",
+                                )}
+                              />
+                              {item.label}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      ))}
                     </CommandList>
                   </Command>
                 </PopoverContent>
