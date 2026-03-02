@@ -12,7 +12,7 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 Phase: 02 (Patient Management & Scheduling)
 Plan: 9 of 9 in current phase (gap closure plans 07-09)
 Status: Executing gap closure plans
-Last activity: 2026-03-02 -- Completed 02-08 Scheduling UX Gap Closure
+Last activity: 2026-03-02 -- Completed 02-07 Patient Module Gap Closure
 
 Progress: [#########-] 90%
 
@@ -64,6 +64,7 @@ Progress: [#########-] 90%
 | Phase 02.1 P04 | 5min | 2 tasks | 29 files |
 | Phase 02 P09 | 3min | 2 tasks | 4 files |
 | Phase 02 P08 | 6min | 2 tasks | 10 files |
+| Phase 02 P07 | 9min | 2 tasks | 16 files |
 
 ## Accumulated Context
 
@@ -183,6 +184,10 @@ Recent decisions affecting current work:
 - [Phase 02]: [02-08]: DoctorSelector auto-select moved to useEffect to avoid React state-update-during-render anti-pattern
 - [Phase 02]: [02-08]: DatePicker + time Select combo for datetime input replacing native datetime-local
 - [Phase 02]: [02-08]: Separate startDate (Date) + startTime (string) form fields combined in handleSubmit
+- [Phase 02]: [02-07]: Microsoft.EntityFrameworkCore in Patient.Application for DbUpdateConcurrencyException (follows Scheduling.Application precedent)
+- [Phase 02]: [02-07]: recentPatientsStore used for breadcrumb patient name lookup (no extra API call)
+- [Phase 02]: [02-07]: AllergyRow autocomplete always stores English canonical key for backend consistency
+- [Phase 02]: [02-07]: Vietnamese_CI_AI collation for patient name search (accent-insensitive, case-insensitive)
 
 ### Roadmap Evolution
 
@@ -204,5 +209,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-02
-Stopped at: Completed 02-08-PLAN.md -- Scheduling UX Gap Closure
-Resume file: .planning/phases/02-patient-management-scheduling/02-08-SUMMARY.md
+Stopped at: Completed 02-07-PLAN.md -- Patient Module Gap Closure
+Resume file: .planning/phases/02-patient-management-scheduling/02-07-SUMMARY.md
