@@ -10,16 +10,16 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 ## Current Position
 
 Phase: 02 (Patient Management & Scheduling)
-Plan: 10 of 10 in current phase (gap closure plans 07-10)
-Status: Phase 02 complete
-Last activity: 2026-03-02 -- Completed 02-10 PAT-03 Field Validation Infrastructure
+Plan: 12 of 14 in current phase (UAT gap closure plans 11-14)
+Status: Executing UAT gap closure
+Last activity: 2026-03-02 -- Completed 02-12 Shared Frontend Infrastructure Fixes
 
-Progress: [##########] 100%
+Progress: [########..] 86%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 24
+- Total plans completed: 25
 - Average duration: 7min
 - Total execution time: 2.48 hours
 
@@ -66,6 +66,7 @@ Progress: [##########] 100%
 | Phase 02 P08 | 6min | 2 tasks | 10 files |
 | Phase 02 P07 | 9min | 2 tasks | 16 files |
 | Phase 02 P10 | 9min | 2 tasks | 15 files |
+| Phase 02 P12 | 4min | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -191,6 +192,10 @@ Recent decisions affecting current work:
 - [Phase 02]: [02-07]: Vietnamese_CI_AI collation for patient name search (accent-insensitive, case-insensitive)
 - [Phase 02]: [02-10]: PatientFieldValidationResult records in Domain.Services (not Contracts) due to project dependency direction
 - [Phase 02]: [02-10]: Referral context as strictest common downstream for validation endpoint
+- [Phase 02]: [02-12]: Calendar already matched official shadcn/ui -- skipped CLI overwrite to avoid breaking imports
+- [Phase 02]: [02-12]: 401 interceptor with shared refreshPromise prevents concurrent refresh, skips auth endpoints
+- [Phase 02]: [02-12]: DialogContent flex flex-col + gap-4 for proper spacing across all dialogs
+- [Phase 02]: [02-12]: Auth error vs not-found differentiation pattern in page error states
 
 ### Roadmap Evolution
 
@@ -212,5 +217,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-02
-Stopped at: Completed 02-10-PLAN.md -- PAT-03 Field Validation Infrastructure (Phase 02 complete)
-Resume file: .planning/phases/02-patient-management-scheduling/02-10-SUMMARY.md
+Stopped at: Completed 02-12-PLAN.md -- Shared Frontend Infrastructure Fixes
+Resume file: .planning/phases/02-patient-management-scheduling/02-12-SUMMARY.md
