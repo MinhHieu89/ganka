@@ -1,4 +1,4 @@
-import { useMemo } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
@@ -27,6 +27,8 @@ import {
   type PublicAppointmentTypeDto,
 } from "@/features/booking/api/booking-api"
 import { IconLoader2 } from "@tabler/icons-react"
+import { handleServerValidationError } from "@/shared/lib/server-validation"
+import { ServerValidationAlert } from "@/shared/components/ServerValidationAlert"
 
 interface BookingFormProps {
   onSubmit: (data: SubmitBookingCommand) => void
@@ -43,6 +45,19 @@ export function BookingForm({ onSubmit, isSubmitting, error }: BookingFormProps)
 
   const { data: appointmentTypes } = usePublicAppointmentTypes()
   const { data: clinicSchedule } = usePublicSchedule()
+  const [nonFieldError, setNonFieldError] = useState<string | null>(null)
+
+  // Parse structured server validation errors from the error prop
+  useEffect(() => {
+    if (error) {
+      const nonFieldErrors = handleServerValidationError(error, form.setError)
+      if (nonFieldErrors.length > 0) {
+        setNonFieldError(nonFieldErrors[0])
+      }
+    } else {
+      setNonFieldError(null)
+    }
+  }, [error]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Days when clinic is open (for date picker filter)
   const openDays = useMemo(() => {
@@ -239,15 +254,20 @@ export function BookingForm({ onSubmit, isSubmitting, error }: BookingFormProps)
       </Field>
 
       {/* Error message */}
-      {error && (
+      {error && error.message === "RATE_LIMITED" && (
         <div className="text-sm text-destructive p-3 bg-destructive/10 border border-destructive/20 rounded-md">
-          {error.message === "RATE_LIMITED"
-            ? t("selfBooking.maxPendingReached")
-            : error.message === "VALIDATION_ERROR"
-              ? tCommon("status.error")
-              : error.message}
+          {t("selfBooking.maxPendingReached")}
         </div>
       )}
+      {error && error.message === "VALIDATION_ERROR" && (
+        <div className="text-sm text-destructive p-3 bg-destructive/10 border border-destructive/20 rounded-md">
+          {tCommon("status.error")}
+        </div>
+      )}
+      <ServerValidationAlert
+        error={nonFieldError}
+        onDismiss={() => setNonFieldError(null)}
+      />
 
       {/* Submit */}
       <Button type="submit" className="w-full" disabled={isSubmitting}>

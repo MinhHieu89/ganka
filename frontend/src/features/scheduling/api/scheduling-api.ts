@@ -186,7 +186,13 @@ export function useBookAppointment() {
       if (error || !response.ok) {
         const status = response.status
         if (status === 409) throw new Error("DOUBLE_BOOKING")
-        if (status === 400) throw new Error("VALIDATION_ERROR")
+        if (status === 400) {
+          const err = error as Record<string, unknown> | undefined
+          if (err?.errors) {
+            throw new Error(JSON.stringify(err))
+          }
+          throw new Error("VALIDATION_ERROR")
+        }
         throw new Error("Failed to book appointment")
       }
       return data as { id: string }
@@ -239,7 +245,13 @@ export function useRescheduleAppointment() {
       if (error || !response.ok) {
         const status = response.status
         if (status === 409) throw new Error("DOUBLE_BOOKING")
-        if (status === 400) throw new Error("VALIDATION_ERROR")
+        if (status === 400) {
+          const err = error as Record<string, unknown> | undefined
+          if (err?.errors) {
+            throw new Error(JSON.stringify(err))
+          }
+          throw new Error("VALIDATION_ERROR")
+        }
         throw new Error("Failed to reschedule appointment")
       }
     },
@@ -266,6 +278,12 @@ export function useApproveSelfBooking() {
       if (error || !response.ok) {
         const status = response.status
         if (status === 409) throw new Error("DOUBLE_BOOKING")
+        if (status === 400) {
+          const err = error as Record<string, unknown> | undefined
+          if (err?.errors) {
+            throw new Error(JSON.stringify(err))
+          }
+        }
         throw new Error("Failed to approve booking")
       }
     },

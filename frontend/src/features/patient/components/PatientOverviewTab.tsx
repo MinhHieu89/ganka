@@ -25,6 +25,8 @@ import {
   type PatientDto,
 } from "@/features/patient/api/patient-api"
 import { PatientFieldWarning } from "@/features/patient/components/PatientFieldWarning"
+import { handleServerValidationError } from "@/shared/lib/server-validation"
+import { ServerValidationAlert } from "@/shared/components/ServerValidationAlert"
 
 interface PatientOverviewTabProps {
   patient: PatientDto
@@ -41,6 +43,7 @@ export function PatientOverviewTab({
   const { t: tCommon } = useTranslation("common")
   const updateMutation = useUpdatePatient()
   const { data: fieldValidation } = usePatientFieldValidation(patient.id)
+  const [nonFieldError, setNonFieldError] = useState<string | null>(null)
 
   const locale = i18n.language === "vi" ? vi : enUS
   const dateFormat = i18n.language === "vi" ? "dd/MM/yyyy" : "MM/dd/yyyy"
@@ -101,9 +104,10 @@ export function PatientOverviewTab({
       toast.success(tCommon("status.success"))
       onEditToggle(false)
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : tCommon("status.error"),
-      )
+      const nonFieldErrors = handleServerValidationError(error, form.setError)
+      if (nonFieldErrors.length > 0) {
+        setNonFieldError(nonFieldErrors[0])
+      }
     }
   }
 
@@ -118,6 +122,7 @@ export function PatientOverviewTab({
       address: patient.address ?? "",
       cccd: patient.cccd ?? "",
     })
+    setNonFieldError(null)
     onEditToggle(false)
   }
 
@@ -222,8 +227,13 @@ export function PatientOverviewTab({
       <CardContent>
         <form
           onSubmit={form.handleSubmit(handleSubmit)}
-          className="grid gap-4 md:grid-cols-2"
+          className="space-y-4"
         >
+          <ServerValidationAlert
+            error={nonFieldError}
+            onDismiss={() => setNonFieldError(null)}
+          />
+          <div className="grid gap-4 md:grid-cols-2">
           <Controller
             name="fullName"
             control={form.control}
@@ -331,6 +341,7 @@ export function PatientOverviewTab({
               )}
               {tCommon("buttons.save")}
             </Button>
+          </div>
           </div>
         </form>
       </CardContent>

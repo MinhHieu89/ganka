@@ -43,6 +43,8 @@ import {
 } from "@/features/scheduling/api/scheduling-api"
 import { DoctorSelector, useDoctors } from "@/features/scheduling/components/DoctorSelector"
 import { IconSearch, IconLoader2 } from "@tabler/icons-react"
+import { handleServerValidationError } from "@/shared/lib/server-validation"
+import { ServerValidationAlert } from "@/shared/components/ServerValidationAlert"
 
 /** Generate 30-minute time slots from 08:00 to 19:30 */
 function generateTimeSlots(): string[] {
@@ -76,6 +78,7 @@ export function AppointmentBookingDialog({
   const bookAppointment = useBookAppointment()
   const { data: appointmentTypes } = useAppointmentTypes()
   const { data: doctors } = useDoctors()
+  const [nonFieldError, setNonFieldError] = useState<string | null>(null)
 
   const schema = useMemo(
     () =>
@@ -113,6 +116,7 @@ export function AppointmentBookingDialog({
   // Reset form when dialog opens with new defaults
   useEffect(() => {
     if (open) {
+      setNonFieldError(null)
       const doctorName = doctors?.find((d) => d.id === defaultDoctorId)?.fullName ?? ""
       form.reset({
         patientId: "",
@@ -166,7 +170,10 @@ export function AppointmentBookingDialog({
           } else if (error.message === "VALIDATION_ERROR") {
             toast.error(t("outsideClinicHours"))
           } else {
-            toast.error(error.message)
+            const nonFieldErrors = handleServerValidationError(error, form.setError)
+            if (nonFieldErrors.length > 0) {
+              setNonFieldError(nonFieldErrors[0])
+            }
           }
         },
       },
@@ -181,6 +188,11 @@ export function AppointmentBookingDialog({
         </DialogHeader>
 
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <ServerValidationAlert
+            error={nonFieldError}
+            onDismiss={() => setNonFieldError(null)}
+          />
+
           {/* Patient search */}
           <Field>
             <FieldLabel>{t("patient")}</FieldLabel>

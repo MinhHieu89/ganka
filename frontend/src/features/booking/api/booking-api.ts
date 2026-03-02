@@ -124,7 +124,13 @@ export function useSubmitBooking() {
       if (error || !response.ok) {
         const status = response.status
         if (status === 429) throw new Error("RATE_LIMITED")
-        if (status === 400) throw new Error("VALIDATION_ERROR")
+        if (status === 400) {
+          const err = error as Record<string, unknown> | undefined
+          if (err?.errors) {
+            throw new Error(JSON.stringify(err))
+          }
+          throw new Error("VALIDATION_ERROR")
+        }
         throw new Error("Failed to submit booking")
       }
       return data as { referenceNumber: string }

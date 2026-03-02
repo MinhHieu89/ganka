@@ -44,6 +44,7 @@ import {
   IconLoader2,
   IconInbox,
 } from "@tabler/icons-react"
+import { ServerValidationAlert } from "@/shared/components/ServerValidationAlert"
 
 /** Generate 30-minute time slots from 08:00 to 19:30 */
 function generateTimeSlots(): string[] {
@@ -76,6 +77,7 @@ export function PendingBookingsPanel() {
   // Reject dialog state
   const [rejectTarget, setRejectTarget] = useState<SelfBookingRequestDto | null>(null)
   const [rejectReason, setRejectReason] = useState("")
+  const [approveError, setApproveError] = useState<string | null>(null)
 
   const handleApprove = () => {
     if (!approveTarget || !approveDoctorId || !approveDate || !approveTime) return
@@ -102,12 +104,13 @@ export function PendingBookingsPanel() {
           setApproveDoctorId("")
           setApproveDate(undefined)
           setApproveTime("")
+          setApproveError(null)
         },
         onError: (error) => {
           if (error.message === "DOUBLE_BOOKING") {
             toast.error(t("slotAlreadyBooked"))
           } else {
-            toast.error(error.message)
+            setApproveError(error.message)
           }
         },
       },
@@ -203,6 +206,7 @@ export function PendingBookingsPanel() {
                   setApproveTarget(booking)
                   setApproveDate(new Date(booking.preferredDate))
                   setApproveTime("14:00")
+                  setApproveError(null)
                 }}
               >
                 <IconCheck className="mr-1.5 h-3.5 w-3.5" />
@@ -235,6 +239,10 @@ export function PendingBookingsPanel() {
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
+            <ServerValidationAlert
+              error={approveError}
+              onDismiss={() => setApproveError(null)}
+            />
             <Field>
               <FieldLabel>{t("doctor")}</FieldLabel>
               <DoctorSelector

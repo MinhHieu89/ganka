@@ -177,8 +177,14 @@ async function registerPatient(
     body: body as never,
   })
   if (res.error) {
-    const err = res.error as { detail?: string; title?: string }
-    throw new Error(err.detail || err.title || "Failed to register patient")
+    const err = res.error as Record<string, unknown>
+    if (err.errors) {
+      // Throw full RFC 7807 body for structured validation handling
+      throw new Error(JSON.stringify(err))
+    }
+    throw new Error(
+      (err.detail as string) || (err.title as string) || "Failed to register patient",
+    )
   }
   return (res.data as { id: string }).id
 }
@@ -186,8 +192,13 @@ async function registerPatient(
 async function getPatientById(patientId: string): Promise<PatientDto> {
   const res = await api.GET(`/api/patients/${patientId}` as never, {})
   if (res.error) {
-    const err = res.error as { detail?: string; title?: string }
-    throw new Error(err.detail || err.title || "Failed to fetch patient")
+    const err = res.error as Record<string, unknown>
+    if (err.errors) {
+      throw new Error(JSON.stringify(err))
+    }
+    throw new Error(
+      (err.detail as string) || (err.title as string) || "Failed to fetch patient",
+    )
   }
   return normalizePatient(res.data as Record<string, unknown>)
 }
@@ -204,8 +215,13 @@ async function updatePatient(data: UpdatePatientCommand): Promise<void> {
     },
   )
   if (res.error) {
-    const err = res.error as { detail?: string; title?: string }
-    throw new Error(err.detail || err.title || "Failed to update patient")
+    const err = res.error as Record<string, unknown>
+    if (err.errors) {
+      throw new Error(JSON.stringify(err))
+    }
+    throw new Error(
+      (err.detail as string) || (err.title as string) || "Failed to update patient",
+    )
   }
 }
 
@@ -215,8 +231,13 @@ async function deactivatePatient(patientId: string): Promise<void> {
     {},
   )
   if (res.error) {
-    const err = res.error as { detail?: string; title?: string }
-    throw new Error(err.detail || err.title || "Failed to deactivate patient")
+    const err = res.error as Record<string, unknown>
+    if (err.errors) {
+      throw new Error(JSON.stringify(err))
+    }
+    throw new Error(
+      (err.detail as string) || (err.title as string) || "Failed to deactivate patient",
+    )
   }
 }
 
@@ -226,8 +247,13 @@ async function reactivatePatient(patientId: string): Promise<void> {
     {},
   )
   if (res.error) {
-    const err = res.error as { detail?: string; title?: string }
-    throw new Error(err.detail || err.title || "Failed to reactivate patient")
+    const err = res.error as Record<string, unknown>
+    if (err.errors) {
+      throw new Error(JSON.stringify(err))
+    }
+    throw new Error(
+      (err.detail as string) || (err.title as string) || "Failed to reactivate patient",
+    )
   }
 }
 
@@ -248,8 +274,13 @@ async function getPatientList(
     params: { query } as never,
   })
   if (res.error) {
-    const err = res.error as { detail?: string; title?: string }
-    throw new Error(err.detail || err.title || "Failed to fetch patients")
+    const err = res.error as Record<string, unknown>
+    if (err.errors) {
+      throw new Error(JSON.stringify(err))
+    }
+    throw new Error(
+      (err.detail as string) || (err.title as string) || "Failed to fetch patients",
+    )
   }
   const data = res.data as PagedResult<PatientDto>
   data.items = data.items.map((item) => normalizePatient(item as unknown as Record<string, unknown>))
@@ -264,8 +295,13 @@ async function addAllergy(data: AddAllergyCommand): Promise<string> {
     },
   )
   if (res.error) {
-    const err = res.error as { detail?: string; title?: string }
-    throw new Error(err.detail || err.title || "Failed to add allergy")
+    const err = res.error as Record<string, unknown>
+    if (err.errors) {
+      throw new Error(JSON.stringify(err))
+    }
+    throw new Error(
+      (err.detail as string) || (err.title as string) || "Failed to add allergy",
+    )
   }
   return res.data as string
 }
@@ -279,8 +315,13 @@ async function removeAllergy(
     {},
   )
   if (res.error) {
-    const err = res.error as { detail?: string; title?: string }
-    throw new Error(err.detail || err.title || "Failed to remove allergy")
+    const err = res.error as Record<string, unknown>
+    if (err.errors) {
+      throw new Error(JSON.stringify(err))
+    }
+    throw new Error(
+      (err.detail as string) || (err.title as string) || "Failed to remove allergy",
+    )
   }
 }
 
@@ -428,9 +469,14 @@ async function getPatientFieldValidation(
     {},
   )
   if (res.error) {
-    const err = res.error as { detail?: string; title?: string }
+    const err = res.error as Record<string, unknown>
+    if (err.errors) {
+      throw new Error(JSON.stringify(err))
+    }
     throw new Error(
-      err.detail || err.title || "Failed to validate patient fields",
+      (err.detail as string) ||
+        (err.title as string) ||
+        "Failed to validate patient fields",
     )
   }
   return res.data as PatientFieldValidationResult
