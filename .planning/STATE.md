@@ -163,6 +163,7 @@ Recent decisions affecting current work:
 
 - Phase 01.1 inserted after Phase 1: Change the current code structure of the backend (URGENT)
 - Phase 01.2 inserted after Phase 1: Refactor frontend to shadcn/ui with TanStack Start file-based routing (URGENT)
+- Phase 02.1 inserted after Phase 02: I notice some bugs in frontend that I want to resolve (URGENT)
 
 ### Pending Todos
 
@@ -177,6 +178,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-01
-Stopped at: Phase 02 complete -- all 6 plans executed, integration verified
-Resume file: .planning/phases/02-patient-management-scheduling/02-06-SUMMARY.md
+Last session: 2026-03-02
+Stopped at: Phase 02.1 context gathered
+Resume file: .planning/phases/02.1-i-notice-some-bugs-in-frontend-that-i-want-to-resolve/02.1-CONTEXT.md
