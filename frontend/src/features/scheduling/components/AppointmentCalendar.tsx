@@ -123,10 +123,10 @@ export function AppointmentCalendar({
       />
       <style>{`
         .appointment-calendar .fc {
-          --fc-border-color: hsl(var(--border));
-          --fc-today-bg-color: hsl(var(--accent) / 0.15);
-          --fc-now-indicator-color: hsl(var(--primary));
-          --fc-non-business-color: hsl(var(--muted) / 0.5);
+          --fc-border-color: var(--border);
+          --fc-today-bg-color: color-mix(in oklch, var(--accent) 15%, transparent);
+          --fc-now-indicator-color: var(--primary);
+          --fc-non-business-color: color-mix(in oklch, var(--muted) 50%, transparent);
           --fc-page-bg-color: transparent;
           font-family: var(--font-sans, 'Be Vietnam Pro', sans-serif);
         }
@@ -135,20 +135,20 @@ export function AppointmentCalendar({
           font-weight: 600;
         }
         .appointment-calendar .fc .fc-button {
-          background-color: hsl(var(--secondary));
-          border-color: hsl(var(--border));
-          color: hsl(var(--secondary-foreground));
+          background-color: var(--secondary);
+          border-color: var(--border);
+          color: var(--secondary-foreground);
           font-size: 0.8125rem;
           font-weight: 500;
           padding: 0.25rem 0.625rem;
-          border-radius: 0;
+          border-radius: calc(var(--radius) - 2px);
         }
         .appointment-calendar .fc .fc-button:hover {
-          background-color: hsl(var(--accent));
+          background-color: var(--accent);
         }
         .appointment-calendar .fc .fc-button-active {
-          background-color: hsl(var(--primary)) !important;
-          color: hsl(var(--primary-foreground)) !important;
+          background-color: var(--primary) !important;
+          color: var(--primary-foreground) !important;
         }
         .appointment-calendar .fc .fc-col-header-cell {
           padding: 0.5rem 0;
@@ -160,10 +160,10 @@ export function AppointmentCalendar({
         }
         .appointment-calendar .fc .fc-timegrid-slot-label {
           font-size: 0.75rem;
-          color: hsl(var(--muted-foreground));
+          color: var(--muted-foreground);
         }
         .appointment-calendar .fc .fc-event {
-          border-radius: 0;
+          border-radius: calc(var(--radius) - 4px);
           font-size: 0.75rem;
           padding: 1px 3px;
           cursor: pointer;
@@ -172,7 +172,7 @@ export function AppointmentCalendar({
           opacity: 0.9;
         }
         .appointment-calendar .fc .fc-highlight {
-          background-color: hsl(var(--primary) / 0.1);
+          background-color: color-mix(in oklch, var(--primary) 10%, transparent);
         }
       `}</style>
     </div>

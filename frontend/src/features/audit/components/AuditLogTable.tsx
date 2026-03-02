@@ -25,7 +25,7 @@ const ACTION_BADGE_STYLES: Record<string, string> = {
   Deleted: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400 border-red-200 dark:border-red-800",
   Login: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800",
   LoginFailed: "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400 border-orange-200 dark:border-orange-800",
-  Logout: "bg-stone-100 text-stone-800 dark:bg-stone-900/30 dark:text-stone-400 border-stone-200 dark:border-stone-800",
+  Logout: "bg-muted text-foreground dark:bg-muted dark:text-muted-foreground border-border dark:border-border",
   ViewRecord: "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400 border-purple-200 dark:border-purple-800",
 }
 

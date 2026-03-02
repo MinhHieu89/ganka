@@ -25,9 +25,9 @@ function BookingStatusPage() {
   }
 
   return (
-    <div className="min-h-screen bg-stone-50">
+    <div className="min-h-screen bg-muted">
       {/* Header */}
-      <header className="bg-white border-b">
+      <header className="bg-card border-b">
         <div className="max-w-2xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="flex size-10 items-center justify-center bg-primary text-primary-foreground text-sm font-bold tracking-wider shadow-sm">
@@ -56,7 +56,7 @@ function BookingStatusPage() {
 
       {/* Main content */}
       <main className="max-w-2xl mx-auto px-4 py-8">
-        <div className="bg-white border p-6 sm:p-8 shadow-sm">
+        <div className="bg-card border p-6 sm:p-8 shadow-sm rounded-lg">
           {/* Back link */}
           <Link
             to="/book"
@@ -81,7 +81,7 @@ function BookingStatusPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t bg-white mt-8">
+      <footer className="border-t bg-card mt-8">
         <div className="max-w-2xl mx-auto px-4 py-6">
           <div className="grid gap-4 sm:grid-cols-2 text-sm text-muted-foreground">
             <div className="space-y-2">
