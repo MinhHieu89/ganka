@@ -36,6 +36,8 @@ const segmentToI18nKey: Record<string, string> = {
   roles: "sidebar.roles",
   "audit-logs": "sidebar.auditLogs",
   settings: "sidebar.settings",
+  patients: "sidebar.patients",
+  appointments: "sidebar.appointments",
 }
 
 function getInitials(name?: string | null, email?: string | null): string {
