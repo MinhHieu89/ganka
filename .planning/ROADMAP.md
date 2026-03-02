@@ -99,6 +99,18 @@ Plans:
 - [x] 02-05-PLAN.md -- Scheduling frontend: FullCalendar calendar, booking dialogs, public self-booking page, pending bookings panel
 - [x] 02-06-PLAN.md -- Integration verification checkpoint: API tests + browser verification of all flows
 
+### Phase 02.1: I notice some bugs in frontend that I want to resolve (INSERTED)
+
+**Goal:** Fix session persistence (not surviving page refresh) and reset all pages to shadcn/ui default neutral theme with rounded corners
+**Depends on:** Phase 02
+**Requirements:** AUTH-04, UI-01, UI-02
+**Plans:** 3 plans in 2 waves
+
+Plans:
+- [ ] 02.1-01-PLAN.md -- Session persistence: add Zustand persist middleware to auth store, store refresh token, rehydration-aware route guard
+- [ ] 02.1-02-PLAN.md -- Theme reset: replace Stone+Green with shadcn/ui neutral defaults, fix hsl(oklch) bugs, replace hardcoded colors
+- [ ] 02.1-03-PLAN.md -- Verification checkpoint: human verification of session persistence and visual alignment
+
 ### Phase 3: Clinical Workflow & Examination
 **Goal**: Doctors can conduct a complete clinical visit with structured examination data, ICD-10 diagnosis, and immutable visit records
 **Depends on**: Phase 2
