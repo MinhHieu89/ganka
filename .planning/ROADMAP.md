@@ -101,15 +101,16 @@ Plans:
 
 ### Phase 02.1: I notice some bugs in frontend that I want to resolve (INSERTED)
 
-**Goal:** Fix session persistence (not surviving page refresh) and reset all pages to shadcn/ui default neutral theme with rounded corners
+**Goal:** Fix session persistence via HTTP-only cookie refresh tokens, reset all pages to shadcn/ui default neutral theme with rounded corners
 **Depends on:** Phase 02
 **Requirements:** AUTH-04, UI-01, UI-02
-**Plans:** 3 plans in 2 waves
+**Plans:** 4 plans in 3 waves
 
 Plans:
-- [ ] 02.1-01-PLAN.md -- Session persistence: add Zustand persist middleware to auth store, store refresh token, rehydration-aware route guard
-- [ ] 02.1-02-PLAN.md -- Theme reset: replace Stone+Green with shadcn/ui neutral defaults, fix hsl(oklch) bugs, replace hardcoded colors
-- [ ] 02.1-03-PLAN.md -- Verification checkpoint: human verification of session persistence and visual alignment
+- [ ] 02.1-01-PLAN.md -- Backend HTTP-only cookie: TDD for Set-Cookie on login/refresh/logout, RememberMe entity column, environment-aware Secure flag
+- [ ] 02.1-02-PLAN.md -- Frontend auth flow: credentials:include, remove refreshToken from JS, silent refresh on page load via cookie
+- [ ] 02.1-03-PLAN.md -- Theme reset: replace Stone+Green with shadcn/ui neutral defaults, fix hsl(oklch) bugs, replace hardcoded stone-* classes
+- [ ] 02.1-04-PLAN.md -- Verification checkpoint: automated checks + human verification of session persistence and visual alignment
 
 ### Phase 3: Clinical Workflow & Examination
 **Goal**: Doctors can conduct a complete clinical visit with structured examination data, ICD-10 diagnosis, and immutable visit records
@@ -241,6 +242,7 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 | 1.1 Backend Restructuring | 5/9 | In Progress | - |
 | 1.2 Frontend shadcn/ui Refactoring | 6/8 | In Progress | - |
 | 2. Patient Management & Scheduling | 6/6 | Complete | 2026-03-01 |
+| 2.1 Frontend Bug Fixes + Auth Security | 0/4 | Not started | - |
 | 3. Clinical Workflow & Examination | 0/3 | Not started | - |
 | 4. Dry Eye Template & Medical Imaging | 0/2 | Not started | - |
 | 5. Prescriptions & Document Printing | 0/2 | Not started | - |
