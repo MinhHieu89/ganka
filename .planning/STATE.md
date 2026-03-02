@@ -12,7 +12,7 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 Phase: 02 (Patient Management & Scheduling)
 Plan: 12 of 14 in current phase (UAT gap closure plans 11-14)
 Status: Executing UAT gap closure
-Last activity: 2026-03-02 -- Completed 02-12 Shared Frontend Infrastructure Fixes
+Last activity: 2026-03-02 -- Completed 02-11 Backend Bug Fixes (search, timezone, validation)
 
 Progress: [########..] 86%
 
@@ -66,6 +66,7 @@ Progress: [########..] 86%
 | Phase 02 P08 | 6min | 2 tasks | 10 files |
 | Phase 02 P07 | 9min | 2 tasks | 16 files |
 | Phase 02 P10 | 9min | 2 tasks | 15 files |
+| Phase 02 P11 | 19min | 2 tasks | 28 files |
 | Phase 02 P12 | 4min | 2 tasks | 8 files |
 
 ## Accumulated Context
@@ -192,6 +193,10 @@ Recent decisions affecting current work:
 - [Phase 02]: [02-07]: Vietnamese_CI_AI collation for patient name search (accent-insensitive, case-insensitive)
 - [Phase 02]: [02-10]: PatientFieldValidationResult records in Domain.Services (not Contracts) due to project dependency direction
 - [Phase 02]: [02-10]: Referral context as strictest common downstream for validation endpoint
+- [Phase 02]: [02-11]: Cross-platform timezone: SE Asia Standard Time (Windows) / Asia/Ho_Chi_Minh (Linux) via OperatingSystem.IsWindows()
+- [Phase 02]: [02-11]: Error.ValidationWithDetails with init property for structured field-level validation errors dictionary
+- [Phase 02]: [02-11]: In .NET 10 Results.ValidationProblem returns ProblemHttpResult with HttpValidationProblemDetails (not separate ValidationProblem type)
+- [Phase 02]: [02-11]: All 13 handlers updated from flat string.Join to GroupBy/ToDictionary structured validation errors
 - [Phase 02]: [02-12]: Calendar already matched official shadcn/ui -- skipped CLI overwrite to avoid breaking imports
 - [Phase 02]: [02-12]: 401 interceptor with shared refreshPromise prevents concurrent refresh, skips auth endpoints
 - [Phase 02]: [02-12]: DialogContent flex flex-col + gap-4 for proper spacing across all dialogs
@@ -217,5 +222,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-02
-Stopped at: Completed 02-12-PLAN.md -- Shared Frontend Infrastructure Fixes
-Resume file: .planning/phases/02-patient-management-scheduling/02-12-SUMMARY.md
+Stopped at: Completed 02-11-PLAN.md -- Backend Bug Fixes (search, timezone, validation)
+Resume file: .planning/phases/02-patient-management-scheduling/02-11-SUMMARY.md
