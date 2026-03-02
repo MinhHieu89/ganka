@@ -1,4 +1,5 @@
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using Patient.Application.Interfaces;
 using Patient.Contracts.Dtos;
 using Shared.Domain;
@@ -56,7 +57,14 @@ public static class UpdatePatientHandler
             command.Address,
             command.Cccd);
 
-        await unitOfWork.SaveChangesAsync(cancellationToken);
+        try
+        {
+            await unitOfWork.SaveChangesAsync(cancellationToken);
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return Result.Failure(Error.Conflict("Patient record was modified by another user. Please refresh and try again."));
+        }
 
         return Result.Success();
     }

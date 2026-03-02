@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
@@ -47,7 +47,7 @@ export function PatientOverviewTab({
     phone: z
       .string()
       .min(1, tCommon("validation.required"))
-      .regex(/^(0[0-9]{9}|(\+84)[0-9]{9})$/, t("invalidPhone")),
+      .regex(/^0\d{9,10}$/, t("invalidPhone")),
     dateOfBirth: z.date().nullable().optional(),
     gender: z.enum(["Male", "Female", "Other"]).nullable().optional(),
     address: z.string().optional(),
@@ -69,6 +69,18 @@ export function PatientOverviewTab({
       cccd: patient.cccd ?? "",
     },
   })
+
+  // Reset form values when patient data changes (ensures DOB displays correctly)
+  useEffect(() => {
+    form.reset({
+      fullName: patient.fullName,
+      phone: patient.phone,
+      dateOfBirth: patient.dateOfBirth ? new Date(patient.dateOfBirth) : null,
+      gender: patient.gender,
+      address: patient.address ?? "",
+      cccd: patient.cccd ?? "",
+    })
+  }, [patient.id]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSubmit = async (data: FormValues) => {
     try {
