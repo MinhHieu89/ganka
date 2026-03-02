@@ -102,10 +102,10 @@ Plans:
 - [x] 02-08-PLAN.md -- [GAP] Fix doctor dropdown, datetime picker, textarea corners, dialog styling, booking form polish
 - [x] 02-09-PLAN.md -- [GAP] Rewrite allergy form autocomplete with free-text support and Vietnamese categories
 - [x] 02-10-PLAN.md -- [GAP] PAT-03 field validation infrastructure + BookingForm placeholder cleanup
-- [ ] 02-11-PLAN.md -- [UAT GAP] Backend: substring search, UTC-to-Vietnam timezone, structured validation errors
-- [ ] 02-12-PLAN.md -- [UAT GAP] Frontend infra: replace calendar.tsx, fix dialog spacing, 401 interceptor, registration redirect, allergy severity
-- [ ] 02-13-PLAN.md -- [UAT GAP] Fix staff booking form (DoctorSelector, pre-populate, slot alignment) and replace allergy autocomplete
-- [ ] 02-14-PLAN.md -- [UAT GAP] Reusable server validation UI, patient profile header redesign, full UAT verification
+- [x] 02-11-PLAN.md -- [UAT GAP] Backend: substring search, UTC-to-Vietnam timezone, structured validation errors
+- [x] 02-12-PLAN.md -- [UAT GAP] Frontend infra: replace calendar.tsx, fix dialog spacing, 401 interceptor, registration redirect, allergy severity
+- [x] 02-13-PLAN.md -- [UAT GAP] Fix staff booking form (DoctorSelector, pre-populate, slot alignment) and replace allergy autocomplete
+- [x] 02-14-PLAN.md -- [UAT GAP] Reusable server validation UI, patient profile header redesign, full UAT verification
 
 ### Phase 02.1: I notice some bugs in frontend that I want to resolve (INSERTED)
 
@@ -249,7 +249,7 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 | 1. Foundation & Infrastructure | 6/7 | In Progress | - |
 | 1.1 Backend Restructuring | 5/9 | In Progress | - |
 | 1.2 Frontend shadcn/ui Refactoring | 6/8 | In Progress | - |
-| 2. Patient Management & Scheduling | 10/14 | UAT Gap Closure | - |
+| 2. Patient Management & Scheduling | 14/14 | Complete | 2026-03-02 |
 | 2.1 Frontend Bug Fixes + Auth Security | 4/4 | Complete | 2026-03-02 |
 | 3. Clinical Workflow & Examination | 0/3 | Not started | - |
 | 4. Dry Eye Template & Medical Imaging | 0/2 | Not started | - |
