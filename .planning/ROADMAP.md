@@ -89,7 +89,7 @@ Plans:
   3. Staff can record allergies on a patient profile, and those allergies are visible as alerts during downstream workflows
   4. Staff can book appointments on a per-doctor calendar with configurable durations, and the system prevents double-booking with a database-level constraint
   5. Patients can self-book via a public-facing page, with staff confirmation required before the appointment is finalized
-**Plans**: 9 plans (6 original + 3 gap closure)
+**Plans**: 10 plans (6 original + 4 gap closure)
 
 Plans:
 - [x] 02-01-PLAN.md -- Patient module backend: domain entities, EF Core infrastructure, application features, Minimal API endpoints
@@ -101,6 +101,7 @@ Plans:
 - [ ] 02-07-PLAN.md -- [GAP] Fix patient registration 404, inline edit 500, pagination visibility, breadcrumb display
 - [ ] 02-08-PLAN.md -- [GAP] Fix doctor dropdown, datetime picker, textarea corners, dialog styling, booking form polish
 - [ ] 02-09-PLAN.md -- [GAP] Rewrite allergy form autocomplete with free-text support and Vietnamese categories
+- [ ] 02-10-PLAN.md -- [GAP] PAT-03 field validation infrastructure + BookingForm placeholder cleanup
 
 ### Phase 02.1: I notice some bugs in frontend that I want to resolve (INSERTED)
 
