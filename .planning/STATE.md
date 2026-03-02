@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-28)
 
 **Core value:** Doctors can manage chronic eye disease patients (Dry Eye, Myopia Control) with structured data tracking, image comparison across visits, and treatment progress reporting
-**Current focus:** Phase 02: Patient Management & Scheduling
+**Current focus:** Phase 02.1: Frontend Bug Fixes
 
 ## Current Position
 
-Phase: 02 of 9 (Patient Management & Scheduling)
-Plan: 6 of 6 in current phase
-Status: Phase 02 COMPLETE
-Last activity: 2026-03-01 -- Completed 02-06 Integration Verification (all 11 flows passed)
+Phase: 02.1 (Frontend Bug Fixes)
+Plan: 3 of 4 in current phase
+Status: Executing Phase 02.1
+Last activity: 2026-03-02 -- Completed 02.1-03 Theme Reset (shadcn/ui neutral defaults + oklch fixes)
 
-Progress: [##########] 100%
+Progress: [#######...] 75%
 
 ## Performance Metrics
 
@@ -58,6 +58,7 @@ Progress: [##########] 100%
 | Phase 02 P04 | 7min | 2 tasks | 17 files |
 | Phase 02 P05 | 8min | 2 tasks | 21 files |
 | Phase 02 P06 | 25min | 2 tasks | 1 files |
+| Phase 02.1 P03 | 3min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -158,6 +159,10 @@ Recent decisions affecting current work:
 - [Phase 02]: [02-05]: FullCalendar CSS themed via CSS variables matching shadcn/ui design tokens
 - [Phase 02]: [02-05]: Public /book and /book/status routes outside _authenticated layout group
 - [Phase 02]: [02-05]: DoctorSelector queries auth/users filtered by Doctor role -- placeholder until dedicated endpoint
+- [Phase 02.1]: [02.1-03]: Reset to shadcn/ui neutral default theme -- replaced Stone+Green palette entirely
+- [Phase 02.1]: [02.1-03]: --radius changed from 0rem to 0.625rem for rounded corners
+- [Phase 02.1]: [02.1-03]: color-mix(in oklch, ...) for opacity variants in FullCalendar (oklch-compatible)
+- [Phase 02.1]: [02.1-03]: var(--token) direct reference pattern -- never wrap oklch values in hsl()
 
 ### Roadmap Evolution
 
@@ -179,5 +184,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-02
-Stopped at: Phase 02.1 context gathered
-Resume file: .planning/phases/02.1-i-notice-some-bugs-in-frontend-that-i-want-to-resolve/02.1-CONTEXT.md
+Stopped at: Completed 02.1-03-PLAN.md
+Resume file: .planning/phases/02.1-i-notice-some-bugs-in-frontend-that-i-want-to-resolve/02.1-03-SUMMARY.md
