@@ -41,7 +41,7 @@ import {
   useAppointmentTypes,
   type AppointmentTypeDto,
 } from "@/features/scheduling/api/scheduling-api"
-import { DoctorSelector } from "@/features/scheduling/components/DoctorSelector"
+import { DoctorSelector, useDoctors } from "@/features/scheduling/components/DoctorSelector"
 import { IconSearch, IconLoader2 } from "@tabler/icons-react"
 
 /** Generate 30-minute time slots from 08:00 to 19:30 */
@@ -75,6 +75,7 @@ export function AppointmentBookingDialog({
 
   const bookAppointment = useBookAppointment()
   const { data: appointmentTypes } = useAppointmentTypes()
+  const { data: doctors } = useDoctors()
 
   const schema = useMemo(
     () =>
@@ -112,11 +113,12 @@ export function AppointmentBookingDialog({
   // Reset form when dialog opens with new defaults
   useEffect(() => {
     if (open) {
+      const doctorName = doctors?.find((d) => d.id === defaultDoctorId)?.fullName ?? ""
       form.reset({
         patientId: "",
         patientName: "",
         doctorId: defaultDoctorId ?? "",
-        doctorName: "",
+        doctorName,
         appointmentTypeId: "",
         startDate: defaultStartTime ?? undefined,
         startTime: defaultStartTime
@@ -125,7 +127,7 @@ export function AppointmentBookingDialog({
         notes: "",
       })
     }
-  }, [open, defaultDoctorId, defaultStartTime, form])
+  }, [open, defaultDoctorId, defaultStartTime, form, doctors])
 
   // -- Patient search state --
   const [patientSearchTerm, setPatientSearchTerm] = useState("")
@@ -251,17 +253,18 @@ export function AppointmentBookingDialog({
               render={({ field }) => (
                 <DoctorSelector
                   value={field.value}
-                  onChange={(id) => {
+                  onChange={(id, name) => {
                     field.onChange(id)
-                    // We don't have doctor name in the selector callback directly
-                    // Set it from the trigger display text after selection
-                    form.setValue("doctorName", id)
+                    form.setValue("doctorName", name)
                   }}
                 />
               )}
             />
             {form.formState.errors.doctorId && (
               <FieldError>{form.formState.errors.doctorId.message}</FieldError>
+            )}
+            {form.formState.errors.doctorName && (
+              <FieldError>{form.formState.errors.doctorName.message}</FieldError>
             )}
           </Field>
 

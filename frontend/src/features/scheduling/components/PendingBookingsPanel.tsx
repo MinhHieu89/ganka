@@ -239,7 +239,7 @@ export function PendingBookingsPanel() {
               <FieldLabel>{t("doctor")}</FieldLabel>
               <DoctorSelector
                 value={approveDoctorId}
-                onChange={setApproveDoctorId}
+                onChange={(id) => setApproveDoctorId(id)}
               />
             </Field>
             <Field>

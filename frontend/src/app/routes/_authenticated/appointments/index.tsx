@@ -76,7 +76,7 @@ function AppointmentsPage() {
         <div className="flex items-center gap-3">
           <DoctorSelector
             value={selectedDoctorId}
-            onChange={setSelectedDoctorId}
+            onChange={(id) => setSelectedDoctorId(id)}
             className="w-[200px]"
           />
           <Button onClick={handleBookAppointmentClick}>

@@ -37,7 +37,7 @@ function useDoctors() {
 
 interface DoctorSelectorProps {
   value?: string
-  onChange: (doctorId: string) => void
+  onChange: (doctorId: string, doctorName: string) => void
   className?: string
 }
 
@@ -48,12 +48,18 @@ export function DoctorSelector({ value, onChange, className }: DoctorSelectorPro
   // Auto-select first doctor when data loads and no value set
   useEffect(() => {
     if (doctors && doctors.length > 0 && !value) {
-      onChange(doctors[0].id)
+      onChange(doctors[0].id, doctors[0].fullName)
     }
   }, [doctors, value, onChange])
 
   return (
-    <Select value={value} onValueChange={onChange}>
+    <Select
+      value={value}
+      onValueChange={(id) => {
+        const doctor = doctors?.find((d) => d.id === id)
+        onChange(id, doctor?.fullName ?? "")
+      }}
+    >
       <SelectTrigger className={className}>
         <SelectValue placeholder={isLoading ? "..." : t("selectDoctor")} />
       </SelectTrigger>

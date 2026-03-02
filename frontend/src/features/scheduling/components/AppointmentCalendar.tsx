@@ -83,7 +83,7 @@ export function AppointmentCalendar({
         }}
         slotMinTime="08:00:00"
         slotMaxTime="21:00:00"
-        slotDuration="00:15:00"
+        slotDuration="00:30:00"
         slotLabelInterval="00:30:00"
         selectable
         editable
