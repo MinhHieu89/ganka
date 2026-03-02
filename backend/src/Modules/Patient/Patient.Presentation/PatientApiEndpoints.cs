@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Routing;
 using Patient.Application.Features;
 using Patient.Contracts.Dtos;
 using Patient.Domain.Enums;
+using Patient.Domain.Services;
 using Shared.Domain;
 using Shared.Presentation;
 using Wolverine;
@@ -27,6 +28,7 @@ public static class PatientApiEndpoints
         MapAllergyEndpoints(group);
         MapSearchEndpoints(group);
         MapPhotoEndpoints(group);
+        MapValidationEndpoints(group);
 
         return app;
     }
@@ -116,5 +118,15 @@ public static class PatientApiEndpoints
             var result = await bus.InvokeAsync<Result<string>>(command, ct);
             return result.ToHttpResult();
         }).DisableAntiforgery();
+    }
+
+    private static void MapValidationEndpoints(RouteGroupBuilder group)
+    {
+        group.MapGet("/{patientId:guid}/field-validation", async (Guid patientId, IMessageBus bus, CancellationToken ct) =>
+        {
+            var result = await bus.InvokeAsync<Result<PatientFieldValidationResult>>(
+                new ValidatePatientFieldsQuery(patientId), ct);
+            return result.ToHttpResult();
+        });
     }
 }
