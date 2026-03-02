@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 ## Current Position
 
 Phase: 02 (Patient Management & Scheduling)
-Plan: 12 of 14 in current phase (UAT gap closure plans 11-14)
+Plan: 13 of 14 in current phase (UAT gap closure plans 11-14)
 Status: Executing UAT gap closure
-Last activity: 2026-03-02 -- Completed 02-11 Backend Bug Fixes (search, timezone, validation)
+Last activity: 2026-03-02 -- Completed 02-13 Staff Booking Form and Allergy Autocomplete Fix
 
-Progress: [########..] 86%
+Progress: [#########.] 93%
 
 ## Performance Metrics
 
@@ -68,6 +68,7 @@ Progress: [########..] 86%
 | Phase 02 P10 | 9min | 2 tasks | 15 files |
 | Phase 02 P11 | 19min | 2 tasks | 28 files |
 | Phase 02 P12 | 4min | 2 tasks | 8 files |
+| Phase 02 P13 | 4min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -201,6 +202,9 @@ Recent decisions affecting current work:
 - [Phase 02]: [02-12]: 401 interceptor with shared refreshPromise prevents concurrent refresh, skips auth endpoints
 - [Phase 02]: [02-12]: DialogContent flex flex-col + gap-4 for proper spacing across all dialogs
 - [Phase 02]: [02-12]: Auth error vs not-found differentiation pattern in page error states
+- [Phase 02]: [02-13]: DoctorSelector 2-arg onChange (doctorId, doctorName) pattern for all consumers
+- [Phase 02]: [02-13]: Allergy combobox uses Button trigger (not Input) with div wrapper to avoid click-to-toggle anti-pattern
+- [Phase 02]: [02-13]: ApproveBookingDialog is inline in PendingBookingsPanel (not standalone component)
 
 ### Roadmap Evolution
 
@@ -222,5 +226,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-02
-Stopped at: Completed 02-11-PLAN.md -- Backend Bug Fixes (search, timezone, validation)
-Resume file: .planning/phases/02-patient-management-scheduling/02-11-SUMMARY.md
+Stopped at: Completed 02-13-PLAN.md -- Staff Booking Form and Allergy Autocomplete Fix
+Resume file: .planning/phases/02-patient-management-scheduling/02-13-SUMMARY.md
