@@ -101,6 +101,18 @@ export interface GetPatientListParams {
   search?: string | null
 }
 
+// ---- Field validation types (matches backend PatientFieldValidationResult) ----
+
+export interface MissingFieldInfo {
+  fieldName: string
+  requiredForContext: string
+}
+
+export interface PatientFieldValidationResult {
+  isValid: boolean
+  missingFields: MissingFieldInfo[]
+}
+
 // ---- Bilingual allergy catalog (matches backend AllergyCatalogSeeder) ----
 
 export const ALLERGY_CATALOG_BILINGUAL = [
@@ -403,5 +415,31 @@ export function useUploadPatientPhoto() {
         queryKey: ["patients", variables.patientId],
       })
     },
+  })
+}
+
+// ---- Field validation ----
+
+async function getPatientFieldValidation(
+  patientId: string,
+): Promise<PatientFieldValidationResult> {
+  const res = await api.GET(
+    `/api/patients/${patientId}/field-validation` as never,
+    {},
+  )
+  if (res.error) {
+    const err = res.error as { detail?: string; title?: string }
+    throw new Error(
+      err.detail || err.title || "Failed to validate patient fields",
+    )
+  }
+  return res.data as PatientFieldValidationResult
+}
+
+export function usePatientFieldValidation(patientId: string | undefined) {
+  return useQuery({
+    queryKey: ["patients", patientId, "field-validation"],
+    queryFn: () => getPatientFieldValidation(patientId!),
+    enabled: !!patientId,
   })
 }

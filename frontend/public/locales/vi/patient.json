@@ -67,5 +67,12 @@
     "material": "Vật liệu",
     "environmental": "Môi trường",
     "custom": "Tùy chỉnh"
+  },
+  "fieldWarning": {
+    "title": "Thiếu thông tin bắt buộc",
+    "description": "Các trường sau cần thiết cho giấy chuyển viện và xuất dữ liệu pháp lý:",
+    "address": "Địa chỉ",
+    "cccd": "CCCD (Căn cước công dân)",
+    "updateProfile": "Cập nhật hồ sơ"
   }
 }

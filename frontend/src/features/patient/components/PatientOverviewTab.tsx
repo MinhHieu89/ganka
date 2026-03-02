@@ -21,8 +21,10 @@ import {
 import { DatePicker } from "@/shared/components/DatePicker"
 import {
   useUpdatePatient,
+  usePatientFieldValidation,
   type PatientDto,
 } from "@/features/patient/api/patient-api"
+import { PatientFieldWarning } from "@/features/patient/components/PatientFieldWarning"
 
 interface PatientOverviewTabProps {
   patient: PatientDto
@@ -38,6 +40,7 @@ export function PatientOverviewTab({
   const { t, i18n } = useTranslation("patient")
   const { t: tCommon } = useTranslation("common")
   const updateMutation = useUpdatePatient()
+  const { data: fieldValidation } = usePatientFieldValidation(patient.id)
 
   const locale = i18n.language === "vi" ? vi : enUS
   const dateFormat = i18n.language === "vi" ? "dd/MM/yyyy" : "MM/dd/yyyy"
@@ -120,7 +123,14 @@ export function PatientOverviewTab({
 
   if (!isEditing) {
     return (
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="space-y-4">
+        {fieldValidation && !fieldValidation.isValid && (
+          <PatientFieldWarning
+            missingFields={fieldValidation.missingFields}
+            onUpdateProfile={() => onEditToggle(true)}
+          />
+        )}
+        <div className="grid gap-4 md:grid-cols-2">
         {/* Personal Info */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
@@ -195,6 +205,7 @@ export function PatientOverviewTab({
             />
           </CardContent>
         </Card>
+      </div>
       </div>
     )
   }

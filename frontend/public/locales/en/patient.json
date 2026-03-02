@@ -67,5 +67,12 @@
     "material": "Material",
     "environmental": "Environmental",
     "custom": "Custom"
+  },
+  "fieldWarning": {
+    "title": "Missing Required Information",
+    "description": "The following fields are needed for referrals and legal exports:",
+    "address": "Address",
+    "cccd": "CCCD (Citizen ID)",
+    "updateProfile": "Update Profile"
   }
 }

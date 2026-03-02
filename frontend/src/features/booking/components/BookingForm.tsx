@@ -194,7 +194,6 @@ export function BookingForm({ onSubmit, isSubmitting, error }: BookingFormProps)
             <DatePicker
               value={field.value}
               onChange={field.onChange}
-              placeholder={t("selfBooking.preferredDate")}
               className="w-full"
             />
           )}
