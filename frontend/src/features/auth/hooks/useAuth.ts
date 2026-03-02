@@ -18,11 +18,10 @@ export function useAuth() {
   const refreshMutation = useRefreshMutation()
   const logoutMutation = useLogoutMutation()
   const refreshTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const refreshTokenRef = useRef<string | null>(null)
 
   // Schedule token refresh at 80% of lifetime
   const scheduleRefresh = useCallback(
-    (expiresAt: string, currentRefreshToken: string) => {
+    (expiresAt: string) => {
       if (refreshTimerRef.current) {
         clearTimeout(refreshTimerRef.current)
       }
@@ -34,14 +33,9 @@ export function useAuth() {
 
       if (refreshAt <= 0) return
 
-      refreshTokenRef.current = currentRefreshToken
-
       refreshTimerRef.current = setTimeout(async () => {
-        if (!refreshTokenRef.current) return
         try {
-          const response = await refreshMutation.mutateAsync({
-            refreshToken: refreshTokenRef.current,
-          })
+          const response = await refreshMutation.mutateAsync()
           setAuth(
             {
               id: response.user.id,
@@ -52,7 +46,7 @@ export function useAuth() {
             },
             response.accessToken,
           )
-          scheduleRefresh(response.expiresAt, response.refreshToken)
+          scheduleRefresh(response.expiresAt)
         } catch {
           clearAuth()
           navigate({ to: "/login" })
@@ -99,7 +93,7 @@ export function useAuth() {
       }
 
       // Schedule automatic token refresh
-      scheduleRefresh(response.expiresAt, response.refreshToken)
+      scheduleRefresh(response.expiresAt)
 
       return response
     },
@@ -115,38 +109,32 @@ export function useAuth() {
     if (refreshTimerRef.current) {
       clearTimeout(refreshTimerRef.current)
     }
-    refreshTokenRef.current = null
     clearAuth()
     navigate({ to: "/login" })
   }, [logoutMutation, clearAuth, navigate])
 
-  const refresh = useCallback(
-    async (currentRefreshToken: string) => {
-      try {
-        const response = await refreshMutation.mutateAsync({
-          refreshToken: currentRefreshToken,
-        })
-        setAuth(
-          {
-            id: response.user.id,
-            email: response.user.email,
-            fullName: response.user.fullName,
-            permissions: response.user.permissions,
-            preferredLanguage: response.user.preferredLanguage,
-          },
-          response.accessToken,
-        )
-        scheduleRefresh(response.expiresAt, response.refreshToken)
-        return response
-      } catch {
-        clearAuth()
-        navigate({ to: "/login" })
-        toast.error("Session expired. Please log in again.")
-        return null
-      }
-    },
-    [refreshMutation, setAuth, clearAuth, navigate, scheduleRefresh],
-  )
+  const refresh = useCallback(async () => {
+    try {
+      const response = await refreshMutation.mutateAsync()
+      setAuth(
+        {
+          id: response.user.id,
+          email: response.user.email,
+          fullName: response.user.fullName,
+          permissions: response.user.permissions,
+          preferredLanguage: response.user.preferredLanguage,
+        },
+        response.accessToken,
+      )
+      scheduleRefresh(response.expiresAt)
+      return response
+    } catch {
+      clearAuth()
+      navigate({ to: "/login" })
+      toast.error("Session expired. Please log in again.")
+      return null
+    }
+  }, [refreshMutation, setAuth, clearAuth, navigate, scheduleRefresh])
 
   return {
     user,
