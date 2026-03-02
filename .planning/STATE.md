@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 ## Current Position
 
 Phase: 02.1 (Frontend Bug Fixes + HTTP-only Cookie Security)
-Plan: 3 of 4 in current phase
-Status: Executing Phase 02.1
-Last activity: 2026-03-02 -- Completed 02.1-02 Frontend Cookie-Based Auth Flow
+Plan: 4 of 4 in current phase
+Status: Phase 02.1 Complete
+Last activity: 2026-03-02 -- Completed 02.1-04 Verification Checkpoint
 
-Progress: [########..] 75%
+Progress: [##########] 100%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 22
+- Total plans completed: 23
 - Average duration: 7min
-- Total execution time: 2.40 hours
+- Total execution time: 2.48 hours
 
 **By Phase:**
 
@@ -61,6 +61,7 @@ Progress: [########..] 75%
 | Phase 02.1 P01 | 19min | 2 tasks | 10 files |
 | Phase 02.1 P02 | 3min | 2 tasks | 4 files |
 | Phase 02.1 P03 | 3min | 2 tasks | 6 files |
+| Phase 02.1 P04 | 5min | 2 tasks | 29 files |
 
 ## Accumulated Context
 
@@ -171,6 +172,9 @@ Recent decisions affecting current work:
 - [Phase 02.1]: [02.1-01]: CreateTables pattern for multi-schema EnsureCreated limitation
 - [Phase 02.1]: [02.1-02]: silentRefresh as standalone async function (not hook) for TanStack Router beforeLoad outside React context
 - [Phase 02.1]: [02.1-02]: authStore confirmed correct as-is -- in-memory only, no refreshToken field, no persist middleware
+- [Phase 02.1]: [02.1-04]: overflow-clip on SidebarInset for visible rounded corners without clipping scrollbars
+- [Phase 02.1]: [02.1-04]: Viewport-locked layout (h-screen flex-col) prevents page-level scrollbar, keeps header fixed
+- [Phase 02.1]: [02.1-04]: Audit log filters restyled to match patients page filter pattern for visual consistency
 
 ### Roadmap Evolution
 
@@ -192,5 +196,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-02
-Stopped at: Completed 02.1-02-PLAN.md
-Resume file: .planning/phases/02.1-i-notice-some-bugs-in-frontend-that-i-want-to-resolve/02.1-02-SUMMARY.md
+Stopped at: Completed 02.1-04-PLAN.md -- Phase 02.1 COMPLETE
+Resume file: .planning/phases/02.1-i-notice-some-bugs-in-frontend-that-i-want-to-resolve/02.1-04-SUMMARY.md
