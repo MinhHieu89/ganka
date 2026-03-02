@@ -1,5 +1,6 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Wolverine;
@@ -236,6 +237,30 @@ if (app.Environment.IsDevelopment())
         options.SwaggerEndpoint("/swagger/v1/swagger.json", "Ganka28 API v1");
     });
 }
+
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        var logger = context.RequestServices.GetRequiredService<ILoggerFactory>()
+            .CreateLogger("GlobalExceptionHandler");
+        var exception = context.Features.Get<IExceptionHandlerFeature>()?.Error;
+
+        if (exception is not null)
+            logger.LogError(exception, "Unhandled exception for {Method} {Path}",
+                context.Request.Method, context.Request.Path);
+
+        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+        context.Response.ContentType = "application/problem+json";
+        await context.Response.WriteAsJsonAsync(new
+        {
+            type = "https://tools.ietf.org/html/rfc9110#section-15.6.1",
+            title = "Internal Server Error",
+            status = 500,
+            detail = "An unexpected error occurred. Please try again later."
+        });
+    });
+});
 
 app.UseCors();
 app.UseAuthentication();
