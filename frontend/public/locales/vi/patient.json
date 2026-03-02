@@ -60,5 +60,12 @@
   "noAppointments": "Chưa có lịch hẹn",
   "upcomingAppointments": "Sắp tới",
   "pastAppointments": "Đã qua",
-  "compact_allergies": "{{count}} dị ứng"
+  "compact_allergies": "{{count}} dị ứng",
+  "allergyCategory": {
+    "ophthalmicDrug": "Thuốc nhãn khoa",
+    "generalDrug": "Thuốc tổng hợp",
+    "material": "Vật liệu",
+    "environmental": "Môi trường",
+    "custom": "Tùy chỉnh"
+  }
 }

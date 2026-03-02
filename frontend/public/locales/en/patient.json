@@ -60,5 +60,12 @@
   "noAppointments": "No appointments yet",
   "upcomingAppointments": "Upcoming",
   "pastAppointments": "Past",
-  "compact_allergies": "{{count}} allergies"
+  "compact_allergies": "{{count}} allergies",
+  "allergyCategory": {
+    "ophthalmicDrug": "Ophthalmic Drug",
+    "generalDrug": "General Drug",
+    "material": "Material",
+    "environmental": "Environmental",
+    "custom": "Custom"
+  }
 }
