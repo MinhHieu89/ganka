@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next"
 import { format, addDays, getDay } from "date-fns"
 import { Button } from "@/shared/components/Button"
 import { Input } from "@/shared/components/Input"
+import { Textarea } from "@/shared/components/Textarea"
 import {
   Select,
   SelectContent,
@@ -120,7 +121,6 @@ export function BookingForm({ onSubmit, isSubmitting, error }: BookingFormProps)
         <FieldLabel>{t("selfBooking.fullName")} *</FieldLabel>
         <Input
           {...form.register("patientName")}
-          placeholder={t("selfBooking.fullName")}
         />
         {form.formState.errors.patientName && (
           <FieldError>{form.formState.errors.patientName.message}</FieldError>
@@ -132,7 +132,6 @@ export function BookingForm({ onSubmit, isSubmitting, error }: BookingFormProps)
         <FieldLabel>{t("selfBooking.phone")} *</FieldLabel>
         <Input
           {...form.register("phone")}
-          placeholder="09xxxxxxxx"
           type="tel"
         />
         {form.formState.errors.phone && (
@@ -145,7 +144,6 @@ export function BookingForm({ onSubmit, isSubmitting, error }: BookingFormProps)
         <FieldLabel>Email</FieldLabel>
         <Input
           {...form.register("email")}
-          placeholder="email@example.com"
           type="email"
         />
         {form.formState.errors.email && (
@@ -236,10 +234,8 @@ export function BookingForm({ onSubmit, isSubmitting, error }: BookingFormProps)
       {/* Notes */}
       <Field>
         <FieldLabel>{t("notes")}</FieldLabel>
-        <textarea
+        <Textarea
           {...form.register("notes")}
-          className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-          placeholder={t("selfBooking.reason")}
         />
       </Field>
 

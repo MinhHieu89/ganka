@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
 import {
@@ -18,12 +19,11 @@ function useDoctors() {
   return useQuery({
     queryKey: ["doctors"],
     queryFn: async (): Promise<DoctorOption[]> => {
-      // Query from auth/users endpoint filtered by doctor role
-      // For now, we use a generic endpoint. Backend will provide doctors list.
-      const { data, error } = await api.GET("/api/auth/users" as never)
+      const { data, error } = await api.GET("/api/admin/users" as never)
       if (error) throw new Error("Failed to fetch doctors")
-      // Filter for users with Doctor role from the list
-      const users = (data as Array<{ id: string; fullName: string; roles?: string[] }>) ?? []
+      // Response is a paginated envelope: { data: UserDto[], totalCount, page, pageSize }
+      const envelope = data as { data: Array<{ id: string; fullName: string; roles?: string[] }> }
+      const users = envelope.data ?? []
       return users
         .filter(
           (u) =>
@@ -46,9 +46,11 @@ export function DoctorSelector({ value, onChange, className }: DoctorSelectorPro
   const { data: doctors, isLoading } = useDoctors()
 
   // Auto-select first doctor when data loads and no value set
-  if (doctors && doctors.length > 0 && !value) {
-    onChange(doctors[0].id)
-  }
+  useEffect(() => {
+    if (doctors && doctors.length > 0 && !value) {
+      onChange(doctors[0].id)
+    }
+  }, [doctors, value, onChange])
 
   return (
     <Select value={value} onValueChange={onChange}>
