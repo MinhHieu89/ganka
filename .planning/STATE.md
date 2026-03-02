@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-28)
 
 **Core value:** Doctors can manage chronic eye disease patients (Dry Eye, Myopia Control) with structured data tracking, image comparison across visits, and treatment progress reporting
-**Current focus:** Phase 02.1: Frontend Bug Fixes
+**Current focus:** Phase 02.1: Frontend Bug Fixes + HTTP-only Cookie Security
 
 ## Current Position
 
-Phase: 02.1 (Frontend Bug Fixes)
-Plan: 3 of 4 in current phase
+Phase: 02.1 (Frontend Bug Fixes + HTTP-only Cookie Security)
+Plan: 1 of 4 in current phase
 Status: Executing Phase 02.1
-Last activity: 2026-03-02 -- Completed 02.1-03 Theme Reset (shadcn/ui neutral defaults + oklch fixes)
+Last activity: 2026-03-02 -- Completed 02.1-01 HTTP-only Cookie Refresh Token Storage (TDD)
 
-Progress: [#######...] 75%
+Progress: [###.......] 25%
 
 ## Performance Metrics
 
@@ -58,6 +58,7 @@ Progress: [#######...] 75%
 | Phase 02 P04 | 7min | 2 tasks | 17 files |
 | Phase 02 P05 | 8min | 2 tasks | 21 files |
 | Phase 02 P06 | 25min | 2 tasks | 1 files |
+| Phase 02.1 P01 | 19min | 2 tasks | 10 files |
 | Phase 02.1 P03 | 3min | 2 tasks | 6 files |
 
 ## Accumulated Context
@@ -163,6 +164,10 @@ Recent decisions affecting current work:
 - [Phase 02.1]: [02.1-03]: --radius changed from 0rem to 0.625rem for rounded corners
 - [Phase 02.1]: [02.1-03]: color-mix(in oklch, ...) for opacity variants in FullCalendar (oklch-compatible)
 - [Phase 02.1]: [02.1-03]: var(--token) direct reference pattern -- never wrap oklch values in hsl()
+- [Phase 02.1]: [02.1-01]: Presentation layer owns cookie logic -- handlers remain unaware of HTTP transport
+- [Phase 02.1]: [02.1-01]: RememberMe added to RefreshTokenResponse for cookie Max-Age determination on rotation
+- [Phase 02.1]: [02.1-01]: LocalDB per-test-run database for integration tests (Testcontainers requires Docker)
+- [Phase 02.1]: [02.1-01]: CreateTables pattern for multi-schema EnsureCreated limitation
 
 ### Roadmap Evolution
 
@@ -184,5 +189,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-02
-Stopped at: Completed 02.1-03-PLAN.md
-Resume file: .planning/phases/02.1-i-notice-some-bugs-in-frontend-that-i-want-to-resolve/02.1-03-SUMMARY.md
+Stopped at: Completed 02.1-01-PLAN.md
+Resume file: .planning/phases/02.1-i-notice-some-bugs-in-frontend-that-i-want-to-resolve/02.1-01-SUMMARY.md
