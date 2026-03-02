@@ -23,6 +23,7 @@ import {
 } from "@/shared/components/DropdownMenu"
 import { Button } from "@/shared/components/Button"
 import { useAuthStore } from "@/shared/stores/authStore"
+import { useRecentPatientsStore } from "@/shared/stores/recentPatientsStore"
 import { useAuth } from "@/features/auth/hooks/useAuth"
 import { GlobalSearch } from "@/shared/components/GlobalSearch"
 
@@ -59,6 +60,7 @@ export function SiteHeader() {
   const routerState = useRouterState()
   const currentPath = routerState.location.pathname
   const user = useAuthStore((s) => s.user)
+  const recentPatients = useRecentPatientsStore((s) => s.recent)
   const { logout } = useAuth()
 
   // Build breadcrumb segments from current path
@@ -67,9 +69,26 @@ export function SiteHeader() {
     .filter(Boolean)
     .filter((s) => s !== "_authenticated") // filter layout route segments
 
+  // UUID regex for detecting dynamic route params
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
   const breadcrumbs = segments.map((segment, index) => {
     const i18nKey = segmentToI18nKey[segment]
-    const label = i18nKey ? t(i18nKey) : segment.charAt(0).toUpperCase() + segment.slice(1)
+    let label: string
+    if (i18nKey) {
+      label = t(i18nKey)
+    } else if (uuidRegex.test(segment)) {
+      // For UUID segments under /patients, look up the patient name
+      const prevSegment = index > 0 ? segments[index - 1] : null
+      if (prevSegment === "patients") {
+        const patient = recentPatients.find((p) => p.id === segment)
+        label = patient ? patient.fullName : (t("sidebar.detail") ?? "Detail")
+      } else {
+        label = t("sidebar.detail") ?? "Detail"
+      }
+    } else {
+      label = segment.charAt(0).toUpperCase() + segment.slice(1)
+    }
     const path = "/" + segments.slice(0, index + 1).join("/")
     const isLast = index === segments.length - 1
     return { label, path, isLast }

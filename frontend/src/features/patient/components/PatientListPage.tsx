@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import type { PaginationState } from "@tanstack/react-table"
 import { IconPlus, IconSearch } from "@tabler/icons-react"
@@ -30,6 +30,16 @@ export function PatientListPage() {
   const [dateFrom, setDateFrom] = useState<Date | undefined>(undefined)
   const [dateTo, setDateTo] = useState<Date | undefined>(undefined)
   const [searchTerm, setSearchTerm] = useState("")
+  const [debouncedSearch, setDebouncedSearch] = useState("")
+
+  // Debounce search input
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchTerm)
+      setPagination((p) => ({ ...p, pageIndex: 0 }))
+    }, 300)
+    return () => clearTimeout(timer)
+  }, [searchTerm])
 
   // Pagination state
   const [pagination, setPagination] = useState<PaginationState>({
@@ -47,6 +57,7 @@ export function PatientListPage() {
         : allergyFilter === "yes",
     dateFrom: dateFrom ? dateFrom.toISOString() : null,
     dateTo: dateTo ? dateTo.toISOString() : null,
+    search: debouncedSearch || null,
   })
 
   const patients = patientList.data?.items ?? []

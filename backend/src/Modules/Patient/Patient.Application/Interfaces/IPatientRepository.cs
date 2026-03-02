@@ -16,6 +16,7 @@ public interface IPatientRepository
         bool? hasAllergies = null,
         DateTime? from = null,
         DateTime? to = null,
+        string? search = null,
         CancellationToken cancellationToken = default);
     Task<bool> PhoneExistsAsync(string phone, CancellationToken cancellationToken = default);
     Task<int> GetMaxSequenceNumberForYearAsync(int year, CancellationToken cancellationToken = default);

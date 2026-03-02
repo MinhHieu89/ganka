@@ -84,7 +84,7 @@ Each task was committed atomically:
 1. **Task 1: Fix DoctorSelector, create Textarea, fix calendar alignment** - `e3449df` (fix)
 2. **Task 2: Fix booking dialog datetime picker and pending bookings dialog styling** - `c8461cf` (fix)
 
-**Plan metadata:** TBD (docs: complete plan)
+**Plan metadata:** `b487b6d` (docs: complete plan)
 
 ## Files Created/Modified
 - `frontend/src/shared/components/ui/textarea.tsx` - shadcn Textarea primitive with rounded-md class
@@ -119,6 +119,10 @@ None - no external service configuration required.
 - UAT Tests 9, 10, 11, and 13 gap closures complete
 - All scheduling UX issues addressed: doctor dropdown, datetime picker, textarea corners, dialog spacing, booking form, calendar alignment
 - Ready for remaining gap closure plans (02-07, 02-09)
+
+## Self-Check: PASSED
+
+All 9 created/modified files verified present. Both task commits (e3449df, c8461cf) verified in git log. Metadata commit: b487b6d.
 
 ---
 *Phase: 02-patient-management-scheduling*

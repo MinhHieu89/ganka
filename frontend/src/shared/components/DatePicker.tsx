@@ -13,6 +13,10 @@ interface DatePickerProps {
   placeholder?: string
   disabled?: boolean
   className?: string
+  /** Earliest selectable date (defaults to 1920-01-01) */
+  fromDate?: Date
+  /** Latest selectable date (defaults to today) */
+  toDate?: Date
 }
 
 const localeMap: Record<string, Locale> = {
@@ -26,12 +30,17 @@ export function DatePicker({
   placeholder,
   disabled,
   className,
+  fromDate,
+  toDate,
 }: DatePickerProps) {
   const { i18n, t } = useTranslation("common")
   const locale = localeMap[i18n.language] ?? vi
 
   const formatPattern = i18n.language === "vi" ? "dd/MM/yyyy" : "MM/dd/yyyy"
   const displayPlaceholder = placeholder ?? t("buttons.search")
+
+  const defaultFrom = fromDate ?? new Date(1920, 0, 1)
+  const defaultTo = toDate ?? new Date()
 
   return (
     <Popover>
@@ -55,6 +64,10 @@ export function DatePicker({
           selected={value}
           onSelect={onChange}
           locale={locale}
+          captionLayout="dropdown"
+          startMonth={defaultFrom}
+          endMonth={defaultTo}
+          defaultMonth={value ?? undefined}
         />
       </PopoverContent>
     </Popover>

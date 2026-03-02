@@ -182,6 +182,9 @@ async function getPatientById(patientId: string): Promise<PatientDto> {
 
 async function updatePatient(data: UpdatePatientCommand): Promise<void> {
   const body = denormalizeForApi(data as unknown as Record<string, unknown>)
+  // patientId is in the URL path; remove from body to avoid deserialization issues
+  delete (body as Record<string, unknown>).patientId
+  delete (body as Record<string, unknown>).PatientId
   const res = await api.PUT(
     `/api/patients/${data.patientId}` as never,
     {

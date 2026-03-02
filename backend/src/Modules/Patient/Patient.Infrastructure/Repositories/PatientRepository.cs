@@ -52,6 +52,7 @@ public sealed class PatientRepository : IPatientRepository
         bool? hasAllergies = null,
         DateTime? from = null,
         DateTime? to = null,
+        string? search = null,
         CancellationToken cancellationToken = default)
     {
         var query = _dbContext.Patients
@@ -59,6 +60,15 @@ public sealed class PatientRepository : IPatientRepository
             .Include(p => p.Allergies)
             .Where(p => p.IsActive)
             .AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var term = search.Trim();
+            query = query.Where(p =>
+                EF.Functions.Collate(p.FullName, "Vietnamese_CI_AI").Contains(term) ||
+                p.Phone.StartsWith(term) ||
+                p.PatientCode == term);
+        }
 
         if (gender.HasValue)
             query = query.Where(p => p.Gender == gender.Value);

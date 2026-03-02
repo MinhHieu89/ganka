@@ -157,33 +157,31 @@ export function PatientTable({
         }
       />
 
-      {/* Pagination */}
-      {pageCount > 1 && (
-        <div className="flex items-center justify-between text-sm text-muted-foreground">
-          <span>
-            {tCommon("table.page")} {pagination.pageIndex + 1} {tCommon("table.of")}{" "}
-            {pageCount} ({totalCount} {tCommon("table.total").toLowerCase()})
-          </span>
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={!table.getCanPreviousPage()}
-              onClick={() => table.previousPage()}
-            >
-              {tCommon("buttons.previous")}
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={!table.getCanNextPage()}
-              onClick={() => table.nextPage()}
-            >
-              {tCommon("buttons.next")}
-            </Button>
-          </div>
+      {/* Pagination - always visible, buttons disabled when single page */}
+      <div className="flex items-center justify-between text-sm text-muted-foreground">
+        <span>
+          {tCommon("table.page")} {pagination.pageIndex + 1} {tCommon("table.of")}{" "}
+          {pageCount || 1} ({totalCount} {tCommon("table.total").toLowerCase()})
+        </span>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={!table.getCanPreviousPage()}
+            onClick={() => table.previousPage()}
+          >
+            {tCommon("buttons.previous")}
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={!table.getCanNextPage()}
+            onClick={() => table.nextPage()}
+          >
+            {tCommon("buttons.next")}
+          </Button>
         </div>
-      )}
+      </div>
     </div>
   )
 }

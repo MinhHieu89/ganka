@@ -11,7 +11,8 @@ public sealed record GetPatientListQuery(
     Gender? Gender = null,
     bool? HasAllergies = null,
     DateTime? DateFrom = null,
-    DateTime? DateTo = null);
+    DateTime? DateTo = null,
+    string? Search = null);
 
 /// <summary>
 /// Wolverine handler for paginated patient listing with optional filters.
@@ -30,6 +31,7 @@ public static class GetPatientListHandler
             query.HasAllergies,
             query.DateFrom,
             query.DateTo,
+            query.Search,
             cancellationToken);
 
         var items = patients.Select(GetPatientByIdHandler.MapToDto).ToList();
