@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 ## Current Position
 
 Phase: 02.1 (Frontend Bug Fixes + HTTP-only Cookie Security)
-Plan: 1 of 4 in current phase
+Plan: 3 of 4 in current phase
 Status: Executing Phase 02.1
-Last activity: 2026-03-02 -- Completed 02.1-01 HTTP-only Cookie Refresh Token Storage (TDD)
+Last activity: 2026-03-02 -- Completed 02.1-02 Frontend Cookie-Based Auth Flow
 
-Progress: [###.......] 25%
+Progress: [########..] 75%
 
 ## Performance Metrics
 
@@ -59,6 +59,7 @@ Progress: [###.......] 25%
 | Phase 02 P05 | 8min | 2 tasks | 21 files |
 | Phase 02 P06 | 25min | 2 tasks | 1 files |
 | Phase 02.1 P01 | 19min | 2 tasks | 10 files |
+| Phase 02.1 P02 | 3min | 2 tasks | 4 files |
 | Phase 02.1 P03 | 3min | 2 tasks | 6 files |
 
 ## Accumulated Context
@@ -168,6 +169,8 @@ Recent decisions affecting current work:
 - [Phase 02.1]: [02.1-01]: RememberMe added to RefreshTokenResponse for cookie Max-Age determination on rotation
 - [Phase 02.1]: [02.1-01]: LocalDB per-test-run database for integration tests (Testcontainers requires Docker)
 - [Phase 02.1]: [02.1-01]: CreateTables pattern for multi-schema EnsureCreated limitation
+- [Phase 02.1]: [02.1-02]: silentRefresh as standalone async function (not hook) for TanStack Router beforeLoad outside React context
+- [Phase 02.1]: [02.1-02]: authStore confirmed correct as-is -- in-memory only, no refreshToken field, no persist middleware
 
 ### Roadmap Evolution
 
@@ -189,5 +192,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-02
-Stopped at: Completed 02.1-01-PLAN.md
-Resume file: .planning/phases/02.1-i-notice-some-bugs-in-frontend-that-i-want-to-resolve/02.1-01-SUMMARY.md
+Stopped at: Completed 02.1-02-PLAN.md
+Resume file: .planning/phases/02.1-i-notice-some-bugs-in-frontend-that-i-want-to-resolve/02.1-02-SUMMARY.md
