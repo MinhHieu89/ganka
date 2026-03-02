@@ -3,3 +3,6 @@ dist/
 .vinxi/
 .output/
 *.timestamp_*.js
+
+
+.playwright-cli/
