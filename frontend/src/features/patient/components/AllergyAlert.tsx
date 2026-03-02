@@ -50,7 +50,7 @@ export function AllergyAlert({ allergies, compact = false }: AllergyAlertProps) 
   }
 
   return (
-    <div className="flex items-start gap-3 p-3 bg-orange-50 border border-orange-200 dark:bg-orange-950/30 dark:border-orange-800">
+    <div className="flex items-start gap-3 p-3 bg-orange-50 border border-orange-200 rounded-lg dark:bg-orange-950/30 dark:border-orange-800">
       <IconAlertTriangle className="h-5 w-5 text-orange-600 dark:text-orange-400 shrink-0 mt-0.5" />
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium text-orange-800 dark:text-orange-300 mb-1">
