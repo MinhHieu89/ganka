@@ -101,7 +101,8 @@ public sealed class LoginHandler
             refreshTokenValue,
             user.Id,
             DateTime.UtcNow.AddDays(refreshTokenLifetimeDays),
-            familyId);
+            familyId,
+            command.RememberMe);
 
         _refreshTokenRepository.Add(refreshToken);
 

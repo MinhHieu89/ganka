@@ -24,6 +24,10 @@ public class RefreshTokenConfiguration : IEntityTypeConfiguration<RefreshToken>
         builder.Property(rt => rt.ReplacedByToken)
             .HasMaxLength(500);
 
+        builder.Property(rt => rt.RememberMe)
+            .IsRequired()
+            .HasDefaultValue(false);
+
         builder.HasOne(rt => rt.User)
             .WithMany()
             .HasForeignKey(rt => rt.UserId)

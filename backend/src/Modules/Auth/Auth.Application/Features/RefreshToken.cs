@@ -14,7 +14,8 @@ public sealed record RefreshTokenResponse(
     string AccessToken,
     string RefreshToken,
     DateTime ExpiresAt,
-    UserDto User);
+    UserDto User,
+    bool RememberMe);
 
 // --- Handler ---
 public sealed class RefreshTokenHandler
@@ -81,8 +82,9 @@ public sealed class RefreshTokenHandler
         var newRefreshToken = new Domain.Entities.RefreshToken(
             newRefreshTokenValue,
             user.Id,
-            DateTime.UtcNow.AddDays(_jwtService.GetRefreshTokenLifetimeDays(false)),
-            existingToken.FamilyId);
+            DateTime.UtcNow.AddDays(_jwtService.GetRefreshTokenLifetimeDays(existingToken.RememberMe)),
+            existingToken.FamilyId,
+            existingToken.RememberMe);
 
         _refreshTokenRepository.Add(newRefreshToken);
         await _unitOfWork.SaveChangesAsync();
@@ -96,6 +98,6 @@ public sealed class RefreshTokenHandler
             user.UserRoles.Select(ur => ur.Role.Name).ToList(),
             permissions);
 
-        return new RefreshTokenResponse(accessToken, newRefreshTokenValue, expiresAt, userDto);
+        return new RefreshTokenResponse(accessToken, newRefreshTokenValue, expiresAt, userDto, existingToken.RememberMe);
     }
 }

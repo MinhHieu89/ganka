@@ -15,6 +15,7 @@ public class RefreshToken : Entity
     public DateTime? RevokedAt { get; private set; }
     public string? ReplacedByToken { get; private set; }
     public Guid FamilyId { get; private set; }
+    public bool RememberMe { get; private set; }
 
     public User User { get; private set; } = default!;
 
@@ -24,12 +25,13 @@ public class RefreshToken : Entity
 
     private RefreshToken() { }
 
-    public RefreshToken(string token, Guid userId, DateTime expiresAt, Guid familyId)
+    public RefreshToken(string token, Guid userId, DateTime expiresAt, Guid familyId, bool rememberMe = false)
     {
         Token = token;
         UserId = userId;
         ExpiresAt = expiresAt;
         FamilyId = familyId;
+        RememberMe = rememberMe;
     }
 
     /// <summary>
