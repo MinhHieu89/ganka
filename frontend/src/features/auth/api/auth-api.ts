@@ -11,7 +11,6 @@ export interface LoginRequest {
 
 export interface LoginResponse {
   accessToken: string
-  refreshToken: string
   expiresAt: string
   user: UserDto
 }
@@ -24,10 +23,6 @@ export interface UserDto {
   isActive: boolean
   roles: string[]
   permissions: string[]
-}
-
-export interface RefreshTokenRequest {
-  refreshToken: string
 }
 
 export interface UpdateLanguageRequest {
@@ -47,10 +42,8 @@ async function login(data: LoginRequest): Promise<LoginResponse> {
   return res.data as LoginResponse
 }
 
-async function refreshToken(data: RefreshTokenRequest): Promise<LoginResponse> {
-  const res = await api.POST("/api/auth/refresh" as never, {
-    body: data as never,
-  })
+async function refreshToken(): Promise<LoginResponse> {
+  const res = await api.POST("/api/auth/refresh" as never, {})
   if (res.error) {
     const err = res.error as { detail?: string; title?: string }
     throw new Error(err.detail || err.title || "Token refresh failed")
@@ -75,6 +68,18 @@ async function updateLanguage(data: UpdateLanguageRequest): Promise<void> {
   await api.PUT("/api/auth/language" as never, {
     body: data as never,
   })
+}
+
+// ---- Standalone functions (non-hook, for use outside React) ----
+
+export async function silentRefresh(): Promise<LoginResponse | null> {
+  try {
+    const res = await api.POST("/api/auth/refresh" as never, {})
+    if (res.error) return null
+    return res.data as LoginResponse
+  } catch {
+    return null
+  }
 }
 
 // ---- TanStack Query hooks ----

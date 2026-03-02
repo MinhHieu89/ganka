@@ -19,5 +19,5 @@ const authMiddleware: Middleware = {
 // When OpenAPI types are generated, update the generic:
 //   import type { paths } from '@/generated/api-types'
 //   export const api = createClient<paths>({ baseUrl: API_URL })
-export const api = createClient({ baseUrl: API_URL })
+export const api = createClient({ baseUrl: API_URL, credentials: "include" })
 api.use(authMiddleware)
