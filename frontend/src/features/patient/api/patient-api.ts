@@ -180,7 +180,7 @@ async function registerPatient(
     const err = res.error as { detail?: string; title?: string }
     throw new Error(err.detail || err.title || "Failed to register patient")
   }
-  return (res.data as { Id: string }).Id
+  return (res.data as { id: string }).id
 }
 
 async function getPatientById(patientId: string): Promise<PatientDto> {
@@ -260,7 +260,7 @@ async function addAllergy(data: AddAllergyCommand): Promise<string> {
   const res = await api.POST(
     `/api/patients/${data.patientId}/allergies` as never,
     {
-      body: { name: data.name, severity: data.severity } as never,
+      body: { name: data.name, severity: severityToInt[data.severity] ?? 0 } as never,
     },
   )
   if (res.error) {

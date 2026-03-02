@@ -61,7 +61,9 @@
     "loading": "Loading...",
     "error": "An error occurred",
     "success": "Success",
-    "notFound": "Not found"
+    "notFound": "Not found",
+    "sessionExpired": "Session Expired",
+    "sessionExpiredDetail": "Your session has expired. Please refresh to continue."
   },
   "search": {
     "placeholder": "Search...",

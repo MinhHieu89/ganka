@@ -61,7 +61,9 @@
     "loading": "Đang tải...",
     "error": "Đã xảy ra lỗi",
     "success": "Thành công",
-    "notFound": "Không tìm thấy"
+    "notFound": "Không tìm thấy",
+    "sessionExpired": "Phiên đã hết hạn",
+    "sessionExpiredDetail": "Phiên làm việc của bạn đã hết hạn. Vui lòng làm mới để tiếp tục."
   },
   "search": {
     "placeholder": "Tìm kiếm...",

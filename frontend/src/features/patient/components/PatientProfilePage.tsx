@@ -57,18 +57,36 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
 
   // Error state
   if (patientQuery.isError || !patient) {
+    const errorMessage = patientQuery.error?.message ?? ""
+    const isAuthError =
+      errorMessage.includes("401") ||
+      errorMessage.toLowerCase().includes("unauthorized")
+
     return (
       <div className="flex flex-col items-center justify-center py-24 text-center">
-        <p className="text-lg font-medium mb-2">{t("notFound")}</p>
-        <p className="text-sm text-muted-foreground mb-4">
-          {tCommon("status.error")}
+        <p className="text-lg font-medium mb-2">
+          {isAuthError ? tCommon("status.sessionExpired") : t("notFound")}
         </p>
-        <Link to={"/patients" as string}>
-          <Button variant="outline">
-            <IconArrowLeft className="h-4 w-4 mr-1" />
-            {tCommon("buttons.back")}
+        <p className="text-sm text-muted-foreground mb-4">
+          {isAuthError
+            ? tCommon("status.sessionExpiredDetail")
+            : tCommon("status.error")}
+        </p>
+        {isAuthError ? (
+          <Button
+            variant="outline"
+            onClick={() => window.location.reload()}
+          >
+            {tCommon("buttons.refresh")}
           </Button>
-        </Link>
+        ) : (
+          <Link to={"/patients" as string}>
+            <Button variant="outline">
+              <IconArrowLeft className="h-4 w-4 mr-1" />
+              {tCommon("buttons.back")}
+            </Button>
+          </Link>
+        )}
       </div>
     )
   }
