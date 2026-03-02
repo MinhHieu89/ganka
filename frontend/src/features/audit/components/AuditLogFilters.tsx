@@ -48,7 +48,7 @@ export function AuditLogFilters({
     filters.dateTo
 
   return (
-    <div className="flex flex-col gap-4 p-4 border bg-card">
+    <div className="flex flex-col gap-4 p-4 border bg-card rounded-lg">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {/* User filter */}
         <Field>

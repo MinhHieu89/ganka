@@ -87,7 +87,7 @@ export function AuditLogDetail({ log }: AuditLogDetailProps) {
 
       {/* Changes table */}
       {log.changes.length > 0 ? (
-        <div className="border bg-background">
+        <div className="border bg-background rounded-lg overflow-hidden">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b bg-muted/50">
