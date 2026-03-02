@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
-import { format } from "date-fns"
 import {
   Dialog,
   DialogContent,
@@ -13,7 +12,6 @@ import {
   DialogFooter,
 } from "@/shared/components/Dialog"
 import { Button } from "@/shared/components/Button"
-import { Input } from "@/shared/components/Input"
 import {
   Select,
   SelectContent,
@@ -35,6 +33,8 @@ import {
   CommandItem,
   CommandList,
 } from "@/shared/components/Command"
+import { DatePicker } from "@/shared/components/DatePicker"
+import { Textarea } from "@/shared/components/Textarea"
 import { usePatientSearch } from "@/features/patient/hooks/usePatientSearch"
 import {
   useBookAppointment,
@@ -43,6 +43,18 @@ import {
 } from "@/features/scheduling/api/scheduling-api"
 import { DoctorSelector } from "@/features/scheduling/components/DoctorSelector"
 import { IconSearch, IconLoader2 } from "@tabler/icons-react"
+
+/** Generate 30-minute time slots from 08:00 to 19:30 */
+function generateTimeSlots(): string[] {
+  const slots: string[] = []
+  for (let h = 8; h < 20; h++) {
+    slots.push(`${String(h).padStart(2, "0")}:00`)
+    if (h < 20) {
+      slots.push(`${String(h).padStart(2, "0")}:30`)
+    }
+  }
+  return slots
+}
 
 interface AppointmentBookingDialogProps {
   open: boolean
@@ -72,7 +84,8 @@ export function AppointmentBookingDialog({
         doctorId: z.string().min(1, t("selectDoctor")),
         doctorName: z.string().min(1),
         appointmentTypeId: z.string().min(1, t("appointmentType")),
-        startTime: z.string().min(1, t("startTime")),
+        startDate: z.date({ required_error: t("date") }),
+        startTime: z.string().min(1, t("time")),
         notes: z.string().optional(),
       }),
     [t],
@@ -88,8 +101,9 @@ export function AppointmentBookingDialog({
       doctorId: defaultDoctorId ?? "",
       doctorName: "",
       appointmentTypeId: "",
+      startDate: defaultStartTime ?? undefined,
       startTime: defaultStartTime
-        ? format(defaultStartTime, "yyyy-MM-dd'T'HH:mm")
+        ? `${String(defaultStartTime.getHours()).padStart(2, "0")}:${String(defaultStartTime.getMinutes()).padStart(2, "0")}`
         : "",
       notes: "",
     },
@@ -104,8 +118,9 @@ export function AppointmentBookingDialog({
         doctorId: defaultDoctorId ?? "",
         doctorName: "",
         appointmentTypeId: "",
+        startDate: defaultStartTime ?? undefined,
         startTime: defaultStartTime
-          ? format(defaultStartTime, "yyyy-MM-dd'T'HH:mm")
+          ? `${String(defaultStartTime.getHours()).padStart(2, "0")}:${String(defaultStartTime.getMinutes()).padStart(2, "0")}`
           : "",
         notes: "",
       })
@@ -123,13 +138,18 @@ export function AppointmentBookingDialog({
   )
 
   const onSubmit = (values: FormValues) => {
+    // Combine date + time into a single ISO datetime
+    const startDateTime = new Date(values.startDate)
+    const [h, m] = values.startTime.split(":")
+    startDateTime.setHours(parseInt(h, 10), parseInt(m, 10), 0, 0)
+
     bookAppointment.mutate(
       {
         patientId: values.patientId,
         patientName: values.patientName,
         doctorId: values.doctorId,
         doctorName: values.doctorName,
-        startTime: new Date(values.startTime).toISOString(),
+        startTime: startDateTime.toISOString(),
         appointmentTypeId: values.appointmentTypeId,
         notes: values.notes || null,
       },
@@ -284,12 +304,47 @@ export function AppointmentBookingDialog({
             )}
           </Field>
 
-          {/* Start Time */}
+          {/* Date */}
           <Field>
-            <FieldLabel>{t("startTime")}</FieldLabel>
-            <Input
-              type="datetime-local"
-              {...form.register("startTime")}
+            <FieldLabel>{t("date")}</FieldLabel>
+            <Controller
+              control={form.control}
+              name="startDate"
+              render={({ field }) => (
+                <DatePicker
+                  value={field.value}
+                  onChange={field.onChange}
+                  fromDate={new Date()}
+                  toDate={new Date(Date.now() + 90 * 24 * 60 * 60 * 1000)}
+                  className="w-full"
+                />
+              )}
+            />
+            {form.formState.errors.startDate && (
+              <FieldError>{form.formState.errors.startDate.message}</FieldError>
+            )}
+          </Field>
+
+          {/* Time */}
+          <Field>
+            <FieldLabel>{t("time")}</FieldLabel>
+            <Controller
+              control={form.control}
+              name="startTime"
+              render={({ field }) => (
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <SelectTrigger>
+                    <SelectValue placeholder={t("selectTime")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {generateTimeSlots().map((slot) => (
+                      <SelectItem key={slot} value={slot}>
+                        {slot}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
             />
             {form.formState.errors.startTime && (
               <FieldError>{form.formState.errors.startTime.message}</FieldError>
@@ -299,11 +354,7 @@ export function AppointmentBookingDialog({
           {/* Notes */}
           <Field>
             <FieldLabel>{t("notes")}</FieldLabel>
-            <textarea
-              {...form.register("notes")}
-              className="flex min-h-[80px] w-full border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-              placeholder={t("notes")}
-            />
+            <Textarea {...form.register("notes")} />
           </Field>
 
           <DialogFooter>

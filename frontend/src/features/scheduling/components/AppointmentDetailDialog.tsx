@@ -19,6 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/components/Select"
+import { Textarea } from "@/shared/components/Textarea"
 import { useCancelAppointment } from "@/features/scheduling/api/scheduling-api"
 import {
   AppointmentStatus,
@@ -196,11 +197,10 @@ export function AppointmentDetailDialog({
                   </SelectItem>
                 </SelectContent>
               </Select>
-              <textarea
+              <Textarea
                 value={cancelNote}
                 onChange={(e) => setCancelNote(e.target.value)}
-                className="flex min-h-[60px] w-full border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                placeholder={t("notes")}
+                className="min-h-[60px]"
               />
               <div className="flex gap-2 justify-end">
                 <Button

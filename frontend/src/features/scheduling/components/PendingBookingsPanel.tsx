@@ -19,7 +19,19 @@ import {
   DialogFooter,
 } from "@/shared/components/Dialog"
 import { Button } from "@/shared/components/Button"
-import { Input } from "@/shared/components/Input"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/shared/components/Select"
+import {
+  Field,
+  FieldLabel,
+} from "@/shared/components/Field"
+import { DatePicker } from "@/shared/components/DatePicker"
+import { Textarea } from "@/shared/components/Textarea"
 import { Badge } from "@/shared/components/Badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card"
 import { Skeleton } from "@/shared/components/Skeleton"
@@ -32,6 +44,18 @@ import {
   IconLoader2,
   IconInbox,
 } from "@tabler/icons-react"
+
+/** Generate 30-minute time slots from 08:00 to 19:30 */
+function generateTimeSlots(): string[] {
+  const slots: string[] = []
+  for (let h = 8; h < 20; h++) {
+    slots.push(`${String(h).padStart(2, "0")}:00`)
+    if (h < 20) {
+      slots.push(`${String(h).padStart(2, "0")}:30`)
+    }
+  }
+  return slots
+}
 
 export function PendingBookingsPanel() {
   const { t, i18n } = useTranslation("scheduling")
@@ -46,16 +70,22 @@ export function PendingBookingsPanel() {
   // Approve dialog state
   const [approveTarget, setApproveTarget] = useState<SelfBookingRequestDto | null>(null)
   const [approveDoctorId, setApproveDoctorId] = useState("")
-  const [approveStartTime, setApproveStartTime] = useState("")
+  const [approveDate, setApproveDate] = useState<Date | undefined>(undefined)
+  const [approveTime, setApproveTime] = useState("")
 
   // Reject dialog state
   const [rejectTarget, setRejectTarget] = useState<SelfBookingRequestDto | null>(null)
   const [rejectReason, setRejectReason] = useState("")
 
   const handleApprove = () => {
-    if (!approveTarget || !approveDoctorId || !approveStartTime) return
+    if (!approveTarget || !approveDoctorId || !approveDate || !approveTime) return
 
     const doctor = doctors?.find((d) => d.id === approveDoctorId)
+
+    // Combine date + time into a single datetime
+    const startDateTime = new Date(approveDate)
+    const [h, m] = approveTime.split(":")
+    startDateTime.setHours(parseInt(h, 10), parseInt(m, 10), 0, 0)
 
     approveMutation.mutate(
       {
@@ -63,14 +93,15 @@ export function PendingBookingsPanel() {
         doctorId: approveDoctorId,
         doctorName: doctor?.fullName ?? "",
         patientName: approveTarget.patientName,
-        startTime: new Date(approveStartTime).toISOString(),
+        startTime: startDateTime.toISOString(),
       },
       {
         onSuccess: () => {
           toast.success(t("approve"))
           setApproveTarget(null)
           setApproveDoctorId("")
-          setApproveStartTime("")
+          setApproveDate(undefined)
+          setApproveTime("")
         },
         onError: (error) => {
           if (error.message === "DOUBLE_BOOKING") {
@@ -170,9 +201,8 @@ export function PendingBookingsPanel() {
                 size="sm"
                 onClick={() => {
                   setApproveTarget(booking)
-                  setApproveStartTime(
-                    format(new Date(booking.preferredDate), "yyyy-MM-dd'T'14:00"),
-                  )
+                  setApproveDate(new Date(booking.preferredDate))
+                  setApproveTime("14:00")
                 }}
               >
                 <IconCheck className="mr-1.5 h-3.5 w-3.5" />
@@ -205,21 +235,38 @@ export function PendingBookingsPanel() {
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium">{t("doctor")}</label>
+            <Field>
+              <FieldLabel>{t("doctor")}</FieldLabel>
               <DoctorSelector
                 value={approveDoctorId}
                 onChange={setApproveDoctorId}
               />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">{t("startTime")}</label>
-              <Input
-                type="datetime-local"
-                value={approveStartTime}
-                onChange={(e) => setApproveStartTime(e.target.value)}
+            </Field>
+            <Field>
+              <FieldLabel>{t("date")}</FieldLabel>
+              <DatePicker
+                value={approveDate}
+                onChange={setApproveDate}
+                fromDate={new Date()}
+                toDate={new Date(Date.now() + 90 * 24 * 60 * 60 * 1000)}
+                className="w-full"
               />
-            </div>
+            </Field>
+            <Field>
+              <FieldLabel>{t("time")}</FieldLabel>
+              <Select value={approveTime} onValueChange={setApproveTime}>
+                <SelectTrigger>
+                  <SelectValue placeholder={t("selectTime")} />
+                </SelectTrigger>
+                <SelectContent>
+                  {generateTimeSlots().map((slot) => (
+                    <SelectItem key={slot} value={slot}>
+                      {slot}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </Field>
           </div>
           <DialogFooter>
             <Button
@@ -230,7 +277,7 @@ export function PendingBookingsPanel() {
             </Button>
             <Button
               onClick={handleApprove}
-              disabled={!approveDoctorId || !approveStartTime || approveMutation.isPending}
+              disabled={!approveDoctorId || !approveDate || !approveTime || approveMutation.isPending}
             >
               {approveMutation.isPending && (
                 <IconLoader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -255,15 +302,13 @@ export function PendingBookingsPanel() {
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium">{t("cancellationReason.title")}</label>
-              <textarea
+            <Field>
+              <FieldLabel>{t("cancellationReason.title")}</FieldLabel>
+              <Textarea
                 value={rejectReason}
                 onChange={(e) => setRejectReason(e.target.value)}
-                className="flex min-h-[80px] w-full border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                placeholder={t("cancellationReason.title")}
               />
-            </div>
+            </Field>
           </div>
           <DialogFooter>
             <Button

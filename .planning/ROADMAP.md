@@ -107,7 +107,7 @@ Plans:
 **Goal:** Fix session persistence via HTTP-only cookie refresh tokens, reset all pages to shadcn/ui default neutral theme with rounded corners
 **Depends on:** Phase 02
 **Requirements:** AUTH-04, UI-01, UI-02
-**Plans:** 4/4 plans complete
+**Plans:** 7/9 plans executed
 
 Plans:
 - [x] 02.1-01-PLAN.md -- Backend HTTP-only cookie: TDD for Set-Cookie on login/refresh/logout, RememberMe entity column, environment-aware Secure flag

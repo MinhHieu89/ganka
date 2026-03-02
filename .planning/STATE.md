@@ -5,21 +5,21 @@
 See: .planning/PROJECT.md (updated 2026-02-28)
 
 **Core value:** Doctors can manage chronic eye disease patients (Dry Eye, Myopia Control) with structured data tracking, image comparison across visits, and treatment progress reporting
-**Current focus:** Phase 02.1: Frontend Bug Fixes + HTTP-only Cookie Security
+**Current focus:** Phase 02: Patient Management & Scheduling (Gap Closure)
 
 ## Current Position
 
-Phase: 02.1 (Frontend Bug Fixes + HTTP-only Cookie Security)
-Plan: 4 of 4 in current phase
-Status: Phase 02.1 Complete
-Last activity: 2026-03-02 -- Completed 02.1-04 Verification Checkpoint
+Phase: 02 (Patient Management & Scheduling)
+Plan: 9 of 9 in current phase (gap closure plans 07-09)
+Status: Executing gap closure plans
+Last activity: 2026-03-02 -- Completed 02-09 Allergy Autocomplete Rewrite
 
-Progress: [##########] 100%
+Progress: [#########-] 90%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 23
+- Total plans completed: 24
 - Average duration: 7min
 - Total execution time: 2.48 hours
 
@@ -62,6 +62,7 @@ Progress: [##########] 100%
 | Phase 02.1 P02 | 3min | 2 tasks | 4 files |
 | Phase 02.1 P03 | 3min | 2 tasks | 6 files |
 | Phase 02.1 P04 | 5min | 2 tasks | 29 files |
+| Phase 02 P09 | 3min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -175,6 +176,9 @@ Recent decisions affecting current work:
 - [Phase 02.1]: [02.1-04]: overflow-clip on SidebarInset for visible rounded corners without clipping scrollbars
 - [Phase 02.1]: [02.1-04]: Viewport-locked layout (h-screen flex-col) prevents page-level scrollbar, keeps header fixed
 - [Phase 02.1]: [02.1-04]: Audit log filters restyled to match patients page filter pattern for visual consistency
+- [Phase 02]: [02-09]: Input wrapped in div inside PopoverTrigger to avoid click-to-toggle anti-pattern while keeping Radix positioning
+- [Phase 02]: [02-09]: shouldFilter={false} on Command to prevent cmdk internal filtering conflict with external filtering
+- [Phase 02]: [02-09]: categoryKeyMap maps English category strings to i18n keys for runtime translation
 
 ### Roadmap Evolution
 
@@ -196,5 +200,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-02
-Stopped at: Completed 02.1-04-PLAN.md -- Phase 02.1 COMPLETE
-Resume file: .planning/phases/02.1-i-notice-some-bugs-in-frontend-that-i-want-to-resolve/02.1-04-SUMMARY.md
+Stopped at: Completed 02-09-PLAN.md -- Allergy autocomplete rewrite with free-text and localized categories
+Resume file: .planning/phases/02-patient-management-scheduling/02-09-SUMMARY.md

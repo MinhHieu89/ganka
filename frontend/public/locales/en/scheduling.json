@@ -34,6 +34,7 @@
   "selectPatient": "Select Patient",
   "date": "Date",
   "time": "Time",
+  "selectTime": "Select time",
   "startTime": "Start Time",
   "endTime": "End Time",
   "duration": "Duration",
