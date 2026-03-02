@@ -12,7 +12,7 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 Phase: 02 (Patient Management & Scheduling)
 Plan: 9 of 9 in current phase (gap closure plans 07-09)
 Status: Executing gap closure plans
-Last activity: 2026-03-02 -- Completed 02-09 Allergy Autocomplete Rewrite
+Last activity: 2026-03-02 -- Completed 02-08 Scheduling UX Gap Closure
 
 Progress: [#########-] 90%
 
@@ -63,6 +63,7 @@ Progress: [#########-] 90%
 | Phase 02.1 P03 | 3min | 2 tasks | 6 files |
 | Phase 02.1 P04 | 5min | 2 tasks | 29 files |
 | Phase 02 P09 | 3min | 2 tasks | 4 files |
+| Phase 02 P08 | 6min | 2 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -179,6 +180,9 @@ Recent decisions affecting current work:
 - [Phase 02]: [02-09]: Input wrapped in div inside PopoverTrigger to avoid click-to-toggle anti-pattern while keeping Radix positioning
 - [Phase 02]: [02-09]: shouldFilter={false} on Command to prevent cmdk internal filtering conflict with external filtering
 - [Phase 02]: [02-09]: categoryKeyMap maps English category strings to i18n keys for runtime translation
+- [Phase 02]: [02-08]: DoctorSelector auto-select moved to useEffect to avoid React state-update-during-render anti-pattern
+- [Phase 02]: [02-08]: DatePicker + time Select combo for datetime input replacing native datetime-local
+- [Phase 02]: [02-08]: Separate startDate (Date) + startTime (string) form fields combined in handleSubmit
 
 ### Roadmap Evolution
 
@@ -200,5 +204,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-02
-Stopped at: Completed 02-09-PLAN.md -- Allergy autocomplete rewrite with free-text and localized categories
-Resume file: .planning/phases/02-patient-management-scheduling/02-09-SUMMARY.md
+Stopped at: Completed 02-08-PLAN.md -- Scheduling UX Gap Closure
+Resume file: .planning/phases/02-patient-management-scheduling/02-08-SUMMARY.md
