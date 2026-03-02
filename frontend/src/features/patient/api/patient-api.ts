@@ -98,6 +98,61 @@ export interface GetPatientListParams {
   hasAllergies?: boolean | null
   dateFrom?: string | null
   dateTo?: string | null
+  search?: string | null
+}
+
+// ---- Bilingual allergy catalog (matches backend AllergyCatalogSeeder) ----
+
+export const ALLERGY_CATALOG_BILINGUAL = [
+  // Ophthalmic Drug
+  { en: "Atropine", vi: "Atropine", category: "Ophthalmic Drug" },
+  { en: "Fluorescein", vi: "Fluorescein", category: "Ophthalmic Drug" },
+  { en: "Tropicamide", vi: "Tropicamide", category: "Ophthalmic Drug" },
+  { en: "Proparacaine", vi: "Proparacaine", category: "Ophthalmic Drug" },
+  { en: "Tetracaine", vi: "Tetracaine", category: "Ophthalmic Drug" },
+  { en: "Timolol", vi: "Timolol", category: "Ophthalmic Drug" },
+  { en: "Latanoprost", vi: "Latanoprost", category: "Ophthalmic Drug" },
+  { en: "Brimonidine", vi: "Brimonidine", category: "Ophthalmic Drug" },
+  { en: "Dorzolamide", vi: "Dorzolamide", category: "Ophthalmic Drug" },
+  { en: "Cyclopentolate", vi: "Cyclopentolate", category: "Ophthalmic Drug" },
+  { en: "Pilocarpine", vi: "Pilocarpine", category: "Ophthalmic Drug" },
+  { en: "Prednisolone Acetate", vi: "Prednisolone Acetate", category: "Ophthalmic Drug" },
+  // General Drug
+  { en: "Penicillin", vi: "Penicillin", category: "General Drug" },
+  { en: "Sulfonamides", vi: "Sulfonamid", category: "General Drug" },
+  { en: "Aspirin", vi: "Aspirin", category: "General Drug" },
+  { en: "Ibuprofen", vi: "Ibuprofen", category: "General Drug" },
+  { en: "Codeine", vi: "Codein", category: "General Drug" },
+  { en: "Amoxicillin", vi: "Amoxicillin", category: "General Drug" },
+  { en: "Cephalosporins", vi: "Cephalosporin", category: "General Drug" },
+  // Material
+  { en: "Latex", vi: "Cao su (Latex)", category: "Material" },
+  { en: "Contact Lens Solution", vi: "Dung dịch kính áp tròng", category: "Material" },
+  { en: "Adhesive Tape", vi: "Băng dính y tế", category: "Material" },
+  // Environmental
+  { en: "Dust", vi: "Bụi", category: "Environmental" },
+  { en: "Pollen", vi: "Phấn hoa", category: "Environmental" },
+  { en: "Animal Dander", vi: "Lông động vật", category: "Environmental" },
+  { en: "Mold", vi: "Nấm mốc", category: "Environmental" },
+] as const
+
+// ---- Enum denormalization: frontend strings → backend integers ----
+
+const patientTypeToInt: Record<string, number> = { Medical: 0, WalkIn: 1 }
+const genderToInt: Record<string, number> = { Male: 0, Female: 1, Other: 2 }
+const severityToInt: Record<string, number> = { Mild: 0, Moderate: 1, Severe: 2 }
+
+function denormalizeForApi(data: Record<string, unknown>): Record<string, unknown> {
+  const out = { ...data }
+  if (typeof out.patientType === "string") out.patientType = patientTypeToInt[out.patientType] ?? 0
+  if (typeof out.gender === "string") out.gender = genderToInt[out.gender] ?? null
+  if (Array.isArray(out.allergies)) {
+    out.allergies = (out.allergies as Record<string, unknown>[]).map((a) => ({
+      ...a,
+      severity: typeof a.severity === "string" ? severityToInt[a.severity as string] ?? 0 : a.severity,
+    }))
+  }
+  return out
 }
 
 // ---- API functions ----
@@ -105,14 +160,15 @@ export interface GetPatientListParams {
 async function registerPatient(
   data: RegisterPatientCommand,
 ): Promise<string> {
+  const body = denormalizeForApi(data as unknown as Record<string, unknown>)
   const res = await api.POST("/api/patients" as never, {
-    body: data as never,
+    body: body as never,
   })
   if (res.error) {
     const err = res.error as { detail?: string; title?: string }
     throw new Error(err.detail || err.title || "Failed to register patient")
   }
-  return res.data as string
+  return (res.data as { Id: string }).Id
 }
 
 async function getPatientById(patientId: string): Promise<PatientDto> {
@@ -125,10 +181,11 @@ async function getPatientById(patientId: string): Promise<PatientDto> {
 }
 
 async function updatePatient(data: UpdatePatientCommand): Promise<void> {
+  const body = denormalizeForApi(data as unknown as Record<string, unknown>)
   const res = await api.PUT(
     `/api/patients/${data.patientId}` as never,
     {
-      body: data as never,
+      body: body as never,
     },
   )
   if (res.error) {
@@ -170,6 +227,7 @@ async function getPatientList(
     query.hasAllergies = params.hasAllergies
   if (params.dateFrom) query.dateFrom = params.dateFrom
   if (params.dateTo) query.dateTo = params.dateTo
+  if (params.search) query.search = params.search
 
   const res = await api.GET("/api/patients" as never, {
     params: { query } as never,

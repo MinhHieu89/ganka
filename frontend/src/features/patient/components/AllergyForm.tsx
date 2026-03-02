@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
-import { IconLoader2 } from "@tabler/icons-react"
+import { IconCheck, IconLoader2, IconPlus } from "@tabler/icons-react"
 import {
   Dialog,
   DialogContent,
@@ -26,7 +26,6 @@ import {
   Command,
   CommandEmpty,
   CommandGroup,
-  CommandInput,
   CommandItem,
   CommandList,
 } from "@/shared/components/Command"
@@ -37,8 +36,17 @@ import {
 } from "@/shared/components/Popover"
 import {
   useAddAllergy,
+  ALLERGY_CATALOG_BILINGUAL,
   type AllergySeverity,
 } from "@/features/patient/api/patient-api"
+import { cn } from "@/shared/lib/utils"
+
+const categoryKeyMap: Record<string, string> = {
+  "Ophthalmic Drug": "allergyCategory.ophthalmicDrug",
+  "General Drug": "allergyCategory.generalDrug",
+  Material: "allergyCategory.material",
+  Environmental: "allergyCategory.environmental",
+}
 
 interface AllergyFormProps {
   open: boolean
@@ -46,41 +54,12 @@ interface AllergyFormProps {
   patientId: string
 }
 
-// Common ophthalmology allergy catalog for autocomplete
-const ALLERGY_CATALOG = [
-  "Atropine",
-  "Tropicamide",
-  "Cyclopentolate",
-  "Phenylephrine",
-  "Timolol",
-  "Latanoprost",
-  "Brimonidine",
-  "Dorzolamide",
-  "Fluorescein",
-  "Proparacaine",
-  "Tetracaine",
-  "Moxifloxacin",
-  "Ofloxacin",
-  "Tobramycin",
-  "Dexamethasone",
-  "Prednisolone",
-  "Neomycin",
-  "Polymyxin B",
-  "Sulfacetamide",
-  "Erythromycin",
-  "Latex",
-  "Benzalkonium chloride",
-  "Thimerosal",
-  "Chlorhexidine",
-  "Iodine",
-  "Adhesive tape",
-]
-
 export function AllergyForm({ open, onClose, patientId }: AllergyFormProps) {
-  const { t } = useTranslation("patient")
+  const { t, i18n } = useTranslation("patient")
   const { t: tCommon } = useTranslation("common")
   const addAllergyMutation = useAddAllergy()
   const [popoverOpen, setPopoverOpen] = useState(false)
+  const [inputValue, setInputValue] = useState("")
 
   const schema = z.object({
     name: z.string().min(1, tCommon("validation.required")),
@@ -106,6 +85,7 @@ export function AllergyForm({ open, onClose, patientId }: AllergyFormProps) {
       })
       toast.success(t("addAllergy"))
       form.reset()
+      setInputValue("")
       onClose()
     } catch (error) {
       toast.error(
@@ -118,12 +98,28 @@ export function AllergyForm({ open, onClose, patientId }: AllergyFormProps) {
     if (!v) {
       onClose()
       form.reset()
+      setInputValue("")
     }
   }
 
+  const catalogItems = ALLERGY_CATALOG_BILINGUAL.map((item) => ({
+    label: i18n.language === "vi" ? item.vi : item.en,
+    value: item.en,
+    category: item.category,
+    categoryLabel: t(categoryKeyMap[item.category] ?? item.category),
+  }))
+
   const nameValue = form.watch("name")
-  const filteredCatalog = ALLERGY_CATALOG.filter((item) =>
-    item.toLowerCase().includes((nameValue ?? "").toLowerCase()),
+  const filtered = inputValue.trim()
+    ? catalogItems.filter((item) =>
+        item.label.toLowerCase().includes(inputValue.toLowerCase()),
+      )
+    : catalogItems
+
+  const hasExactMatch = catalogItems.some(
+    (item) =>
+      item.label.toLowerCase() === inputValue.toLowerCase() ||
+      item.value.toLowerCase() === inputValue.toLowerCase(),
   )
 
   return (
@@ -143,42 +139,85 @@ export function AllergyForm({ open, onClose, patientId }: AllergyFormProps) {
                 <FieldLabel>{t("allergyName")}</FieldLabel>
                 <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
                   <PopoverTrigger asChild>
-                    <Input
-                      {...field}
-                      placeholder={t("allergyName")}
-                      aria-invalid={fieldState.invalid || undefined}
-                      onClick={() => setPopoverOpen(true)}
-                      onChange={(e) => {
-                        field.onChange(e)
-                        setPopoverOpen(true)
-                      }}
-                      autoComplete="off"
-                    />
+                    <div>
+                      <Input
+                        value={inputValue}
+                        placeholder={t("allergyName")}
+                        aria-invalid={fieldState.invalid || undefined}
+                        onFocus={() => setPopoverOpen(true)}
+                        onChange={(e) => {
+                          const val = e.target.value
+                          setInputValue(val)
+                          field.onChange(val)
+                          if (!popoverOpen) setPopoverOpen(true)
+                        }}
+                        autoComplete="off"
+                      />
+                    </div>
                   </PopoverTrigger>
                   <PopoverContent
                     className="w-[--radix-popover-trigger-width] p-0"
                     align="start"
                     onOpenAutoFocus={(e) => e.preventDefault()}
                   >
-                    <Command>
+                    <Command shouldFilter={false}>
                       <CommandList>
-                        <CommandEmpty>
-                          {tCommon("search.noResults")}
-                        </CommandEmpty>
-                        <CommandGroup>
-                          {filteredCatalog.slice(0, 10).map((item) => (
-                            <CommandItem
-                              key={item}
-                              value={item}
-                              onSelect={(val) => {
-                                form.setValue("name", val)
-                                setPopoverOpen(false)
-                              }}
-                            >
-                              {item}
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
+                        {filtered.length === 0 && !inputValue.trim() && (
+                          <CommandEmpty>
+                            {tCommon("search.noResults")}
+                          </CommandEmpty>
+                        )}
+                        {/* Show "Add custom" option when typed text doesn't match any item exactly */}
+                        {inputValue.trim() && !hasExactMatch && (
+                          <CommandItem
+                            value={`custom:${inputValue}`}
+                            onSelect={() => {
+                              field.onChange(inputValue.trim())
+                              setPopoverOpen(false)
+                            }}
+                          >
+                            <IconPlus className="mr-2 h-4 w-4" />
+                            {t("allergyCategory.custom")}:{" "}
+                            &quot;{inputValue.trim()}&quot;
+                          </CommandItem>
+                        )}
+                        {/* Group filtered catalog items by category */}
+                        {Object.entries(
+                          filtered.reduce<
+                            Record<string, typeof filtered>
+                          >((acc, item) => {
+                            const cat = item.categoryLabel
+                            ;(acc[cat] ??= []).push(item)
+                            return acc
+                          }, {}),
+                        ).map(([categoryLabel, items]) => (
+                          <CommandGroup
+                            key={categoryLabel}
+                            heading={categoryLabel}
+                          >
+                            {items.map((item) => (
+                              <CommandItem
+                                key={item.value}
+                                value={item.value}
+                                onSelect={() => {
+                                  field.onChange(item.value)
+                                  setInputValue(item.label)
+                                  setPopoverOpen(false)
+                                }}
+                              >
+                                <IconCheck
+                                  className={cn(
+                                    "mr-2 h-4 w-4",
+                                    nameValue === item.value
+                                      ? "opacity-100"
+                                      : "opacity-0",
+                                  )}
+                                />
+                                {item.label}
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        ))}
                       </CommandList>
                     </Command>
                   </PopoverContent>
