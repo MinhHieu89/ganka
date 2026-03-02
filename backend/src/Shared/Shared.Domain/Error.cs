@@ -9,6 +9,12 @@ public sealed record Error
     public string Code { get; }
     public string Description { get; }
 
+    /// <summary>
+    /// Optional structured validation errors mapping field names to error messages.
+    /// Populated by <see cref="ValidationWithDetails"/> for RFC 7807 "errors" dictionary support.
+    /// </summary>
+    public Dictionary<string, string[]>? ValidationErrors { get; init; }
+
     private Error(string code, string description)
     {
         Code = code;
@@ -24,6 +30,16 @@ public sealed record Error
     /// <summary>Creates a validation error.</summary>
     public static Error Validation(string description) =>
         new("Error.Validation", description);
+
+    /// <summary>
+    /// Creates a validation error with structured field-level error messages.
+    /// Used for FluentValidation results to produce RFC 7807 "errors" dictionary.
+    /// </summary>
+    public static Error ValidationWithDetails(Dictionary<string, string[]> errors) =>
+        new("Error.Validation", "One or more validation errors occurred.")
+        {
+            ValidationErrors = errors
+        };
 
     /// <summary>Creates a not-found error for a specific entity.</summary>
     public static Error NotFound(string entityName, object id) =>

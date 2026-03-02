@@ -75,5 +75,6 @@
     <Project Path="tests/Ganka28.ArchitectureTests/Ganka28.ArchitectureTests.csproj" />
     <Project Path="tests/Patient.Unit.Tests/Patient.Unit.Tests.csproj" />
     <Project Path="tests/Scheduling.Unit.Tests/Scheduling.Unit.Tests.csproj" />
+    <Project Path="tests/Shared.Unit.Tests/Shared.Unit.Tests.csproj" />
   </Folder>
 </Solution>

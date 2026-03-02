@@ -48,6 +48,10 @@ public static class ResultExtensions
 
     private static IResult MapError(Error error)
     {
+        // Structured validation errors with field-level detail (RFC 7807 "errors" dictionary)
+        if (error.Code == "Error.Validation" && error.ValidationErrors is not null)
+            return Results.ValidationProblem(error.ValidationErrors);
+
         return error.Code switch
         {
             "Error.Unauthorized" => Results.Problem(

@@ -41,8 +41,10 @@ public static class UpdatePatientHandler
         var validationResult = await validator.ValidateAsync(command, cancellationToken);
         if (!validationResult.IsValid)
         {
-            var errors = string.Join("; ", validationResult.Errors.Select(e => e.ErrorMessage));
-            return Result.Failure(Error.Validation(errors));
+            var errors = validationResult.Errors
+                .GroupBy(e => e.PropertyName)
+                .ToDictionary(g => g.Key, g => g.Select(e => e.ErrorMessage).ToArray());
+            return Result.Failure(Error.ValidationWithDetails(errors));
         }
 
         var patient = await patientRepository.GetByIdWithTrackingAsync(command.PatientId, cancellationToken);

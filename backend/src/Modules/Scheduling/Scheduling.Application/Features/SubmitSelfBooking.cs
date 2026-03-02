@@ -45,8 +45,10 @@ public static class SubmitSelfBookingHandler
         var validationResult = await validator.ValidateAsync(command, ct);
         if (!validationResult.IsValid)
         {
-            var errors = string.Join("; ", validationResult.Errors.Select(e => e.ErrorMessage));
-            return Result<string>.Failure(Error.Validation(errors));
+            var errors = validationResult.Errors
+                .GroupBy(e => e.PropertyName)
+                .ToDictionary(g => g.Key, g => g.Select(e => e.ErrorMessage).ToArray());
+            return Result<string>.Failure(Error.ValidationWithDetails(errors));
         }
 
         // Validate appointment type exists

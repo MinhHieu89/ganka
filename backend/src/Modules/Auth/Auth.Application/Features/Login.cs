@@ -63,8 +63,10 @@ public sealed class LoginHandler
         var validationResult = await _validator.ValidateAsync(command);
         if (!validationResult.IsValid)
         {
-            var errors = string.Join("; ", validationResult.Errors.Select(e => e.ErrorMessage));
-            return Result<LoginResponse>.Failure(Error.Validation(errors));
+            var errors = validationResult.Errors
+                .GroupBy(e => e.PropertyName)
+                .ToDictionary(g => g.Key, g => g.Select(e => e.ErrorMessage).ToArray());
+            return Result<LoginResponse>.Failure(Error.ValidationWithDetails(errors));
         }
 
         var user = await _userRepository.GetByEmailWithRolesAndPermissionsAsync(command.Email);

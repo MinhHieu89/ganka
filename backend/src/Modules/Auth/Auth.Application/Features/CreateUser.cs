@@ -50,8 +50,10 @@ public static class CreateUserHandler
         var validationResult = await validator.ValidateAsync(command, cancellationToken);
         if (!validationResult.IsValid)
         {
-            var errors = string.Join("; ", validationResult.Errors.Select(e => e.ErrorMessage));
-            return Result<Guid>.Failure(Error.Validation(errors));
+            var errors = validationResult.Errors
+                .GroupBy(e => e.PropertyName)
+                .ToDictionary(g => g.Key, g => g.Select(e => e.ErrorMessage).ToArray());
+            return Result<Guid>.Failure(Error.ValidationWithDetails(errors));
         }
 
         var emailExists = await userRepository.EmailExistsAsync(command.Email, cancellationToken);
