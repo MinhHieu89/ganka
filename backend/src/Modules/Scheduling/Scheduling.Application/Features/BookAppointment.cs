@@ -53,9 +53,17 @@ public static class BookAppointmentHandler
 
         var endTime = command.StartTime.AddMinutes(appointmentType.DefaultDurationMinutes);
 
-        // Validate clinic schedule
-        var schedule = await clinicScheduleRepository.GetForDayAsync(command.StartTime.DayOfWeek, ct);
-        if (schedule is null || !schedule.IsWithinHours(command.StartTime.TimeOfDay, endTime.TimeOfDay))
+        // Convert UTC to Vietnam local time for schedule validation
+        var vietnamTz = TimeZoneInfo.FindSystemTimeZoneById(
+            OperatingSystem.IsWindows() ? "SE Asia Standard Time" : "Asia/Ho_Chi_Minh");
+        var localStart = TimeZoneInfo.ConvertTimeFromUtc(
+            DateTime.SpecifyKind(command.StartTime, DateTimeKind.Utc), vietnamTz);
+        var localEnd = TimeZoneInfo.ConvertTimeFromUtc(
+            DateTime.SpecifyKind(endTime, DateTimeKind.Utc), vietnamTz);
+
+        // Validate clinic schedule using Vietnam local time
+        var schedule = await clinicScheduleRepository.GetForDayAsync(localStart.DayOfWeek, ct);
+        if (schedule is null || !schedule.IsWithinHours(localStart.TimeOfDay, localEnd.TimeOfDay))
             return Result<Guid>.Failure(Error.Validation("Appointment time is outside clinic operating hours."));
 
         // Check overlap

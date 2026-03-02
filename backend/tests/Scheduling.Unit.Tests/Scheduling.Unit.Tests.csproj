@@ -18,9 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Modules\Patient\Patient.Application\Patient.Application.csproj" />
-    <ProjectReference Include="..\..\src\Modules\Patient\Patient.Domain\Patient.Domain.csproj" />
-    <ProjectReference Include="..\..\src\Modules\Patient\Patient.Contracts\Patient.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Scheduling\Scheduling.Application\Scheduling.Application.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Scheduling\Scheduling.Domain\Scheduling.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

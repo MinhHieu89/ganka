@@ -38,8 +38,8 @@ public sealed class PatientRepository : IPatientRepository
             .AsNoTracking()
             .Where(p => p.IsActive &&
                 (EF.Functions.Collate(p.FullName, "Vietnamese_CI_AI").Contains(term) ||
-                 p.Phone.StartsWith(term) ||
-                 p.PatientCode == term))
+                 p.Phone.Contains(term) ||
+                 p.PatientCode.Contains(term)))
             .OrderBy(p => p.FullName)
             .Take(limit)
             .ToListAsync(cancellationToken);
@@ -66,8 +66,8 @@ public sealed class PatientRepository : IPatientRepository
             var term = search.Trim();
             query = query.Where(p =>
                 EF.Functions.Collate(p.FullName, "Vietnamese_CI_AI").Contains(term) ||
-                p.Phone.StartsWith(term) ||
-                p.PatientCode == term);
+                p.Phone.Contains(term) ||
+                p.PatientCode.Contains(term));
         }
 
         if (gender.HasValue)
