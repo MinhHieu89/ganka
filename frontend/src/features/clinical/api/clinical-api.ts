@@ -323,8 +323,9 @@ export function useActiveVisits() {
   return useQuery({
     queryKey: clinicalKeys.activeVisits(),
     queryFn: getActiveVisits,
-    refetchInterval: 5000,
+    refetchInterval: 30_000,
     refetchIntervalInBackground: false,
+    retry: 1,
   })
 }
 

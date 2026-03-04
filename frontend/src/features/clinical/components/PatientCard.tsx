@@ -85,7 +85,7 @@ export function PatientCard({
   const canAdvance = visit.currentStage < MAX_STAGE
 
   const handleCardClick = () => {
-    navigate({ to: "/clinical/$visitId" as string, params: { visitId: visit.id } } as never)
+    navigate({ to: "/visits/$visitId" as string, params: { visitId: visit.id } } as never)
   }
 
   const handleAdvance = (e: React.MouseEvent) => {
