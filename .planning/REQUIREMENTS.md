@@ -25,9 +25,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Clinical Workflow
 
-- [ ] **CLN-01**: Doctor can create electronic visit record (benh an) linked to patient and doctor, immutable after sign-off
-- [ ] **CLN-02**: Corrections to signed visit records create amendment records with reason, field-level changes, and original preserved
-- [ ] **CLN-03**: Staff can track visit workflow status (reception -> refraction/VA -> doctor exam -> diagnostics -> doctor reads -> Rx -> cashier -> pharmacy/optical)
+- [x] **CLN-01**: Doctor can create electronic visit record (benh an) linked to patient and doctor, immutable after sign-off
+- [x] **CLN-02**: Corrections to signed visit records create amendment records with reason, field-level changes, and original preserved
+- [x] **CLN-03**: Staff can track visit workflow status (reception -> refraction/VA -> doctor exam -> diagnostics -> doctor reads -> Rx -> cashier -> pharmacy/optical)
 - [ ] **CLN-04**: Dashboard shows all active patients and their current workflow stage in real-time
 
 ### Dry Eye Template
@@ -39,9 +39,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Refraction & Examination
 
-- [ ] **REF-01**: Technician or doctor can record refraction data: SPH, CYL, AXIS, ADD, PD per eye
-- [ ] **REF-02**: System records VA (with/without correction), IOP (with method and time), Axial Length per eye
-- [ ] **REF-03**: System supports manifest, autorefraction, and cycloplegic refraction types
+- [x] **REF-01**: Technician or doctor can record refraction data: SPH, CYL, AXIS, ADD, PD per eye
+- [x] **REF-02**: System records VA (with/without correction), IOP (with method and time), Axial Length per eye
+- [x] **REF-03**: System supports manifest, autorefraction, and cycloplegic refraction types
 
 ### Medical Imaging
 
@@ -52,8 +52,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Diagnosis & Prescription
 
-- [ ] **DX-01**: Doctor can search and select ICD-10 codes in Vietnamese and English with ophthalmology favorites/pinned codes
-- [ ] **DX-02**: System enforces ICD-10 laterality selection for ophthalmology codes (no unspecified eye)
+- [x] **DX-01**: Doctor can search and select ICD-10 codes in Vietnamese and English with ophthalmology favorites/pinned codes
+- [x] **DX-02**: System enforces ICD-10 laterality selection for ophthalmology codes (no unspecified eye)
 - [ ] **RX-01**: Doctor can write drug prescription by selecting from pharmacy catalog or adding off-catalog drugs
 - [ ] **RX-02**: Catalog-linked prescriptions auto-deduct stock when dispensed; off-catalog drugs flagged as manual
 - [ ] **RX-03**: Doctor can write glasses prescription (optical Rx) with full refraction parameters
@@ -236,23 +236,23 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAT-03 | Phase 2 | Complete |
 | PAT-04 | Phase 2 | Complete |
 | PAT-05 | Phase 2 | Complete |
-| CLN-01 | Phase 3 | Pending |
-| CLN-02 | Phase 3 | Pending |
-| CLN-03 | Phase 3 | Pending |
+| CLN-01 | Phase 3 | Complete |
+| CLN-02 | Phase 3 | Complete |
+| CLN-03 | Phase 3 | Complete |
 | CLN-04 | Phase 3 | Pending |
 | DRY-01 | Phase 4 | Pending |
 | DRY-02 | Phase 4 | Pending |
 | DRY-03 | Phase 4 | Pending |
 | DRY-04 | Phase 4 | Pending |
-| REF-01 | Phase 3 | Pending |
-| REF-02 | Phase 3 | Pending |
-| REF-03 | Phase 3 | Pending |
+| REF-01 | Phase 3 | Complete |
+| REF-02 | Phase 3 | Complete |
+| REF-03 | Phase 3 | Complete |
 | IMG-01 | Phase 4 | Pending |
 | IMG-02 | Phase 4 | Pending |
 | IMG-03 | Phase 4 | Pending |
 | IMG-04 | Phase 4 | Pending |
-| DX-01 | Phase 3 | Pending |
-| DX-02 | Phase 3 | Pending |
+| DX-01 | Phase 3 | Complete |
+| DX-02 | Phase 3 | Complete |
 | RX-01 | Phase 5 | Pending |
 | RX-02 | Phase 5 | Pending |
 | RX-03 | Phase 5 | Pending |

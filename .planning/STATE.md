@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: completed
-stopped_at: Phase 3 context gathered
-last_updated: "2026-03-04T09:13:45.980Z"
-last_activity: 2026-03-02 -- Completed 02-14 Server Validation UI and Profile Header Redesign
+status: in-progress
+stopped_at: Completed 03-01-PLAN.md
+last_updated: "2026-03-04T10:03:02.000Z"
+last_activity: 2026-03-04 -- Completed 03-01 Clinical Domain & Infrastructure
 progress:
   total_phases: 12
   completed_phases: 5
-  total_plans: 42
-  completed_plans: 42
-  percent: 100
+  total_plans: 47
+  completed_plans: 43
+  percent: 91
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-02-28)
 
 **Core value:** Doctors can manage chronic eye disease patients (Dry Eye, Myopia Control) with structured data tracking, image comparison across visits, and treatment progress reporting
-**Current focus:** Phase 02: Patient Management & Scheduling (Gap Closure)
+**Current focus:** Phase 03: Clinical Workflow & Examination
 
 ## Current Position
 
-Phase: 02 (Patient Management & Scheduling)
-Plan: 14 of 14 in current phase (COMPLETE)
-Status: Phase 02 complete -- all 14 plans executed, all 15 UAT tests passing
-Last activity: 2026-03-02 -- Completed 02-14 Server Validation UI and Profile Header Redesign
+Phase: 03 (Clinical Workflow & Examination)
+Plan: 1 of 5 in current phase
+Status: Plan 03-01 complete -- domain entities, infrastructure, and test scaffold
+Last activity: 2026-03-04 -- Completed 03-01 Clinical Domain & Infrastructure
 
-Progress: [##########] 100%
+Progress: [#########-] 91%
 
 ## Performance Metrics
 
@@ -86,6 +86,7 @@ Progress: [##########] 100%
 | Phase 02 P12 | 4min | 2 tasks | 8 files |
 | Phase 02 P13 | 4min | 2 tasks | 6 files |
 | Phase 02 P14 | 15min | 2 tasks | 10 files |
+| Phase 03 P01 | 3min | 2 tasks | 37 files |
 
 ## Accumulated Context
 
@@ -225,6 +226,11 @@ Recent decisions affecting current work:
 - [Phase 02]: [02-14]: API functions throw JSON.stringify(err) when errors dict present for structured validation handling
 - [Phase 02]: [02-14]: PatientProfileHeader redesigned with Card, large accent-bordered avatar, icon-labeled metadata, grouped action buttons
 - [Phase 02]: [02-14]: ServerValidationAlert as standalone component for consistent non-field error display
+- [Phase 03]: [03-01]: WolverineFx.Http removed from Clinical.Application -- replaced with FluentValidation.DependencyInjectionExtensions (Application layer HTTP-free)
+- [Phase 03]: [03-01]: Microsoft.EntityFrameworkCore added to Clinical.Application for DbUpdateConcurrencyException (Scheduling.Application precedent)
+- [Phase 03]: [03-01]: DoctorIcd10Favorite as per-doctor junction table -- global Icd10Code.IsFavorite field is ignored
+- [Phase 03]: [03-01]: Refraction decimal fields use precision(5,2) for all diopter/VA/IOP/axial length values
+- [Phase 03]: [03-01]: VisitAmendment.FieldChangesJson stores JSON array of FieldChange records for field-level diff
 
 ### Roadmap Evolution
 
@@ -245,6 +251,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-04T09:13:45.977Z
-Stopped at: Phase 3 context gathered
-Resume file: .planning/phases/03-clinical-workflow-examination/03-CONTEXT.md
+Last session: 2026-03-04T10:03:02.000Z
+Stopped at: Completed 03-01-PLAN.md
+Resume file: .planning/phases/03-clinical-workflow-examination/03-01-SUMMARY.md
