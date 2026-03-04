@@ -20,16 +20,47 @@
     "noActivePatients": "Không có bệnh nhân đang trong quy trình"
   },
   "visit": {
-    "title": "Chi tiết lượt khám",
+    "title": "Lượt khám - {{name}}",
     "patientInfo": "Thông tin bệnh nhân",
     "refraction": "Khúc xạ",
     "examinationNotes": "Ghi chú khám",
     "diagnosis": "Chẩn đoán",
     "signOff": "Ký duyệt",
+    "signOffTitle": "Ký duyệt lượt khám",
     "signOffConfirm": "Thao tác này sẽ khóa hồ sơ. Chỉnh sửa sau đó sẽ cần tạo bản sửa đổi.",
+    "signOffButton": "Ký duyệt lượt khám",
+    "signedAt": "Đã ký lúc {{date}}",
     "amendments": "Lịch sử sửa đổi",
     "amend": "Sửa đổi",
-    "amendReason": "Lý do sửa đổi"
+    "amendReason": "Lý do sửa đổi",
+    "amendConfirm": "Xác nhận sửa đổi",
+    "amendReasonMin": "Lý do phải có ít nhất 10 ký tự",
+    "status": {
+      "draft": "Bản nháp",
+      "signed": "Đã ký",
+      "amended": "Đã sửa đổi"
+    },
+    "backToClinical": "Quay lại lâm sàng",
+    "notesAutoSaved": "Đã lưu ghi chú",
+    "refractionSaved": "Đã lưu khúc xạ",
+    "diagnosisAdded": "Đã thêm chẩn đoán",
+    "diagnosisRemoved": "Đã xóa chẩn đoán",
+    "signedOff": "Đã ký duyệt lượt khám",
+    "amendmentCreated": "Đã tạo bản sửa đổi",
+    "patientName": "Bệnh nhân",
+    "doctorName": "Bác sĩ",
+    "visitDate": "Ngày khám",
+    "stage": "Giai đoạn",
+    "appointmentLinked": "Lịch hẹn liên kết",
+    "notFound": "Không tìm thấy lượt khám",
+    "addDiagnosis": "Thêm chẩn đoán",
+    "noDiagnoses": "Chưa có chẩn đoán",
+    "noAmendments": "Chưa có bản sửa đổi",
+    "amendmentBy": "Sửa đổi bởi {{name}}",
+    "amendmentField": "Trường",
+    "amendmentOld": "Giá trị cũ",
+    "amendmentNew": "Giá trị mới",
+    "setPrimary": "Đặt làm chính"
   },
   "refraction": {
     "manifest": "Thường quy",
@@ -46,7 +77,14 @@
     "bcva": "TL chỉnh kính",
     "iop": "Nhãn áp",
     "iopMethod": "Phương pháp",
-    "axialLength": "Trục nhãn cầu"
+    "axialLength": "Trục nhãn cầu",
+    "iopMethods": {
+      "goldmann": "Goldmann",
+      "nonContact": "Không tiếp xúc",
+      "icare": "iCare",
+      "tonopen": "Tonopen",
+      "other": "Khác"
+    }
   },
   "diagnosis": {
     "search": "Tìm mã ICD-10...",
@@ -54,7 +92,10 @@
     "primary": "Chính",
     "secondary": "Phụ",
     "laterality": "Mắt",
-    "selectLaterality": "Chọn mắt"
+    "selectLaterality": "Chọn mắt",
+    "od": "MP (Phải)",
+    "os": "MT (Trái)",
+    "ou": "2M (Hai mắt)"
   },
   "card": {
     "waitTime": "Thời gian chờ",

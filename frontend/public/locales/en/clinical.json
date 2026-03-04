@@ -20,16 +20,47 @@
     "noActivePatients": "No active patients in the workflow"
   },
   "visit": {
-    "title": "Visit Details",
+    "title": "Visit - {{name}}",
     "patientInfo": "Patient Information",
     "refraction": "Refraction",
     "examinationNotes": "Examination Notes",
     "diagnosis": "Diagnosis",
     "signOff": "Sign Off",
+    "signOffTitle": "Sign Off Visit",
     "signOffConfirm": "This will lock the record. Corrections will require an amendment.",
+    "signOffButton": "Sign Off Visit",
+    "signedAt": "Signed at {{date}}",
     "amendments": "Amendment History",
     "amend": "Amend",
-    "amendReason": "Reason for Amendment"
+    "amendReason": "Reason for Amendment",
+    "amendConfirm": "Confirm Amendment",
+    "amendReasonMin": "Reason must be at least 10 characters",
+    "status": {
+      "draft": "Draft",
+      "signed": "Signed",
+      "amended": "Amended"
+    },
+    "backToClinical": "Back to Clinical",
+    "notesAutoSaved": "Notes saved",
+    "refractionSaved": "Refraction saved",
+    "diagnosisAdded": "Diagnosis added",
+    "diagnosisRemoved": "Diagnosis removed",
+    "signedOff": "Visit signed off",
+    "amendmentCreated": "Amendment created",
+    "patientName": "Patient",
+    "doctorName": "Doctor",
+    "visitDate": "Visit Date",
+    "stage": "Stage",
+    "appointmentLinked": "Linked Appointment",
+    "notFound": "Visit not found",
+    "addDiagnosis": "Add Diagnosis",
+    "noDiagnoses": "No diagnoses added",
+    "noAmendments": "No amendments",
+    "amendmentBy": "Amended by {{name}}",
+    "amendmentField": "Field",
+    "amendmentOld": "Old Value",
+    "amendmentNew": "New Value",
+    "setPrimary": "Set as Primary"
   },
   "refraction": {
     "manifest": "Manifest",
@@ -46,7 +77,14 @@
     "bcva": "BCVA",
     "iop": "IOP",
     "iopMethod": "Method",
-    "axialLength": "Axial Length"
+    "axialLength": "Axial Length",
+    "iopMethods": {
+      "goldmann": "Goldmann",
+      "nonContact": "Non-contact",
+      "icare": "iCare",
+      "tonopen": "Tonopen",
+      "other": "Other"
+    }
   },
   "diagnosis": {
     "search": "Search ICD-10...",
@@ -54,7 +92,10 @@
     "primary": "Primary",
     "secondary": "Secondary",
     "laterality": "Eye",
-    "selectLaterality": "Select eye"
+    "selectLaterality": "Select eye",
+    "od": "OD (Right)",
+    "os": "OS (Left)",
+    "ou": "OU (Both)"
   },
   "card": {
     "waitTime": "Wait time",
