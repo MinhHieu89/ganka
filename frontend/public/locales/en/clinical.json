@@ -1,0 +1,73 @@
+{
+  "workflow": {
+    "title": "Clinical Workflow",
+    "reception": "Reception",
+    "testing": "Testing",
+    "doctor": "Doctor",
+    "processing": "Processing",
+    "done": "Done",
+    "stages": {
+      "reception": "Reception",
+      "refractionVa": "Refraction/VA",
+      "doctorExam": "Doctor Exam",
+      "diagnostics": "Diagnostics",
+      "doctorReads": "Doctor Reads",
+      "rx": "Rx",
+      "cashier": "Cashier",
+      "pharmacyOptical": "Pharmacy/Optical"
+    },
+    "totalPatients": "Total patients",
+    "noActivePatients": "No active patients in the workflow"
+  },
+  "visit": {
+    "title": "Visit Details",
+    "patientInfo": "Patient Information",
+    "refraction": "Refraction",
+    "examinationNotes": "Examination Notes",
+    "diagnosis": "Diagnosis",
+    "signOff": "Sign Off",
+    "signOffConfirm": "This will lock the record. Corrections will require an amendment.",
+    "amendments": "Amendment History",
+    "amend": "Amend",
+    "amendReason": "Reason for Amendment"
+  },
+  "refraction": {
+    "manifest": "Manifest",
+    "autorefraction": "Autorefraction",
+    "cycloplegic": "Cycloplegic",
+    "od": "OD (Right Eye)",
+    "os": "OS (Left Eye)",
+    "sph": "SPH",
+    "cyl": "CYL",
+    "axis": "AXIS",
+    "add": "ADD",
+    "pd": "PD",
+    "ucva": "UCVA",
+    "bcva": "BCVA",
+    "iop": "IOP",
+    "iopMethod": "Method",
+    "axialLength": "Axial Length"
+  },
+  "diagnosis": {
+    "search": "Search ICD-10...",
+    "favorites": "Favorites",
+    "primary": "Primary",
+    "secondary": "Secondary",
+    "laterality": "Eye",
+    "selectLaterality": "Select eye"
+  },
+  "card": {
+    "waitTime": "Wait time",
+    "allergyWarning": "Patient has allergies",
+    "advanceStage": "Advance",
+    "viewDetails": "View Details"
+  },
+  "newVisit": {
+    "title": "New Visit",
+    "walkIn": "Walk-in Visit",
+    "checkIn": "Check In",
+    "selectPatient": "Select patient",
+    "selectDoctor": "Select doctor",
+    "create": "Create Visit"
+  }
+}

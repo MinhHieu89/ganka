@@ -1,0 +1,73 @@
+{
+  "workflow": {
+    "title": "Quy trình lâm sàng",
+    "reception": "Tiếp nhận",
+    "testing": "Khám nghiệm",
+    "doctor": "Bác sĩ",
+    "processing": "Xử lý",
+    "done": "Hoàn tất",
+    "stages": {
+      "reception": "Tiếp nhận",
+      "refractionVa": "Đo khúc xạ/TL",
+      "doctorExam": "Bác sĩ khám",
+      "diagnostics": "Chẩn đoán hình ảnh",
+      "doctorReads": "Bác sĩ đọc KQ",
+      "rx": "Kê đơn",
+      "cashier": "Thu ngân",
+      "pharmacyOptical": "Nhà thuốc/Kính"
+    },
+    "totalPatients": "Tổng bệnh nhân",
+    "noActivePatients": "Không có bệnh nhân đang trong quy trình"
+  },
+  "visit": {
+    "title": "Chi tiết lượt khám",
+    "patientInfo": "Thông tin bệnh nhân",
+    "refraction": "Khúc xạ",
+    "examinationNotes": "Ghi chú khám",
+    "diagnosis": "Chẩn đoán",
+    "signOff": "Ký duyệt",
+    "signOffConfirm": "Thao tác này sẽ khóa hồ sơ. Chỉnh sửa sau đó sẽ cần tạo bản sửa đổi.",
+    "amendments": "Lịch sử sửa đổi",
+    "amend": "Sửa đổi",
+    "amendReason": "Lý do sửa đổi"
+  },
+  "refraction": {
+    "manifest": "Thường quy",
+    "autorefraction": "Máy đo tự động",
+    "cycloplegic": "Liệt điều tiết",
+    "od": "MP (Mắt phải)",
+    "os": "MT (Mắt trái)",
+    "sph": "SPH",
+    "cyl": "CYL",
+    "axis": "TRỤC",
+    "add": "ADD",
+    "pd": "PD",
+    "ucva": "TL không kính",
+    "bcva": "TL chỉnh kính",
+    "iop": "Nhãn áp",
+    "iopMethod": "Phương pháp",
+    "axialLength": "Trục nhãn cầu"
+  },
+  "diagnosis": {
+    "search": "Tìm mã ICD-10...",
+    "favorites": "Yêu thích",
+    "primary": "Chính",
+    "secondary": "Phụ",
+    "laterality": "Mắt",
+    "selectLaterality": "Chọn mắt"
+  },
+  "card": {
+    "waitTime": "Thời gian chờ",
+    "allergyWarning": "Bệnh nhân có dị ứng",
+    "advanceStage": "Chuyển tiếp",
+    "viewDetails": "Xem chi tiết"
+  },
+  "newVisit": {
+    "title": "Lượt khám mới",
+    "walkIn": "Khám vãng lai",
+    "checkIn": "Tiếp nhận",
+    "selectPatient": "Chọn bệnh nhân",
+    "selectDoctor": "Chọn bác sĩ",
+    "create": "Tạo lượt khám"
+  }
+}
