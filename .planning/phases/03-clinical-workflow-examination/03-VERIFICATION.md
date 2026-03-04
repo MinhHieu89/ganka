@@ -1,64 +1,103 @@
 ---
 phase: 03-clinical-workflow-examination
-verified: 2026-03-04T18:00:00Z
+verified: 2026-03-04T16:20:00Z
 status: gaps_found
-score: 3/5 success criteria verified
+score: 2/5 success criteria verified
+re_verification: true
+previous_gaps_fixed: "03-06 (PropertyAccessMode.Field + laterality 0-indexing), 03-07 task 1 (amendment field-level diff)"
 gaps:
-  - truth: "Technician or doctor can record refraction data (SPH, CYL, AXIS, ADD, PD, VA, IOP, Axial Length per eye) with support for manifest, autorefraction, and cycloplegic types"
+  - id: GAP-REF-500
+    truth: "Technician or doctor can record refraction data (SPH, CYL, AXIS, ADD, PD, VA, IOP, Axial Length per eye) with support for manifest, autorefraction, and cycloplegic types"
     status: failed
-    reason: "PUT /api/clinical/{visitId}/refraction returns HTTP 500 Internal Server Error when attempting to save refraction data. Confirmed during human E2E testing in Plan 05 and documented in 03-05-SUMMARY.md. Not fixed before phase was marked complete."
+    reason: "PUT /api/clinical/{visitId}/refraction returns HTTP 500 — DbUpdateConcurrencyException. Plan 03-06 added PropertyAccessMode.Field but the actual root cause is different: EF Core generates UPDATE (not INSERT) for new child Refraction entities, then the RowVersion concurrency check fails because no row exists to update. Confirmed via Playwright E2E testing with fresh backend build containing 03-06 fix."
+    root_cause: "DbUpdateConcurrencyException at UpdateVisitRefraction.cs:line 127 (SaveChangesAsync). Backend log shows: UPDATE [clinical].[Refractions] SET ... followed by 'expected to affect 1 row(s), but actually affected 0 row(s)'. EF Core treats the new Refraction entity as Modified instead of Added despite PropertyAccessMode.Field being configured."
     artifacts:
       - path: "backend/src/Modules/Clinical/Clinical.Application/Features/UpdateVisitRefraction.cs"
-        issue: "Handler logic appears correct but results in 500 at runtime — likely EF Core change tracking issue with private _refractions collection or missing navigation property access mode configuration"
+        issue: "SaveChangesAsync at line 127 throws DbUpdateConcurrencyException — the newly created Refraction entity via visit.AddRefraction() is tracked as Modified, not Added"
       - path: "backend/src/Modules/Clinical/Clinical.Infrastructure/Configurations/VisitConfiguration.cs"
-        issue: "HasMany(v => v.Refractions).WithOne() does not specify UsePropertyAccessMode(Field) for private backing field _refractions — may cause EF Core to not track newly added refractions correctly"
+        issue: "PropertyAccessMode.Field was added by 03-06 but doesn't resolve the concurrency issue — the problem is in how EF Core's change tracker sees new entities added through the Visit aggregate"
+      - path: "backend/src/Modules/Clinical/Clinical.Domain/Entities/Visit.cs"
+        issue: "Need to investigate how _refractions backing field and AddRefraction() interact with EF Core change tracker — new entities may need explicit Add tracking or RowVersion handling"
     missing:
-      - "Root-cause investigation and fix of the 500 error on PUT /api/clinical/{visitId}/refraction"
-      - "Possibly add .Metadata.SetPropertyAccessMode(PropertyAccessMode.Field) or equivalent EF Core backing field configuration"
-      - "Regression test to cover the save-new-refraction scenario end-to-end"
+      - "Root-cause investigation of why EF Core tracks new Refraction as Modified instead of Added — check Visit.RowVersion interaction, backing field initialization, entity Create() method ID generation"
+      - "Fix the change tracking issue — likely need to ensure new entities are properly tracked as Added state, or adjust concurrency token handling for child entities"
+      - "Integration test that exercises the actual EF Core save path (not just unit test with mocked repo)"
 
-  - truth: "Doctor can search ICD-10 codes in Vietnamese and English, pin favorites, and the system enforces laterality selection (OD/OS/OU) for ophthalmology codes"
+  - id: GAP-DX-500
+    truth: "Doctor can search ICD-10 codes in Vietnamese and English, pin favorites, and the system enforces laterality selection (OD/OS/OU) for ophthalmology codes"
     status: failed
-    reason: "POST /api/clinical/{visitId}/diagnoses returns HTTP 400 Bad Request when adding a diagnosis. Root cause is a laterality enum off-by-one mismatch: frontend Icd10Combobox sends laterality values 1 (OD), 2 (OS), 3 (OU) but the backend Laterality enum uses OD=0, OS=1, OU=2. Value 3 for OU fails Enum.IsDefined validation, causing the 400. Even for OD (frontend=1) and OS (frontend=2), the wrong laterality is stored. Confirmed during human E2E testing in Plan 05."
+    reason: "POST /api/clinical/{visitId}/diagnoses returns HTTP 500 — same DbUpdateConcurrencyException as refraction. Plan 03-06 fixed the laterality enum values (now 0-indexed), but the save still fails because new VisitDiagnosis entities added via visit.AddDiagnosis() are tracked as Modified instead of Added. Confirmed via Playwright testing — ICD-10 search works, laterality selector works, but save fails."
+    root_cause: "DbUpdateConcurrencyException at AddVisitDiagnosis.cs:line 101 (SaveChangesAsync). Backend log shows: UPDATE [clinical].[VisitDiagnoses] SET ... followed by 'expected 1 row(s), affected 0 row(s)'. Same root cause as GAP-REF-500 — EF Core change tracking issue with child entities added through Visit aggregate."
     artifacts:
-      - path: "frontend/src/features/clinical/components/Icd10Combobox.tsx"
-        issue: "LATERALITY_OPTIONS uses values {1=OD, 2=OS, 3=OU} but backend Laterality enum is {OD=0, OS=1, OU=2} — off-by-one mismatch causes 400 on every diagnosis add attempt"
       - path: "backend/src/Modules/Clinical/Clinical.Application/Features/AddVisitDiagnosis.cs"
-        issue: "Validator checks Enum.IsDefined(typeof(Laterality), l) which will reject value 3 (frontend OU) since max valid is 2"
+        issue: "SaveChangesAsync at line 101 throws DbUpdateConcurrencyException"
+      - path: "frontend/src/features/clinical/components/Icd10Combobox.tsx"
+        issue: "Laterality values now correct (0-indexed per 03-06 fix) — frontend is no longer the problem"
     missing:
-      - "Fix frontend LATERALITY_OPTIONS to use 0-indexed values matching backend enum: {value: 0, label: 'od'}, {value: 1, label: 'os'}, {value: 2, label: 'ou'}"
-      - "Non-laterality codes currently pass laterality=0 (treated as OD) instead of having a separate 'None' state — consider adding explicit None handling or documenting the convention"
-      - "After fix, verify diagnosis save, OU dual-record creation, and laterality badges in UI"
+      - "Same fix as GAP-REF-500 — shared root cause in Visit aggregate child entity tracking"
 
-  - truth: "Doctor can create a visit record linked to a patient, record examination findings, and sign off the visit -- making the record immutable"
-    status: partial
-    reason: "Visit creation and sign-off work correctly (confirmed via human testing). However, the 'record examination findings' portion requires refraction save (500 error) and diagnosis add (400 error) to work. Sign-off and immutability can be triggered but without examination data, the record is incomplete. The sign-off mechanism itself is verified functional."
+  - id: GAP-AMEND-500
+    truth: "Corrections to signed visit records create amendment records that preserve the original and log the reason, field-level changes, who amended, and when"
+    status: failed
+    reason: "POST /api/clinical/{visitId}/amend returns HTTP 500 — same DbUpdateConcurrencyException. Plan 03-07 task 1 added field-level diff capture in AmendmentDialog, but the backend save fails because new VisitAmendment entities added via visit.StartAmendment() are tracked as Modified instead of Added. Confirmed via Playwright testing — dialog opens, reason entered, confirm clicked, 500 returned."
+    root_cause: "DbUpdateConcurrencyException at AmendVisitHandler SaveChangesAsync. Backend log shows: 'Invocation of AmendVisitCommand ... failed! DbUpdateConcurrencyException'. Same root cause as GAP-REF-500 and GAP-DX-500."
     artifacts:
-      - path: "backend/src/Modules/Clinical/Clinical.Application/Features/SignOffVisit.cs"
-        issue: "Sign-off handler itself works correctly — visit creation and sign-off are confirmed working"
-      - path: "backend/src/Modules/Clinical/Clinical.Application/Features/UpdateVisitRefraction.cs"
-        issue: "500 error prevents examination data from being recorded before sign-off"
+      - path: "backend/src/Modules/Clinical/Clinical.Application/Features/AmendVisit.cs"
+        issue: "SaveChangesAsync throws DbUpdateConcurrencyException when saving new VisitAmendment"
+      - path: "frontend/src/features/clinical/components/AmendmentDialog.tsx"
+        issue: "Field-level diff capture was added by 03-07 task 1 — frontend amendment payload now includes real field changes, but backend save fails"
     missing:
-      - "Fix refraction 500 and diagnosis 400 bugs (see above gaps) — sign-off alone is not the full CLN-01 truth"
+      - "Same fix as GAP-REF-500 — shared root cause in Visit aggregate child entity tracking"
+
+  - id: GAP-NO-ERROR-TOAST
+    truth: "User receives feedback when operations fail"
+    status: failed
+    reason: "When refraction save, diagnosis add, or amendment fail with HTTP 500, the user sees NO error feedback. Refraction silently fails (no toast). Diagnosis dialog closes as if successful. Amendment dialog stays open with no error message. Confirmed via Playwright visual inspection."
+    root_cause: "Frontend API mutation error handlers do not show error toasts for 500 responses"
+    artifacts:
+      - path: "frontend/src/features/clinical/components/RefractionForm.tsx"
+        issue: "Refraction auto-save on blur has no error toast — mutation.onError likely missing or not showing toast"
+      - path: "frontend/src/features/clinical/components/Icd10Combobox.tsx"
+        issue: "Diagnosis add closes dialog even on error — needs to keep dialog open and show error"
+      - path: "frontend/src/features/clinical/components/AmendmentDialog.tsx"
+        issue: "Amendment stays open on error but shows no error message to user"
+    missing:
+      - "Add error toast/feedback for all clinical mutation failures"
+
+  - id: GAP-SELECT-CONTROLLED
+    truth: "React components follow controlled/uncontrolled best practices"
+    status: warning
+    reason: "Console warning: 'Select is changing from uncontrolled to controlled' on the IOP method combobox. Not a blocker but indicates state management issue."
+    root_cause: "IOP method Select component initializes with undefined value then gets a controlled value, causing React warning"
+    artifacts:
+      - path: "frontend/src/features/clinical/components/RefractionForm.tsx"
+        issue: "IOP method select likely initializes without defaultValue then receives value prop"
+    missing:
+      - "Initialize IOP method select with empty string or default value to prevent controlled/uncontrolled switch"
 
 human_verification:
-  - test: "Verify refraction save works after bug fix"
-    expected: "PUT /api/clinical/{visitId}/refraction with valid SPH/CYL/AXIS values returns 200 and data persists and reloads in the form"
-    why_human: "Runtime behavior — cannot verify 500 vs 200 response without running backend and actual DB interaction"
-  - test: "Verify diagnosis add and laterality enforcement after bug fix"
-    expected: "Selecting a laterality-required code and choosing OD in the combobox saves a diagnosis with OD laterality badge visible in list. Selecting OU creates two entries. Non-laterality code saves without laterality selection."
-    why_human: "Runtime UI behavior — need to observe the combobox interaction and resulting list state"
-  - test: "Verify complete visit workflow end-to-end: create -> enter data -> sign off -> amend"
-    expected: "Doctor can navigate the full workflow: create visit from dashboard, add refraction + diagnosis, sign off (all fields go read-only), amend (fields editable again, amendment appears in history)"
-    why_human: "Sequential multi-step flow across multiple API calls — requires running application"
+  - test: "Verify refraction save works after DbUpdateConcurrencyException fix"
+    expected: "PUT /api/clinical/{visitId}/refraction returns 200, toast 'Saved' shown, data persists on reload"
+    why_human: "Runtime EF Core behavior requires actual database interaction"
+  - test: "Verify diagnosis add works after fix"
+    expected: "Diagnosis appears in list with laterality badge. OU creates two entries."
+    why_human: "Runtime UI state after API call"
+  - test: "Verify amendment works after fix"
+    expected: "Amendment saves, visit transitions to Amended, amendment history shows field-level diff"
+    why_human: "Sequential multi-step flow"
+  - test: "Verify error toasts appear on API failures"
+    expected: "When API returns 500, user sees error toast with actionable message"
+    why_human: "UI feedback verification"
 ---
 
 # Phase 3: Clinical Workflow & Examination Verification Report
 
 **Phase Goal:** Doctors can conduct a complete clinical visit with structured examination data, ICD-10 diagnosis, and immutable visit records
-**Verified:** 2026-03-04T18:00:00Z
+**Verified:** 2026-03-04T16:20:00Z
 **Status:** gaps_found
-**Re-verification:** No — initial verification
+**Re-verification:** Yes — post gap-closure plans 03-06 and 03-07 task 1. Tested via Playwright E2E with fresh backend build.
+**Previous diagnosis:** 03-05 found HTTP 500 (refraction) + HTTP 400 (diagnosis). 03-06 applied PropertyAccessMode.Field + laterality 0-indexing. 03-07 task 1 added amendment field-level diff.
+**Current finding:** All three mutations (refraction, diagnosis, amendment) still fail with HTTP 500 — root cause is `DbUpdateConcurrencyException`, NOT the previously diagnosed issues.
 
 ## Goal Achievement
 
@@ -66,13 +105,13 @@ human_verification:
 
 | #   | Truth                                                                                                                                    | Status     | Evidence                                                                                                   |
 | --- | ---------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ---------------------------------------------------------------------------------------------------------- |
-| 1   | Doctor can create a visit record linked to a patient, record examination findings, and sign off — making the record immutable            | PARTIAL    | Visit creation and sign-off confirmed working; refraction save (500) and diagnosis add (400) block examination data entry |
-| 2   | Corrections to signed visit records create amendment records that preserve the original and log the reason, field-level changes, who amended, and when | ? UNCERTAIN | Amendment handler and UI exist and are substantive; cannot be fully verified until sign-off on a visit with real data works |
-| 3   | Dashboard shows all active patients and their current workflow stage (reception, refraction/VA, doctor exam, diagnostics, doctor reads, Rx, cashier, pharmacy/optical) in real-time | VERIFIED   | Kanban dashboard confirmed working in human testing: 5 columns, stage advance via drag and button, 30s polling |
-| 4   | Technician or doctor can record refraction data (SPH, CYL, AXIS, ADD, PD, VA, IOP, Axial Length per eye) with support for manifest, autorefraction, and cycloplegic types | FAILED     | PUT /api/clinical/{id}/refraction returns 500 — documented in 03-05-SUMMARY.md                            |
-| 5   | Doctor can search ICD-10 codes in Vietnamese and English, pin favorites, and the system enforces laterality selection (OD/OS/OU) for ophthalmology codes | FAILED     | POST /api/clinical/{id}/diagnoses returns 400 — frontend laterality enum off-by-one (sends 1,2,3; backend expects 0,1,2) |
+| 1   | Doctor can create a visit record linked to a patient, record examination findings, and sign off — making the record immutable            | PARTIAL    | Visit creation and sign-off work. Fields become disabled after sign-off. BUT refraction/diagnosis cannot be saved (500) so examination data is empty. |
+| 2   | Corrections to signed visit records create amendment records that preserve the original and log the reason, field-level changes, who amended, and when | FAILED     | POST /api/clinical/{id}/amend returns 500 — DbUpdateConcurrencyException. Amendment dialog stays open with no error feedback. |
+| 3   | Dashboard shows all active patients and their current workflow stage in real-time | VERIFIED   | Kanban dashboard confirmed working via Playwright: 5 columns, new visit creation, card navigation to detail page, 30s polling |
+| 4   | Technician or doctor can record refraction data (SPH, CYL, AXIS, ADD, PD, VA, IOP, Axial Length per eye) with support for manifest, autorefraction, and cycloplegic types | FAILED     | PUT /api/clinical/{id}/refraction returns 500 — DbUpdateConcurrencyException. PropertyAccessMode.Field fix from 03-06 did not resolve it. |
+| 5   | Doctor can search ICD-10 codes in Vietnamese and English, pin favorites, and the system enforces laterality selection (OD/OS/OU) for ophthalmology codes | FAILED     | ICD-10 search works. Laterality selector works (03-06 fix applied). But POST /api/clinical/{id}/diagnoses returns 500 — DbUpdateConcurrencyException, not the previous 400 error. |
 
-**Score:** 1/5 truths fully verified (Truth 3), 1/5 partial (Truth 1), 1/5 uncertain (Truth 2), 2/5 failed (Truths 4 and 5)
+**Score:** 1/5 truths fully verified (Truth 3), 1/5 partial (Truth 1), 3/5 failed (Truths 2, 4, 5)
 
 ### Required Artifacts
 
@@ -85,15 +124,16 @@ human_verification:
 | `backend/src/Modules/Clinical/Clinical.Application/Features/CreateVisit.cs` | Visit creation handler | VERIFIED | Full handler with validation, Visit.Create factory call, repository+UoW save |
 | `backend/src/Modules/Clinical/Clinical.Application/Features/SignOffVisit.cs` | Sign-off immutability handler | VERIFIED | Calls visit.SignOff(currentUserId), returns Result |
 | `backend/src/Modules/Clinical/Clinical.Application/Features/AmendVisit.cs` | Amendment handler with field-level diff | VERIFIED | Creates VisitAmendment, calls visit.StartAmendment(amendment), validates Reason required |
-| `backend/src/Modules/Clinical/Clinical.Application/Features/UpdateVisitRefraction.cs` | Refraction update with find-or-create | STUB/BROKEN | Code is substantive (175 lines, full validation, find-or-create pattern) but returns 500 at runtime |
-| `backend/src/Modules/Clinical/Clinical.Application/Features/AddVisitDiagnosis.cs` | Diagnosis add with OU dual-record, laterality enforcement | STUB/BROKEN | Code is substantive (104 lines, OU handling, EnsureEditable) but returns 400 due to frontend enum mismatch |
+| `backend/src/Modules/Clinical/Clinical.Application/Features/UpdateVisitRefraction.cs` | Refraction update with find-or-create | BROKEN | Code is substantive and correct, but SaveChangesAsync throws DbUpdateConcurrencyException — EF Core tracks new Refraction as Modified instead of Added |
+| `backend/src/Modules/Clinical/Clinical.Application/Features/AddVisitDiagnosis.cs` | Diagnosis add with OU dual-record, laterality enforcement | BROKEN | Code is substantive, laterality enum now correct (03-06 fix), but SaveChangesAsync throws DbUpdateConcurrencyException — same root cause as refraction |
+| `backend/src/Modules/Clinical/Clinical.Application/Features/AmendVisit.cs` | Amendment handler with field-level diff | BROKEN | SaveChangesAsync throws DbUpdateConcurrencyException when saving new VisitAmendment via visit.StartAmendment() |
 | `backend/src/Modules/Clinical/Clinical.Application/Features/SearchIcd10Codes.cs` | Bilingual ICD-10 search with doctor favorites pinned | VERIFIED | Queries ReferenceDbContext, Contains bilingual search, favorites sorted to top |
 | `backend/src/Modules/Clinical/Clinical.Presentation/ClinicalApiEndpoints.cs` | 13 endpoints under /api/clinical | VERIFIED | All 13 endpoints mapped with correct HTTP verbs and route patterns |
 | `backend/tests/Clinical.Unit.Tests/Features/` | 8 test classes, TDD | VERIFIED | 44 tests, all passing (confirmed via dotnet test output) |
 | `frontend/src/features/clinical/api/clinical-api.ts` | 13 TanStack Query hooks | VERIFIED | All 13 API functions and hooks present and wired to correct endpoints |
 | `frontend/src/features/clinical/components/WorkflowDashboard.tsx` | Kanban with dnd-kit, 5 columns | VERIFIED | DndContext, PointerSensor+TouchSensor, 5 columns, DragOverlay, confirmed working in human testing |
 | `frontend/src/features/clinical/components/PatientCard.tsx` | Patient card with allergy warning | VERIFIED | 161 lines, allergy warning icon (hasAllergies check), wait time badge, stage badge |
-| `frontend/src/features/clinical/components/Icd10Combobox.tsx` | Bilingual search, favorites, laterality enforcement | BROKEN | Component is substantive (312 lines) but LATERALITY_OPTIONS uses 1-indexed values (1=OD, 2=OS, 3=OU) conflicting with backend 0-indexed enum (OD=0, OS=1, OU=2) |
+| `frontend/src/features/clinical/components/Icd10Combobox.tsx` | Bilingual search, favorites, laterality enforcement | FIXED | Laterality values corrected to 0-indexed by 03-06. Search and laterality UI work correctly. Backend save still fails due to DbUpdateConcurrencyException. |
 | `frontend/src/features/clinical/components/SignOffSection.tsx` | Sign-off with AlertDialog + AmendmentDialog | VERIFIED | AlertDialog confirmation, AmendmentDialog integration, isSigned read-only state |
 | `frontend/src/features/clinical/components/VisitDetailPage.tsx` | 6-section visit detail page | VERIFIED | All 6 sections rendered, uses visit.status for read-only gate, confirmed via code review |
 | `frontend/src/app/routes/_authenticated/visits/$visitId.tsx` | Visit detail route | VERIFIED | File-based route, uses Route.useParams(), renders VisitDetailPage |
@@ -120,22 +160,24 @@ human_verification:
 
 | Requirement | Source Plan | Description | Status | Evidence |
 | ----------- | ----------- | ----------- | ------ | -------- |
-| CLN-01 | 03-01, 03-02, 03-04 | Doctor can create electronic visit record linked to patient and doctor, immutable after sign-off | PARTIAL | Visit creation and sign-off work; examination data cannot be saved due to refraction 500 and diagnosis 400 bugs |
-| CLN-02 | 03-01, 03-02, 03-04 | Corrections to signed records create amendment records with reason, field-level changes, original preserved | UNCERTAIN | AmendVisit handler and AmendmentDialog exist and are substantive; cannot fully verify without completing CLN-01 prerequisites |
-| CLN-03 | 03-02, 03-03 | Staff can track visit workflow status across 8 stages | VERIFIED | AdvanceWorkflowStage handler confirmed working; Kanban column advancement confirmed in human testing |
-| CLN-04 | 03-02, 03-03 | Dashboard shows all active patients and current workflow stage in real-time | VERIFIED | GetActiveVisits handler returns active visits; Kanban dashboard with 5 columns and 30s polling confirmed working |
-| REF-01 | 03-01, 03-02 | Technician or doctor can record refraction data: SPH, CYL, AXIS, ADD, PD per eye | BLOCKED | PUT /api/clinical/{id}/refraction returns 500 — data cannot be saved |
-| REF-02 | 03-01, 03-02 | System records VA (with/without correction), IOP (with method and time), Axial Length per eye | BLOCKED | Same 500 error blocks all refraction data including VA, IOP, Axial Length |
-| REF-03 | 03-01, 03-02 | System supports manifest, autorefraction, and cycloplegic refraction types | BLOCKED | Domain model and handler support all 3 types correctly; blocked by same 500 error |
-| DX-01 | 03-01, 03-02, 03-04 | Doctor can search and select ICD-10 codes in Vietnamese and English with ophthalmology favorites/pinned codes | PARTIALLY BLOCKED | Search works (SearchIcd10Codes returns bilingual results); adding selected code to visit fails with 400 |
-| DX-02 | 03-01, 03-02, 03-04 | System enforces ICD-10 laterality selection for ophthalmology codes (no unspecified eye) | BLOCKED | AddVisitDiagnosis returns 400 — laterality enum off-by-one means no diagnosis can be saved |
+| CLN-01 | 03-01, 03-02, 03-04 | Doctor can create electronic visit record linked to patient and doctor, immutable after sign-off | PARTIAL | Visit creation and sign-off work (confirmed via Playwright). Examination data cannot be saved — DbUpdateConcurrencyException on refraction and diagnosis saves. |
+| CLN-02 | 03-01, 03-02, 03-04 | Corrections to signed records create amendment records with reason, field-level changes, original preserved | BLOCKED | POST /api/clinical/{id}/amend returns 500 — DbUpdateConcurrencyException. Frontend diff capture was fixed by 03-07 but backend save fails. |
+| CLN-03 | 03-02, 03-03 | Staff can track visit workflow status across 8 stages | VERIFIED | AdvanceWorkflowStage handler working; Kanban column advancement confirmed via Playwright |
+| CLN-04 | 03-02, 03-03 | Dashboard shows all active patients and current workflow stage in real-time | VERIFIED | GetActiveVisits returns active visits; Kanban dashboard with 5 columns and 30s polling confirmed via Playwright |
+| REF-01 | 03-01, 03-02 | Technician or doctor can record refraction data: SPH, CYL, AXIS, ADD, PD per eye | BLOCKED | PUT /api/clinical/{id}/refraction returns 500 — DbUpdateConcurrencyException |
+| REF-02 | 03-01, 03-02 | System records VA (with/without correction), IOP (with method and time), Axial Length per eye | BLOCKED | Same DbUpdateConcurrencyException blocks all refraction data |
+| REF-03 | 03-01, 03-02 | System supports manifest, autorefraction, and cycloplegic refraction types | BLOCKED | Domain model supports 3 types; blocked by DbUpdateConcurrencyException |
+| DX-01 | 03-01, 03-02, 03-04 | Doctor can search and select ICD-10 codes in Vietnamese and English with ophthalmology favorites/pinned codes | PARTIALLY BLOCKED | Search works. Laterality selector works (03-06 fix). But save fails with DbUpdateConcurrencyException. |
+| DX-02 | 03-01, 03-02, 03-04 | System enforces ICD-10 laterality selection for ophthalmology codes (no unspecified eye) | BLOCKED | Laterality enum values now correct (03-06), but save fails with DbUpdateConcurrencyException |
 
 ### Anti-Patterns Found
 
 | File | Line | Pattern | Severity | Impact |
 | ---- | ---- | ------- | -------- | ------ |
-| `frontend/src/features/clinical/components/Icd10Combobox.tsx` | 32-36 | Laterality values 1/2/3 sent but backend enum is 0/1/2 — value 3 (OU) fails Enum.IsDefined validation | BLOCKER | All diagnosis saves fail with 400; OU laterality always rejected |
-| `backend/src/Modules/Clinical/Clinical.Application/Features/AmendmentDialog.tsx` (frontend) | 47 | `fieldChangesJson: "[]"` — amendment always sends empty field-level diff | WARNING | Amendments are created but field-level diff is always empty, violating CLN-02 requirement for field-level changes |
+| `backend/src/Modules/Clinical/Clinical.Domain/Entities/Visit.cs` | — | Visit aggregate adds child entities (Refraction, Diagnosis, Amendment) via backing fields, but EF Core tracks them as Modified instead of Added | BLOCKER | All three child-entity mutations fail with DbUpdateConcurrencyException — the single root cause for all 500 errors |
+| `backend/src/Modules/Clinical/Clinical.Infrastructure/Configurations/VisitConfiguration.cs` | — | RowVersion concurrency token on Visit causes check on child entity operations — UPDATE generated for new entities which don't exist in DB | BLOCKER | `expected to affect 1 row(s), but actually affected 0 row(s)` across refraction, diagnosis, amendment saves |
+| Frontend clinical mutations | — | No error toasts shown when API returns 500 | HIGH | User gets no feedback when refraction save, diagnosis add, or amendment fail silently |
+| `frontend/src/features/clinical/components/RefractionForm.tsx` | — | IOP method Select switches between controlled and uncontrolled | WARNING | React console warning on every visit detail page load |
 | `frontend/src/features/clinical/api/clinical-api.ts` | 326 | `refetchInterval: 30_000` — Plan 03 SUMMARY claimed 5s polling but code uses 30s | INFO | Different from what was documented; 30s is reasonable but SUMMARY.md is inaccurate |
 
 ### Human Verification Required
@@ -166,20 +208,50 @@ human_verification:
 
 ### Gaps Summary
 
-Phase 3 has two blocking API bugs that were discovered during the Plan 05 human verification checkpoint and were **not fixed** before the phase was concluded:
+**Re-verification context:** Plans 03-06 and 03-07 task 1 attempted to fix the original gaps (PropertyAccessMode.Field for refraction 500, laterality 0-indexing for diagnosis 400, amendment field-level diff). Playwright E2E testing with fresh backend build reveals those fixes were **insufficient** — the actual root cause is different.
 
-**Gap 1 — Refraction Save (500 Error):**
-The `UpdateRefractionHandler` is substantive and unit-tested, but returns HTTP 500 at runtime when called via the real API. The most likely cause is an EF Core change tracking issue: the `VisitConfiguration` maps `HasMany(v => v.Refractions).WithOne()` against the public `IReadOnlyCollection<Refraction>` property without explicitly specifying that EF Core should use the private `_refractions` backing field via `UsePropertyAccessMode(PropertyAccessMode.Field)`. This prevents EF Core from correctly tracking newly added refraction entities. All of REF-01, REF-02, and REF-03 are blocked.
+**GAP-REF-500 / GAP-DX-500 / GAP-AMEND-500 — Shared Root Cause: DbUpdateConcurrencyException**
 
-**Gap 2 — Diagnosis Add (400 Error):**
-The `Icd10Combobox.tsx` component defines `LATERALITY_OPTIONS` with 1-indexed values `{1=OD, 2=OS, 3=OU}`, but the backend `Laterality` enum is 0-indexed `{OD=0, OS=1, OU=2}`. When a user selects OU (frontend value=3), the backend validator `Enum.IsDefined(typeof(Laterality), 3)` fails, returning 400. Even for OD (frontend=1) and OS (frontend=2), the backend stores the wrong laterality. This is a pure frontend constant definition bug. DX-01 and DX-02 are blocked.
+All three child-entity mutations (refraction, diagnosis, amendment) fail with the same exception:
+```
+Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException:
+The database operation was expected to affect 1 row(s), but actually affected 0 row(s)
+```
 
-**Secondary Gap — Empty Amendment Diff:**
-The `AmendmentDialog.tsx` always sends `fieldChangesJson: "[]"` regardless of what data changed. This means CLN-02's requirement for "field-level changes" in amendments is not implemented in the frontend, even though the backend supports it. This is a warning-level gap that can be addressed separately.
+**What happens:** When a handler calls `visit.AddRefraction()`, `visit.AddDiagnosis()`, or `visit.StartAmendment()` followed by `unitOfWork.SaveChangesAsync()`, EF Core generates an **UPDATE** SQL statement instead of an **INSERT** for the new child entity. Since the row doesn't exist in the database, UPDATE affects 0 rows, triggering the concurrency check failure.
 
-The remaining automated infrastructure (44 unit tests passing, correct build, routes registered, Bootstrapper wired, migrations applied) provides a solid foundation. The two bugs are narrow and fixable independently.
+**Why the 03-06 fix didn't help:** `PropertyAccessMode.Field` tells EF Core to use the backing field when materializing entities from queries, but it doesn't address the root issue of how the change tracker classifies new entities added through domain methods. The entity state is likely Modified (due to RowVersion on the parent Visit being involved) instead of Added.
+
+**Likely root causes to investigate:**
+1. Visit entity's RowVersion concurrency token interfering with child entity tracking
+2. EF Core change tracker seeing entities added via `_refractions.Add()` as modifications to the Visit (updating its navigation property) rather than new entity additions
+3. Possible issue with how child entity Id is generated (if using Guid.Empty then set later vs Guid.NewGuid() in constructor)
+4. The `GetByIdWithDetailsAsync` Include/ThenInclude loading pattern may affect how the change tracker sees subsequently added entities
+
+**Requirements blocked:** CLN-01 (partial), CLN-02, REF-01, REF-02, REF-03, DX-01, DX-02
+
+**GAP-NO-ERROR-TOAST — Silent API Failures**
+
+When any clinical mutation returns HTTP 500, the user receives NO visual feedback:
+- Refraction: silently fails, no toast
+- Diagnosis: dialog closes as if successful
+- Amendment: dialog stays open with no error message
+
+This is a separate frontend issue that should be fixed alongside the backend fix.
+
+**GAP-SELECT-CONTROLLED — IOP Method Select Warning (minor)**
+
+React console warning about Select controlled/uncontrolled switch. Non-blocking.
+
+**What works correctly:**
+- Kanban dashboard with 5 columns, card navigation, visit creation
+- ICD-10 search with bilingual results and favorites
+- Laterality selector UI (03-06 fix applied correctly)
+- Sign-off confirmation dialog → status transition to "Đã ký" → fields disabled
+- Amendment dialog with field-level diff capture (03-07 task 1)
+- 44 unit tests passing, builds clean
 
 ---
 
-_Verified: 2026-03-04T18:00:00Z_
-_Verifier: Claude (gsd-verifier)_
+_Initial verification: 2026-03-04T18:00:00Z (gsd-verifier)_
+_Re-verification: 2026-03-04T16:20:00Z (Playwright E2E testing post 03-06/03-07 gap closure)_
