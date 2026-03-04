@@ -82,7 +82,6 @@ export function AppSidebar({ ...sidebarProps }: ComponentProps<typeof Sidebar>) 
       titleKey: "sidebar.clinical",
       to: "/clinical",
       icon: IconStethoscope,
-      disabled: true,
     },
     {
       titleKey: "sidebar.imaging",
