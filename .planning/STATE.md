@@ -3,31 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 03-06-PLAN.md
-last_updated: "2026-03-04T15:57:55.601Z"
-last_activity: 2026-03-04 -- Completed 03-06 Gap Closure Bug Fixes
+stopped_at: Completed 03-08-PLAN.md
+last_updated: "2026-03-04T16:56:18.000Z"
+last_activity: 2026-03-04 -- Completed 03-08 Fix DbUpdateConcurrencyException
 progress:
   total_phases: 12
   completed_phases: 5
   total_plans: 49
-  completed_plans: 48
-  percent: 98
----
-
----
-gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: in-progress
-stopped_at: Completed 03-04-PLAN.md
-last_updated: "2026-03-04T10:49:45.581Z"
-last_activity: 2026-03-04 -- Completed 03-04 Visit Detail Page
-progress:
-  [██████████] 98%
-  completed_phases: 5
-  total_plans: 47
-  completed_plans: 46
-  percent: 98
+  completed_plans: 49
+  percent: 100
 ---
 
 # Project State
@@ -42,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 ## Current Position
 
 Phase: 03 (Clinical Workflow & Examination)
-Plan: 6 of 7 in current phase
-Status: Plan 03-06 complete -- Fixed refraction 500 and diagnosis 400 API bugs
-Last activity: 2026-03-04 -- Completed 03-06 Gap Closure Bug Fixes
+Plan: 8 of 9 in current phase
+Status: Plan 03-08 complete -- Fixed DbUpdateConcurrencyException in all child-entity mutation handlers
+Last activity: 2026-03-04 -- Completed 03-08 Fix DbUpdateConcurrencyException
 
-Progress: [##########] 98%
+Progress: [##########] 100%
 
 ## Performance Metrics
 
@@ -107,6 +91,7 @@ Progress: [##########] 98%
 | Phase 03 P03 | 9min | 2 tasks | 14 files |
 | Phase 03 P04 | 7 | 2 tasks | 15 files |
 | Phase 03 P06 | 9 | 2 tasks | 2 files |
+| Phase 03 P08 | 10min | 2 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -264,6 +249,8 @@ Recent decisions affecting current work:
 - [Phase 03]: SignOff uses AlertDialog (non-dismissible) for confirmation pattern
 - [Phase 03]: PropertyAccessMode.Field on all three Visit navigation properties (Refractions, Diagnoses, Amendments) for EF Core backing field access
 - [Phase 03]: Non-laterality ICD-10 codes default to laterality 0 (OD) -- stored but not clinically meaningful when requiresLaterality=false
+- [Phase 03]: [03-08]: Direct DbContext.DbSet.Add() for child entities instead of relying on aggregate backing field insertion (same pattern as AllergyRepository.Add)
+- [Phase 03]: [03-08]: Dual-call pattern: domain aggregate method for business rules + repository Add for EF Core change tracking
 
 ### Roadmap Evolution
 
@@ -284,6 +271,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-04T15:57:55.598Z
-Stopped at: Completed 03-06-PLAN.md
+Last session: 2026-03-04T16:56:18.000Z
+Stopped at: Completed 03-08-PLAN.md
 Resume file: None
