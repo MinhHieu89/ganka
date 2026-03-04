@@ -76,5 +76,6 @@
     <Project Path="tests/Patient.Unit.Tests/Patient.Unit.Tests.csproj" />
     <Project Path="tests/Scheduling.Unit.Tests/Scheduling.Unit.Tests.csproj" />
     <Project Path="tests/Shared.Unit.Tests/Shared.Unit.Tests.csproj" />
+    <Project Path="tests/Clinical.Unit.Tests/Clinical.Unit.Tests.csproj" />
   </Folder>
 </Solution>
