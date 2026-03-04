@@ -21,6 +21,7 @@ public static class ClinicalApiEndpoints
 
         MapVisitLifecycleEndpoints(group);
         MapVisitDataEndpoints(group);
+        MapIcd10Endpoints(group);
 
         return app;
     }
@@ -73,6 +74,59 @@ public static class ClinicalApiEndpoints
             var enriched = new UpdateVisitNotesCommand(visitId, command.Notes);
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
+        });
+
+        group.MapPut("/{visitId:guid}/refraction", async (Guid visitId, UpdateRefractionCommand command, IMessageBus bus, CancellationToken ct) =>
+        {
+            var enriched = new UpdateRefractionCommand(
+                visitId, command.RefractionType,
+                command.OdSph, command.OdCyl, command.OdAxis, command.OdAdd, command.OdPd,
+                command.OsSph, command.OsCyl, command.OsAxis, command.OsAdd, command.OsPd,
+                command.UcvaOd, command.UcvaOs, command.BcvaOd, command.BcvaOs,
+                command.IopOd, command.IopOs, command.IopMethod,
+                command.AxialLengthOd, command.AxialLengthOs);
+            var result = await bus.InvokeAsync<Result>(enriched, ct);
+            return result.ToHttpResult();
+        });
+
+        group.MapPost("/{visitId:guid}/diagnoses", async (Guid visitId, AddVisitDiagnosisCommand command, IMessageBus bus, CancellationToken ct) =>
+        {
+            var enriched = new AddVisitDiagnosisCommand(
+                visitId, command.Icd10Code, command.DescriptionEn, command.DescriptionVi,
+                command.Laterality, command.Role, command.SortOrder);
+            var result = await bus.InvokeAsync<Result>(enriched, ct);
+            return result.ToHttpResult();
+        });
+
+        group.MapDelete("/{visitId:guid}/diagnoses/{diagnosisId:guid}", async (Guid visitId, Guid diagnosisId, IMessageBus bus, CancellationToken ct) =>
+        {
+            var result = await bus.InvokeAsync<Result>(new RemoveVisitDiagnosisCommand(visitId, diagnosisId), ct);
+            return result.ToHttpResult();
+        });
+    }
+
+    private static void MapIcd10Endpoints(RouteGroupBuilder group)
+    {
+        group.MapGet("/icd10/search", async (string term, IMessageBus bus, HttpContext httpContext, CancellationToken ct) =>
+        {
+            var doctorId = httpContext.User.FindFirst("sub")?.Value;
+            Guid? parsedDoctorId = Guid.TryParse(doctorId, out var id) ? id : null;
+            var results = await bus.InvokeAsync<List<Icd10SearchResultDto>>(
+                new SearchIcd10CodesQuery(term, parsedDoctorId), ct);
+            return Results.Ok(results);
+        });
+
+        group.MapPost("/icd10/favorites/toggle", async (ToggleIcd10FavoriteCommand command, IMessageBus bus, CancellationToken ct) =>
+        {
+            var result = await bus.InvokeAsync<Result>(command, ct);
+            return result.ToHttpResult();
+        });
+
+        group.MapGet("/icd10/favorites", async (Guid doctorId, IMessageBus bus, CancellationToken ct) =>
+        {
+            var results = await bus.InvokeAsync<List<Icd10SearchResultDto>>(
+                new GetDoctorFavoritesQuery(doctorId), ct);
+            return Results.Ok(results);
         });
     }
 }

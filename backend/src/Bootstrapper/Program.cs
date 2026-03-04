@@ -30,7 +30,6 @@ using Audit.Presentation;
 using Patient.Application;
 using Patient.Presentation;
 using Clinical.Application;
-using Clinical.Infrastructure;
 using Clinical.Presentation;
 using Scheduling.Application;
 using Scheduling.Presentation;
