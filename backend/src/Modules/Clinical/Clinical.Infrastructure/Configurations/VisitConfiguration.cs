@@ -67,6 +67,19 @@ public class VisitConfiguration : IEntityTypeConfiguration<Visit>
             .HasForeignKey(a => a.VisitId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        // Backing field access mode: tells EF Core to use private _refractions, _diagnoses,
+        // _amendments fields directly when materializing and tracking entities, rather than
+        // trying to go through the read-only IReadOnlyCollection properties.
+        // Without this, EF Core cannot persist entities added via domain methods like AddRefraction().
+        builder.Navigation(v => v.Refractions)
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
+
+        builder.Navigation(v => v.Diagnoses)
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
+
+        builder.Navigation(v => v.Amendments)
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
+
         // Performance indexes
         builder.HasIndex(v => v.PatientId);
         builder.HasIndex(v => v.DoctorId);
