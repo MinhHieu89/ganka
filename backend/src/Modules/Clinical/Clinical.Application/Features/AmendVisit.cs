@@ -63,6 +63,8 @@ public static class AmendVisitHandler
             return Result.Failure(Error.Validation(ex.Message));
         }
 
+        visitRepository.AddAmendment(amendment);
+
         await unitOfWork.SaveChangesAsync(ct);
         return Result.Success();
     }

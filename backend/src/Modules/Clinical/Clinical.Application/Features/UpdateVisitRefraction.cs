@@ -122,6 +122,8 @@ public static class UpdateRefractionHandler
             {
                 return Result.Failure(Error.Validation(ex.Message));
             }
+
+            visitRepository.AddRefraction(refraction);
         }
 
         await unitOfWork.SaveChangesAsync(ct);

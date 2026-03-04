@@ -81,7 +81,9 @@ public static class AddVisitDiagnosisHandler
                     command.SortOrder + 1);
 
                 visit.AddDiagnosis(odDiagnosis);
+                visitRepository.AddDiagnosis(odDiagnosis);
                 visit.AddDiagnosis(osDiagnosis);
+                visitRepository.AddDiagnosis(osDiagnosis);
             }
             else
             {
@@ -91,6 +93,7 @@ public static class AddVisitDiagnosisHandler
                     laterality, role, command.SortOrder);
 
                 visit.AddDiagnosis(diagnosis);
+                visitRepository.AddDiagnosis(diagnosis);
             }
         }
         catch (InvalidOperationException ex)
