@@ -45,6 +45,8 @@
     "refractionSaved": "Đã lưu khúc xạ",
     "diagnosisAdded": "Đã thêm chẩn đoán",
     "diagnosisRemoved": "Đã xóa chẩn đoán",
+    "diagnosisAddFailed": "Thêm chẩn đoán thất bại",
+    "diagnosisRemoveFailed": "Xóa chẩn đoán thất bại",
     "signedOff": "Đã ký duyệt lượt khám",
     "amendmentCreated": "Đã tạo bản sửa đổi",
     "patientName": "Bệnh nhân",
@@ -78,6 +80,7 @@
     "iop": "Nhãn áp",
     "iopMethod": "Phương pháp",
     "axialLength": "Trục nhãn cầu",
+    "saveFailed": "Lưu dữ liệu khúc xạ thất bại",
     "iopMethods": {
       "goldmann": "Goldmann",
       "nonContact": "Không tiếp xúc",

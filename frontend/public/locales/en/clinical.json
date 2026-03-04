@@ -45,6 +45,8 @@
     "refractionSaved": "Refraction saved",
     "diagnosisAdded": "Diagnosis added",
     "diagnosisRemoved": "Diagnosis removed",
+    "diagnosisAddFailed": "Failed to add diagnosis",
+    "diagnosisRemoveFailed": "Failed to remove diagnosis",
     "signedOff": "Visit signed off",
     "amendmentCreated": "Amendment created",
     "patientName": "Patient",
@@ -78,6 +80,7 @@
     "iop": "IOP",
     "iopMethod": "Method",
     "axialLength": "Axial Length",
+    "saveFailed": "Failed to save refraction data",
     "iopMethods": {
       "goldmann": "Goldmann",
       "nonContact": "Non-contact",

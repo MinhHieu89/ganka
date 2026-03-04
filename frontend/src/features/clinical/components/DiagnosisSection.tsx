@@ -59,6 +59,9 @@ export function DiagnosisSection({
           onSuccess: () => {
             toast.success(t("visit.diagnosisAdded"))
           },
+          onError: () => {
+            toast.error(t("visit.diagnosisAddFailed"))
+          },
         },
       )
     },
@@ -72,6 +75,9 @@ export function DiagnosisSection({
         {
           onSuccess: () => {
             toast.success(t("visit.diagnosisRemoved"))
+          },
+          onError: () => {
+            toast.error(t("visit.diagnosisRemoveFailed"))
           },
         },
       )

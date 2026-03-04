@@ -174,6 +174,9 @@ export function RefractionForm({
           onSuccess: () => {
             toast.success(t("visit.refractionSaved"))
           },
+          onError: () => {
+            toast.error(t("refraction.saveFailed"))
+          },
         },
       )
     },
@@ -281,9 +284,12 @@ export function RefractionForm({
           {t("refraction.iopMethod")}
         </Label>
         <Select
-          value={toFormValue(form.watch("iopMethod") as number | null | undefined)}
+          value={(() => {
+            const v = form.watch("iopMethod") as number | null | undefined
+            return v === null || v === undefined ? undefined : String(v)
+          })()}
           onValueChange={(v) => {
-            form.setValue("iopMethod", v === "" ? null : Number(v))
+            form.setValue("iopMethod", Number(v))
             handleBlur()
           }}
           disabled={disabled}
