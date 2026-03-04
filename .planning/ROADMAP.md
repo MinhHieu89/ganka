@@ -130,7 +130,7 @@ Plans:
   3. Dashboard shows all active patients and their current workflow stage (reception, refraction/VA, doctor exam, diagnostics, doctor reads, Rx, cashier, pharmacy/optical) in real-time
   4. Technician or doctor can record refraction data (SPH, CYL, AXIS, ADD, PD, VA, IOP, Axial Length per eye) with support for manifest, autorefraction, and cycloplegic types
   5. Doctor can search ICD-10 codes in Vietnamese and English, pin favorites, and the system enforces laterality selection (OD/OS/OU) for ophthalmology codes
-**Plans**: 7 plans (5 original + 2 gap closure)
+**Plans**: 9 plans (5 original + 4 gap closure)
 
 Plans:
 - [x] 03-01-PLAN.md -- Clinical domain entities, contracts DTOs, EF Core infrastructure, test project scaffold
@@ -138,8 +138,10 @@ Plans:
 - [x] 03-03-PLAN.md -- Frontend shared components, API hooks, Kanban workflow dashboard with @dnd-kit
 - [x] 03-04-PLAN.md -- Frontend visit detail page: refraction, diagnosis, sign-off, amendment
 - [x] 03-05-PLAN.md -- End-to-end verification checkpoint
-- [ ] 03-06-PLAN.md -- [GAP] Fix refraction save 500 (EF Core backing field config) and diagnosis add 400 (laterality enum mismatch)
-- [ ] 03-07-PLAN.md -- [GAP] Fix amendment empty field-level diff + human verification of all gap fixes
+- [x] 03-06-PLAN.md -- [GAP] Fix refraction save 500 (EF Core backing field config) and diagnosis add 400 (laterality enum mismatch)
+- [x] 03-07-PLAN.md -- [GAP] Fix amendment empty field-level diff + human verification of all gap fixes
+- [ ] 03-08-PLAN.md -- [GAP] Fix DbUpdateConcurrencyException: explicit child-entity registration with EF Core change tracker
+- [ ] 03-09-PLAN.md -- [GAP] Frontend error toasts + IOP Select warning fix + human verification of complete workflow
 
 ### Phase 4: Dry Eye Template & Medical Imaging
 **Goal**: Doctors can perform structured Dry Eye assessments with OSDI scoring and compare clinical data and images across visits
@@ -255,7 +257,7 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 | 1.2 Frontend shadcn/ui Refactoring | 6/8 | In Progress | - |
 | 2. Patient Management & Scheduling | 14/14 | Complete    | 2026-03-02 |
 | 2.1 Frontend Bug Fixes + Auth Security | 4/4 | Complete | 2026-03-02 |
-| 3. Clinical Workflow & Examination | 5/7 | In Progress | - |
+| 3. Clinical Workflow & Examination | 7/9 | In Progress | - |
 | 4. Dry Eye Template & Medical Imaging | 0/2 | Not started | - |
 | 5. Prescriptions & Document Printing | 0/2 | Not started | - |
 | 6. Pharmacy & Consumables | 0/2 | Not started | - |
