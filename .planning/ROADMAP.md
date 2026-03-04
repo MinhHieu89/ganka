@@ -133,10 +133,10 @@ Plans:
 **Plans**: 5 plans in 5 waves
 
 Plans:
-- [ ] 03-01-PLAN.md -- Clinical domain entities, contracts DTOs, EF Core infrastructure, test project scaffold
-- [ ] 03-02-PLAN.md -- Clinical application handlers (TDD), presentation endpoints, Bootstrapper wiring
-- [ ] 03-03-PLAN.md -- Frontend shared components, API hooks, Kanban workflow dashboard with @dnd-kit
-- [ ] 03-04-PLAN.md -- Frontend visit detail page: refraction, diagnosis, sign-off, amendment
+- [x] 03-01-PLAN.md -- Clinical domain entities, contracts DTOs, EF Core infrastructure, test project scaffold
+- [x] 03-02-PLAN.md -- Clinical application handlers (TDD), presentation endpoints, Bootstrapper wiring
+- [x] 03-03-PLAN.md -- Frontend shared components, API hooks, Kanban workflow dashboard with @dnd-kit
+- [x] 03-04-PLAN.md -- Frontend visit detail page: refraction, diagnosis, sign-off, amendment
 - [ ] 03-05-PLAN.md -- End-to-end verification checkpoint
 
 ### Phase 4: Dry Eye Template & Medical Imaging
