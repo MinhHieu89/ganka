@@ -111,6 +111,7 @@ export function SignOffSection({ visitId, visit }: SignOffSectionProps) {
       {/* Amendment dialog */}
       <AmendmentDialog
         visitId={visitId}
+        visit={visit}
         open={amendOpen}
         onClose={() => setAmendOpen(false)}
       />

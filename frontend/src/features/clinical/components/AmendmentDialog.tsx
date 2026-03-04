@@ -14,15 +14,83 @@ import {
 import { Button } from "@/shared/components/Button"
 import { Textarea } from "@/shared/components/Textarea"
 import { Field, FieldLabel, FieldError } from "@/shared/components/Field"
-import { useAmendVisit } from "../api/clinical-api"
+import { useAmendVisit, type VisitDetailDto } from "../api/clinical-api"
+
+/**
+ * Builds a snapshot of the visit's current signed state at the moment amendment
+ * is initiated. This captures what existed before the amendment for audit purposes.
+ *
+ * NOTE: Full before/after diff would require a "finalize amendment" endpoint that
+ * compares the snapshot baseline to the final state after edits. The current approach
+ * captures the signed state at amendment initiation time. (Future enhancement)
+ */
+function buildFieldChangesSnapshot(visit: VisitDetailDto): string {
+  const changes: Array<{ fieldName: string; oldValue: string; newValue: string }> = []
+
+  if (visit.examinationNotes) {
+    changes.push({
+      fieldName: "examinationNotes",
+      oldValue: visit.examinationNotes,
+      newValue: "pending_amendment",
+    })
+  }
+
+  if (visit.refractions.length > 0) {
+    for (const r of visit.refractions) {
+      const typeLabel =
+        r.refractionType === 0
+          ? "manifest"
+          : r.refractionType === 1
+            ? "autorefraction"
+            : "cycloplegic"
+      changes.push({
+        fieldName: `refraction.${typeLabel}`,
+        oldValue: JSON.stringify({
+          odSph: r.odSph,
+          odCyl: r.odCyl,
+          odAxis: r.odAxis,
+          osSph: r.osSph,
+          osCyl: r.osCyl,
+          osAxis: r.osAxis,
+        }),
+        newValue: "pending_amendment",
+      })
+    }
+  }
+
+  if (visit.diagnoses.length > 0) {
+    changes.push({
+      fieldName: "diagnoses",
+      oldValue: JSON.stringify(
+        visit.diagnoses.map((d) => ({
+          code: d.icd10Code,
+          laterality: d.laterality,
+        })),
+      ),
+      newValue: "pending_amendment",
+    })
+  }
+
+  // If no specific data to snapshot, provide a generic baseline
+  if (changes.length === 0) {
+    changes.push({
+      fieldName: "visit",
+      oldValue: "signed_state",
+      newValue: "amendment_initiated",
+    })
+  }
+
+  return JSON.stringify(changes)
+}
 
 interface AmendmentDialogProps {
   visitId: string
+  visit: VisitDetailDto
   open: boolean
   onClose: () => void
 }
 
-export function AmendmentDialog({ visitId, open, onClose }: AmendmentDialogProps) {
+export function AmendmentDialog({ visitId, visit, open, onClose }: AmendmentDialogProps) {
   const { t } = useTranslation("clinical")
   const { t: tCommon } = useTranslation("common")
   const amendMutation = useAmendVisit()
@@ -40,10 +108,11 @@ export function AmendmentDialog({ visitId, open, onClose }: AmendmentDialogProps
 
   const handleSubmit = async (data: FormValues) => {
     try {
+      const fieldChangesJson = buildFieldChangesSnapshot(visit)
       await amendMutation.mutateAsync({
         visitId,
         reason: data.reason,
-        fieldChangesJson: "[]",
+        fieldChangesJson,
       })
       toast.success(t("visit.amendmentCreated"))
       form.reset()
