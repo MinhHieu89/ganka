@@ -28,11 +28,11 @@ import {
   type Icd10SearchResultDto,
 } from "../api/clinical-api"
 
-// Laterality enum: 0=None, 1=OD, 2=OS, 3=OU
+// Laterality enum matching backend: OD=0, OS=1, OU=2
 const LATERALITY_OPTIONS = [
-  { value: 1, label: "od" },
-  { value: 2, label: "os" },
-  { value: 3, label: "ou" },
+  { value: 0, label: "od" },
+  { value: 1, label: "os" },
+  { value: 2, label: "ou" },
 ] as const
 
 interface Icd10ComboboxProps {
@@ -78,7 +78,10 @@ export function Icd10Combobox({
         setPendingCode(code)
         setSelectedLaterality(null)
       } else {
-        onSelect(code, 0) // 0 = None/not applicable
+        // For non-laterality codes, default to 0 (OD). The backend only validates
+        // laterality when requiresLaterality=true, so this value is stored but not
+        // clinically meaningful for non-laterality ICD-10 codes.
+        onSelect(code, 0)
         setOpen(false)
         setSearchTerm("")
         setDebouncedTerm("")
