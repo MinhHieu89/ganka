@@ -32,4 +32,20 @@ public interface IVisitRepository
     /// Checks if a patient already has an active (non-signed) visit.
     /// </summary>
     Task<bool> HasActiveVisitForPatientAsync(Guid patientId, CancellationToken ct = default);
+
+    /// <summary>
+    /// Explicitly adds a Refraction entity to the change tracker as Added.
+    /// Required because adding through Visit aggregate backing field does not register with EF Core.
+    /// </summary>
+    void AddRefraction(Refraction refraction);
+
+    /// <summary>
+    /// Explicitly adds a VisitDiagnosis entity to the change tracker as Added.
+    /// </summary>
+    void AddDiagnosis(VisitDiagnosis diagnosis);
+
+    /// <summary>
+    /// Explicitly adds a VisitAmendment entity to the change tracker as Added.
+    /// </summary>
+    void AddAmendment(VisitAmendment amendment);
 }

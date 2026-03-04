@@ -58,4 +58,19 @@ public sealed class VisitRepository : IVisitRepository
                 !v.IsDeleted &&
                 (v.Status == VisitStatus.Draft || v.Status == VisitStatus.Amended), ct);
     }
+
+    public void AddRefraction(Refraction refraction)
+    {
+        _dbContext.Refractions.Add(refraction);
+    }
+
+    public void AddDiagnosis(VisitDiagnosis diagnosis)
+    {
+        _dbContext.VisitDiagnoses.Add(diagnosis);
+    }
+
+    public void AddAmendment(VisitAmendment amendment)
+    {
+        _dbContext.VisitAmendments.Add(amendment);
+    }
 }
