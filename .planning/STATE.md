@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 03-01-PLAN.md
-last_updated: "2026-03-04T10:03:02.000Z"
-last_activity: 2026-03-04 -- Completed 03-01 Clinical Domain & Infrastructure
+stopped_at: Completed 03-02-PLAN.md
+last_updated: "2026-03-04T10:22:52.000Z"
+last_activity: 2026-03-04 -- Completed 03-02 Clinical Feature Handlers
 progress:
   total_phases: 12
   completed_phases: 5
   total_plans: 47
-  completed_plans: 43
-  percent: 91
+  completed_plans: 44
+  percent: 93
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 ## Current Position
 
 Phase: 03 (Clinical Workflow & Examination)
-Plan: 1 of 5 in current phase
-Status: Plan 03-01 complete -- domain entities, infrastructure, and test scaffold
-Last activity: 2026-03-04 -- Completed 03-01 Clinical Domain & Infrastructure
+Plan: 2 of 5 in current phase
+Status: Plan 03-02 complete -- 13 Clinical feature handlers with TDD, Presentation wired
+Last activity: 2026-03-04 -- Completed 03-02 Clinical Feature Handlers
 
-Progress: [#########-] 91%
+Progress: [#########-] 93%
 
 ## Performance Metrics
 
@@ -87,6 +87,7 @@ Progress: [#########-] 91%
 | Phase 02 P13 | 4min | 2 tasks | 6 files |
 | Phase 02 P14 | 15min | 2 tasks | 10 files |
 | Phase 03 P01 | 3min | 2 tasks | 37 files |
+| Phase 03 P02 | 16min | 2 tasks | 33 files |
 
 ## Accumulated Context
 
@@ -231,6 +232,10 @@ Recent decisions affecting current work:
 - [Phase 03]: [03-01]: DoctorIcd10Favorite as per-doctor junction table -- global Icd10Code.IsFavorite field is ignored
 - [Phase 03]: [03-01]: Refraction decimal fields use precision(5,2) for all diopter/VA/IOP/axial length values
 - [Phase 03]: [03-01]: VisitAmendment.FieldChangesJson stores JSON array of FieldChange records for field-level diff
+- [Phase 03]: [03-02]: Visit.StartAmendment now accepts VisitAmendment parameter -- domain method instead of reflection
+- [Phase 03]: [03-02]: Shared.Infrastructure reference added to Clinical.Application for ReferenceDbContext access in ICD-10 handlers
+- [Phase 03]: [03-02]: OU laterality creates two diagnosis records with .1/.2 code suffixes per ICD-10 convention
+- [Phase 03]: [03-02]: SearchIcd10Codes uses Contains for bilingual search with favorites pinned via OrderByDescending
 
 ### Roadmap Evolution
 
@@ -251,6 +256,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-04T10:03:02.000Z
-Stopped at: Completed 03-01-PLAN.md
-Resume file: .planning/phases/03-clinical-workflow-examination/03-01-SUMMARY.md
+Last session: 2026-03-04T10:22:52.000Z
+Stopped at: Completed 03-02-PLAN.md
+Resume file: .planning/phases/03-clinical-workflow-examination/03-02-SUMMARY.md

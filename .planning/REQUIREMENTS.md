@@ -28,7 +28,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **CLN-01**: Doctor can create electronic visit record (benh an) linked to patient and doctor, immutable after sign-off
 - [x] **CLN-02**: Corrections to signed visit records create amendment records with reason, field-level changes, and original preserved
 - [x] **CLN-03**: Staff can track visit workflow status (reception -> refraction/VA -> doctor exam -> diagnostics -> doctor reads -> Rx -> cashier -> pharmacy/optical)
-- [ ] **CLN-04**: Dashboard shows all active patients and their current workflow stage in real-time
+- [x] **CLN-04**: Dashboard shows all active patients and their current workflow stage in real-time
 
 ### Dry Eye Template
 
@@ -239,7 +239,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CLN-01 | Phase 3 | Complete |
 | CLN-02 | Phase 3 | Complete |
 | CLN-03 | Phase 3 | Complete |
-| CLN-04 | Phase 3 | Pending |
+| CLN-04 | Phase 3 | Complete |
 | DRY-01 | Phase 4 | Pending |
 | DRY-02 | Phase 4 | Pending |
 | DRY-03 | Phase 4 | Pending |
