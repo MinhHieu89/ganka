@@ -59,6 +59,7 @@ public class UpdateRefractionHandlerTests
         refraction.Type.Should().Be(RefractionType.Manifest);
         refraction.OdSph.Should().Be(-2.0m);
         refraction.OsSph.Should().Be(-1.5m);
+        _visitRepository.Received(1).AddRefraction(Arg.Any<Refraction>());
     }
 
     [Fact]
@@ -85,6 +86,7 @@ public class UpdateRefractionHandlerTests
         result.IsSuccess.Should().BeTrue();
         visit.Refractions.Should().HaveCount(1);
         visit.Refractions.First().Type.Should().Be(RefractionType.Autorefraction);
+        _visitRepository.Received(1).AddRefraction(Arg.Any<Refraction>());
     }
 
     [Fact]

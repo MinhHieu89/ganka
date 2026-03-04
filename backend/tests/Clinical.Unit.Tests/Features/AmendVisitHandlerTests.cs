@@ -65,6 +65,7 @@ public class AmendVisitHandlerTests
         visit.Status.Should().Be(VisitStatus.Amended);
         visit.Amendments.Should().HaveCount(1);
         visit.Amendments.First().Reason.Should().Be("Corrected diagnosis laterality");
+        _visitRepository.Received(1).AddAmendment(Arg.Any<VisitAmendment>());
     }
 
     [Fact]
@@ -142,5 +143,6 @@ public class AmendVisitHandlerTests
 
         // Assert
         await _unitOfWork.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
+        _visitRepository.Received(1).AddAmendment(Arg.Any<VisitAmendment>());
     }
 }

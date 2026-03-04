@@ -53,6 +53,7 @@ public class AddVisitDiagnosisHandlerTests
         visit.Diagnoses.Should().HaveCount(1);
         visit.Diagnoses.First().Laterality.Should().Be(Laterality.OD);
         visit.Diagnoses.First().Icd10Code.Should().Be("H04.121");
+        _visitRepository.Received(1).AddDiagnosis(Arg.Any<VisitDiagnosis>());
     }
 
     [Fact]
@@ -76,6 +77,7 @@ public class AddVisitDiagnosisHandlerTests
         visit.Diagnoses.Should().HaveCount(2);
         visit.Diagnoses.Should().Contain(d => d.Laterality == Laterality.OD);
         visit.Diagnoses.Should().Contain(d => d.Laterality == Laterality.OS);
+        _visitRepository.Received(2).AddDiagnosis(Arg.Any<VisitDiagnosis>());
     }
 
     [Fact]
