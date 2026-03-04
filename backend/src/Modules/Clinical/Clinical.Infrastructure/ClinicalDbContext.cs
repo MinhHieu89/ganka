@@ -1,3 +1,4 @@
+using Clinical.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Clinical.Infrastructure;
@@ -5,10 +6,15 @@ namespace Clinical.Infrastructure;
 /// <summary>
 /// EF Core DbContext for the Clinical module.
 /// Uses schema-per-module isolation with the "clinical" schema.
-/// Entity configurations and DbSets will be added as the module is implemented.
 /// </summary>
 public class ClinicalDbContext : DbContext
 {
+    public DbSet<Visit> Visits => Set<Visit>();
+    public DbSet<VisitAmendment> VisitAmendments => Set<VisitAmendment>();
+    public DbSet<Refraction> Refractions => Set<Refraction>();
+    public DbSet<VisitDiagnosis> VisitDiagnoses => Set<VisitDiagnosis>();
+    public DbSet<DoctorIcd10Favorite> DoctorIcd10Favorites => Set<DoctorIcd10Favorite>();
+
     public ClinicalDbContext(DbContextOptions<ClinicalDbContext> options) : base(options)
     {
     }
@@ -17,8 +23,7 @@ public class ClinicalDbContext : DbContext
     {
         modelBuilder.HasDefaultSchema("clinical");
 
-        // Entity configurations will be added as this module is implemented
-        // in its respective phase plan.
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ClinicalDbContext).Assembly);
 
         base.OnModelCreating(modelBuilder);
     }
