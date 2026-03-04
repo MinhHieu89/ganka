@@ -29,6 +29,9 @@ using Audit.Application;
 using Audit.Presentation;
 using Patient.Application;
 using Patient.Presentation;
+using Clinical.Application;
+using Clinical.Infrastructure;
+using Clinical.Presentation;
 using Scheduling.Application;
 using Scheduling.Presentation;
 using Shared.Infrastructure;
@@ -66,6 +69,11 @@ builder.Services.AddPatientPresentation();
 builder.Services.AddSchedulingApplication();
 builder.Services.AddSchedulingInfrastructure();
 builder.Services.AddSchedulingPresentation();
+
+// Clinical module
+builder.Services.AddClinicalApplication();
+builder.Services.AddClinicalInfrastructure();
+builder.Services.AddClinicalPresentation();
 
 // ---------------------------------------------------------------------------
 // EF Core DbContexts -- module DbContexts with AuditInterceptor
@@ -284,6 +292,7 @@ app.MapAuditApiEndpoints();
 app.MapPatientApiEndpoints();
 app.MapSchedulingApiEndpoints();
 app.MapPublicBookingEndpoints();
+app.MapClinicalApiEndpoints();
 
 app.Run();
 

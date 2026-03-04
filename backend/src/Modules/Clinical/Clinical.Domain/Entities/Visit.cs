@@ -141,13 +141,15 @@ public class Visit : AggregateRoot, IAuditable
 
     /// <summary>
     /// Starts an amendment workflow, allowing edits to a signed visit.
+    /// Adds the amendment record to the visit's amendment chain.
     /// </summary>
-    public void StartAmendment()
+    public void StartAmendment(VisitAmendment amendment)
     {
         if (Status != VisitStatus.Signed)
             throw new InvalidOperationException("Only signed visits can be amended.");
 
         Status = VisitStatus.Amended;
+        _amendments.Add(amendment);
         SetUpdatedAt();
     }
 

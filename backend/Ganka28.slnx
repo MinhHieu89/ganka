@@ -28,6 +28,7 @@
     <Project Path="src/Modules/Clinical/Clinical.Contracts/Clinical.Contracts.csproj" />
     <Project Path="src/Modules/Clinical/Clinical.Domain/Clinical.Domain.csproj" />
     <Project Path="src/Modules/Clinical/Clinical.Infrastructure/Clinical.Infrastructure.csproj" />
+    <Project Path="src/Modules/Clinical/Clinical.Presentation/Clinical.Presentation.csproj" />
   </Folder>
   <Folder Name="/src/Modules/Optical/">
     <Project Path="src/Modules/Optical/Optical.Application/Optical.Application.csproj" />
