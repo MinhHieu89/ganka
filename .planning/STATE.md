@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 05-05a-PLAN.md
-last_updated: "2026-03-05T16:19:06.163Z"
+stopped_at: Completed 05-17a-PLAN.md
+last_updated: "2026-03-05T16:21:08.247Z"
 last_activity: 2026-03-05 -- Completed 05-01 Drug Catalog Domain Model
 progress:
   total_phases: 13
   completed_phases: 8
   total_plans: 88
-  completed_plans: 67
+  completed_plans: 69
 ---
 
 ---
@@ -155,6 +155,7 @@ Progress: [███████░░░] 73%
 | Phase 05 P04 | 4min | 2 tasks | 5 files |
 | Phase 05 P17b | 4min | 1 tasks | 3 files |
 | Phase 05 P05a | 4min | 1 tasks | 5 files |
+| Phase 05 P17a | 5min | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -361,6 +362,7 @@ Recent decisions affecting current work:
 - [Phase 05]: Vietnamese prescription terminology uses standard medical Vietnamese with proper diacritics
 - [Phase 05]: Pharmacy translations in separate namespace (pharmacy.json) to match module boundaries
 - [Phase 05]: Items collection on DrugPrescription uses PropertyAccessMode.Field for backing field _items
+- [Phase 05]: Used native fetch for PDF blob response handling; PrintButton with blob URL new-tab pattern; 30s revokeObjectURL delay
 
 ### Roadmap Evolution
 
@@ -382,6 +384,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-05T16:19:06.157Z
-Stopped at: Completed 05-05a-PLAN.md
+Last session: 2026-03-05T16:21:08.243Z
+Stopped at: Completed 05-17a-PLAN.md
 Resume file: None

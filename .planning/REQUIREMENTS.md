@@ -129,9 +129,9 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **PRT-01**: System prints drug prescriptions with clinic header, doctor name, patient info, drug list with dosage
 - [x] **PRT-02**: System prints glasses prescriptions (optical Rx) with refraction parameters
 - [ ] **PRT-03**: System prints invoices/receipts with itemized charges and payment method
-- [ ] **PRT-04**: System prints referral letters (giay chuyen vien) with patient info, diagnosis, reason
-- [ ] **PRT-05**: System prints treatment consent forms with patient name, procedure type, date
-- [ ] **PRT-06**: System prints pharmacy labels with patient name, drug name, dose, frequency, expiry
+- [x] **PRT-04**: System prints referral letters (giay chuyen vien) with patient info, diagnosis, reason
+- [x] **PRT-05**: System prints treatment consent forms with patient name, procedure type, date
+- [x] **PRT-06**: System prints pharmacy labels with patient name, drug name, dose, frequency, expiry
 
 ### Audit & Compliance
 
@@ -311,9 +311,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PRT-01 | Phase 5 | Complete |
 | PRT-02 | Phase 5 | Complete |
 | PRT-03 | Phase 5 | Pending |
-| PRT-04 | Phase 5 | Pending |
-| PRT-05 | Phase 5 | Pending |
-| PRT-06 | Phase 5 | Pending |
+| PRT-04 | Phase 5 | Complete |
+| PRT-05 | Phase 5 | Complete |
+| PRT-06 | Phase 5 | Complete |
 | AUD-01 | Phase 1 | Complete |
 | AUD-02 | Phase 1 | Complete |
 | AUD-03 | Phase 1 | Complete |
