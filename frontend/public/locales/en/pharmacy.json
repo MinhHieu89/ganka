@@ -1,0 +1,19 @@
+{
+  "catalog": {
+    "title": "Drug Catalog",
+    "addDrug": "Add Drug",
+    "editDrug": "Edit Drug",
+    "search": "Search drugs...",
+    "name": "Name",
+    "nameVi": "Vietnamese Name",
+    "genericName": "Generic Name",
+    "form": "Form",
+    "strength": "Strength",
+    "route": "Route",
+    "unit": "Unit",
+    "defaultDosage": "Default Dosage",
+    "active": "Active",
+    "inactive": "Inactive",
+    "empty": "No drugs in catalog"
+  }
+}
