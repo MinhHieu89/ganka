@@ -3,14 +3,30 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Phase 03.1 context gathered
-last_updated: "2026-03-05T03:56:32.363Z"
-last_activity: 2026-03-05 -- Completed 03-10 Gap Closure Refraction DTO Mismatch
+stopped_at: Completed 03.1-03-PLAN.md
+last_updated: "2026-03-05T04:27:24.227Z"
+last_activity: 2026-03-05 -- Completed 03.1-01 Auth & Patient User Stories
 progress:
   total_phases: 13
   completed_phases: 6
-  total_plans: 52
-  completed_plans: 52
+  total_plans: 55
+  completed_plans: 54
+  percent: 98
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: in-progress
+stopped_at: Phase 03.1 context gathered
+last_updated: "2026-03-05T04:27:00.473Z"
+last_activity: 2026-03-05 -- Completed 03-10 Gap Closure Refraction DTO Mismatch
+progress:
+  [██████████] 98%
+  completed_phases: 6
+  total_plans: 55
+  completed_plans: 54
 ---
 
 ---
@@ -51,16 +67,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-02-28)
 
 **Core value:** Doctors can manage chronic eye disease patients (Dry Eye, Myopia Control) with structured data tracking, image comparison across visits, and treatment progress reporting
-**Current focus:** Phase 03: Clinical Workflow & Examination
+**Current focus:** Phase 03.1: Create Vietnamese User Stories Documentation
 
 ## Current Position
 
-Phase: 03 (Clinical Workflow & Examination) -- COMPLETE
-Plan: 10 of 10 in current phase (all complete)
-Status: Phase 03 complete -- All 10 plans executed, all UAT gaps closed
-Last activity: 2026-03-05 -- Completed 03-10 Gap Closure Refraction DTO Mismatch
+Phase: 03.1 (Create Vietnamese User Stories Documentation) -- IN PROGRESS
+Plan: 1 of 3 in current phase (1 complete)
+Status: Completed 03.1-01 Authentication & Patient Management User Stories
+Last activity: 2026-03-05 -- Completed 03.1-01 Auth & Patient User Stories
 
-Progress: [##########] 100%
+Progress: [##########] 98%
 
 ## Performance Metrics
 
@@ -125,6 +141,8 @@ Progress: [##########] 100%
 | Phase 03 P07 | 5min | 2 tasks | 2 files |
 | Phase 03 P09 | 5min | 2 tasks | 4 files |
 | Phase 03 P10 | 5min | 2 tasks | 4 files |
+| Phase 03.1 P03 | 4min | 2 tasks | 2 files |
+| Phase 03.1 P01 | 4min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -289,6 +307,9 @@ Recent decisions affecting current work:
 - [Phase 03]: [03-09]: IOP method Select uses undefined (not empty string) for null state to avoid controlled/uncontrolled React warning
 - [Phase 03]: [03-10]: RefractionDto uses 'type' (read path) while updateRefraction sends 'refractionType' (write path) -- asymmetric DTO naming matches backend C# record vs command
 - [Phase 03]: [03-10]: IOP Select uses empty string (not undefined) for no-selection state -- supersedes 03-09 decision, keeps Select always controlled
+- [Phase 03.1]: 6 admin workflow audit stories including viewer and export (not just 4 system-level)
+- [Phase 03.1]: Architecture stories framed from admin/manager perspective with business-value benefits
+- [Phase 03.1]: 8 stories per file covering 5 core requirements plus 3 admin/workflow stories each for comprehensive domain coverage
 
 ### Roadmap Evolution
 
@@ -310,6 +331,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-05T03:56:32.359Z
-Stopped at: Phase 03.1 context gathered
-Resume file: .planning/phases/03.1-create-vietnamese-user-stories-documentation-for-all-implemented-features/03.1-CONTEXT.md
+Last session: 2026-03-05T04:27:24.223Z
+Stopped at: Completed 03.1-03-PLAN.md
+Resume file: None
