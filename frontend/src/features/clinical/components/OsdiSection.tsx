@@ -52,7 +52,10 @@ export function OsdiSection({ visitId, patientId, assessment, disabled }: OsdiSe
   const handleGenerateLink = useCallback(() => {
     generateLinkMutation.mutate(visitId, {
       onSuccess: (data) => {
-        setOsdiLink(data)
+        const fullUrl = data.url.startsWith("http")
+          ? data.url
+          : `${window.location.origin}${data.url}`
+        setOsdiLink({ ...data, url: fullUrl })
         setShowQrCode(true)
         toast.success(t("osdi.linkGenerated"))
       },

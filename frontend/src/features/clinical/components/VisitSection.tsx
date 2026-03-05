@@ -31,15 +31,15 @@ export function VisitSection({
   return (
     <Collapsible defaultOpen={defaultOpen}>
       <Card className={cn(className)}>
-        <CollapsibleTrigger asChild>
-          <CardHeader className="cursor-pointer flex flex-row items-center justify-between py-3">
-            <div className="flex items-center gap-2">
+        <CardHeader className="flex flex-row items-center justify-between py-3">
+          <CollapsibleTrigger asChild>
+            <div className="flex items-center gap-2 cursor-pointer flex-1">
               <CardTitle className="text-base">{title}</CardTitle>
-              {headerExtra}
+              <IconChevronDown className="h-4 w-4 shrink-0 transition-transform [[data-state=open]>&]:rotate-180" />
             </div>
-            <IconChevronDown className="h-4 w-4 shrink-0 transition-transform [[data-state=open]>&]:rotate-180" />
-          </CardHeader>
-        </CollapsibleTrigger>
+          </CollapsibleTrigger>
+          {headerExtra}
+        </CardHeader>
         <CollapsibleContent>
           <CardContent className="pt-0">{children}</CardContent>
         </CollapsibleContent>
