@@ -16,6 +16,7 @@ import { Route as BookIndexRouteImport } from './routes/book/index'
 import { Route as OsdiTokenRouteImport } from './routes/osdi/$token'
 import { Route as BookStatusRouteImport } from './routes/book/status'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedPharmacyIndexRouteImport } from './routes/_authenticated/pharmacy/index'
 import { Route as AuthenticatedPatientsIndexRouteImport } from './routes/_authenticated/patients/index'
 import { Route as AuthenticatedClinicalIndexRouteImport } from './routes/_authenticated/clinical/index'
 import { Route as AuthenticatedAppointmentsIndexRouteImport } from './routes/_authenticated/appointments/index'
@@ -59,6 +60,12 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedPharmacyIndexRoute =
+  AuthenticatedPharmacyIndexRouteImport.update({
+    id: '/pharmacy/',
+    path: '/pharmacy/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedPatientsIndexRoute =
   AuthenticatedPatientsIndexRouteImport.update({
     id: '/patients/',
@@ -121,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/appointments/': typeof AuthenticatedAppointmentsIndexRoute
   '/clinical/': typeof AuthenticatedClinicalIndexRoute
   '/patients/': typeof AuthenticatedPatientsIndexRoute
+  '/pharmacy/': typeof AuthenticatedPharmacyIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -137,6 +145,7 @@ export interface FileRoutesByTo {
   '/appointments': typeof AuthenticatedAppointmentsIndexRoute
   '/clinical': typeof AuthenticatedClinicalIndexRoute
   '/patients': typeof AuthenticatedPatientsIndexRoute
+  '/pharmacy': typeof AuthenticatedPharmacyIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -155,6 +164,7 @@ export interface FileRoutesById {
   '/_authenticated/appointments/': typeof AuthenticatedAppointmentsIndexRoute
   '/_authenticated/clinical/': typeof AuthenticatedClinicalIndexRoute
   '/_authenticated/patients/': typeof AuthenticatedPatientsIndexRoute
+  '/_authenticated/pharmacy/': typeof AuthenticatedPharmacyIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -173,6 +183,7 @@ export interface FileRouteTypes {
     | '/appointments/'
     | '/clinical/'
     | '/patients/'
+    | '/pharmacy/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -189,6 +200,7 @@ export interface FileRouteTypes {
     | '/appointments'
     | '/clinical'
     | '/patients'
+    | '/pharmacy'
   id:
     | '__root__'
     | '/'
@@ -206,6 +218,7 @@ export interface FileRouteTypes {
     | '/_authenticated/appointments/'
     | '/_authenticated/clinical/'
     | '/_authenticated/patients/'
+    | '/_authenticated/pharmacy/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -266,6 +279,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/pharmacy/': {
+      id: '/_authenticated/pharmacy/'
+      path: '/pharmacy'
+      fullPath: '/pharmacy/'
+      preLoaderRoute: typeof AuthenticatedPharmacyIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/patients/': {
@@ -337,6 +357,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedAppointmentsIndexRoute: typeof AuthenticatedAppointmentsIndexRoute
   AuthenticatedClinicalIndexRoute: typeof AuthenticatedClinicalIndexRoute
   AuthenticatedPatientsIndexRoute: typeof AuthenticatedPatientsIndexRoute
+  AuthenticatedPharmacyIndexRoute: typeof AuthenticatedPharmacyIndexRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
@@ -349,6 +370,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAppointmentsIndexRoute: AuthenticatedAppointmentsIndexRoute,
   AuthenticatedClinicalIndexRoute: AuthenticatedClinicalIndexRoute,
   AuthenticatedPatientsIndexRoute: AuthenticatedPatientsIndexRoute,
+  AuthenticatedPharmacyIndexRoute: AuthenticatedPharmacyIndexRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
