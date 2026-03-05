@@ -1,0 +1,42 @@
+{
+  "catalog": {
+    "title": "Danh mục thuốc",
+    "addDrug": "Thêm thuốc",
+    "editDrug": "Sửa thuốc",
+    "search": "Tìm kiếm thuốc...",
+    "name": "Tên thuốc",
+    "nameVi": "Tên tiếng Việt",
+    "genericName": "Hoạt chất",
+    "form": "Dạng bào chế",
+    "strength": "Hàm lượng",
+    "route": "Đường dùng",
+    "unit": "Đơn vị",
+    "defaultDosage": "Liều mặc định",
+    "active": "Hoạt động",
+    "inactive": "Ngừng hoạt động",
+    "empty": "Danh mục thuốc trống",
+    "created": "Thêm thuốc thành công",
+    "updated": "Cập nhật thuốc thành công"
+  },
+  "form": {
+    "eyeDrops": "Thuốc nhỏ mắt",
+    "tablet": "Viên nén",
+    "capsule": "Viên nang",
+    "ointment": "Thuốc mỡ",
+    "injection": "Thuốc tiêm",
+    "gel": "Gel",
+    "solution": "Dung dịch",
+    "suspension": "Hỗn dịch",
+    "cream": "Kem",
+    "spray": "Xịt"
+  },
+  "route": {
+    "topical": "Tại chỗ",
+    "oral": "Uống",
+    "intramuscular": "Tiêm bắp",
+    "intravenous": "Tiêm tĩnh mạch",
+    "subconjunctival": "Tiêm dưới kết mạc",
+    "intravitreal": "Tiêm nội nhãn",
+    "periocular": "Quanh nhãn cầu"
+  }
+}
