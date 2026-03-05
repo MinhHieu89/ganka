@@ -13,6 +13,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BookIndexRouteImport } from './routes/book/index'
+import { Route as OsdiTokenRouteImport } from './routes/osdi/$token'
 import { Route as BookStatusRouteImport } from './routes/book/status'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedPatientsIndexRouteImport } from './routes/_authenticated/patients/index'
@@ -41,6 +42,11 @@ const IndexRoute = IndexRouteImport.update({
 const BookIndexRoute = BookIndexRouteImport.update({
   id: '/book/',
   path: '/book/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OsdiTokenRoute = OsdiTokenRouteImport.update({
+  id: '/osdi/$token',
+  path: '/osdi/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BookStatusRoute = BookStatusRouteImport.update({
@@ -105,6 +111,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/book/status': typeof BookStatusRoute
+  '/osdi/$token': typeof OsdiTokenRoute
   '/book/': typeof BookIndexRoute
   '/admin/audit-logs': typeof AuthenticatedAdminAuditLogsRoute
   '/admin/roles': typeof AuthenticatedAdminRolesRoute
@@ -120,6 +127,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/book/status': typeof BookStatusRoute
+  '/osdi/$token': typeof OsdiTokenRoute
   '/book': typeof BookIndexRoute
   '/admin/audit-logs': typeof AuthenticatedAdminAuditLogsRoute
   '/admin/roles': typeof AuthenticatedAdminRolesRoute
@@ -137,6 +145,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/book/status': typeof BookStatusRoute
+  '/osdi/$token': typeof OsdiTokenRoute
   '/book/': typeof BookIndexRoute
   '/_authenticated/admin/audit-logs': typeof AuthenticatedAdminAuditLogsRoute
   '/_authenticated/admin/roles': typeof AuthenticatedAdminRolesRoute
@@ -154,6 +163,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/dashboard'
     | '/book/status'
+    | '/osdi/$token'
     | '/book/'
     | '/admin/audit-logs'
     | '/admin/roles'
@@ -169,6 +179,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/dashboard'
     | '/book/status'
+    | '/osdi/$token'
     | '/book'
     | '/admin/audit-logs'
     | '/admin/roles'
@@ -185,6 +196,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/_authenticated/dashboard'
     | '/book/status'
+    | '/osdi/$token'
     | '/book/'
     | '/_authenticated/admin/audit-logs'
     | '/_authenticated/admin/roles'
@@ -201,6 +213,7 @@ export interface RootRouteChildren {
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   LoginRoute: typeof LoginRoute
   BookStatusRoute: typeof BookStatusRoute
+  OsdiTokenRoute: typeof OsdiTokenRoute
   BookIndexRoute: typeof BookIndexRoute
 }
 
@@ -232,6 +245,13 @@ declare module '@tanstack/react-router' {
       path: '/book'
       fullPath: '/book/'
       preLoaderRoute: typeof BookIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/osdi/$token': {
+      id: '/osdi/$token'
+      path: '/osdi/$token'
+      fullPath: '/osdi/$token'
+      preLoaderRoute: typeof OsdiTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/book/status': {
@@ -340,6 +360,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   LoginRoute: LoginRoute,
   BookStatusRoute: BookStatusRoute,
+  OsdiTokenRoute: OsdiTokenRoute,
   BookIndexRoute: BookIndexRoute,
 }
 export const routeTree = rootRouteImport
