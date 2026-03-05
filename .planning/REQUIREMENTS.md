@@ -57,7 +57,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **RX-01**: Doctor can write drug prescription by selecting from pharmacy catalog or adding off-catalog drugs
 - [x] **RX-02**: Catalog-linked prescriptions auto-deduct stock when dispensed; off-catalog drugs flagged as manual
 - [x] **RX-03**: Doctor can write glasses prescription (optical Rx) with full refraction parameters
-- [ ] **RX-04**: Prescriptions comply with MOH format requirements (required fields, dosage format per Bo Y te)
+- [x] **RX-04**: Prescriptions comply with MOH format requirements (required fields, dosage format per Bo Y te)
 - [x] **RX-05**: System warns when prescribing drugs the patient is allergic to
 
 ### Appointment Scheduling
@@ -260,7 +260,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | RX-01 | Phase 5 | Complete |
 | RX-02 | Phase 5 | Complete |
 | RX-03 | Phase 5 | Complete |
-| RX-04 | Phase 5 | Pending |
+| RX-04 | Phase 5 | Complete |
 | RX-05 | Phase 5 | Complete |
 | SCH-01 | Phase 2 | Complete |
 | SCH-02 | Phase 2 | Complete |

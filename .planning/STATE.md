@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 05-06-PLAN.md
-last_updated: "2026-03-05T16:53:04Z"
-last_activity: 2026-03-05 -- Completed 05-06 Drug Prescription Handlers
+stopped_at: Completed 05-10-PLAN.md
+last_updated: "2026-03-05T17:02:32Z"
+last_activity: 2026-03-05 -- Completed 05-10 Integration Wiring & Migrations
 progress:
   total_phases: 13
   completed_phases: 8
   total_plans: 108
-  completed_plans: 78
-  percent: 72
+  completed_plans: 79
+  percent: 73
 ---
 
 # Project State
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 ## Current Position
 
 Phase: 05 (Prescriptions & Document Printing) -- IN PROGRESS
-Plan: 06 of 25 in current phase (11 complete)
-Status: Completed 05-06 Drug Prescription Handlers
-Last activity: 2026-03-05 -- Completed 05-06 Drug Prescription Handlers
+Plan: 10 of 25 in current phase (12 complete)
+Status: Completed 05-10 Integration Wiring & Migrations
+Last activity: 2026-03-05 -- Completed 05-10 Integration Wiring & Migrations
 
 Progress: [████████░░] 84%
 
@@ -120,6 +120,7 @@ Progress: [████████░░] 84%
 | Phase 05 P02 | 5min | 2 tasks | 4 files |
 | Phase 05 P08 | 3min | 2 tasks | 8 files |
 | Phase 05 P07 | 3min | 1 tasks | 6 files |
+| Phase 05 P10 | 6min | 2 tasks | 14 files |
 | Phase 05 P06 | 8min | 2 tasks | 9 files |
 
 ## Accumulated Context
@@ -347,6 +348,8 @@ Recent decisions affecting current work:
 - [Phase 05]: GetAllActiveDrugsQuery handler added for admin list endpoint (not in original plan scope)
 - [Phase 05]: UnitOfWork implementation created as missing prerequisite for IoC registration
 - [Phase 05]: [05-07]: RemoveOpticalPrescriptions called before SetOpticalPrescription to sync EF Core change tracker with domain backing field clear
+- [Phase 05]: [05-10]: Patient.Contracts reference added to Clinical.Presentation for AllergyDto type in CheckDrugAllergy endpoint
+- [Phase 05]: [05-10]: ClinicSettings migration created alongside prescription migrations (Plan 09 had no migration)
 - [Phase 05]: [05-06]: Clinical.Application references Patient.Contracts for cross-module allergy query via IMessageBus
 - [Phase 05]: [05-06]: GetPatientAllergiesQuery in Patient.Contracts (not Patient.Application) for proper module boundary
 - [Phase 05]: [05-06]: Bidirectional Contains matching for drug-allergy: checks both drug name contains allergy AND allergy contains drug name
@@ -371,6 +374,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-05T16:53:04Z
-Stopped at: Completed 05-06-PLAN.md
+Last session: 2026-03-05T17:02:32Z
+Stopped at: Completed 05-10-PLAN.md
 Resume file: None
