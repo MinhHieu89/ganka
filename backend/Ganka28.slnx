@@ -48,6 +48,7 @@
     <Project Path="src/Modules/Pharmacy/Pharmacy.Contracts/Pharmacy.Contracts.csproj" />
     <Project Path="src/Modules/Pharmacy/Pharmacy.Domain/Pharmacy.Domain.csproj" />
     <Project Path="src/Modules/Pharmacy/Pharmacy.Infrastructure/Pharmacy.Infrastructure.csproj" />
+    <Project Path="src/Modules/Pharmacy/Pharmacy.Presentation/Pharmacy.Presentation.csproj" />
   </Folder>
   <Folder Name="/src/Modules/Scheduling/">
     <Project Path="src/Modules/Scheduling/Scheduling.Application/Scheduling.Application.csproj" />
