@@ -43,6 +43,7 @@
     <ProjectReference Include="..\Modules\Patient\Patient.Presentation\Patient.Presentation.csproj" />
     <ProjectReference Include="..\Modules\Scheduling\Scheduling.Presentation\Scheduling.Presentation.csproj" />
     <ProjectReference Include="..\Modules\Clinical\Clinical.Presentation\Clinical.Presentation.csproj" />
+    <ProjectReference Include="..\Modules\Pharmacy\Pharmacy.Presentation\Pharmacy.Presentation.csproj" />
   </ItemGroup>
 
   <!-- Module Infrastructure layers (DbContexts, repos, external services) -->

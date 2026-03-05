@@ -33,7 +33,10 @@ using Clinical.Application;
 using Clinical.Presentation;
 using Scheduling.Application;
 using Scheduling.Presentation;
+using Pharmacy.Application;
+using Pharmacy.Presentation;
 using Shared.Infrastructure;
+using Shared.Presentation;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.RateLimiting;
 
@@ -73,6 +76,11 @@ builder.Services.AddSchedulingPresentation();
 builder.Services.AddClinicalApplication();
 builder.Services.AddClinicalInfrastructure();
 builder.Services.AddClinicalPresentation();
+
+// Pharmacy module
+builder.Services.AddPharmacyApplication();
+builder.Services.AddPharmacyInfrastructure();
+builder.Services.AddPharmacyPresentation();
 
 // ---------------------------------------------------------------------------
 // EF Core DbContexts -- module DbContexts with AuditInterceptor
@@ -293,6 +301,8 @@ app.MapSchedulingApiEndpoints();
 app.MapPublicBookingEndpoints();
 app.MapPublicOsdiEndpoints();
 app.MapClinicalApiEndpoints();
+app.MapPharmacyApiEndpoints();
+app.MapSettingsApiEndpoints();
 
 app.Run();
 

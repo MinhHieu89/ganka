@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Routing;
 using Clinical.Application.Features;
 using Clinical.Application.Interfaces;
 using Clinical.Contracts.Dtos;
+using Patient.Contracts.Dtos;
 using Shared.Domain;
 using Shared.Presentation;
 using Wolverine;
@@ -26,6 +27,7 @@ public static class ClinicalApiEndpoints
         MapIcd10Endpoints(group);
         MapDryEyeEndpoints(group);
         MapMedicalImageEndpoints(group);
+        MapPrescriptionEndpoints(group);
         MapPrintEndpoints(group);
 
         return app;
@@ -203,6 +205,67 @@ public static class ClinicalApiEndpoints
             return result.ToHttpResult();
         });
     }
+    private static void MapPrescriptionEndpoints(RouteGroupBuilder group)
+    {
+        // Drug prescription endpoints
+        group.MapPost("/{visitId:guid}/drug-prescriptions", async (Guid visitId, AddDrugPrescriptionCommand command, IMessageBus bus, CancellationToken ct) =>
+        {
+            var enriched = new AddDrugPrescriptionCommand(visitId, command.Notes, command.Items);
+            var result = await bus.InvokeAsync<Result<Guid>>(enriched, ct);
+            return result.ToCreatedHttpResult($"/api/clinical/{visitId}/drug-prescriptions");
+        });
+
+        group.MapPut("/{visitId:guid}/drug-prescriptions/{prescriptionId:guid}", async (Guid visitId, Guid prescriptionId, UpdateDrugPrescriptionCommand command, IMessageBus bus, CancellationToken ct) =>
+        {
+            var enriched = new UpdateDrugPrescriptionCommand(visitId, prescriptionId, command.Notes);
+            var result = await bus.InvokeAsync<Result>(enriched, ct);
+            return result.ToHttpResult();
+        });
+
+        group.MapDelete("/{visitId:guid}/drug-prescriptions/{prescriptionId:guid}", async (Guid visitId, Guid prescriptionId, IMessageBus bus, CancellationToken ct) =>
+        {
+            var result = await bus.InvokeAsync<Result>(new RemoveDrugPrescriptionCommand(visitId, prescriptionId), ct);
+            return result.ToHttpResult();
+        });
+
+        // Allergy check
+        group.MapGet("/{visitId:guid}/check-drug-allergy", async ([AsParameters] CheckDrugAllergyParams p, IMessageBus bus, CancellationToken ct) =>
+        {
+            var query = new CheckDrugAllergyQuery(p.PatientId, p.DrugName ?? "", p.GenericName);
+            var matches = await bus.InvokeAsync<List<AllergyDto>>(query, ct);
+            return Results.Ok(matches);
+        });
+
+        // Optical prescription endpoints
+        group.MapPost("/{visitId:guid}/optical-prescription", async (Guid visitId, AddOpticalPrescriptionCommand command, IMessageBus bus, CancellationToken ct) =>
+        {
+            var enriched = new AddOpticalPrescriptionCommand(
+                visitId,
+                command.OdSph, command.OdCyl, command.OdAxis, command.OdAdd,
+                command.OsSph, command.OsCyl, command.OsAxis, command.OsAdd,
+                command.FarPd, command.NearPd,
+                command.NearOdSph, command.NearOdCyl, command.NearOdAxis,
+                command.NearOsSph, command.NearOsCyl, command.NearOsAxis,
+                command.LensType, command.Notes);
+            var result = await bus.InvokeAsync<Result<Guid>>(enriched, ct);
+            return result.ToCreatedHttpResult($"/api/clinical/{visitId}/optical-prescription");
+        });
+
+        group.MapPut("/{visitId:guid}/optical-prescription/{prescriptionId:guid}", async (Guid visitId, Guid prescriptionId, UpdateOpticalPrescriptionCommand command, IMessageBus bus, CancellationToken ct) =>
+        {
+            var enriched = new UpdateOpticalPrescriptionCommand(
+                visitId, prescriptionId,
+                command.OdSph, command.OdCyl, command.OdAxis, command.OdAdd,
+                command.OsSph, command.OsCyl, command.OsAxis, command.OsAdd,
+                command.FarPd, command.NearPd,
+                command.NearOdSph, command.NearOdCyl, command.NearOdAxis,
+                command.NearOsSph, command.NearOsCyl, command.NearOsAxis,
+                command.LensType, command.Notes);
+            var result = await bus.InvokeAsync<Result>(enriched, ct);
+            return result.ToHttpResult();
+        });
+    }
+
     private static void MapPrintEndpoints(RouteGroupBuilder group)
     {
         group.MapGet("/{visitId:guid}/print/drug-rx", async (Guid visitId, IDocumentService docs, CancellationToken ct) =>
@@ -247,4 +310,14 @@ public class ImageUploadParams
 
     [Microsoft.AspNetCore.Mvc.FromForm(Name = "eyeTag")]
     public int? EyeTag { get; set; }
+}
+
+/// <summary>
+/// Query string binding for drug allergy check endpoint.
+/// </summary>
+public class CheckDrugAllergyParams
+{
+    public Guid PatientId { get; set; }
+    public string? DrugName { get; set; }
+    public string? GenericName { get; set; }
 }
