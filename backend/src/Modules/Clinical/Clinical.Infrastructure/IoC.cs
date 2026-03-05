@@ -17,6 +17,8 @@ public static class IoC
         // Repositories
         services.AddScoped<IVisitRepository, VisitRepository>();
         services.AddScoped<IDoctorIcd10FavoriteRepository, DoctorIcd10FavoriteRepository>();
+        services.AddScoped<IMedicalImageRepository, MedicalImageRepository>();
+        services.AddScoped<IOsdiSubmissionRepository, OsdiSubmissionRepository>();
 
         // Unit of Work
         services.AddScoped<IUnitOfWork, UnitOfWork>();

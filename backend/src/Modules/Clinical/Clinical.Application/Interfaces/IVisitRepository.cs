@@ -48,4 +48,21 @@ public interface IVisitRepository
     /// Explicitly adds a VisitAmendment entity to the change tracker as Added.
     /// </summary>
     void AddAmendment(VisitAmendment amendment);
+
+    /// <summary>
+    /// Explicitly adds a DryEyeAssessment entity to the change tracker as Added.
+    /// Required because adding through Visit aggregate backing field does not register with EF Core.
+    /// </summary>
+    void AddDryEyeAssessment(DryEyeAssessment assessment);
+
+    /// <summary>
+    /// Gets all dry eye assessments for a patient across visits, for trend chart display.
+    /// Includes Visit navigation for VisitDate, ordered by VisitDate.
+    /// </summary>
+    Task<List<DryEyeAssessment>> GetDryEyeAssessmentsByPatientAsync(Guid patientId, CancellationToken ct = default);
+
+    /// <summary>
+    /// Gets the dry eye assessment for a specific visit.
+    /// </summary>
+    Task<DryEyeAssessment?> GetDryEyeAssessmentByVisitAsync(Guid visitId, CancellationToken ct = default);
 }

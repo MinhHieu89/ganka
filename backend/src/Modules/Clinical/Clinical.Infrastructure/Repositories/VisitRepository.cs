@@ -28,6 +28,7 @@ public sealed class VisitRepository : IVisitRepository
         return await _dbContext.Visits
             .Include(v => v.Refractions)
             .Include(v => v.Diagnoses)
+            .Include(v => v.DryEyeAssessments)
             .Include(v => v.Amendments)
             .FirstOrDefaultAsync(v => v.Id == id, ct);
     }
@@ -72,5 +73,31 @@ public sealed class VisitRepository : IVisitRepository
     public void AddAmendment(VisitAmendment amendment)
     {
         _dbContext.VisitAmendments.Add(amendment);
+    }
+
+    public void AddDryEyeAssessment(DryEyeAssessment assessment)
+    {
+        _dbContext.DryEyeAssessments.Add(assessment);
+    }
+
+    public async Task<List<DryEyeAssessment>> GetDryEyeAssessmentsByPatientAsync(Guid patientId, CancellationToken ct = default)
+    {
+        return await _dbContext.DryEyeAssessments
+            .AsNoTracking()
+            .Join(
+                _dbContext.Visits,
+                d => d.VisitId,
+                v => v.Id,
+                (d, v) => new { Assessment = d, Visit = v })
+            .Where(x => x.Visit.PatientId == patientId && !x.Visit.IsDeleted)
+            .OrderBy(x => x.Visit.VisitDate)
+            .Select(x => x.Assessment)
+            .ToListAsync(ct);
+    }
+
+    public async Task<DryEyeAssessment?> GetDryEyeAssessmentByVisitAsync(Guid visitId, CancellationToken ct = default)
+    {
+        return await _dbContext.DryEyeAssessments
+            .FirstOrDefaultAsync(d => d.VisitId == visitId, ct);
     }
 }
