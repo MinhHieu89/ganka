@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Phase 9 context gathered
-last_updated: "2026-03-05T16:26:43.752Z"
+stopped_at: Completed 05-12b-PLAN.md
+last_updated: "2026-03-05T16:31:21.349Z"
 last_activity: 2026-03-05 -- Completed 05-12a Remaining Document Types
 progress:
   total_phases: 13
   completed_phases: 8
   total_plans: 88
-  completed_plans: 70
+  completed_plans: 72
   percent: 80
 ---
 
@@ -41,9 +41,9 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 ## Current Position
 
 Phase: 05 (Prescriptions & Document Printing) -- IN PROGRESS
-Plan: 12a of 25 in current phase (7 complete)
-Status: Completed 05-12a Remaining Document Types
-Last activity: 2026-03-05 -- Completed 05-12a Remaining Document Types
+Plan: 05b of 25 in current phase (8 complete)
+Status: Completed 05-05b ClinicalDbContext DbSets and Prescription Contract DTOs
+Last activity: 2026-03-05 -- Completed 05-05b ClinicalDbContext DbSets and Contract DTOs
 
 Progress: [████████░░] 80%
 
@@ -128,6 +128,7 @@ Progress: [████████░░] 80%
 | Phase 05 P17a | 5min | 2 tasks | 8 files |
 | Phase 05 P12a | 5min | 2 tasks | 4 files |
 | Phase 05 P09 | 7min | 2 tasks | 6 files |
+| Phase 05 P12b | 15min | 1 tasks | 17 files |
 
 ## Accumulated Context
 
@@ -341,6 +342,9 @@ Recent decisions affecting current work:
 - [Phase 05]: ClinicSettings added to ReferenceDbContext (reference schema) as cross-module shared data
 - [Phase 05]: DTOs defined inline in interface file to avoid adding Shared.Contracts project reference to Shared.Application
 - [Phase 05]: Upsert pattern for CreateOrUpdateAsync -- single settings row per branch
+- [Phase 05]: Cross-schema raw SQL for patient data in DocumentService (avoids cross-module project reference)
+- [Phase 05]: QuestPDF Community license with embedded Noto Sans fonts for Vietnamese diacritics
+- [Phase 05]: Print endpoint pattern: GET /api/clinical/{visitId}/print/{docType} returning Results.File(pdf, application/pdf)
 
 ### Roadmap Evolution
 
@@ -362,6 +366,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-05T16:26:43.748Z
-Stopped at: Phase 9 context gathered
-Resume file: .planning/phases/09-treatment-protocols/09-CONTEXT.md
+Last session: 2026-03-05T16:31:21.345Z
+Stopped at: Completed 05-12b-PLAN.md
+Resume file: None
