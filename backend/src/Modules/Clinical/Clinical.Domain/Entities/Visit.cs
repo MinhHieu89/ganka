@@ -37,6 +37,12 @@ public class Visit : AggregateRoot, IAuditable
     private readonly List<VisitAmendment> _amendments = [];
     public IReadOnlyCollection<VisitAmendment> Amendments => _amendments.AsReadOnly();
 
+    private readonly List<DrugPrescription> _drugPrescriptions = [];
+    public IReadOnlyCollection<DrugPrescription> DrugPrescriptions => _drugPrescriptions.AsReadOnly();
+
+    private readonly List<OpticalPrescription> _opticalPrescriptions = [];
+    public IReadOnlyCollection<OpticalPrescription> OpticalPrescriptions => _opticalPrescriptions.AsReadOnly();
+
     private Visit() { }
 
     /// <summary>
@@ -149,6 +155,40 @@ public class Visit : AggregateRoot, IAuditable
             throw new InvalidOperationException($"Diagnosis with ID {diagnosisId} not found.");
 
         _diagnoses.Remove(diagnosis);
+        SetUpdatedAt();
+    }
+
+    /// <summary>
+    /// Adds a drug prescription to the visit. Requires the visit to be editable.
+    /// </summary>
+    public void AddDrugPrescription(DrugPrescription prescription)
+    {
+        EnsureEditable();
+        _drugPrescriptions.Add(prescription);
+        SetUpdatedAt();
+    }
+
+    /// <summary>
+    /// Removes a drug prescription by ID. Requires the visit to be editable.
+    /// </summary>
+    public void RemoveDrugPrescription(Guid prescriptionId)
+    {
+        EnsureEditable();
+        var rx = _drugPrescriptions.FirstOrDefault(p => p.Id == prescriptionId)
+            ?? throw new InvalidOperationException($"Drug prescription {prescriptionId} not found.");
+        _drugPrescriptions.Remove(rx);
+        SetUpdatedAt();
+    }
+
+    /// <summary>
+    /// Sets the optical prescription for the visit. Only one allowed per visit.
+    /// Clears any existing optical prescription first. Requires the visit to be editable.
+    /// </summary>
+    public void SetOpticalPrescription(OpticalPrescription prescription)
+    {
+        EnsureEditable();
+        _opticalPrescriptions.Clear();
+        _opticalPrescriptions.Add(prescription);
         SetUpdatedAt();
     }
 
