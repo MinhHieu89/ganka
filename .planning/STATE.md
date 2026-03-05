@@ -67,14 +67,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-02-28)
 
 **Core value:** Doctors can manage chronic eye disease patients (Dry Eye, Myopia Control) with structured data tracking, image comparison across visits, and treatment progress reporting
-**Current focus:** Phase 03.1: Create Vietnamese User Stories Documentation
+**Current focus:** Phase 04: Dry Eye Template & Medical Imaging
 
 ## Current Position
 
-Phase: 03.1 (Create Vietnamese User Stories Documentation) -- IN PROGRESS
-Plan: 1 of 3 in current phase (1 complete)
-Status: Completed 03.1-01 Authentication & Patient Management User Stories
-Last activity: 2026-03-05 -- Completed 03.1-01 Auth & Patient User Stories
+Phase: 04 (Dry Eye Template & Medical Imaging) -- IN PROGRESS
+Plan: 5 of 7 in current phase (5 complete)
+Status: Completed 04-05 Medical Imaging UI & Public OSDI Self-Fill
+Last activity: 2026-03-05 -- Completed 04-05 Medical Imaging UI & Public OSDI Self-Fill
 
 Progress: [##########] 98%
 
@@ -149,6 +149,7 @@ Progress: [##########] 98%
 | Phase 04 P01b | 6min | 1 tasks | 15 files |
 | Phase 04 P02 | 10min | 2 tasks | 12 files |
 | Phase 04 P03 | 11min | 2 tasks | 15 files |
+| Phase 04 P05 | 12min | 2 tasks | 11 files |
 
 ## Accumulated Context
 
@@ -334,6 +335,11 @@ Recent decisions affecting current work:
 - [Phase 04]: File upload uses IFormFile + [AsParameters] ImageUploadParams for imageType/eyeTag form fields with DisableAntiforgery()
 - [Phase 04]: SAS URLs generated with 1-hour expiry for all image access; AllowedContentTypes as static class with separate image/video sets
 - [Phase 04]: Public OSDI endpoints reuse public-booking rate limit policy; GetOsdiByTokenQuery in Contracts for cross-layer access
+- [Phase 04]: [04-05]: Image upload uses native fetch + FormData (not openapi-fetch) following patient photo upload pattern
+- [Phase 04]: [04-05]: SAS URL query cache uses staleTime 30 minutes for refresh before 1-hour SAS expiry
+- [Phase 04]: [04-05]: Image comparison uses Dialog (full-screen overlay) with two independently scrollable panels
+- [Phase 04]: [04-05]: Public OSDI page uses separate publicApi client without auth middleware following booking page pattern
+- [Phase 04]: [04-05]: OSDI questions display Vietnamese primary with English secondary; Q1-5 mandatory, Q6-12 support N/A
 
 ### Roadmap Evolution
 
@@ -355,6 +361,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-05T06:42:58.734Z
-Stopped at: Completed 04-03-PLAN.md
+Last session: 2026-03-05T06:57:40Z
+Stopped at: Completed 04-05-PLAN.md
 Resume file: None
