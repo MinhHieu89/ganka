@@ -5,11 +5,6 @@ using Shared.Domain;
 namespace Clinical.Application.Features;
 
 /// <summary>
-/// Query for getting OSDI questionnaire by public token.
-/// </summary>
-public sealed record GetOsdiByTokenQuery(string Token);
-
-/// <summary>
 /// Wolverine handler for retrieving the OSDI questionnaire via public token.
 /// Returns the 12 OSDI questions with Vietnamese and English text.
 /// Returns minimal data (questions + visit date only) for security.
