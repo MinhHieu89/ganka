@@ -188,7 +188,7 @@ Plans:
   3. System warns the doctor when prescribing a drug the patient is allergic to (using allergy data from patient profile)
   4. All prescriptions comply with MOH format requirements (required fields, dosage format per Bo Y te regulations)
   5. Staff can print drug prescriptions, optical Rx, invoices/receipts, referral letters, consent forms, and pharmacy labels -- all with correct clinic branding and formatting
-**Plans**: 24 plans in 9 waves
+**Plans**: 25 plans in 9 waves
 
 Plans:
 - [ ] 05-01-PLAN.md -- Pharmacy drug catalog domain entities, enums, contracts DTOs
@@ -200,8 +200,9 @@ Plans:
 - [ ] 05-06-PLAN.md -- [TDD] Drug prescription handlers: add, update, remove, allergy check
 - [ ] 05-07-PLAN.md -- [TDD] Optical prescription handlers: add, update
 - [ ] 05-08-PLAN.md -- Pharmacy Presentation layer: API endpoints, IoC registration
-- [ ] 05-09-PLAN.md -- Clinic settings entity, service, EF config for configurable document headers
-- [ ] 05-10-PLAN.md -- Integration: prescription endpoints in ClinicalAPI, Bootstrapper wiring, NuGet packages, migration
+- [ ] 05-09-PLAN.md -- Clinic settings entity, service, EF config, DI registration for configurable document headers
+- [ ] 05-09b-PLAN.md -- Clinic settings HTTP API endpoints (GET/PUT /api/settings/clinic)
+- [ ] 05-10-PLAN.md -- Integration: prescription endpoints in ClinicalAPI, Bootstrapper wiring, settings endpoint wiring, NuGet packages, migration
 - [ ] 05-11-PLAN.md -- QuestPDF infrastructure: font manager, clinic header component, drug prescription PDF (A5)
 - [ ] 05-12a-PLAN.md -- PDF documents: optical Rx, referral letter, consent form, pharmacy label
 - [ ] 05-12b-PLAN.md -- Complete DocumentService + print API endpoints
@@ -301,7 +302,7 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 | 3. Clinical Workflow & Examination | 9/10 | In Progress | - |
 | 3.1 Vietnamese User Stories Documentation | 0/3 | Not started | - |
 | 4. Dry Eye Template & Medical Imaging | 7/8 | In Progress | - |
-| 5. Prescriptions & Document Printing | 0/24 | Not started | - |
+| 5. Prescriptions & Document Printing | 0/25 | Not started | - |
 | 6. Pharmacy & Consumables | 0/2 | Not started | - |
 | 7. Billing & Finance | 0/3 | Not started | - |
 | 8. Optical Center | 0/3 | Not started | - |
