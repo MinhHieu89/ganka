@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next"
-import { IconCalendar, IconUser, IconStethoscope, IconLink } from "@tabler/icons-react"
+import { IconCalendar, IconUser, IconStethoscope, IconLink, IconProgress } from "@tabler/icons-react"
 import { Badge } from "@/shared/components/Badge"
 import { VisitSection } from "./VisitSection"
 import type { VisitDetailDto } from "../api/clinical-api"
@@ -54,6 +54,7 @@ export function PatientInfoSection({ visit }: PatientInfoSectionProps) {
           <span className="font-medium">{visitDate}</span>
         </div>
         <div className="flex items-center gap-2">
+          <IconProgress className="h-4 w-4 text-muted-foreground" />
           <span className="text-muted-foreground">{t("visit.stage")}:</span>
           <Badge variant="outline">{stageLabel}</Badge>
         </div>
