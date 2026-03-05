@@ -24,6 +24,7 @@ import { Route as AuthenticatedVisitsVisitIdRouteImport } from './routes/_authen
 import { Route as AuthenticatedPatientsPatientIdRouteImport } from './routes/_authenticated/patients/$patientId'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin/users'
 import { Route as AuthenticatedAdminRolesRouteImport } from './routes/_authenticated/admin/roles'
+import { Route as AuthenticatedAdminClinicSettingsRouteImport } from './routes/_authenticated/admin/clinic-settings'
 import { Route as AuthenticatedAdminAuditLogsRouteImport } from './routes/_authenticated/admin/audit-logs'
 
 const LoginRoute = LoginRouteImport.update({
@@ -106,6 +107,12 @@ const AuthenticatedAdminRolesRoute = AuthenticatedAdminRolesRouteImport.update({
   path: '/admin/roles',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedAdminClinicSettingsRoute =
+  AuthenticatedAdminClinicSettingsRouteImport.update({
+    id: '/admin/clinic-settings',
+    path: '/admin/clinic-settings',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedAdminAuditLogsRoute =
   AuthenticatedAdminAuditLogsRouteImport.update({
     id: '/admin/audit-logs',
@@ -121,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/osdi/$token': typeof OsdiTokenRoute
   '/book/': typeof BookIndexRoute
   '/admin/audit-logs': typeof AuthenticatedAdminAuditLogsRoute
+  '/admin/clinic-settings': typeof AuthenticatedAdminClinicSettingsRoute
   '/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/patients/$patientId': typeof AuthenticatedPatientsPatientIdRoute
@@ -138,6 +146,7 @@ export interface FileRoutesByTo {
   '/osdi/$token': typeof OsdiTokenRoute
   '/book': typeof BookIndexRoute
   '/admin/audit-logs': typeof AuthenticatedAdminAuditLogsRoute
+  '/admin/clinic-settings': typeof AuthenticatedAdminClinicSettingsRoute
   '/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/patients/$patientId': typeof AuthenticatedPatientsPatientIdRoute
@@ -157,6 +166,7 @@ export interface FileRoutesById {
   '/osdi/$token': typeof OsdiTokenRoute
   '/book/': typeof BookIndexRoute
   '/_authenticated/admin/audit-logs': typeof AuthenticatedAdminAuditLogsRoute
+  '/_authenticated/admin/clinic-settings': typeof AuthenticatedAdminClinicSettingsRoute
   '/_authenticated/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/patients/$patientId': typeof AuthenticatedPatientsPatientIdRoute
@@ -176,6 +186,7 @@ export interface FileRouteTypes {
     | '/osdi/$token'
     | '/book/'
     | '/admin/audit-logs'
+    | '/admin/clinic-settings'
     | '/admin/roles'
     | '/admin/users'
     | '/patients/$patientId'
@@ -193,6 +204,7 @@ export interface FileRouteTypes {
     | '/osdi/$token'
     | '/book'
     | '/admin/audit-logs'
+    | '/admin/clinic-settings'
     | '/admin/roles'
     | '/admin/users'
     | '/patients/$patientId'
@@ -211,6 +223,7 @@ export interface FileRouteTypes {
     | '/osdi/$token'
     | '/book/'
     | '/_authenticated/admin/audit-logs'
+    | '/_authenticated/admin/clinic-settings'
     | '/_authenticated/admin/roles'
     | '/_authenticated/admin/users'
     | '/_authenticated/patients/$patientId'
@@ -337,6 +350,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRolesRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/admin/clinic-settings': {
+      id: '/_authenticated/admin/clinic-settings'
+      path: '/admin/clinic-settings'
+      fullPath: '/admin/clinic-settings'
+      preLoaderRoute: typeof AuthenticatedAdminClinicSettingsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/admin/audit-logs': {
       id: '/_authenticated/admin/audit-logs'
       path: '/admin/audit-logs'
@@ -350,6 +370,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedAdminAuditLogsRoute: typeof AuthenticatedAdminAuditLogsRoute
+  AuthenticatedAdminClinicSettingsRoute: typeof AuthenticatedAdminClinicSettingsRoute
   AuthenticatedAdminRolesRoute: typeof AuthenticatedAdminRolesRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedPatientsPatientIdRoute: typeof AuthenticatedPatientsPatientIdRoute
@@ -363,6 +384,7 @@ interface AuthenticatedRouteChildren {
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedAdminAuditLogsRoute: AuthenticatedAdminAuditLogsRoute,
+  AuthenticatedAdminClinicSettingsRoute: AuthenticatedAdminClinicSettingsRoute,
   AuthenticatedAdminRolesRoute: AuthenticatedAdminRolesRoute,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
   AuthenticatedPatientsPatientIdRoute: AuthenticatedPatientsPatientIdRoute,
