@@ -32,6 +32,9 @@
     <!-- Document Generation -->
     <PackageVersion Include="QuestPDF" Version="2025.*" />
 
+    <!-- Excel Import -->
+    <PackageVersion Include="ClosedXML" Version="0.104.*" />
+
     <!-- API Documentation -->
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="7.*" />
 
