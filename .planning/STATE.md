@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 04-07-PLAN.md
-last_updated: "2026-03-05T06:17:36.291Z"
+stopped_at: Completed 04-01b-PLAN.md
+last_updated: "2026-03-05T06:27:12.115Z"
 last_activity: 2026-03-05 -- Completed 03.1-01 Auth & Patient User Stories
 progress:
   total_phases: 13
   completed_phases: 7
   total_plans: 63
-  completed_plans: 57
+  completed_plans: 58
   percent: 98
 ---
 
@@ -146,6 +146,7 @@ Progress: [##########] 98%
 | Phase 03.1 P02 | 5min | 2 tasks | 2 files |
 | Phase 04 P01a | 2min | 1 tasks | 12 files |
 | Phase 04 P07 | 5min | 2 tasks | 2 files |
+| Phase 04 P01b | 6min | 1 tasks | 15 files |
 
 ## Accumulated Context
 
@@ -322,6 +323,9 @@ Recent decisions affecting current work:
 - [Phase 04]: OSDI patient self-fill via QR code stories included following public-page pattern from Phase 2 self-booking
 - [Phase 04]: Image comparison with dry eye metrics (US-IMG-007) for holistic clinical assessment across modalities
 - [Phase 04]: File limits: 20MB images, 200MB videos, 50 files per visit
+- [Phase 04]: MedicalImage has NO navigation property from Visit -- kept separate from aggregate with its own repository
+- [Phase 04]: DryEyeAssessment patient-level queries use Join with Visits table instead of Include for efficiency
+- [Phase 04]: OsdiSubmission PublicToken uses filtered unique index (IS NOT NULL) for SQL Server
 
 ### Roadmap Evolution
 
@@ -343,6 +347,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-05T06:17:36.288Z
-Stopped at: Completed 04-07-PLAN.md
+Last session: 2026-03-05T06:27:12.112Z
+Stopped at: Completed 04-01b-PLAN.md
 Resume file: None
