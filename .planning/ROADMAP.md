@@ -166,11 +166,16 @@ Plans:
   3. Doctor can compare Dry Eye metrics (TBUT, Schirmer, etc.) between any two visits side-by-side
   4. Staff can upload medical images and videos (Fluorescein, Meibography, OCT, lacrimal duct video) associated with specific visits, and doctors can view them in a lightbox with zoom
   5. Doctor can compare images of the same type side-by-side across two visits for the same patient
-**Plans**: TBD
+**Plans**: 7 plans in 4 waves
 
 Plans:
-- [ ] 04-01: TBD
-- [ ] 04-02: TBD
+- [ ] 04-01-PLAN.md -- Backend domain entities, enums, contracts, EF Core configs, migration
+- [ ] 04-02-PLAN.md -- Dry Eye + OSDI handlers (TDD): assessment CRUD, OSDI calculation, history, comparison
+- [ ] 04-03-PLAN.md -- Medical image handlers (TDD) + API endpoints + public OSDI endpoints + Bootstrapper wiring
+- [ ] 04-04-PLAN.md -- Frontend dry eye form, OSDI questionnaire, trend chart, comparison panel
+- [ ] 04-05-PLAN.md -- Frontend image upload, gallery, lightbox, comparison overlay, public OSDI page
+- [ ] 04-06-PLAN.md -- End-to-end verification checkpoint
+- [ ] 04-07-PLAN.md -- Vietnamese user stories documentation (DOC-01)
 
 ### Phase 5: Prescriptions & Document Printing
 **Goal**: Doctors can write drug and optical prescriptions that comply with MOH regulations, and all clinical documents can be printed
@@ -272,7 +277,7 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 | 2.1 Frontend Bug Fixes + Auth Security | 4/4 | Complete | 2026-03-02 |
 | 3. Clinical Workflow & Examination | 9/10 | In Progress | - |
 | 3.1 Vietnamese User Stories Documentation | 0/3 | Not started | - |
-| 4. Dry Eye Template & Medical Imaging | 0/2 | Not started | - |
+| 4. Dry Eye Template & Medical Imaging | 0/7 | Not started | - |
 | 5. Prescriptions & Document Printing | 0/2 | Not started | - |
 | 6. Pharmacy & Consumables | 0/2 | Not started | - |
 | 7. Billing & Finance | 0/3 | Not started | - |
