@@ -6,7 +6,10 @@ using FluentAssertions;
 using FluentValidation;
 using FluentValidation.Results;
 using NSubstitute;
+using Patient.Contracts.Dtos;
+using Patient.Domain.Enums;
 using Shared.Domain;
+using Wolverine;
 
 namespace Clinical.Unit.Tests.Features;
 
@@ -16,6 +19,7 @@ public class DrugPrescriptionHandlerTests
     private readonly IUnitOfWork _unitOfWork = Substitute.For<IUnitOfWork>();
     private readonly IValidator<AddDrugPrescriptionCommand> _addValidator = Substitute.For<IValidator<AddDrugPrescriptionCommand>>();
     private readonly IValidator<UpdateDrugPrescriptionCommand> _updateValidator = Substitute.For<IValidator<UpdateDrugPrescriptionCommand>>();
+    private readonly IMessageBus _messageBus = Substitute.For<IMessageBus>();
 
     private static readonly BranchId DefaultBranchId = new(Guid.Parse("00000000-0000-0000-0000-000000000001"));
 
@@ -258,5 +262,103 @@ public class DrugPrescriptionHandlerTests
         // Assert
         result.IsFailure.Should().BeTrue();
         result.Error.Code.Should().Be("Error.Validation");
+    }
+
+    // ===== CheckDrugAllergy Tests =====
+
+    [Fact]
+    public async Task CheckDrugAllergy_MatchingAllergyName_ReturnsMatches()
+    {
+        // Arrange
+        var patientId = Guid.NewGuid();
+        var allergies = new List<AllergyDto>
+        {
+            new(Guid.NewGuid(), "Tobramycin", AllergySeverity.Severe),
+            new(Guid.NewGuid(), "Penicillin", AllergySeverity.Moderate)
+        };
+
+        _messageBus.InvokeAsync<List<AllergyDto>>(
+            Arg.Any<GetPatientAllergiesQuery>(), Arg.Any<CancellationToken>())
+            .Returns(allergies);
+
+        var query = new CheckDrugAllergyQuery(patientId, "Tobramycin 0.3%", "Tobramycin");
+
+        // Act
+        var result = await CheckDrugAllergyHandler.Handle(query, _messageBus, CancellationToken.None);
+
+        // Assert
+        result.Should().HaveCount(1);
+        result.First().Name.Should().Be("Tobramycin");
+    }
+
+    [Fact]
+    public async Task CheckDrugAllergy_MatchingGenericName_ReturnsMatches()
+    {
+        // Arrange
+        var patientId = Guid.NewGuid();
+        var allergies = new List<AllergyDto>
+        {
+            new(Guid.NewGuid(), "Amoxicillin", AllergySeverity.Severe)
+        };
+
+        _messageBus.InvokeAsync<List<AllergyDto>>(
+            Arg.Any<GetPatientAllergiesQuery>(), Arg.Any<CancellationToken>())
+            .Returns(allergies);
+
+        var query = new CheckDrugAllergyQuery(patientId, "Augmentin", "Amoxicillin");
+
+        // Act
+        var result = await CheckDrugAllergyHandler.Handle(query, _messageBus, CancellationToken.None);
+
+        // Assert
+        result.Should().HaveCount(1);
+        result.First().Name.Should().Be("Amoxicillin");
+    }
+
+    [Fact]
+    public async Task CheckDrugAllergy_NoMatch_ReturnsEmpty()
+    {
+        // Arrange
+        var patientId = Guid.NewGuid();
+        var allergies = new List<AllergyDto>
+        {
+            new(Guid.NewGuid(), "Penicillin", AllergySeverity.Severe)
+        };
+
+        _messageBus.InvokeAsync<List<AllergyDto>>(
+            Arg.Any<GetPatientAllergiesQuery>(), Arg.Any<CancellationToken>())
+            .Returns(allergies);
+
+        var query = new CheckDrugAllergyQuery(patientId, "Tobramycin 0.3%", "Tobramycin");
+
+        // Act
+        var result = await CheckDrugAllergyHandler.Handle(query, _messageBus, CancellationToken.None);
+
+        // Assert
+        result.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task CheckDrugAllergy_CaseInsensitive_ReturnsMatches()
+    {
+        // Arrange
+        var patientId = Guid.NewGuid();
+        var allergies = new List<AllergyDto>
+        {
+            new(Guid.NewGuid(), "tobramycin", AllergySeverity.Moderate)
+        };
+
+        _messageBus.InvokeAsync<List<AllergyDto>>(
+            Arg.Any<GetPatientAllergiesQuery>(), Arg.Any<CancellationToken>())
+            .Returns(allergies);
+
+        var query = new CheckDrugAllergyQuery(patientId, "TOBRAMYCIN Eye Drops", "Tobramycin");
+
+        // Act
+        var result = await CheckDrugAllergyHandler.Handle(query, _messageBus, CancellationToken.None);
+
+        // Assert
+        result.Should().HaveCount(1);
+        result.First().Name.Should().Be("tobramycin");
     }
 }
