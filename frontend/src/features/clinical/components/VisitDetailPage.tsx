@@ -13,6 +13,8 @@ import { SignOffSection } from "./SignOffSection"
 import { VisitAmendmentHistory } from "./VisitAmendmentHistory"
 import { DryEyeSection } from "./DryEyeSection"
 import { MedicalImagesSection } from "./MedicalImagesSection"
+import { DrugPrescriptionSection } from "./DrugPrescriptionSection"
+import { OpticalPrescriptionSection } from "./OpticalPrescriptionSection"
 
 // Visit status enum: 0=Draft, 1=Signed, 2=Amended
 const STATUS_MAP: Record<number, { key: string; variant: "default" | "secondary" | "outline" }> = {
@@ -107,6 +109,18 @@ export function VisitDetailPage({ visitId }: VisitDetailPageProps) {
         visitId={visitId}
         diagnoses={visit.diagnoses}
         doctorId={visit.doctorId}
+        disabled={isReadOnly}
+      />
+
+      <DrugPrescriptionSection
+        visitId={visitId}
+        prescriptions={visit.drugPrescriptions ?? []}
+        disabled={isReadOnly}
+      />
+
+      <OpticalPrescriptionSection
+        visitId={visitId}
+        prescriptions={visit.opticalPrescriptions ?? []}
         disabled={isReadOnly}
       />
 

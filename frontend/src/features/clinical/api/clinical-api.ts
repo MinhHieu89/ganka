@@ -103,6 +103,58 @@ export interface OsdiLinkResponse {
   expiresAt: string
 }
 
+export interface PrescriptionItemDto {
+  id: string
+  drugCatalogItemId: string | null
+  drugName: string
+  genericName: string | null
+  strength: string | null
+  form: number
+  route: number
+  dosage: string | null
+  dosageOverride: string | null
+  quantity: number
+  unit: string
+  frequency: string | null
+  durationDays: number | null
+  isOffCatalog: boolean
+  hasAllergyWarning: boolean
+  sortOrder: number
+}
+
+export interface DrugPrescriptionDto {
+  id: string
+  visitId: string
+  notes: string | null
+  prescriptionCode: string | null
+  prescribedAt: string
+  items: PrescriptionItemDto[]
+}
+
+export interface OpticalPrescriptionDto {
+  id: string
+  visitId: string
+  odSph: number | null
+  odCyl: number | null
+  odAxis: number | null
+  odAdd: number | null
+  osSph: number | null
+  osCyl: number | null
+  osAxis: number | null
+  osAdd: number | null
+  farPd: number | null
+  nearPd: number | null
+  nearOdSph: number | null
+  nearOdCyl: number | null
+  nearOdAxis: number | null
+  nearOsSph: number | null
+  nearOsCyl: number | null
+  nearOsAxis: number | null
+  lensType: number
+  notes: string | null
+  prescribedAt: string
+}
+
 export interface VisitDetailDto {
   id: string
   patientId: string
@@ -117,6 +169,8 @@ export interface VisitDetailDto {
   diagnoses: VisitDiagnosisDto[]
   amendments: VisitAmendmentDto[]
   dryEyeAssessments: DryEyeAssessmentDto[]
+  drugPrescriptions: DrugPrescriptionDto[]
+  opticalPrescriptions: OpticalPrescriptionDto[]
   signedAt: string | null
   signedById: string | null
   appointmentId: string | null
