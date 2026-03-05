@@ -3,11 +3,27 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
+stopped_at: Completed 04-04-PLAN.md
+last_updated: "2026-03-05T07:01:34.724Z"
+last_activity: 2026-03-05 -- Completed 04-05 Medical Imaging UI & Public OSDI Self-Fill
+progress:
+  total_phases: 13
+  completed_phases: 7
+  total_plans: 63
+  completed_plans: 62
+  percent: 98
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: in-progress
 stopped_at: Completed 04-03-PLAN.md
 last_updated: "2026-03-05T06:42:58.738Z"
 last_activity: 2026-03-05 -- Completed 03.1-01 Auth & Patient User Stories
 progress:
-  total_phases: 13
+  [██████████] 98%
   completed_phases: 7
   total_plans: 63
   completed_plans: 60
@@ -150,6 +166,7 @@ Progress: [##########] 98%
 | Phase 04 P02 | 10min | 2 tasks | 12 files |
 | Phase 04 P03 | 11min | 2 tasks | 15 files |
 | Phase 04 P05 | 12min | 2 tasks | 11 files |
+| Phase 04 P04 | 13min | 2 tasks | 16 files |
 
 ## Accumulated Context
 
@@ -340,6 +357,9 @@ Recent decisions affecting current work:
 - [Phase 04]: [04-05]: Image comparison uses Dialog (full-screen overlay) with two independently scrollable panels
 - [Phase 04]: [04-05]: Public OSDI page uses separate publicApi client without auth middleware following booking page pattern
 - [Phase 04]: [04-05]: OSDI questions display Vietnamese primary with English secondary; Q1-5 mandatory, Q6-12 support N/A
+- [Phase 04]: DryEyeAssessmentDto added to VisitDetailDto for frontend data access (backend deviation)
+- [Phase 04]: RadioGroup shadcn component added with wrapper for OSDI questionnaire radio options
+- [Phase 04]: OSDI history reused for comparison visit selectors; inline collapsible section for OSDI questionnaire
 
 ### Roadmap Evolution
 
@@ -361,6 +381,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-05T06:57:40Z
-Stopped at: Completed 04-05-PLAN.md
+Last session: 2026-03-05T07:01:34.720Z
+Stopped at: Completed 04-04-PLAN.md
 Resume file: None
