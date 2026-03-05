@@ -43,3 +43,13 @@ public sealed record GetImageComparisonQuery(
 public sealed record ImageComparisonResponse(
     MedicalImageDto[] Visit1Images,
     MedicalImageDto[] Visit2Images);
+
+/// <summary>
+/// Query to get all images for a visit with SAS URLs.
+/// </summary>
+public sealed record GetVisitImagesQuery(Guid VisitId);
+
+/// <summary>
+/// Command to delete a medical image by ID.
+/// </summary>
+public sealed record DeleteMedicalImageCommand(Guid ImageId);
