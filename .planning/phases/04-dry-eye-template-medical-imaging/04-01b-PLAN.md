@@ -11,16 +11,19 @@ files_modified:
   - backend/src/Modules/Clinical/Clinical.Infrastructure/ClinicalDbContext.cs
   - backend/src/Modules/Clinical/Clinical.Infrastructure/Repositories/VisitRepository.cs
   - backend/src/Modules/Clinical/Clinical.Infrastructure/Repositories/MedicalImageRepository.cs
+  - backend/src/Modules/Clinical/Clinical.Infrastructure/Repositories/OsdiSubmissionRepository.cs
   - backend/src/Modules/Clinical/Clinical.Application/Interfaces/IVisitRepository.cs
   - backend/src/Modules/Clinical/Clinical.Application/Interfaces/IMedicalImageRepository.cs
+  - backend/src/Modules/Clinical/Clinical.Application/Interfaces/IOsdiSubmissionRepository.cs
 autonomous: true
-requirements: [DRY-01, IMG-01]
+requirements: [DRY-01, DRY-02, IMG-01]
 
 must_haves:
   truths:
     - "Dry eye assessment data can be saved and retrieved per visit"
     - "Medical images can be stored independently of visit sign-off"
     - "OSDI questionnaire tokens can be generated and validated"
+    - "OSDI submissions can be created, queried by token, and queried by visit"
   artifacts:
     - path: "backend/src/Modules/Clinical/Clinical.Infrastructure/Configurations/DryEyeAssessmentConfiguration.cs"
       provides: "EF Core config for DryEyeAssessment table with proper schema and indexes"
@@ -37,6 +40,12 @@ must_haves:
     - path: "backend/src/Modules/Clinical/Clinical.Application/Interfaces/IMedicalImageRepository.cs"
       provides: "Repository interface for medical image CRUD"
       min_lines: 10
+    - path: "backend/src/Modules/Clinical/Clinical.Application/Interfaces/IOsdiSubmissionRepository.cs"
+      provides: "Repository interface for OSDI submission CRUD by token and visit"
+      min_lines: 10
+    - path: "backend/src/Modules/Clinical/Clinical.Infrastructure/Repositories/OsdiSubmissionRepository.cs"
+      provides: "Repository implementation for OSDI submission queries"
+      min_lines: 20
   key_links:
     - from: "VisitRepository"
       to: "DryEyeAssessment"
@@ -46,13 +55,17 @@ must_haves:
       to: "ClinicalDbContext"
       via: "DbSet<MedicalImage> queries"
       pattern: "DbSet<MedicalImage>"
+    - from: "OsdiSubmissionRepository"
+      to: "ClinicalDbContext"
+      via: "DbSet<OsdiSubmission> queries"
+      pattern: "DbSet<OsdiSubmission>"
 ---
 
 <objective>
 Create EF Core configurations, repository interfaces and implementations, and database migration for all Phase 4 entities.
 
 Purpose: Wire the domain entities (created in Plan 01a) to the database with proper schema, indexes, constraints, and data access patterns.
-Output: 3 EF Core configurations, 2 repository interfaces, 2 repository implementations, updated DbContext, and a database migration.
+Output: 3 EF Core configurations, 3 repository interfaces, 3 repository implementations, updated DbContext, and a database migration.
 </objective>
 
 <execution_context>
@@ -150,8 +163,10 @@ public interface IVisitRepository
     backend/src/Modules/Clinical/Clinical.Infrastructure/ClinicalDbContext.cs,
     backend/src/Modules/Clinical/Clinical.Infrastructure/Repositories/VisitRepository.cs,
     backend/src/Modules/Clinical/Clinical.Infrastructure/Repositories/MedicalImageRepository.cs,
+    backend/src/Modules/Clinical/Clinical.Infrastructure/Repositories/OsdiSubmissionRepository.cs,
     backend/src/Modules/Clinical/Clinical.Application/Interfaces/IVisitRepository.cs,
-    backend/src/Modules/Clinical/Clinical.Application/Interfaces/IMedicalImageRepository.cs
+    backend/src/Modules/Clinical/Clinical.Application/Interfaces/IMedicalImageRepository.cs,
+    backend/src/Modules/Clinical/Clinical.Application/Interfaces/IOsdiSubmissionRepository.cs
   </files>
   <action>
     **Create DryEyeAssessmentConfiguration:**
@@ -213,8 +228,21 @@ public interface IVisitRepository
     - Implement all IMedicalImageRepository methods
     - GetByVisitIdAsync ordered by CreatedAt descending
 
+    **Create IOsdiSubmissionRepository interface:**
+    - Task AddAsync(OsdiSubmission submission, CancellationToken ct)
+    - Task<OsdiSubmission?> GetByTokenAsync(string token, CancellationToken ct)
+    - Task<OsdiSubmission?> GetByVisitIdAsync(Guid visitId, CancellationToken ct)
+    - Task<List<OsdiSubmission>> GetByVisitIdsAsync(IEnumerable<Guid> visitIds, CancellationToken ct)
+
+    **Create OsdiSubmissionRepository:**
+    - Implement all IOsdiSubmissionRepository methods using ClinicalDbContext
+    - GetByTokenAsync: query where PublicToken == token, SingleOrDefaultAsync
+    - GetByVisitIdAsync: query where VisitId == visitId, order by CreatedAt descending, FirstOrDefaultAsync (latest submission)
+    - GetByVisitIdsAsync: query where VisitId in visitIds, for batch loading
+
     **Update Clinical.Infrastructure IoC.cs:**
     - Register IMedicalImageRepository -> MedicalImageRepository as scoped
+    - Register IOsdiSubmissionRepository -> OsdiSubmissionRepository as scoped
 
     **Create and run migration:**
     - `dotnet ef migrations add AddDryEyeAndImaging --project backend/src/Modules/Clinical/Clinical.Infrastructure --startup-project backend/src/Bootstrapper`
@@ -223,7 +251,7 @@ public interface IVisitRepository
   <verify>
     <automated>dotnet build backend/ --no-restore && dotnet ef migrations list --project backend/src/Modules/Clinical/Clinical.Infrastructure --startup-project backend/src/Bootstrapper 2>&1 | tail -5</automated>
   </verify>
-  <done>All 3 EF Core configurations created with proper schema, indexes, and constraints. ClinicalDbContext has 3 new DbSets. VisitRepository extended with DryEyeAssessment queries and Include. MedicalImageRepository created and registered in IoC. Migration created and applied successfully. Backend builds with 0 errors.</done>
+  <done>All 3 EF Core configurations created with proper schema, indexes, and constraints. ClinicalDbContext has 3 new DbSets. VisitRepository extended with DryEyeAssessment queries and Include. MedicalImageRepository created and registered in IoC. IOsdiSubmissionRepository interface and OsdiSubmissionRepository implementation created with AddAsync, GetByTokenAsync, GetByVisitIdAsync, GetByVisitIdsAsync methods and registered in IoC. Migration created and applied successfully. Backend builds with 0 errors.</done>
 </task>
 
 </tasks>
@@ -234,6 +262,7 @@ public interface IVisitRepository
 - ClinicalDbContext has DbSet<DryEyeAssessment>, DbSet<MedicalImage>, DbSet<OsdiSubmission>
 - VisitRepository includes DryEyeAssessments in GetByIdWithDetailsAsync
 - MedicalImageRepository registered in IoC
+- IOsdiSubmissionRepository registered in IoC with GetByTokenAsync, GetByVisitIdAsync, AddAsync
 </verification>
 
 <success_criteria>
@@ -241,6 +270,7 @@ public interface IVisitRepository
 - Migration applies cleanly
 - Repository interfaces and implementations follow established patterns
 - MedicalImage has no navigation property from Visit (kept separate from aggregate)
+- IOsdiSubmissionRepository provides token-based lookup for Plan 02 handlers (GenerateOsdiLink, GetOsdiByToken, SubmitOsdiQuestionnaire)
 </success_criteria>
 
 <output>

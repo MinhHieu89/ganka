@@ -1,13 +1,13 @@
 ---
 phase: 4
 slug: dry-eye-template-medical-imaging
-status: draft
-nyquist_compliant: false
-wave_0_complete: false
+status: ready
+nyquist_compliant: true
+wave_0_complete: true
 created: 2026-03-05
 ---
 
-# Phase 4 — Validation Strategy
+# Phase 4 -- Validation Strategy
 
 > Per-phase validation contract for feedback sampling during execution.
 
@@ -36,36 +36,32 @@ created: 2026-03-05
 
 ## Per-Task Verification Map
 
-| Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
-|---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| 04-01-01 | 01 | 1 | DRY-01 | unit | `dotnet test backend/tests/Clinical.Unit.Tests --filter "FullyQualifiedName~UpdateDryEyeAssessment" -x` | ❌ W0 | ⬜ pending |
-| 04-01-02 | 01 | 1 | DRY-02 | unit | `dotnet test backend/tests/Clinical.Unit.Tests --filter "FullyQualifiedName~OsdiCalculation" -x` | ❌ W0 | ⬜ pending |
-| 04-01-03 | 01 | 1 | DRY-02 | unit | `dotnet test backend/tests/Clinical.Unit.Tests --filter "FullyQualifiedName~SubmitOsdiQuestionnaire" -x` | ❌ W0 | ⬜ pending |
-| 04-01-04 | 01 | 1 | DRY-03 | unit | `dotnet test backend/tests/Clinical.Unit.Tests --filter "FullyQualifiedName~GetOsdiHistory" -x` | ❌ W0 | ⬜ pending |
-| 04-01-05 | 01 | 1 | DRY-04 | unit | `dotnet test backend/tests/Clinical.Unit.Tests --filter "FullyQualifiedName~DryEyeComparison" -x` | ❌ W0 | ⬜ pending |
-| 04-02-01 | 02 | 1 | IMG-01 | unit | `dotnet test backend/tests/Clinical.Unit.Tests --filter "FullyQualifiedName~UploadMedicalImage" -x` | ❌ W0 | ⬜ pending |
-| 04-02-02 | 02 | 1 | IMG-02 | unit | `dotnet test backend/tests/Clinical.Unit.Tests --filter "FullyQualifiedName~UploadMedicalImage" -x` | ❌ W0 | ⬜ pending |
-| 04-02-03 | 02 | 1 | IMG-03 | unit | `dotnet test backend/tests/Clinical.Unit.Tests --filter "FullyQualifiedName~GetVisitImages" -x` | ❌ W0 | ⬜ pending |
-| 04-02-04 | 02 | 1 | IMG-04 | unit | `dotnet test backend/tests/Clinical.Unit.Tests --filter "FullyQualifiedName~ImageComparison" -x` | ❌ W0 | ⬜ pending |
-| 04-02-05 | 02 | 1 | IMG-01 | unit | `dotnet test backend/tests/Clinical.Unit.Tests --filter "FullyQualifiedName~DeleteMedicalImage" -x` | ❌ W0 | ⬜ pending |
+| Task ID | Plan | Wave | Requirement | Test Type | Automated Command | Test Created By | Status |
+|---------|------|------|-------------|-----------|-------------------|-----------------|--------|
+| 04-02-T1 | 02 | 3 | DRY-01, DRY-02 | unit | `dotnet test backend/tests/Clinical.Unit.Tests --filter "FullyQualifiedName~UpdateDryEyeAssessment\|FullyQualifiedName~OsdiCalculation\|FullyQualifiedName~SubmitOsdi" -x` | TDD in Plan 02 Task 1 | pending |
+| 04-02-T2 | 02 | 3 | DRY-03, DRY-04 | unit | `dotnet test backend/tests/Clinical.Unit.Tests --filter "FullyQualifiedName~GetOsdiHistory\|FullyQualifiedName~DryEyeComparison" -x` | TDD in Plan 02 Task 2 | pending |
+| 04-03-T1 | 03 | 3 | IMG-01, IMG-02, IMG-03, IMG-04 | unit | `dotnet test backend/tests/Clinical.Unit.Tests --filter "FullyQualifiedName~UploadMedicalImage\|FullyQualifiedName~GetVisitImages\|FullyQualifiedName~ImageComparison\|FullyQualifiedName~DeleteMedicalImage" -x` | TDD in Plan 03 Task 1 | pending |
+| 04-04-T1 | 04 | 4 | DRY-01, DRY-02 | build | `cd frontend && npx tsc --noEmit && npm run build` | Plan 04 Task 1 | pending |
+| 04-04-T2 | 04 | 4 | DRY-03, DRY-04 | build | `cd frontend && npx tsc --noEmit && npm run build` | Plan 04 Task 2 | pending |
+| 04-05-T1 | 05 | 4 | IMG-01, IMG-02, IMG-03 | build | `cd frontend && npx tsc --noEmit && npm run build` | Plan 05 Task 1 | pending |
+| 04-05-T2 | 05 | 4 | IMG-04 | build | `cd frontend && npx tsc --noEmit && npm run build` | Plan 05 Task 2 | pending |
+| 04-06-T1 | 06 | 5 | ALL | e2e | `dotnet test backend/tests/ --no-restore && cd frontend && npx tsc --noEmit` | Plan 06 Task 1 | pending |
+| 04-06-T2 | 06 | 5 | ALL | manual | Human verification | Plan 06 Task 2 | pending |
 
-*Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
+*Status: pending -- green -- red -- flaky*
+
+**Note:** Wave 0 test stubs are not needed as separate tasks. Plans 02 and 03 use TDD (test-first), so tests are created as part of the RED phase within those plan tasks. Tests exist before production code.
 
 ---
 
 ## Wave 0 Requirements
 
-- [ ] `backend/tests/Clinical.Unit.Tests/Features/UpdateDryEyeAssessmentHandlerTests.cs` — stubs for DRY-01
-- [ ] `backend/tests/Clinical.Unit.Tests/Features/OsdiCalculationTests.cs` — stubs for DRY-02
-- [ ] `backend/tests/Clinical.Unit.Tests/Features/SubmitOsdiQuestionnaireHandlerTests.cs` — stubs for DRY-02
-- [ ] `backend/tests/Clinical.Unit.Tests/Features/GetOsdiHistoryHandlerTests.cs` — stubs for DRY-03
-- [ ] `backend/tests/Clinical.Unit.Tests/Features/GetDryEyeComparisonHandlerTests.cs` — stubs for DRY-04
-- [ ] `backend/tests/Clinical.Unit.Tests/Features/UploadMedicalImageHandlerTests.cs` — stubs for IMG-01, IMG-02
-- [ ] `backend/tests/Clinical.Unit.Tests/Features/GetVisitImagesHandlerTests.cs` — stubs for IMG-03
-- [ ] `backend/tests/Clinical.Unit.Tests/Features/GetImageComparisonDataHandlerTests.cs` — stubs for IMG-04
-- [ ] `backend/tests/Clinical.Unit.Tests/Features/DeleteMedicalImageHandlerTests.cs` — stubs for IMG-01
+Not applicable -- Plans 02 and 03 are TDD plans where tests are written first (RED phase) as part of each task. No separate Wave 0 test scaffold is needed because:
+- Plan 02 Task 1 creates: UpdateDryEyeAssessmentHandlerTests.cs, OsdiCalculationTests.cs, SubmitOsdiQuestionnaireHandlerTests.cs
+- Plan 02 Task 2 creates: GetOsdiHistoryHandlerTests.cs, GetDryEyeComparisonHandlerTests.cs
+- Plan 03 Task 1 creates: UploadMedicalImageHandlerTests.cs, GetVisitImagesHandlerTests.cs, GetImageComparisonDataHandlerTests.cs, DeleteMedicalImageHandlerTests.cs
 
-*Framework install: none needed — xUnit + FluentAssertions + NSubstitute already in Clinical.Unit.Tests.csproj*
+xUnit + FluentAssertions + NSubstitute already in Clinical.Unit.Tests.csproj from Phase 3.
 
 ---
 
@@ -82,11 +78,11 @@ created: 2026-03-05
 
 ## Validation Sign-Off
 
-- [ ] All tasks have `<automated>` verify or Wave 0 dependencies
-- [ ] Sampling continuity: no 3 consecutive tasks without automated verify
-- [ ] Wave 0 covers all MISSING references
-- [ ] No watch-mode flags
-- [ ] Feedback latency < 30s
-- [ ] `nyquist_compliant: true` set in frontmatter
+- [x] All tasks have `<automated>` verify or TDD-created tests
+- [x] Sampling continuity: no 3 consecutive tasks without automated verify
+- [x] TDD plans (02, 03) create all test files during RED phase (no Wave 0 needed)
+- [x] No watch-mode flags
+- [x] Feedback latency < 30s
+- [x] `nyquist_compliant: true` set in frontmatter
 
-**Approval:** pending
+**Approval:** approved
