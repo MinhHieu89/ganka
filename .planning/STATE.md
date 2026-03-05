@@ -3,29 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 03-09-PLAN.md
-last_updated: "2026-03-05T02:40:45.029Z"
-last_activity: 2026-03-05 -- Completed 03-09 Gap Closure Frontend Error Handling
+stopped_at: Completed 03-10-PLAN.md
+last_updated: "2026-03-05T03:33:09.241Z"
+last_activity: 2026-03-05 -- Completed 03-10 Gap Closure Refraction DTO Mismatch
 progress:
   total_phases: 12
   completed_phases: 6
-  total_plans: 51
-  completed_plans: 51
----
-
----
-gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: in-progress
-stopped_at: Completed 03-09-PLAN.md
-last_updated: "2026-03-05T02:35:00.000Z"
-last_activity: 2026-03-05 -- Completed 03-09 Gap Closure Frontend Error Handling
-progress:
-  total_phases: 12
-  completed_phases: 6
-  total_plans: 51
-  completed_plans: 51
+  total_plans: 52
+  completed_plans: 52
   percent: 100
 ---
 
@@ -41,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 ## Current Position
 
 Phase: 03 (Clinical Workflow & Examination) -- COMPLETE
-Plan: 9 of 9 in current phase (all complete)
-Status: Phase 03 complete -- All 9 plans executed, gap closure verified end-to-end
-Last activity: 2026-03-05 -- Completed 03-09 Gap Closure Frontend Error Handling
+Plan: 10 of 10 in current phase (all complete)
+Status: Phase 03 complete -- All 10 plans executed, all UAT gaps closed
+Last activity: 2026-03-05 -- Completed 03-10 Gap Closure Refraction DTO Mismatch
 
 Progress: [##########] 100%
 
@@ -109,6 +94,7 @@ Progress: [##########] 100%
 | Phase 03 P08 | 10min | 2 tasks | 9 files |
 | Phase 03 P07 | 5min | 2 tasks | 2 files |
 | Phase 03 P09 | 5min | 2 tasks | 4 files |
+| Phase 03 P10 | 5min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -271,6 +257,8 @@ Recent decisions affecting current work:
 - [Phase 03]: Capture signed-state snapshot at amendment initiation rather than before/after diff (no finalize-amendment endpoint)
 - [Phase 03]: [03-09]: onError callback pattern: all React Query mutations must have onError with toast.error for user feedback
 - [Phase 03]: [03-09]: IOP method Select uses undefined (not empty string) for null state to avoid controlled/uncontrolled React warning
+- [Phase 03]: [03-10]: RefractionDto uses 'type' (read path) while updateRefraction sends 'refractionType' (write path) -- asymmetric DTO naming matches backend C# record vs command
+- [Phase 03]: [03-10]: IOP Select uses empty string (not undefined) for no-selection state -- supersedes 03-09 decision, keeps Select always controlled
 
 ### Roadmap Evolution
 
@@ -291,6 +279,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-05T02:35:00.000Z
-Stopped at: Completed 03-09-PLAN.md
+Last session: 2026-03-05T03:33:09.238Z
+Stopped at: Completed 03-10-PLAN.md
 Resume file: None
