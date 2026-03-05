@@ -11,7 +11,7 @@ import {
   CollapsibleContent,
 } from "@/shared/components/Collapsible"
 import { cn } from "@/shared/lib/utils"
-import { useGenerateOsdiLink } from "../api/clinical-api"
+import { useGenerateOsdiLink, useSubmitOsdiInline } from "../api/clinical-api"
 import type { DryEyeAssessmentDto, OsdiLinkResponse } from "../api/clinical-api"
 import { OsdiQuestionnaire, SEVERITY_CONFIG } from "./OsdiQuestionnaire"
 
@@ -42,6 +42,7 @@ export function OsdiSection({ visitId, patientId, assessment, disabled }: OsdiSe
   const [showQrCode, setShowQrCode] = useState(false)
 
   const generateLinkMutation = useGenerateOsdiLink()
+  const submitOsdiMutation = useSubmitOsdiInline()
 
   const osdiScore = assessment?.osdiScore
   const osdiSeverity = assessment?.osdiSeverity
@@ -69,13 +70,21 @@ export function OsdiSection({ visitId, patientId, assessment, disabled }: OsdiSe
   }, [osdiLink, t])
 
   const handleQuestionnaireSubmit = useCallback(
-    (_answers: (number | null)[]) => {
-      // The OSDI submission is handled via the backend public endpoint
-      // For doctor-recorded mode, we would POST answers directly
-      // For now, show questionnaire and let doctor manually record
-      toast.info(t("osdi.usePatientLink"))
+    (answers: (number | null)[]) => {
+      submitOsdiMutation.mutate(
+        { visitId, answers },
+        {
+          onSuccess: () => {
+            toast.success(t("osdi.submitted"))
+            setShowQuestionnaire(false)
+          },
+          onError: () => {
+            toast.error(t("osdi.submitFailed"))
+          },
+        },
+      )
     },
-    [t],
+    [visitId, submitOsdiMutation, t],
   )
 
   return (
@@ -153,6 +162,7 @@ export function OsdiSection({ visitId, patientId, assessment, disabled }: OsdiSe
           <div className="pt-2">
             <OsdiQuestionnaire
               onSubmit={handleQuestionnaireSubmit}
+              isSubmitting={submitOsdiMutation.isPending}
               disabled={disabled}
             />
           </div>

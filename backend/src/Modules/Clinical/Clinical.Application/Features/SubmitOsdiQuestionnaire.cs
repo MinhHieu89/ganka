@@ -13,7 +13,7 @@ namespace Clinical.Application.Features;
 /// </summary>
 public static class SubmitOsdiQuestionnaireHandler
 {
-    public static async Task<Result> Handle(
+    public static async Task<Result<decimal>> Handle(
         SubmitOsdiCommand command,
         IOsdiSubmissionRepository osdiRepository,
         IVisitRepository visitRepository,
@@ -23,16 +23,16 @@ public static class SubmitOsdiQuestionnaireHandler
         // Look up submission by token
         var submission = await osdiRepository.GetByTokenAsync(command.Token, ct);
         if (submission is null)
-            return Result.Failure(Error.Custom("Error.NotFound", "Token not found."));
+            return Result<decimal>.Failure(Error.Custom("Error.NotFound", "Token not found."));
 
         // Check token expiry
         if (submission.TokenExpiresAt.HasValue && submission.TokenExpiresAt.Value < DateTime.UtcNow)
-            return Result.Failure(Error.Custom("Error.Expired", "Token expired."));
+            return Result<decimal>.Failure(Error.Custom("Error.Expired", "Token expired."));
 
         // Calculate OSDI score
         var osdiResult = OsdiCalculator.Calculate(command.Answers);
         if (osdiResult is null)
-            return Result.Failure(Error.Validation("At least one question must be answered."));
+            return Result<decimal>.Failure(Error.Validation("At least one question must be answered."));
 
         // Update the OsdiSubmission with answers and calculated score
         var answersJson = JsonSerializer.Serialize(command.Answers);
@@ -61,7 +61,7 @@ public static class SubmitOsdiQuestionnaireHandler
         }
 
         await unitOfWork.SaveChangesAsync(ct);
-        return Result.Success();
+        return Result<decimal>.Success(osdiResult.Score);
     }
 
     private static void UpdateSubmission(OsdiSubmission submission, string answersJson, OsdiResult osdiResult)

@@ -200,6 +200,8 @@
     "linkCopied": "Link copied to clipboard",
     "linkExpires": "Expires: {{date}}",
     "usePatientLink": "Use the patient link for self-fill, or record via backend",
+    "submitted": "OSDI questionnaire submitted successfully",
+    "submitFailed": "Failed to submit OSDI questionnaire",
     "liveScore": "Live Score",
     "answered": "{{count}}/{{total}} answered",
     "subscaleA": "Ocular Symptoms (Q1-5)",

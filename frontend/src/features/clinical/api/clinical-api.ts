@@ -776,9 +776,38 @@ export function useGenerateOsdiLink() {
   })
 }
 
-// -- Medical Image API functions (native fetch + FormData, NOT openapi-fetch) --
+export function useSubmitOsdiInline() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async ({ visitId, answers }: { visitId: string; answers: (number | null)[] }) => {
+      const link = await generateOsdiLink(visitId)
+      await submitOsdiPublic(link.token, answers)
+    },
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: clinicalKeys.visit(variables.visitId),
+      })
+    },
+  })
+}
+
+// -- Public OSDI API function --
 
 const API_URL = (import.meta as never as { env: Record<string, string> }).env?.VITE_API_URL ?? "http://localhost:5255"
+
+async function submitOsdiPublic(token: string, answers: (number | null)[]): Promise<void> {
+  const res = await fetch(`${API_URL}/api/public/osdi/${token}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ answers }),
+  })
+  if (!res.ok) {
+    const body = await res.json().catch(() => null)
+    throw new Error(body?.detail || body?.title || "Failed to submit OSDI")
+  }
+}
+
+// -- Medical Image API functions (native fetch + FormData, NOT openapi-fetch) --
 
 export async function uploadMedicalImage(
   visitId: string,

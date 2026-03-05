@@ -200,6 +200,8 @@
     "linkCopied": "Đã sao chép liên kết",
     "linkExpires": "Hết hạn: {{date}}",
     "usePatientLink": "Sử dụng liên kết bệnh nhân để tự điền, hoặc ghi nhận qua hệ thống",
+    "submitted": "Đã gửi bảng câu hỏi OSDI thành công",
+    "submitFailed": "Gửi bảng câu hỏi OSDI thất bại",
     "liveScore": "Điểm trực tiếp",
     "answered": "{{count}}/{{total}} đã trả lời",
     "subscaleA": "Triệu chứng mắt (C1-5)",

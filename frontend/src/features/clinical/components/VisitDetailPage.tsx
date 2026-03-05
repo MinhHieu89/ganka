@@ -110,7 +110,7 @@ export function VisitDetailPage({ visitId }: VisitDetailPageProps) {
         disabled={isReadOnly}
       />
 
-      <MedicalImagesSection visitId={visitId} />
+      <MedicalImagesSection visitId={visitId} patientId={visit.patientId} />
 
       {visit.amendments.length > 0 && (
         <VisitAmendmentHistory amendments={visit.amendments} />

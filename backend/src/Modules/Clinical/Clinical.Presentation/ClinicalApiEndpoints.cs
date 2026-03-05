@@ -204,10 +204,13 @@ public static class ClinicalApiEndpoints
 }
 
 /// <summary>
-/// Query parameter binding for image upload form data.
+/// Form data binding for image upload parameters.
 /// </summary>
 public class ImageUploadParams
 {
+    [Microsoft.AspNetCore.Mvc.FromForm(Name = "imageType")]
     public int ImageType { get; set; }
+
+    [Microsoft.AspNetCore.Mvc.FromForm(Name = "eyeTag")]
     public int? EyeTag { get; set; }
 }

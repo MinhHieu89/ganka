@@ -360,6 +360,8 @@ Recent decisions affecting current work:
 - [Phase 04]: DryEyeAssessmentDto added to VisitDetailDto for frontend data access (backend deviation)
 - [Phase 04]: RadioGroup shadcn component added with wrapper for OSDI questionnaire radio options
 - [Phase 04]: OSDI history reused for comparison visit selectors; inline collapsible section for OSDI questionnaire
+- [Phase 04]: [FUTURE] Show previously submitted OSDI answers in visit page (read-only view of past questionnaire responses)
+- [Phase 04]: [FUTURE] Multi-visit trend charts for dry eye metrics (TBUT, Schirmer, etc.) similar to OSDI trend chart — beyond DRY-04 two-visit comparison
 
 ### Roadmap Evolution
 
