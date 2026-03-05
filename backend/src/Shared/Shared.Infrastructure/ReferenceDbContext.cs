@@ -1,10 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Shared.Domain;
+using Shared.Infrastructure.Entities;
 
 namespace Shared.Infrastructure;
 
 /// <summary>
-/// EF Core DbContext for cross-module reference data (e.g., ICD-10 codes).
+/// EF Core DbContext for cross-module reference data (e.g., ICD-10 codes, clinic settings).
 /// Uses the "reference" schema for data that is shared across all modules.
 /// </summary>
 public class ReferenceDbContext : DbContext
@@ -14,10 +15,14 @@ public class ReferenceDbContext : DbContext
     }
 
     public DbSet<Icd10Code> Icd10Codes => Set<Icd10Code>();
+    public DbSet<ClinicSettings> ClinicSettings => Set<ClinicSettings>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("reference");
+
+        // Apply IEntityTypeConfiguration classes from this assembly (e.g., ClinicSettingsConfiguration)
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ReferenceDbContext).Assembly);
 
         modelBuilder.Entity<Icd10Code>(builder =>
         {
