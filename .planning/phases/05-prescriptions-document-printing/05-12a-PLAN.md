@@ -1,15 +1,14 @@
 ---
 phase: 05-prescriptions-document-printing
-plan: 12
+plan: 12a
 type: execute
-wave: 5
+wave: 6
 depends_on: ["05-11"]
 files_modified:
   - backend/src/Modules/Clinical/Clinical.Infrastructure/Documents/OpticalPrescriptionDocument.cs
   - backend/src/Modules/Clinical/Clinical.Infrastructure/Documents/ReferralLetterDocument.cs
   - backend/src/Modules/Clinical/Clinical.Infrastructure/Documents/ConsentFormDocument.cs
   - backend/src/Modules/Clinical/Clinical.Infrastructure/Documents/PharmacyLabelDocument.cs
-  - backend/src/Modules/Clinical/Clinical.Infrastructure/Services/DocumentService.cs
 autonomous: true
 requirements:
   - PRT-02
@@ -37,18 +36,18 @@ must_haves:
       provides: "Small-format pharmacy label PDF"
       contains: "class PharmacyLabelDocument : IDocument"
   key_links:
-    - from: "DocumentService.cs"
-      to: "All 4 document classes"
-      via: "Instantiate and call GeneratePdf()"
-      pattern: "new (Optical|Referral|Consent|PharmacyLabel).*Document"
+    - from: "All 4 document classes"
+      to: "ClinicHeaderComponent"
+      via: "Shared header rendering"
+      pattern: "ClinicHeaderComponent"
 ---
 
 <objective>
-Implement remaining 4 printable document types and complete DocumentService.
+Implement remaining 4 printable document types (QuestPDF IDocument classes).
 
-Purpose: Completes the document printing requirements (PRT-02, PRT-04, PRT-05, PRT-06). Each document uses the shared ClinicHeaderComponent and Noto Sans Vietnamese font from Plan 11. Also updates DocumentService to wire all document generators.
+Purpose: Creates the OpticalPrescriptionDocument, ReferralLetterDocument, ConsentFormDocument, and PharmacyLabelDocument. Each uses the shared ClinicHeaderComponent and Noto Sans Vietnamese font from Plan 11.
 
-Output: OpticalPrescriptionDocument, ReferralLetterDocument, ConsentFormDocument, PharmacyLabelDocument
+Output: 4 document IDocument implementations
 </objective>
 
 <execution_context>
@@ -71,10 +70,9 @@ From 05-11:
 // ClinicHeaderComponent -- reusable QuestPDF header block
 // DocumentFontManager.RegisterFonts() -- Noto Sans registration
 // DrugPrescriptionDocument as IDocument pattern reference
-// DocumentService -- needs remaining methods implemented
 ```
 
-From 05-05 (DTOs):
+From 05-05b (DTOs):
 ```csharp
 public sealed record OpticalPrescriptionDto(Guid Id, Guid VisitId, decimal? OdSph, ...);
 ```
@@ -125,11 +123,10 @@ All Vietnamese text must use proper diacritics.
 </task>
 
 <task type="auto">
-  <name>Task 2: Create ConsentFormDocument, PharmacyLabelDocument, and complete DocumentService</name>
+  <name>Task 2: Create ConsentFormDocument and PharmacyLabelDocument</name>
   <files>
     backend/src/Modules/Clinical/Clinical.Infrastructure/Documents/ConsentFormDocument.cs,
-    backend/src/Modules/Clinical/Clinical.Infrastructure/Documents/PharmacyLabelDocument.cs,
-    backend/src/Modules/Clinical/Clinical.Infrastructure/Services/DocumentService.cs
+    backend/src/Modules/Clinical/Clinical.Infrastructure/Documents/PharmacyLabelDocument.cs
   </files>
   <action>
 **ConsentFormDocument.cs**: QuestPDF IDocument
@@ -155,40 +152,25 @@ All Vietnamese text must use proper diacritics.
   - Date dispensed
 - Designed for adhesive label printers (standard pharmacy label stock)
 
-**DocumentService.cs** -- complete remaining methods:
-- GenerateOpticalPrescriptionAsync: load visit with optical prescription + patient data, build data record, generate PDF
-- GenerateReferralLetterAsync: load visit + patient data, build data record with referralReason/referralTo params, generate PDF
-- GenerateConsentFormAsync: load visit + patient data, build data record with procedureType param, generate PDF
-- GeneratePharmacyLabelAsync: load prescription item by ID (via ClinicalDbContext direct query), build label data, generate PDF
-
-Also add document generation endpoint methods to ClinicalApiEndpoints if not already done in Plan 10:
-- GET /api/clinical/{visitId}/print/drug-rx -> PDF file
-- GET /api/clinical/{visitId}/print/optical-rx -> PDF file
-- GET /api/clinical/{visitId}/print/referral-letter?reason=...&to=... -> PDF file
-- GET /api/clinical/{visitId}/print/consent-form?procedureType=... -> PDF file
-- GET /api/clinical/prescription-items/{itemId}/print/label -> PDF file
-
-All return `Results.File(pdfBytes, "application/pdf", filename)`.
+All Vietnamese text must use proper diacritics.
   </action>
   <verify>
     <automated>dotnet build backend/src/Modules/Clinical/Clinical.Infrastructure/Clinical.Infrastructure.csproj</automated>
   </verify>
-  <done>All 5 document types generate PDFs. DocumentService fully implemented. Print endpoints return PDF file responses.</done>
+  <done>ConsentFormDocument renders A4 consent with signature lines. PharmacyLabelDocument renders small-format label.</done>
 </task>
 
 </tasks>
 
 <verification>
 - `dotnet build backend/src/Modules/Clinical/Clinical.Infrastructure/Clinical.Infrastructure.csproj` passes
-- All 5 document types compile and implement IDocument
-- DocumentService has no NotImplementedException stubs remaining
-- Print endpoints added for all document types
+- All 4 document types compile and implement IDocument
 </verification>
 
 <success_criteria>
-All printable document types implemented: drug Rx (A5), optical Rx (A4), referral letter (A4), consent form (A4), pharmacy label (~70x35mm). All use ClinicHeaderComponent and Vietnamese-compatible Noto Sans font.
+All remaining printable document types implemented: optical Rx (A4), referral letter (A4), consent form (A4), pharmacy label (~70x35mm). All use ClinicHeaderComponent and Vietnamese-compatible Noto Sans font.
 </success_criteria>
 
 <output>
-After completion, create `.planning/phases/05-prescriptions-document-printing/05-12-SUMMARY.md`
+After completion, create `.planning/phases/05-prescriptions-document-printing/05-12a-SUMMARY.md`
 </output>

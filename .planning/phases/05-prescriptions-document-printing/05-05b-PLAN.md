@@ -1,13 +1,10 @@
 ---
 phase: 05-prescriptions-document-printing
-plan: 05
+plan: 05b
 type: execute
 wave: 2
 depends_on: ["05-04"]
 files_modified:
-  - backend/src/Modules/Clinical/Clinical.Infrastructure/Configurations/DrugPrescriptionConfiguration.cs
-  - backend/src/Modules/Clinical/Clinical.Infrastructure/Configurations/PrescriptionItemConfiguration.cs
-  - backend/src/Modules/Clinical/Clinical.Infrastructure/Configurations/OpticalPrescriptionConfiguration.cs
   - backend/src/Modules/Clinical/Clinical.Infrastructure/ClinicalDbContext.cs
   - backend/src/Modules/Clinical/Clinical.Contracts/Dtos/DrugPrescriptionDto.cs
 autonomous: true
@@ -17,37 +14,29 @@ requirements:
   - RX-03
 must_haves:
   truths:
-    - "DrugPrescription, PrescriptionItem, and OpticalPrescription are persisted with proper EF Core configs"
-    - "Backing field access configured for Visit navigation properties"
-    - "ClinicalDbContext has DbSets for new entities"
+    - "ClinicalDbContext has DbSets for DrugPrescription, PrescriptionItem, OpticalPrescription"
     - "Contract DTOs exist for prescription data transfer"
+    - "VisitDetailDto includes prescription collections"
   artifacts:
-    - path: "backend/src/Modules/Clinical/Clinical.Infrastructure/Configurations/DrugPrescriptionConfiguration.cs"
-      provides: "EF config for DrugPrescription with Items collection"
-      contains: "IEntityTypeConfiguration<DrugPrescription>"
-    - path: "backend/src/Modules/Clinical/Clinical.Infrastructure/Configurations/OpticalPrescriptionConfiguration.cs"
-      provides: "EF config for OpticalPrescription with decimal precision"
-      contains: "IEntityTypeConfiguration<OpticalPrescription>"
     - path: "backend/src/Modules/Clinical/Clinical.Infrastructure/ClinicalDbContext.cs"
       provides: "Updated with DrugPrescription, PrescriptionItem, OpticalPrescription DbSets"
       contains: "DbSet<DrugPrescription>"
+    - path: "backend/src/Modules/Clinical/Clinical.Contracts/Dtos/DrugPrescriptionDto.cs"
+      provides: "Prescription contract DTOs"
+      contains: "DrugPrescriptionDto"
   key_links:
     - from: "ClinicalDbContext.cs"
       to: "DrugPrescriptionConfiguration.cs"
       via: "ApplyConfigurationsFromAssembly"
       pattern: "DbSet<DrugPrescription>"
-    - from: "VisitConfiguration.cs (existing)"
-      to: "DrugPrescription/OpticalPrescription"
-      via: "PropertyAccessMode.Field on backing fields"
-      pattern: "PropertyAccessMode.Field"
 ---
 
 <objective>
-Configure EF Core persistence for prescription entities and create contract DTOs.
+Update ClinicalDbContext with prescription DbSets and create contract DTOs.
 
-Purpose: Sets up the database mapping for prescriptions, including backing field access on Visit (critical for aggregate pattern), decimal precision for refraction values, and nullable FK for catalog-link. Also creates the DTOs needed by the application layer.
+Purpose: Adds the DbSet registrations and creates the DTO records needed by the application layer handlers.
 
-Output: 3 EF configurations, updated ClinicalDbContext, prescription DTOs
+Output: Updated ClinicalDbContext, prescription DTOs
 </objective>
 
 <execution_context>
@@ -62,8 +51,6 @@ Output: 3 EF configurations, updated ClinicalDbContext, prescription DTOs
 @.planning/phases/05-prescriptions-document-printing/05-04-SUMMARY.md
 
 @backend/src/Modules/Clinical/Clinical.Infrastructure/ClinicalDbContext.cs
-@backend/src/Modules/Clinical/Clinical.Infrastructure/Configurations/VisitConfiguration.cs
-@backend/src/Modules/Clinical/Clinical.Infrastructure/Configurations/RefractionConfiguration.cs
 
 <interfaces>
 From 05-04:
@@ -71,7 +58,6 @@ From 05-04:
 // DrugPrescription: Entity with VisitId, Notes, PrescriptionCode, PrescribedAt, Items collection
 // PrescriptionItem: Entity with DrugPrescriptionId, DrugCatalogItemId?, DrugName, GenericName, Strength, Form(int), Route(int), Dosage, DosageOverride, Quantity, Unit, Frequency, DurationDays, IsOffCatalog, HasAllergyWarning, SortOrder
 // OpticalPrescription: Entity with VisitId, OD/OS Sph/Cyl/Axis/Add, Far/Near PD, Near OD/OS override, LensType, Notes, PrescribedAt
-// Visit: _drugPrescriptions, _opticalPrescriptions backing fields added
 ```
 </interfaces>
 </context>
@@ -79,56 +65,7 @@ From 05-04:
 <tasks>
 
 <task type="auto">
-  <name>Task 1: Create EF Core configurations for prescription entities</name>
-  <files>
-    backend/src/Modules/Clinical/Clinical.Infrastructure/Configurations/DrugPrescriptionConfiguration.cs,
-    backend/src/Modules/Clinical/Clinical.Infrastructure/Configurations/PrescriptionItemConfiguration.cs,
-    backend/src/Modules/Clinical/Clinical.Infrastructure/Configurations/OpticalPrescriptionConfiguration.cs
-  </files>
-  <action>
-**DrugPrescriptionConfiguration.cs**:
-- Table "DrugPrescriptions" in clinical schema
-- VisitId: required FK to Visits table
-- Notes: max length 1000
-- PrescriptionCode: max length 20
-- PrescribedAt: required
-- Items collection: HasMany with cascade delete
-- PropertyAccessMode.Field on Items navigation for backing field `_items`
-- Follow VisitDiagnosisConfiguration pattern for Visit child entity
-
-**PrescriptionItemConfiguration.cs**:
-- Table "PrescriptionItems" in clinical schema
-- DrugPrescriptionId: required FK
-- DrugCatalogItemId: optional (nullable FK -- null = off-catalog)
-- DrugName: required, max length 200
-- GenericName: max length 200
-- Strength: max length 50
-- Unit: required, max length 50
-- Dosage: max length 500
-- DosageOverride: max length 500
-- Frequency: max length 100
-- Form, Route: int columns
-- SortOrder: default 0
-
-**OpticalPrescriptionConfiguration.cs**:
-- Table "OpticalPrescriptions" in clinical schema
-- VisitId: required FK to Visits table
-- All decimal fields: precision(5,2) following RefractionConfiguration pattern
-- LensType: int conversion
-- Notes: max length 500
-- PrescribedAt: required
-- PropertyAccessMode.Field on Visit's _opticalPrescriptions backing field
-
-IMPORTANT: Also update the existing VisitConfiguration.cs to configure PropertyAccessMode.Field for the two new backing field collections (_drugPrescriptions, _opticalPrescriptions), following the same pattern used for _refractions, _diagnoses, _dryEyeAssessments, _amendments.
-  </action>
-  <verify>
-    <automated>dotnet build backend/src/Modules/Clinical/Clinical.Infrastructure/Clinical.Infrastructure.csproj</automated>
-  </verify>
-  <done>All three EF configurations compile. Decimal precision set to (5,2). Backing field access configured for aggregate pattern.</done>
-</task>
-
-<task type="auto">
-  <name>Task 2: Update ClinicalDbContext and create contract DTOs</name>
+  <name>Task 1: Update ClinicalDbContext and create contract DTOs</name>
   <files>
     backend/src/Modules/Clinical/Clinical.Infrastructure/ClinicalDbContext.cs,
     backend/src/Modules/Clinical/Clinical.Contracts/Dtos/DrugPrescriptionDto.cs
@@ -185,9 +122,9 @@ Also update **VisitDetailDto** to include prescription collections:
 </verification>
 
 <success_criteria>
-EF Core persistence configured for all prescription entities. DTOs ready for application layer handlers. Visit aggregate properly wired with backing field access for new collections.
+ClinicalDbContext updated with prescription DbSets. DTOs ready for application layer handlers.
 </success_criteria>
 
 <output>
-After completion, create `.planning/phases/05-prescriptions-document-printing/05-05-SUMMARY.md`
+After completion, create `.planning/phases/05-prescriptions-document-printing/05-05b-SUMMARY.md`
 </output>

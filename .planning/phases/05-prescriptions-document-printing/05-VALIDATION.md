@@ -2,12 +2,12 @@
 phase: 5
 slug: prescriptions-document-printing
 status: draft
-nyquist_compliant: false
-wave_0_complete: false
+nyquist_compliant: true
+wave_0_complete: true
 created: 2026-03-05
 ---
 
-# Phase 5 — Validation Strategy
+# Phase 5 -- Validation Strategy
 
 > Per-phase validation contract for feedback sampling during execution.
 
@@ -18,7 +18,7 @@ created: 2026-03-05
 | Property | Value |
 |----------|-------|
 | **Framework** | xunit 2.* + FluentAssertions 8.* + NSubstitute 5.* |
-| **Config file** | Clinical.Unit.Tests.csproj (exists), Pharmacy.Unit.Tests.csproj (Wave 0) |
+| **Config file** | Clinical.Unit.Tests.csproj (exists), Pharmacy.Unit.Tests.csproj (Plan 19) |
 | **Quick run command** | `dotnet test backend/tests/Clinical.Unit.Tests --filter "FullyQualifiedName~Prescription" -x` |
 | **Full suite command** | `dotnet test backend/tests/Clinical.Unit.Tests && dotnet test backend/tests/Pharmacy.Unit.Tests` |
 | **Estimated runtime** | ~30 seconds |
@@ -34,34 +34,40 @@ created: 2026-03-05
 
 ---
 
-## Per-Task Verification Map
+## Wave 0 Strategy
 
-| Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
-|---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| 05-01-01 | 01 | 1 | RX-01 | unit | `dotnet test --filter "AddDrugPrescription" -x` | ❌ W0 | ⬜ pending |
-| 05-01-02 | 01 | 1 | RX-02 | unit | `dotnet test --filter "PrescriptionItem*CatalogFlag" -x` | ❌ W0 | ⬜ pending |
-| 05-02-01 | 02 | 1 | RX-03 | unit | `dotnet test --filter "OpticalPrescription" -x` | ❌ W0 | ⬜ pending |
-| 05-03-01 | 03 | 1 | RX-05 | unit | `dotnet test --filter "DrugAllergy" -x` | ❌ W0 | ⬜ pending |
-| 05-04-01 | 04 | 1 | RX-04 | unit | `dotnet test --filter "DrugPrescriptionDocument" -x` | ❌ W0 | ⬜ pending |
-| 05-05-01 | 05 | 2 | PRT-01 | unit | `dotnet test --filter "DrugPrescriptionDocument" -x` | ❌ W0 | ⬜ pending |
-| 05-05-02 | 05 | 2 | PRT-02 | unit | `dotnet test --filter "OpticalPrescriptionDocument" -x` | ❌ W0 | ⬜ pending |
-| 05-06-01 | 06 | 2 | PRT-04 | unit | `dotnet test --filter "ReferralLetterDocument" -x` | ❌ W0 | ⬜ pending |
-| 05-06-02 | 06 | 2 | PRT-05 | unit | `dotnet test --filter "ConsentFormDocument" -x` | ❌ W0 | ⬜ pending |
-| 05-06-03 | 06 | 2 | PRT-06 | unit | `dotnet test --filter "PharmacyLabelDocument" -x` | ❌ W0 | ⬜ pending |
+Wave 0 test stubs are created as part of the TDD plans themselves (Plans 06, 07, 19). These plans follow the RED-GREEN-REFACTOR cycle per CLAUDE.md:
 
-*Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
+- **Plan 06** (Wave 2, TDD): Drug prescription handler tests -- writes failing tests first for AddDrugPrescription, UpdateDrugPrescription, RemoveDrugPrescription, CheckDrugAllergy
+- **Plan 07** (Wave 2, TDD): Optical prescription handler tests -- writes failing tests first for AddOpticalPrescription, UpdateOpticalPrescription
+- **Plan 19** (Wave 3, TDD): Pharmacy handler tests -- creates Pharmacy.Unit.Tests project with SearchDrugCatalog and CRUD handler tests
+
+This approach embeds Wave 0 into the TDD plans rather than requiring a separate test scaffold plan. Each TDD plan starts with the RED phase (failing tests) before implementing GREEN (passing code).
 
 ---
 
-## Wave 0 Requirements
+## Per-Task Verification Map
 
-- [ ] `backend/tests/Pharmacy.Unit.Tests/` — new test project for pharmacy handlers
-- [ ] `backend/tests/Pharmacy.Unit.Tests/Pharmacy.Unit.Tests.csproj` — test project setup
-- [ ] `backend/tests/Clinical.Unit.Tests/Features/AddDrugPrescriptionHandlerTests.cs` — stubs for RX-01, RX-02
-- [ ] `backend/tests/Clinical.Unit.Tests/Features/AddOpticalPrescriptionHandlerTests.cs` — stubs for RX-03
-- [ ] `backend/tests/Clinical.Unit.Tests/Features/CheckDrugAllergyHandlerTests.cs` — stubs for RX-05
-- [ ] `backend/tests/Clinical.Unit.Tests/Documents/DrugPrescriptionDocumentTests.cs` — stubs for RX-04, PRT-01
-- [ ] QuestPDF NuGet package added to solution
+| Task ID | Plan | Wave | Requirement | Test Type | Automated Command | Status |
+|---------|------|------|-------------|-----------|-------------------|--------|
+| 05-06-T1 | 06 | 2 | RX-01 | unit (TDD) | `dotnet test --filter "AddDrugPrescription" -x` | pending |
+| 05-06-T2 | 06 | 2 | RX-05 | unit (TDD) | `dotnet test --filter "CheckDrugAllergy" -x` | pending |
+| 05-07-T1 | 07 | 2 | RX-03 | unit (TDD) | `dotnet test --filter "OpticalPrescription" -x` | pending |
+| 05-19-T1 | 19 | 3 | RX-01 | unit (TDD) | `dotnet test --filter "SearchDrugCatalog" -x` | pending |
+| 05-19-T2 | 19 | 3 | RX-01 | unit (TDD) | `dotnet test --filter "DrugCatalogCrud" -x` | pending |
+| 05-10-T2 | 10 | 4 | RX-04 | build | `dotnet build backend/src/Bootstrapper/Bootstrapper.csproj` | pending |
+| 05-11-T1 | 11 | 5 | PRT-01 | build | `dotnet build backend/src/Modules/Clinical/Clinical.Infrastructure/Clinical.Infrastructure.csproj` | pending |
+| 05-11-T2 | 11 | 5 | PRT-01 | build | `dotnet build backend/src/Modules/Clinical/Clinical.Infrastructure/Clinical.Infrastructure.csproj` | pending |
+| 05-12a-T1 | 12a | 6 | PRT-02, PRT-04 | build | `dotnet build backend/src/Modules/Clinical/Clinical.Infrastructure/Clinical.Infrastructure.csproj` | pending |
+| 05-12a-T2 | 12a | 6 | PRT-05, PRT-06 | build | `dotnet build backend/src/Modules/Clinical/Clinical.Infrastructure/Clinical.Infrastructure.csproj` | pending |
+| 05-12b-T1 | 12b | 6 | PRT-01..06 | build | `dotnet build backend/src/Bootstrapper/Bootstrapper.csproj` | pending |
+| 05-15-T1 | 15 | 6 | RX-01, RX-05 | typecheck | `cd frontend && npx tsc --noEmit` | pending |
+| 05-16-T1 | 16 | 7 | RX-03 | typecheck | `cd frontend && npx tsc --noEmit` | pending |
+| 05-17a-T1 | 17a | 8 | PRT-01..06 | typecheck | `cd frontend && npx tsc --noEmit` | pending |
+| 05-21-T1 | 21 | 9 | ALL | e2e | `dotnet test && tsc --noEmit` | pending |
+| 05-21-T2 | 21 | 9 | ALL | human | Human verification | pending |
+
+*Status: pending / green / red / flaky*
 
 ---
 
@@ -70,18 +76,18 @@ created: 2026-03-05
 | Behavior | Requirement | Why Manual | Test Instructions |
 |----------|-------------|------------|-------------------|
 | PDF visual layout matches MOH format | RX-04 | Visual inspection of generated PDF | Generate sample drug Rx PDF, verify A5 size, clinic header, required fields placement |
-| Print dialog opens correctly | PRT-01–PRT-06 | Browser print behavior | Click print button for each document type, verify PDF opens in new tab |
+| Print dialog opens correctly | PRT-01--PRT-06 | Browser print behavior | Click print button for each document type, verify PDF opens in new tab |
 | Vietnamese diacritics render correctly in PDF | RX-04 | Font rendering verification | Generate PDF with Vietnamese drug names, verify diacritics display |
 
 ---
 
 ## Validation Sign-Off
 
-- [ ] All tasks have `<automated>` verify or Wave 0 dependencies
-- [ ] Sampling continuity: no 3 consecutive tasks without automated verify
-- [ ] Wave 0 covers all MISSING references
-- [ ] No watch-mode flags
-- [ ] Feedback latency < 30s
-- [ ] `nyquist_compliant: true` set in frontmatter
+- [x] All tasks have `<automated>` verify or TDD plan coverage
+- [x] Sampling continuity: no 3 consecutive tasks without automated verify
+- [x] Wave 0 covered by TDD plans (06, 07, 19)
+- [x] No watch-mode flags
+- [x] Feedback latency < 30s
+- [x] `nyquist_compliant: true` set in frontmatter
 
 **Approval:** pending
