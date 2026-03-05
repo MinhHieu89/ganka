@@ -56,6 +56,30 @@ public interface IVisitRepository
     void AddDryEyeAssessment(DryEyeAssessment assessment);
 
     /// <summary>
+    /// Explicitly adds a DrugPrescription entity to the change tracker as Added.
+    /// Required because adding through Visit aggregate backing field does not register with EF Core.
+    /// </summary>
+    void AddDrugPrescription(DrugPrescription prescription);
+
+    /// <summary>
+    /// Explicitly adds a PrescriptionItem entity to the change tracker as Added.
+    /// Required because adding through Visit aggregate backing field does not register with EF Core.
+    /// </summary>
+    void AddPrescriptionItem(PrescriptionItem item);
+
+    /// <summary>
+    /// Explicitly adds an OpticalPrescription entity to the change tracker as Added.
+    /// Required because adding through Visit aggregate backing field does not register with EF Core.
+    /// </summary>
+    void AddOpticalPrescription(OpticalPrescription prescription);
+
+    /// <summary>
+    /// Removes OpticalPrescription entities for a visit from the change tracker.
+    /// Used when SetOpticalPrescription clears existing before adding new.
+    /// </summary>
+    void RemoveOpticalPrescriptions(IEnumerable<OpticalPrescription> prescriptions);
+
+    /// <summary>
     /// Gets all dry eye assessments for a patient across visits, for trend chart display.
     /// Includes Visit navigation for VisitDate, ordered by VisitDate.
     /// </summary>

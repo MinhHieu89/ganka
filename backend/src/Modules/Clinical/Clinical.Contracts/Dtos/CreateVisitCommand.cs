@@ -97,3 +97,79 @@ public record GetVisitByIdQuery(Guid VisitId);
 /// Query to get a doctor's ICD-10 favorites.
 /// </summary>
 public record GetDoctorFavoritesQuery(Guid DoctorId);
+
+/// <summary>
+/// Command to add/replace optical prescription (glasses Rx) on a visit.
+/// Only one optical Rx per visit -- SetOpticalPrescription clears existing.
+/// </summary>
+public record AddOpticalPrescriptionCommand(
+    Guid VisitId,
+    decimal? OdSph, decimal? OdCyl, int? OdAxis, decimal? OdAdd,
+    decimal? OsSph, decimal? OsCyl, int? OsAxis, decimal? OsAdd,
+    decimal? FarPd, decimal? NearPd,
+    decimal? NearOdSph, decimal? NearOdCyl, int? NearOdAxis,
+    decimal? NearOsSph, decimal? NearOsCyl, int? NearOsAxis,
+    int LensType, string? Notes);
+
+/// <summary>
+/// Command to update an existing optical prescription on a visit.
+/// </summary>
+public record UpdateOpticalPrescriptionCommand(
+    Guid VisitId,
+    Guid PrescriptionId,
+    decimal? OdSph, decimal? OdCyl, int? OdAxis, decimal? OdAdd,
+    decimal? OsSph, decimal? OsCyl, int? OsAxis, decimal? OsAdd,
+    decimal? FarPd, decimal? NearPd,
+    decimal? NearOdSph, decimal? NearOdCyl, int? NearOdAxis,
+    decimal? NearOsSph, decimal? NearOsCyl, int? NearOsAxis,
+    int LensType, string? Notes);
+
+/// <summary>
+/// Input for a single drug line in a prescription.
+/// </summary>
+public record PrescriptionItemInput(
+    Guid? DrugCatalogItemId,
+    string DrugName,
+    string? GenericName,
+    string? Strength,
+    int Form,
+    int Route,
+    string? Dosage,
+    string? DosageOverride,
+    int Quantity,
+    string Unit,
+    string? Frequency,
+    int? DurationDays,
+    bool HasAllergyWarning);
+
+/// <summary>
+/// Command to add a drug prescription with items to a visit.
+/// </summary>
+public record AddDrugPrescriptionCommand(
+    Guid VisitId,
+    string? Notes,
+    List<PrescriptionItemInput> Items);
+
+/// <summary>
+/// Command to update notes on an existing drug prescription.
+/// </summary>
+public record UpdateDrugPrescriptionCommand(
+    Guid VisitId,
+    Guid PrescriptionId,
+    string? Notes);
+
+/// <summary>
+/// Command to remove a drug prescription from a visit.
+/// </summary>
+public record RemoveDrugPrescriptionCommand(
+    Guid VisitId,
+    Guid PrescriptionId);
+
+/// <summary>
+/// Query to check if a drug triggers any patient allergy warnings.
+/// Returns matching allergies for cross-reference display.
+/// </summary>
+public record CheckDrugAllergyQuery(
+    Guid PatientId,
+    string DrugName,
+    string? GenericName);

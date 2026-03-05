@@ -83,6 +83,26 @@ public sealed class VisitRepository : IVisitRepository
         _dbContext.DryEyeAssessments.Add(assessment);
     }
 
+    public void AddDrugPrescription(DrugPrescription prescription)
+    {
+        _dbContext.DrugPrescriptions.Add(prescription);
+    }
+
+    public void AddPrescriptionItem(PrescriptionItem item)
+    {
+        _dbContext.PrescriptionItems.Add(item);
+    }
+
+    public void AddOpticalPrescription(OpticalPrescription prescription)
+    {
+        _dbContext.OpticalPrescriptions.Add(prescription);
+    }
+
+    public void RemoveOpticalPrescriptions(IEnumerable<OpticalPrescription> prescriptions)
+    {
+        _dbContext.OpticalPrescriptions.RemoveRange(prescriptions);
+    }
+
     public async Task<List<DryEyeAssessment>> GetDryEyeAssessmentsByPatientAsync(Guid patientId, CancellationToken ct = default)
     {
         return await _dbContext.DryEyeAssessments
