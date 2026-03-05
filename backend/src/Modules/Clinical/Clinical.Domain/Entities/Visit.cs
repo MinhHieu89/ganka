@@ -31,6 +31,9 @@ public class Visit : AggregateRoot, IAuditable
     private readonly List<VisitDiagnosis> _diagnoses = [];
     public IReadOnlyCollection<VisitDiagnosis> Diagnoses => _diagnoses.AsReadOnly();
 
+    private readonly List<DryEyeAssessment> _dryEyeAssessments = [];
+    public IReadOnlyCollection<DryEyeAssessment> DryEyeAssessments => _dryEyeAssessments.AsReadOnly();
+
     private readonly List<VisitAmendment> _amendments = [];
     public IReadOnlyCollection<VisitAmendment> Amendments => _amendments.AsReadOnly();
 
@@ -112,6 +115,16 @@ public class Visit : AggregateRoot, IAuditable
     {
         EnsureEditable();
         _refractions.Add(refraction);
+        SetUpdatedAt();
+    }
+
+    /// <summary>
+    /// Adds a dry eye assessment to the visit. Requires the visit to be editable.
+    /// </summary>
+    public void AddDryEyeAssessment(DryEyeAssessment assessment)
+    {
+        EnsureEditable();
+        _dryEyeAssessments.Add(assessment);
         SetUpdatedAt();
     }
 
