@@ -345,6 +345,8 @@ Recent decisions affecting current work:
 - [Phase 05]: Cross-schema raw SQL for patient data in DocumentService (avoids cross-module project reference)
 - [Phase 05]: QuestPDF Community license with embedded Noto Sans fonts for Vietnamese diacritics
 - [Phase 05]: Print endpoint pattern: GET /api/clinical/{visitId}/print/{docType} returning Results.File(pdf, application/pdf)
+- [Phase 05]: [05-05b]: All three prescription DTOs in single DrugPrescriptionDto.cs file for cohesion
+- [Phase 05]: [05-05b]: Include + ThenInclude for DrugPrescription.Items eager loading in repository
 
 ### Roadmap Evolution
 
@@ -366,6 +368,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-05T16:31:21.345Z
-Stopped at: Completed 05-12b-PLAN.md
-Resume file: None
+Last session: 2026-03-05T16:30:00Z
+Stopped at: Completed 05-05b-PLAN.md
+Resume file: .planning/phases/05-prescriptions-document-printing/05-05b-SUMMARY.md
