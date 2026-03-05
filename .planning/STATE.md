@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 03-08-PLAN.md
-last_updated: "2026-03-04T16:56:18.000Z"
-last_activity: 2026-03-04 -- Completed 03-08 Fix DbUpdateConcurrencyException
+stopped_at: Completed 03-09-PLAN.md
+last_updated: "2026-03-05T02:35:00.000Z"
+last_activity: 2026-03-05 -- Completed 03-09 Gap Closure Frontend Error Handling
 progress:
   total_phases: 12
-  completed_phases: 5
-  total_plans: 49
-  completed_plans: 49
+  completed_phases: 6
+  total_plans: 51
+  completed_plans: 51
   percent: 100
 ---
 
@@ -25,10 +25,10 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 
 ## Current Position
 
-Phase: 03 (Clinical Workflow & Examination)
-Plan: 8 of 9 in current phase
-Status: Plan 03-08 complete -- Fixed DbUpdateConcurrencyException in all child-entity mutation handlers
-Last activity: 2026-03-04 -- Completed 03-08 Fix DbUpdateConcurrencyException
+Phase: 03 (Clinical Workflow & Examination) -- COMPLETE
+Plan: 9 of 9 in current phase (all complete)
+Status: Phase 03 complete -- All 9 plans executed, gap closure verified end-to-end
+Last activity: 2026-03-05 -- Completed 03-09 Gap Closure Frontend Error Handling
 
 Progress: [##########] 100%
 
@@ -92,6 +92,8 @@ Progress: [##########] 100%
 | Phase 03 P04 | 7 | 2 tasks | 15 files |
 | Phase 03 P06 | 9 | 2 tasks | 2 files |
 | Phase 03 P08 | 10min | 2 tasks | 9 files |
+| Phase 03 P07 | 5min | 2 tasks | 2 files |
+| Phase 03 P09 | 5min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -251,6 +253,9 @@ Recent decisions affecting current work:
 - [Phase 03]: Non-laterality ICD-10 codes default to laterality 0 (OD) -- stored but not clinically meaningful when requiresLaterality=false
 - [Phase 03]: [03-08]: Direct DbContext.DbSet.Add() for child entities instead of relying on aggregate backing field insertion (same pattern as AllergyRepository.Add)
 - [Phase 03]: [03-08]: Dual-call pattern: domain aggregate method for business rules + repository Add for EF Core change tracking
+- [Phase 03]: Capture signed-state snapshot at amendment initiation rather than before/after diff (no finalize-amendment endpoint)
+- [Phase 03]: [03-09]: onError callback pattern: all React Query mutations must have onError with toast.error for user feedback
+- [Phase 03]: [03-09]: IOP method Select uses undefined (not empty string) for null state to avoid controlled/uncontrolled React warning
 
 ### Roadmap Evolution
 
@@ -271,6 +276,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-04T16:56:18.000Z
-Stopped at: Completed 03-08-PLAN.md
+Last session: 2026-03-05T02:33:10.164Z
+Stopped at: Completed 03-07-PLAN.md
 Resume file: None

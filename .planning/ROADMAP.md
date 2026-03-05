@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [ ] **Phase 1: Foundation & Infrastructure** - Modular monolith skeleton with auth, audit, i18n, and multi-tenant scaffolding
 - [x] **Phase 2: Patient Management & Scheduling** - Patient registration and appointment booking with calendar (completed 2026-03-02)
-- [ ] **Phase 3: Clinical Workflow & Examination** - Visit lifecycle, refraction recording, and ICD-10 diagnosis
+- [x] **Phase 3: Clinical Workflow & Examination** - Visit lifecycle, refraction recording, and ICD-10 diagnosis (completed 2026-03-05)
 - [ ] **Phase 4: Dry Eye Template & Medical Imaging** - Structured dry eye assessment and medical image management with comparison
 - [ ] **Phase 5: Prescriptions & Document Printing** - Drug and optical prescription writing with all printable documents
 - [ ] **Phase 6: Pharmacy & Consumables** - Drug inventory, dispensing, and consumables warehouse
@@ -140,8 +140,8 @@ Plans:
 - [x] 03-05-PLAN.md -- End-to-end verification checkpoint
 - [x] 03-06-PLAN.md -- [GAP] Fix refraction save 500 (EF Core backing field config) and diagnosis add 400 (laterality enum mismatch)
 - [x] 03-07-PLAN.md -- [GAP] Fix amendment empty field-level diff + human verification of all gap fixes
-- [ ] 03-08-PLAN.md -- [GAP] Fix DbUpdateConcurrencyException: explicit child-entity registration with EF Core change tracker
-- [ ] 03-09-PLAN.md -- [GAP] Frontend error toasts + IOP Select warning fix + human verification of complete workflow
+- [x] 03-08-PLAN.md -- [GAP] Fix DbUpdateConcurrencyException: explicit child-entity registration with EF Core change tracker
+- [x] 03-09-PLAN.md -- [GAP] Frontend error toasts + IOP Select warning fix + human verification of complete workflow
 
 ### Phase 4: Dry Eye Template & Medical Imaging
 **Goal**: Doctors can perform structured Dry Eye assessments with OSDI scoring and compare clinical data and images across visits
@@ -257,7 +257,7 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 | 1.2 Frontend shadcn/ui Refactoring | 6/8 | In Progress | - |
 | 2. Patient Management & Scheduling | 14/14 | Complete    | 2026-03-02 |
 | 2.1 Frontend Bug Fixes + Auth Security | 4/4 | Complete | 2026-03-02 |
-| 3. Clinical Workflow & Examination | 7/9 | In Progress | - |
+| 3. Clinical Workflow & Examination | 9/9 | Complete | 2026-03-05 |
 | 4. Dry Eye Template & Medical Imaging | 0/2 | Not started | - |
 | 5. Prescriptions & Document Printing | 0/2 | Not started | - |
 | 6. Pharmacy & Consumables | 0/2 | Not started | - |
