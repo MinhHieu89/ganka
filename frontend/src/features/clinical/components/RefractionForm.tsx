@@ -286,7 +286,7 @@ export function RefractionForm({
         <Select
           value={(() => {
             const v = form.watch("iopMethod") as number | null | undefined
-            return v === null || v === undefined ? undefined : String(v)
+            return v === null || v === undefined ? "" : String(v)
           })()}
           onValueChange={(v) => {
             form.setValue("iopMethod", Number(v))

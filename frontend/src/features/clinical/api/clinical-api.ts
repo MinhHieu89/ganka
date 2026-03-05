@@ -17,7 +17,7 @@ export interface ActiveVisitDto {
 export interface RefractionDto {
   id: string
   visitId: string
-  refractionType: number
+  type: number
   odSph: number | null
   odCyl: number | null
   odAxis: number | null

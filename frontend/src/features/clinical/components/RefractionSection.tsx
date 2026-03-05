@@ -40,7 +40,7 @@ export function RefractionSection({
   const { t } = useTranslation("clinical")
 
   const getRefractionByType = (type: number): RefractionDto | undefined =>
-    refractions.find((r) => r.refractionType === type)
+    refractions.find((r) => r.type === type)
 
   return (
     <VisitSection title={t("visit.refraction")}>

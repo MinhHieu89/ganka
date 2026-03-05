@@ -38,9 +38,9 @@ function buildFieldChangesSnapshot(visit: VisitDetailDto): string {
   if (visit.refractions.length > 0) {
     for (const r of visit.refractions) {
       const typeLabel =
-        r.refractionType === 0
+        r.type === 0
           ? "manifest"
-          : r.refractionType === 1
+          : r.type === 1
             ? "autorefraction"
             : "cycloplegic"
       changes.push({
