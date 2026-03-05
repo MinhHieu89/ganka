@@ -58,6 +58,51 @@ export interface VisitAmendmentDto {
   amendedAt: string
 }
 
+export interface DryEyeAssessmentDto {
+  id: string
+  visitId: string
+  odTbut: number | null
+  osTbut: number | null
+  odSchirmer: number | null
+  osSchirmer: number | null
+  odMeibomianGrading: number | null
+  osMeibomianGrading: number | null
+  odTearMeniscus: number | null
+  osTearMeniscus: number | null
+  odStaining: number | null
+  osStaining: number | null
+  osdiScore: number | null
+  osdiSeverity: number | null
+}
+
+export interface OsdiHistoryDto {
+  visitId: string
+  visitDate: string
+  osdiScore: number
+  severity: number
+}
+
+export interface OsdiHistoryResponse {
+  items: OsdiHistoryDto[]
+}
+
+export interface DryEyeComparisonVisitData {
+  visitId: string
+  visitDate: string
+  assessment: DryEyeAssessmentDto | null
+}
+
+export interface DryEyeComparisonDto {
+  visit1: DryEyeComparisonVisitData
+  visit2: DryEyeComparisonVisitData
+}
+
+export interface OsdiLinkResponse {
+  token: string
+  url: string
+  expiresAt: string
+}
+
 export interface VisitDetailDto {
   id: string
   patientId: string
@@ -71,6 +116,7 @@ export interface VisitDetailDto {
   refractions: RefractionDto[]
   diagnoses: VisitDiagnosisDto[]
   amendments: VisitAmendmentDto[]
+  dryEyeAssessments: DryEyeAssessmentDto[]
   signedAt: string | null
   signedById: string | null
   appointmentId: string | null
@@ -96,6 +142,76 @@ export interface CreateVisitCommand {
 
 // -- Query key factory --
 
+// -- Medical Image types --
+
+export interface MedicalImageDto {
+  id: string
+  visitId: string
+  type: number
+  eyeTag: number | null
+  fileName: string
+  url: string
+  contentType: string
+  fileSize: number
+  description: string | null
+  createdAt: string
+}
+
+export interface ImageComparisonResponse {
+  visit1Images: MedicalImageDto[]
+  visit2Images: MedicalImageDto[]
+}
+
+// ImageType enum matching backend Clinical.Domain.Enums.ImageType
+export const ImageType = {
+  Fluorescein: 0,
+  Meibography: 1,
+  OCT: 2,
+  SpecularMicroscopy: 3,
+  Topography: 4,
+  Video: 5,
+} as const
+
+export type ImageTypeValue = (typeof ImageType)[keyof typeof ImageType]
+
+// EyeTag enum matching backend Clinical.Domain.Enums.EyeTag
+export const EyeTag = {
+  OD: 0,
+  OS: 1,
+  OU: 2,
+} as const
+
+export type EyeTagValue = (typeof EyeTag)[keyof typeof EyeTag]
+
+export const IMAGE_TYPE_LABELS: Record<number, { en: string; vi: string }> = {
+  [ImageType.Fluorescein]: { en: "Fluorescein", vi: "Fluorescein" },
+  [ImageType.Meibography]: { en: "Meibography", vi: "Meibography" },
+  [ImageType.OCT]: { en: "OCT", vi: "OCT" },
+  [ImageType.SpecularMicroscopy]: { en: "Specular Microscopy", vi: "Kính hiển vi phản xạ gương" },
+  [ImageType.Topography]: { en: "Topography", vi: "Địa hình giác mạc" },
+  [ImageType.Video]: { en: "Video", vi: "Video" },
+}
+
+export const EYE_TAG_LABELS: Record<number, { en: string; vi: string }> = {
+  [EyeTag.OD]: { en: "OD", vi: "MP" },
+  [EyeTag.OS]: { en: "OS", vi: "MT" },
+  [EyeTag.OU]: { en: "OU", vi: "2M" },
+}
+
+// Allowed content types matching backend AllowedContentTypes
+export const ALLOWED_IMAGE_TYPES = [
+  "image/jpeg", "image/png", "image/tiff", "image/bmp", "image/webp",
+]
+export const ALLOWED_VIDEO_TYPES = [
+  "video/mp4", "video/quicktime", "video/x-msvideo",
+]
+export const ALL_ALLOWED_TYPES = [...ALLOWED_IMAGE_TYPES, ...ALLOWED_VIDEO_TYPES]
+
+// Size limits
+export const MAX_IMAGE_SIZE = 50 * 1024 * 1024 // 50MB
+export const MAX_VIDEO_SIZE = 200 * 1024 * 1024 // 200MB
+export const MAX_FILES_PER_BATCH = 20
+
 export const clinicalKeys = {
   all: ["clinical"] as const,
   visits: () => [...clinicalKeys.all, "visits"] as const,
@@ -104,6 +220,14 @@ export const clinicalKeys = {
   icd10Search: (query: string) => [...clinicalKeys.all, "icd10", query] as const,
   doctorFavorites: (doctorId: string) =>
     [...clinicalKeys.all, "icd10-favorites", doctorId] as const,
+  osdiHistory: (patientId: string) =>
+    [...clinicalKeys.all, "osdi-history", patientId] as const,
+  dryEyeComparison: (patientId: string, visitId1: string, visitId2: string) =>
+    [...clinicalKeys.all, "dry-eye-comparison", patientId, visitId1, visitId2] as const,
+  visitImages: (visitId: string) =>
+    [...clinicalKeys.all, "visit-images", visitId] as const,
+  imageComparison: (patientId: string, visitId1: string, visitId2: string, imageType: number) =>
+    [...clinicalKeys.all, "image-comparison", patientId, visitId1, visitId2, imageType] as const,
 }
 
 // -- API functions --
@@ -524,5 +648,264 @@ export function useToggleIcd10Favorite() {
       })
       queryClient.invalidateQueries({ queryKey: clinicalKeys.all })
     },
+  })
+}
+
+// -- Dry Eye API functions --
+
+async function updateDryEye(
+  visitId: string,
+  data: {
+    odTbut?: number | null
+    osTbut?: number | null
+    odSchirmer?: number | null
+    osSchirmer?: number | null
+    odMeibomianGrading?: number | null
+    osMeibomianGrading?: number | null
+    odTearMeniscus?: number | null
+    osTearMeniscus?: number | null
+    odStaining?: number | null
+    osStaining?: number | null
+  },
+): Promise<void> {
+  const { error, response } = await api.PUT(
+    `/api/clinical/${visitId}/dry-eye` as never,
+    {
+      body: { visitId, ...data },
+    } as never,
+  )
+  if (error || !response.ok) {
+    const err = error as Record<string, unknown> | undefined
+    if (err?.errors) throw new Error(JSON.stringify(err))
+    throw new Error("Failed to update dry eye assessment")
+  }
+}
+
+async function getOsdiHistory(patientId: string): Promise<OsdiHistoryResponse> {
+  const { data, error } = await api.GET(
+    `/api/clinical/osdi-history/${patientId}` as never,
+  )
+  if (error) throw new Error("Failed to fetch OSDI history")
+  return data as OsdiHistoryResponse
+}
+
+async function getDryEyeComparison(
+  patientId: string,
+  visitId1: string,
+  visitId2: string,
+): Promise<DryEyeComparisonDto> {
+  const { data, error } = await api.GET(
+    "/api/clinical/dry-eye-comparison" as never,
+    {
+      params: { query: { patientId, visitId1, visitId2 } },
+    } as never,
+  )
+  if (error) throw new Error("Failed to fetch dry eye comparison")
+  return data as DryEyeComparisonDto
+}
+
+async function generateOsdiLink(visitId: string): Promise<OsdiLinkResponse> {
+  const { data, error, response } = await api.POST(
+    `/api/clinical/${visitId}/osdi-link` as never,
+    {} as never,
+  )
+  if (error || !response.ok) {
+    const err = error as Record<string, unknown> | undefined
+    if (err?.errors) throw new Error(JSON.stringify(err))
+    throw new Error("Failed to generate OSDI link")
+  }
+  return data as OsdiLinkResponse
+}
+
+// -- Dry Eye hooks --
+
+export function useUpdateDryEye() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({
+      visitId,
+      ...data
+    }: {
+      visitId: string
+      odTbut?: number | null
+      osTbut?: number | null
+      odSchirmer?: number | null
+      osSchirmer?: number | null
+      odMeibomianGrading?: number | null
+      osMeibomianGrading?: number | null
+      odTearMeniscus?: number | null
+      osTearMeniscus?: number | null
+      odStaining?: number | null
+      osStaining?: number | null
+    }) => updateDryEye(visitId, data),
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: clinicalKeys.visit(variables.visitId),
+      })
+    },
+  })
+}
+
+export function useOsdiHistory(patientId: string | undefined) {
+  return useQuery({
+    queryKey: clinicalKeys.osdiHistory(patientId ?? ""),
+    queryFn: () => getOsdiHistory(patientId!),
+    enabled: !!patientId,
+  })
+}
+
+export function useDryEyeComparison(
+  patientId: string | undefined,
+  visitId1: string | undefined,
+  visitId2: string | undefined,
+) {
+  return useQuery({
+    queryKey: clinicalKeys.dryEyeComparison(
+      patientId ?? "",
+      visitId1 ?? "",
+      visitId2 ?? "",
+    ),
+    queryFn: () => getDryEyeComparison(patientId!, visitId1!, visitId2!),
+    enabled: !!patientId && !!visitId1 && !!visitId2,
+  })
+}
+
+export function useGenerateOsdiLink() {
+  return useMutation({
+    mutationFn: (visitId: string) => generateOsdiLink(visitId),
+  })
+}
+
+// -- Medical Image API functions (native fetch + FormData, NOT openapi-fetch) --
+
+const API_URL = (import.meta as never as { env: Record<string, string> }).env?.VITE_API_URL ?? "http://localhost:5255"
+
+export async function uploadMedicalImage(
+  visitId: string,
+  file: File,
+  imageType: number,
+  eyeTag?: number | null,
+): Promise<string> {
+  const formData = new FormData()
+  formData.append("file", file)
+  formData.append("imageType", imageType.toString())
+  if (eyeTag != null) {
+    formData.append("eyeTag", eyeTag.toString())
+  }
+
+  const token = (await import("@/shared/stores/authStore")).useAuthStore.getState().accessToken
+  const res = await fetch(`${API_URL}/api/clinical/${visitId}/images`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+    credentials: "include",
+  })
+  if (!res.ok) {
+    const body = await res.json().catch(() => null)
+    throw new Error(body?.detail || body?.title || "Failed to upload image")
+  }
+  const data = await res.json()
+  return data.id ?? data
+}
+
+async function getVisitImages(visitId: string): Promise<MedicalImageDto[]> {
+  const { data, error } = await api.GET(
+    `/api/clinical/${visitId}/images` as never,
+  )
+  if (error) throw new Error("Failed to fetch visit images")
+  return (data as MedicalImageDto[]) ?? []
+}
+
+async function deleteImage(imageId: string): Promise<void> {
+  const { error, response } = await api.DELETE(
+    `/api/clinical/images/${imageId}` as never,
+    {} as never,
+  )
+  if (error || !response.ok) {
+    throw new Error("Failed to delete image")
+  }
+}
+
+async function getImageComparison(
+  patientId: string,
+  visitId1: string,
+  visitId2: string,
+  imageType: number,
+): Promise<ImageComparisonResponse> {
+  const { data, error } = await api.GET(
+    "/api/clinical/image-comparison" as never,
+    {
+      params: {
+        query: { patientId, visitId1, visitId2, imageType },
+      },
+    } as never,
+  )
+  if (error) throw new Error("Failed to fetch image comparison")
+  return data as ImageComparisonResponse
+}
+
+// -- Medical Image hooks --
+
+export function useVisitImages(visitId: string | undefined) {
+  return useQuery({
+    queryKey: clinicalKeys.visitImages(visitId ?? ""),
+    queryFn: () => getVisitImages(visitId!),
+    enabled: !!visitId,
+    staleTime: 1000 * 60 * 30, // 30 min -- SAS URLs expire in 1 hour
+  })
+}
+
+export function useUploadImage(visitId: string) {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({
+      file,
+      imageType,
+      eyeTag,
+    }: {
+      file: File
+      imageType: number
+      eyeTag?: number | null
+    }) => uploadMedicalImage(visitId, file, imageType, eyeTag),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: clinicalKeys.visitImages(visitId),
+      })
+    },
+  })
+}
+
+export function useDeleteImage() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ imageId }: { imageId: string; visitId: string }) =>
+      deleteImage(imageId),
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: clinicalKeys.visitImages(variables.visitId),
+      })
+    },
+  })
+}
+
+export function useImageComparison(
+  patientId: string | undefined,
+  visitId1: string | undefined,
+  visitId2: string | undefined,
+  imageType: number | undefined,
+) {
+  return useQuery({
+    queryKey: clinicalKeys.imageComparison(
+      patientId ?? "",
+      visitId1 ?? "",
+      visitId2 ?? "",
+      imageType ?? -1,
+    ),
+    queryFn: () =>
+      getImageComparison(patientId!, visitId1!, visitId2!, imageType!),
+    enabled: !!patientId && !!visitId1 && !!visitId2 && imageType != null,
+    staleTime: 1000 * 60 * 30,
   })
 }

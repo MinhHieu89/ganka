@@ -54,6 +54,17 @@ public static class GetVisitByIdHandler
                 a.FieldChangesJson,
                 a.AmendedAt
             )).ToList(),
+            visit.DryEyeAssessments.Select(d => new DryEyeAssessmentDto(
+                d.Id,
+                d.VisitId,
+                d.OdTbut, d.OsTbut,
+                d.OdSchirmer, d.OsSchirmer,
+                d.OdMeibomianGrading, d.OsMeibomianGrading,
+                d.OdTearMeniscus, d.OsTearMeniscus,
+                d.OdStaining, d.OsStaining,
+                d.OsdiScore,
+                d.OsdiSeverity.HasValue ? (int)d.OsdiSeverity.Value : null
+            )).ToList(),
             visit.SignedAt,
             visit.SignedById,
             visit.AppointmentId);
