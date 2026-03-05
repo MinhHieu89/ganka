@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 04-02-PLAN.md
-last_updated: "2026-03-05T06:41:13.708Z"
+stopped_at: Completed 04-03-PLAN.md
+last_updated: "2026-03-05T06:42:58.738Z"
 last_activity: 2026-03-05 -- Completed 03.1-01 Auth & Patient User Stories
 progress:
   total_phases: 13
   completed_phases: 7
   total_plans: 63
-  completed_plans: 59
+  completed_plans: 60
   percent: 98
 ---
 
@@ -148,6 +148,7 @@ Progress: [##########] 98%
 | Phase 04 P07 | 5min | 2 tasks | 2 files |
 | Phase 04 P01b | 6min | 1 tasks | 15 files |
 | Phase 04 P02 | 10min | 2 tasks | 12 files |
+| Phase 04 P03 | 11min | 2 tasks | 15 files |
 
 ## Accumulated Context
 
@@ -330,6 +331,9 @@ Recent decisions affecting current work:
 - [Phase 04]: Query records defined in Contracts project (not Application) to avoid ambiguous references across module boundaries
 - [Phase 04]: OsdiCalculator as static utility class for formula reuse across SubmitOsdi and future doctor-recorded OSDI
 - [Phase 04]: URL-safe base64 tokens: Replace +/= with -/_ for clean URLs in public OSDI self-fill links
+- [Phase 04]: File upload uses IFormFile + [AsParameters] ImageUploadParams for imageType/eyeTag form fields with DisableAntiforgery()
+- [Phase 04]: SAS URLs generated with 1-hour expiry for all image access; AllowedContentTypes as static class with separate image/video sets
+- [Phase 04]: Public OSDI endpoints reuse public-booking rate limit policy; GetOsdiByTokenQuery in Contracts for cross-layer access
 
 ### Roadmap Evolution
 
@@ -351,6 +355,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-05T06:41:13.705Z
-Stopped at: Completed 04-02-PLAN.md
+Last session: 2026-03-05T06:42:58.734Z
+Stopped at: Completed 04-03-PLAN.md
 Resume file: None

@@ -47,8 +47,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **IMG-01**: Staff can upload medical images (Fluorescein, Meibography, Specular microscopy, Topography, OCT) and associate them with the correct visit
 - [x] **IMG-02**: Staff can upload video files (e.g., lacrimal duct procedures) associated with visits
-- [ ] **IMG-03**: Doctor can view images in a lightbox with zoom capability
-- [ ] **IMG-04**: Doctor can compare images side-by-side across two visits (same image type, same patient)
+- [x] **IMG-03**: Doctor can view images in a lightbox with zoom capability
+- [x] **IMG-04**: Doctor can compare images side-by-side across two visits (same image type, same patient)
 
 ### Diagnosis & Prescription
 
@@ -253,8 +253,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | REF-03 | Phase 3 | Complete |
 | IMG-01 | Phase 4 | Complete |
 | IMG-02 | Phase 4 | Complete |
-| IMG-03 | Phase 4 | Pending |
-| IMG-04 | Phase 4 | Pending |
+| IMG-03 | Phase 4 | Complete |
+| IMG-04 | Phase 4 | Complete |
 | DX-01 | Phase 3 | Complete |
 | DX-02 | Phase 3 | Complete |
 | RX-01 | Phase 5 | Pending |
