@@ -114,6 +114,7 @@ export function VisitDetailPage({ visitId }: VisitDetailPageProps) {
 
       <DrugPrescriptionSection
         visitId={visitId}
+        patientId={visit.patientId}
         prescriptions={visit.drugPrescriptions ?? []}
         disabled={isReadOnly}
       />
