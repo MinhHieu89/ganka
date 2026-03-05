@@ -3,11 +3,27 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
+stopped_at: Completed 05-08-PLAN.md
+last_updated: "2026-03-05T16:48:25.647Z"
+last_activity: 2026-03-05 -- Completed 05-08 Pharmacy Presentation & IoC
+progress:
+  total_phases: 13
+  completed_phases: 8
+  total_plans: 108
+  completed_plans: 77
+  percent: 71
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: in-progress
 stopped_at: Completed 05-02-PLAN.md
 last_updated: "2026-03-05T16:41:32.949Z"
 last_activity: 2026-03-05 -- Completed 05-03 Pharmacy Application Handlers
 progress:
-  total_phases: 13
+  [███████░░░] 71%
   completed_phases: 8
   total_plans: 95
   completed_plans: 76
@@ -42,9 +58,9 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 ## Current Position
 
 Phase: 05 (Prescriptions & Document Printing) -- IN PROGRESS
-Plan: 03 of 25 in current phase (9 complete)
-Status: Completed 05-03 Pharmacy Application Handlers
-Last activity: 2026-03-05 -- Completed 05-03 Pharmacy Application Handlers
+Plan: 08 of 25 in current phase (10 complete)
+Status: Completed 05-08 Pharmacy Presentation & IoC
+Last activity: 2026-03-05 -- Completed 05-08 Pharmacy Presentation & IoC
 
 Progress: [████████░░] 84%
 
@@ -134,6 +150,7 @@ Progress: [████████░░] 84%
 | Phase 05 P03 | 3min | 2 tasks | 6 files |
 | Phase 05 P19 | 5min | 2 tasks | 9 files |
 | Phase 05 P02 | 5min | 2 tasks | 4 files |
+| Phase 05 P08 | 3min | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -357,6 +374,8 @@ Recent decisions affecting current work:
 - [Phase 05]: [05-03]: IDrugCatalogItemRepository/IUnitOfWork created as blocking prerequisite when Plan 02 not yet executed
 - [Phase 05]: Command records use int for Form/Route (not Domain enums) matching Contracts DTO normalization pattern
 - [Phase 05]: Used BranchId 00000000-0000-0000-0000-000000000001 for drug catalog seed data, matching ClinicScheduleSeeder pattern
+- [Phase 05]: GetAllActiveDrugsQuery handler added for admin list endpoint (not in original plan scope)
+- [Phase 05]: UnitOfWork implementation created as missing prerequisite for IoC registration
 
 ### Roadmap Evolution
 
@@ -378,6 +397,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-05T16:41:32.945Z
-Stopped at: Completed 05-02-PLAN.md
+Last session: 2026-03-05T16:48:25.643Z
+Stopped at: Completed 05-08-PLAN.md
 Resume file: None
