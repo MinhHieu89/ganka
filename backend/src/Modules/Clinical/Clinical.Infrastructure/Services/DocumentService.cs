@@ -4,6 +4,7 @@ using Clinical.Infrastructure.Documents;
 using Clinical.Infrastructure.Documents.Shared;
 using Microsoft.EntityFrameworkCore;
 using QuestPDF.Fluent;
+using Shared.Application.Interfaces;
 
 namespace Clinical.Infrastructure.Services;
 
@@ -11,14 +12,17 @@ namespace Clinical.Infrastructure.Services;
 /// Service for generating clinical document PDFs.
 /// Loads visit/patient data from the database and generates PDF bytes using QuestPDF.
 /// Cross-module patient data is queried via raw SQL to avoid project reference coupling.
+/// Clinic header data is pulled from IClinicSettingsService (configurable, not hardcoded).
 /// </summary>
 public sealed class DocumentService : IDocumentService
 {
     private readonly ClinicalDbContext _clinicalDb;
+    private readonly IClinicSettingsService _clinicSettingsService;
 
-    public DocumentService(ClinicalDbContext clinicalDb)
+    public DocumentService(ClinicalDbContext clinicalDb, IClinicSettingsService clinicSettingsService)
     {
         _clinicalDb = clinicalDb;
+        _clinicSettingsService = clinicSettingsService;
 
         // Ensure fonts are registered (idempotent, thread-safe)
         DocumentFontManager.RegisterFonts();
@@ -232,23 +236,35 @@ public sealed class DocumentService : IDocumentService
     }
 
     /// <summary>
-    /// Gets clinic header data. Returns defaults if no clinic settings configured.
-    /// When IClinicSettingsService is available (Plan 05-09), this should delegate to it.
+    /// Gets clinic header data from IClinicSettingsService.
+    /// Returns sensible defaults if no clinic settings are configured yet.
     /// </summary>
-    private Task<ClinicHeaderData> GetClinicHeaderDataAsync(CancellationToken ct)
+    private async Task<ClinicHeaderData> GetClinicHeaderDataAsync(CancellationToken ct)
     {
-        // TODO: Replace with IClinicSettingsService when Plan 05-09 is implemented
-        var defaultHeader = new ClinicHeaderData(
-            ClinicName: "GANKA Eye Clinic",
-            ClinicNameVi: "PH\u00d2NG KH\u00c1M M\u1eaeT GANKA",
-            Address: null,
-            Phone: null,
-            Fax: null,
-            LicenseNumber: null,
-            Tagline: null,
-            LogoBytes: null);
+        var settings = await _clinicSettingsService.GetCurrentAsync(ct);
 
-        return Task.FromResult(defaultHeader);
+        if (settings is null)
+        {
+            return new ClinicHeaderData(
+                ClinicName: "GANKA Eye Clinic",
+                ClinicNameVi: "PH\u00d2NG KH\u00c1M M\u1eaeT GANKA",
+                Address: null,
+                Phone: null,
+                Fax: null,
+                LicenseNumber: null,
+                Tagline: null,
+                LogoBytes: null);
+        }
+
+        return new ClinicHeaderData(
+            ClinicName: settings.ClinicName,
+            ClinicNameVi: settings.ClinicNameVi,
+            Address: settings.Address,
+            Phone: settings.Phone,
+            Fax: settings.Fax,
+            LicenseNumber: settings.LicenseNumber,
+            Tagline: settings.Tagline,
+            LogoBytes: null); // Logo bytes loaded separately if needed
     }
 
     /// <summary>
