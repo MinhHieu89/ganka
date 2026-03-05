@@ -3,76 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 04-04-PLAN.md
-last_updated: "2026-03-05T07:01:34.724Z"
-last_activity: 2026-03-05 -- Completed 04-05 Medical Imaging UI & Public OSDI Self-Fill
+stopped_at: Completed 04-06-PLAN.md
+last_updated: "2026-03-05T09:59:52Z"
+last_activity: 2026-03-05 -- Completed 04-06 End-to-End Verification of Phase 4 Features
 progress:
   total_phases: 13
-  completed_phases: 7
+  completed_phases: 8
   total_plans: 63
-  completed_plans: 62
-  percent: 98
----
-
----
-gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: in-progress
-stopped_at: Completed 04-03-PLAN.md
-last_updated: "2026-03-05T06:42:58.738Z"
-last_activity: 2026-03-05 -- Completed 03.1-01 Auth & Patient User Stories
-progress:
-  [██████████] 98%
-  completed_phases: 7
-  total_plans: 63
-  completed_plans: 60
-  percent: 98
----
-
----
-gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: in-progress
-stopped_at: Phase 03.1 context gathered
-last_updated: "2026-03-05T04:27:00.473Z"
-last_activity: 2026-03-05 -- Completed 03-10 Gap Closure Refraction DTO Mismatch
-progress:
-  [██████████] 98%
-  completed_phases: 6
-  total_plans: 55
-  completed_plans: 54
----
-
----
-gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: in-progress
-stopped_at: Completed 03-10-PLAN.md
-last_updated: "2026-03-05T03:40:02.336Z"
-last_activity: 2026-03-05 -- Completed 03-10 Gap Closure Refraction DTO Mismatch
-progress:
-  total_phases: 12
-  completed_phases: 6
-  total_plans: 52
-  completed_plans: 52
----
-
----
-gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: in-progress
-stopped_at: Completed 03-10-PLAN.md
-last_updated: "2026-03-05T03:33:09.241Z"
-last_activity: 2026-03-05 -- Completed 03-10 Gap Closure Refraction DTO Mismatch
-progress:
-  total_phases: 12
-  completed_phases: 6
-  total_plans: 52
-  completed_plans: 52
+  completed_plans: 63
   percent: 100
 ---
 
@@ -88,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 ## Current Position
 
 Phase: 04 (Dry Eye Template & Medical Imaging) -- IN PROGRESS
-Plan: 5 of 7 in current phase (5 complete)
-Status: Completed 04-05 Medical Imaging UI & Public OSDI Self-Fill
-Last activity: 2026-03-05 -- Completed 04-05 Medical Imaging UI & Public OSDI Self-Fill
+Plan: 6 of 7 in current phase (6 complete)
+Status: Completed 04-06 End-to-End Verification of Phase 4 Features
+Last activity: 2026-03-05 -- Completed 04-06 End-to-End Verification of Phase 4 Features
 
-Progress: [##########] 98%
+Progress: [##########] 100%
 
 ## Performance Metrics
 
@@ -167,6 +105,7 @@ Progress: [##########] 98%
 | Phase 04 P03 | 11min | 2 tasks | 15 files |
 | Phase 04 P05 | 12min | 2 tasks | 11 files |
 | Phase 04 P04 | 13min | 2 tasks | 16 files |
+| Phase 04 P06 | 3min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -362,6 +301,9 @@ Recent decisions affecting current work:
 - [Phase 04]: OSDI history reused for comparison visit selectors; inline collapsible section for OSDI questionnaire
 - [Phase 04]: [FUTURE] Show previously submitted OSDI answers in visit page (read-only view of past questionnaire responses)
 - [Phase 04]: [FUTURE] Multi-visit trend charts for dry eye metrics (TBUT, Schirmer, etc.) similar to OSDI trend chart — beyond DRY-04 two-visit comparison
+- [Phase 04]: [04-06]: Compare button must be outside CollapsibleTrigger to prevent trigger interference
+- [Phase 04]: [04-06]: Public links (OSDI, etc.) must prepend window.location.origin for full absolute URL
+- [Phase 04]: [04-06]: Compare buttons hidden when patient has fewer than 2 visits (no empty comparisons)
 
 ### Roadmap Evolution
 
@@ -383,6 +325,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-05T07:01:34.720Z
-Stopped at: Completed 04-04-PLAN.md
+Last session: 2026-03-05T09:59:52Z
+Stopped at: Completed 04-06-PLAN.md
 Resume file: None
