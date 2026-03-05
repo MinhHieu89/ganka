@@ -3,60 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 05-17a-PLAN.md
-last_updated: "2026-03-05T16:21:08.247Z"
-last_activity: 2026-03-05 -- Completed 05-01 Drug Catalog Domain Model
+stopped_at: Completed 05-12a-PLAN.md
+last_updated: "2026-03-05T16:22:00Z"
+last_activity: 2026-03-05 -- Completed 05-12a Remaining Document Types
 progress:
   total_phases: 13
   completed_phases: 8
   total_plans: 88
-  completed_plans: 69
----
-
----
-gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: in-progress
-stopped_at: Phase 8 context gathered
-last_updated: "2026-03-05T16:18:03.118Z"
-last_activity: 2026-03-05 -- Completed 04-06 End-to-End Verification of Phase 4 Features
-progress:
-  total_phases: 13
-  completed_phases: 8
-  total_plans: 88
-  completed_plans: 64
----
-
----
-gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: in-progress
-stopped_at: Completed 04-06-PLAN.md
-last_updated: "2026-03-05T10:17:31.167Z"
-last_activity: 2026-03-05 -- Completed 04-06 End-to-End Verification of Phase 4 Features
-progress:
-  total_phases: 13
-  completed_phases: 8
-  total_plans: 63
-  completed_plans: 63
----
-
----
-gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: in-progress
-stopped_at: Completed 04-06-PLAN.md
-last_updated: "2026-03-05T09:59:52Z"
-last_activity: 2026-03-05 -- Completed 04-06 End-to-End Verification of Phase 4 Features
-progress:
-  total_phases: 13
-  completed_phases: 8
-  total_plans: 63
-  completed_plans: 63
-  percent: 100
+  completed_plans: 70
 ---
 
 # Project State
@@ -71,11 +25,11 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 ## Current Position
 
 Phase: 05 (Prescriptions & Document Printing) -- IN PROGRESS
-Plan: 1 of 25 in current phase (1 complete)
-Status: Completed 05-01 Drug Catalog Domain Model
-Last activity: 2026-03-05 -- Completed 05-01 Drug Catalog Domain Model
+Plan: 12a of 25 in current phase (7 complete)
+Status: Completed 05-12a Remaining Document Types
+Last activity: 2026-03-05 -- Completed 05-12a Remaining Document Types
 
-Progress: [███████░░░] 73%
+Progress: [████████░░] 80%
 
 ## Performance Metrics
 
@@ -156,6 +110,7 @@ Progress: [███████░░░] 73%
 | Phase 05 P17b | 4min | 1 tasks | 3 files |
 | Phase 05 P05a | 4min | 1 tasks | 5 files |
 | Phase 05 P17a | 5min | 2 tasks | 8 files |
+| Phase 05 P12a | 5min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -363,6 +318,9 @@ Recent decisions affecting current work:
 - [Phase 05]: Pharmacy translations in separate namespace (pharmacy.json) to match module boundaries
 - [Phase 05]: Items collection on DrugPrescription uses PropertyAccessMode.Field for backing field _items
 - [Phase 05]: Used native fetch for PDF blob response handling; PrintButton with blob URL new-tab pattern; 30s revokeObjectURL delay
+- [Phase 05]: [05-12a]: PharmacyLabelDocument uses 70x35mm custom PageSize with 3mm margins for standard adhesive label stock
+- [Phase 05]: [05-12a]: ConsentFormDocument includes fingerprint space alongside patient/doctor signature lines
+- [Phase 05]: [05-12a]: ReferralLetterDocument dual footer: receiving hospital stamp + referring doctor signature columns
 
 ### Roadmap Evolution
 
@@ -384,6 +342,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-05T16:21:08.243Z
-Stopped at: Completed 05-17a-PLAN.md
+Last session: 2026-03-05T16:22:00Z
+Stopped at: Completed 05-12a-PLAN.md
 Resume file: None
