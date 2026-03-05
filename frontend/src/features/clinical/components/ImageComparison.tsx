@@ -1,7 +1,5 @@
 import { useState, useMemo } from "react"
 import { useTranslation } from "react-i18next"
-import { IconX } from "@tabler/icons-react"
-import { Button } from "@/shared/components/Button"
 import {
   Select,
   SelectTrigger,
@@ -144,15 +142,6 @@ export function ImageComparison({
                 </SelectContent>
               </Select>
             </div>
-
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 w-8 p-0 shrink-0"
-              onClick={onClose}
-            >
-              <IconX className="h-4 w-4" />
-            </Button>
           </DialogHeader>
 
           {/* Two-panel comparison area */}
