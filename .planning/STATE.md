@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 05-19-PLAN.md
-last_updated: "2026-03-05T16:40:46.357Z"
+stopped_at: Completed 05-02-PLAN.md
+last_updated: "2026-03-05T16:41:32.949Z"
 last_activity: 2026-03-05 -- Completed 05-03 Pharmacy Application Handlers
 progress:
   total_phases: 13
   completed_phases: 8
-  total_plans: 93
+  total_plans: 95
   completed_plans: 76
   percent: 81
 ---
@@ -133,6 +133,7 @@ Progress: [████████░░] 84%
 | Phase 05 P09b | 2min | 1 tasks | 2 files |
 | Phase 05 P03 | 3min | 2 tasks | 6 files |
 | Phase 05 P19 | 5min | 2 tasks | 9 files |
+| Phase 05 P02 | 5min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -355,6 +356,7 @@ Recent decisions affecting current work:
 - [Phase 05]: [05-03]: Command records use int for Form/Route (not enum types) with Enum.IsDefined validation at API boundary
 - [Phase 05]: [05-03]: IDrugCatalogItemRepository/IUnitOfWork created as blocking prerequisite when Plan 02 not yet executed
 - [Phase 05]: Command records use int for Form/Route (not Domain enums) matching Contracts DTO normalization pattern
+- [Phase 05]: Used BranchId 00000000-0000-0000-0000-000000000001 for drug catalog seed data, matching ClinicScheduleSeeder pattern
 
 ### Roadmap Evolution
 
@@ -376,6 +378,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-05T16:40:46.354Z
-Stopped at: Completed 05-19-PLAN.md
+Last session: 2026-03-05T16:41:32.945Z
+Stopped at: Completed 05-02-PLAN.md
 Resume file: None
