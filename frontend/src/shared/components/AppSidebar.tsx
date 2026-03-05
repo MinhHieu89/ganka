@@ -14,6 +14,7 @@ import {
   IconReceipt,
   IconEyeglass,
   IconHeartbeat,
+  IconBuilding,
 } from "@tabler/icons-react"
 import {
   Sidebar,
@@ -102,7 +103,6 @@ export function AppSidebar({ ...sidebarProps }: ComponentProps<typeof Sidebar>) 
       titleKey: "sidebar.pharmacy",
       to: "/pharmacy",
       icon: IconMedicineSyrup,
-      disabled: true,
     },
     {
       titleKey: "sidebar.billing",
@@ -139,6 +139,11 @@ export function AppSidebar({ ...sidebarProps }: ComponentProps<typeof Sidebar>) 
       titleKey: "sidebar.auditLogs",
       to: "/admin/audit-logs",
       icon: IconFileText,
+    },
+    {
+      titleKey: "sidebar.clinicSettings",
+      to: "/admin/clinic-settings",
+      icon: IconBuilding,
     },
   ]
 

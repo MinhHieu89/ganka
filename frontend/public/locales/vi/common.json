@@ -21,6 +21,7 @@
     "imaging": "Chẩn đoán hình ảnh",
     "prescriptions": "Đơn thuốc",
     "treatments": "Điều trị",
+    "clinicSettings": "Cài đặt phòng khám",
     "comingSoon": "Sắp ra mắt"
   },
   "topbar": {
@@ -68,5 +69,23 @@
   "search": {
     "placeholder": "Tìm kiếm...",
     "noResults": "Không tìm thấy kết quả"
+  },
+  "clinicSettings": {
+    "title": "Cài đặt phòng khám",
+    "headerConfig": "Cấu hình tiêu đề phòng khám",
+    "headerDescription": "Cấu hình thông tin phòng khám hiển thị trên tất cả tài liệu in",
+    "logo": "Logo phòng khám",
+    "uploadLogo": "Tải logo lên",
+    "clinicName": "Tên phòng khám (EN)",
+    "clinicNameVi": "Tên phòng khám (VI)",
+    "address": "Địa chỉ",
+    "phone": "Điện thoại",
+    "fax": "Fax",
+    "email": "Email",
+    "website": "Website",
+    "licenseNumber": "Số GPHN",
+    "tagline": "Khẩu hiệu",
+    "saved": "Lưu cài đặt phòng khám thành công",
+    "logoUploaded": "Tải logo lên thành công"
   }
 }

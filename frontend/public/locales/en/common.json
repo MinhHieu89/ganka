@@ -21,6 +21,7 @@
     "imaging": "Imaging",
     "prescriptions": "Prescriptions",
     "treatments": "Treatments",
+    "clinicSettings": "Clinic Settings",
     "comingSoon": "Coming soon"
   },
   "topbar": {
@@ -68,5 +69,23 @@
   "search": {
     "placeholder": "Search...",
     "noResults": "No results found"
+  },
+  "clinicSettings": {
+    "title": "Clinic Settings",
+    "headerConfig": "Clinic Header Configuration",
+    "headerDescription": "Configure the clinic information that appears on all printed documents",
+    "logo": "Clinic Logo",
+    "uploadLogo": "Upload Logo",
+    "clinicName": "Clinic Name (EN)",
+    "clinicNameVi": "Clinic Name (VI)",
+    "address": "Address",
+    "phone": "Phone",
+    "fax": "Fax",
+    "email": "Email",
+    "website": "Website",
+    "licenseNumber": "License Number (So GPHN)",
+    "tagline": "Tagline",
+    "saved": "Clinic settings saved successfully",
+    "logoUploaded": "Logo uploaded successfully"
   }
 }
