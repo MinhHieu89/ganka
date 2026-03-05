@@ -145,6 +145,10 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **UI-01**: All UI text, labels, menus, and reports available in Vietnamese and English (Vietnamese primary)
 - [x] **UI-02**: Staff can switch language preference per user session
 
+### Documentation
+
+- [x] **DOC-01**: Each phase plan must include a sub-plan to create Vietnamese user stories documentation (`docs/user-stories/`) for all features implemented in that phase, following the Phase 3.1 format: standard user story format ("Là một [vai trò], Tôi muốn [hành động], Để [lợi ích]"), unique story IDs (US-XXX-NNN), acceptance criteria with happy path + edge cases + error scenarios, proper Vietnamese diacritics, and requirement ID traceability
+
 ### Architecture & Infrastructure
 
 - [x] **ARC-01**: All external system integrations use ACL adapter pattern (domain ports + infrastructure adapters)
@@ -316,6 +320,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUD-04 | Phase 1 | Complete |
 | UI-01 | Phase 1 | Complete |
 | UI-02 | Phase 1 | Complete |
+| DOC-01 | All Phases | Complete |
 | ARC-01 | Phase 1 | Complete |
 | ARC-02 | Phase 1 | Complete |
 | ARC-03 | Phase 1 | Complete |
@@ -324,8 +329,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ARC-06 | Phase 1 | Complete |
 
 **Coverage:**
-- v1 requirements: 96 total
-- Mapped to phases: 96
+- v1 requirements: 97 total
+- Mapped to phases: 97
 - Unmapped: 0
 
 ---
