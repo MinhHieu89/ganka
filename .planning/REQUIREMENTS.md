@@ -54,8 +54,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **DX-01**: Doctor can search and select ICD-10 codes in Vietnamese and English with ophthalmology favorites/pinned codes
 - [x] **DX-02**: System enforces ICD-10 laterality selection for ophthalmology codes (no unspecified eye)
-- [ ] **RX-01**: Doctor can write drug prescription by selecting from pharmacy catalog or adding off-catalog drugs
-- [ ] **RX-02**: Catalog-linked prescriptions auto-deduct stock when dispensed; off-catalog drugs flagged as manual
+- [x] **RX-01**: Doctor can write drug prescription by selecting from pharmacy catalog or adding off-catalog drugs
+- [x] **RX-02**: Catalog-linked prescriptions auto-deduct stock when dispensed; off-catalog drugs flagged as manual
 - [ ] **RX-03**: Doctor can write glasses prescription (optical Rx) with full refraction parameters
 - [ ] **RX-04**: Prescriptions comply with MOH format requirements (required fields, dosage format per Bo Y te)
 - [ ] **RX-05**: System warns when prescribing drugs the patient is allergic to
@@ -257,8 +257,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | IMG-04 | Phase 4 | Complete |
 | DX-01 | Phase 3 | Complete |
 | DX-02 | Phase 3 | Complete |
-| RX-01 | Phase 5 | Pending |
-| RX-02 | Phase 5 | Pending |
+| RX-01 | Phase 5 | Complete |
+| RX-02 | Phase 5 | Complete |
 | RX-03 | Phase 5 | Pending |
 | RX-04 | Phase 5 | Pending |
 | RX-05 | Phase 5 | Pending |

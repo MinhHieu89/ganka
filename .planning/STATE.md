@@ -3,14 +3,29 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
+stopped_at: Completed 05-01-PLAN.md
+last_updated: "2026-03-05T16:18:37.405Z"
+last_activity: 2026-03-05 -- Completed 05-01 Drug Catalog Domain Model
+progress:
+  total_phases: 13
+  completed_phases: 8
+  total_plans: 88
+  completed_plans: 67
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: in-progress
 stopped_at: Phase 8 context gathered
-last_updated: "2026-03-05T15:59:47.982Z"
+last_updated: "2026-03-05T16:18:03.118Z"
 last_activity: 2026-03-05 -- Completed 04-06 End-to-End Verification of Phase 4 Features
 progress:
   total_phases: 13
   completed_phases: 8
-  total_plans: 87
-  completed_plans: 63
+  total_plans: 88
+  completed_plans: 64
 ---
 
 ---
@@ -51,16 +66,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-02-28)
 
 **Core value:** Doctors can manage chronic eye disease patients (Dry Eye, Myopia Control) with structured data tracking, image comparison across visits, and treatment progress reporting
-**Current focus:** Phase 04: Dry Eye Template & Medical Imaging
+**Current focus:** Phase 05: Prescriptions & Document Printing
 
 ## Current Position
 
-Phase: 04 (Dry Eye Template & Medical Imaging) -- IN PROGRESS
-Plan: 6 of 7 in current phase (6 complete)
-Status: Completed 04-06 End-to-End Verification of Phase 4 Features
-Last activity: 2026-03-05 -- Completed 04-06 End-to-End Verification of Phase 4 Features
+Phase: 05 (Prescriptions & Document Printing) -- IN PROGRESS
+Plan: 1 of 25 in current phase (1 complete)
+Status: Completed 05-01 Drug Catalog Domain Model
+Last activity: 2026-03-05 -- Completed 05-01 Drug Catalog Domain Model
 
-Progress: [##########] 100%
+Progress: [███████░░░] 73%
 
 ## Performance Metrics
 
@@ -136,6 +151,7 @@ Progress: [##########] 100%
 | Phase 04 P05 | 12min | 2 tasks | 11 files |
 | Phase 04 P04 | 13min | 2 tasks | 16 files |
 | Phase 04 P06 | 3min | 2 tasks | 5 files |
+| Phase 05 P01 | 3min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -334,6 +350,9 @@ Recent decisions affecting current work:
 - [Phase 04]: [04-06]: Compare button must be outside CollapsibleTrigger to prevent trigger interference
 - [Phase 04]: [04-06]: Public links (OSDI, etc.) must prepend window.location.origin for full absolute URL
 - [Phase 04]: [04-06]: Compare buttons hidden when patient has fewer than 2 visits (no empty comparisons)
+- [Phase 05]: DrugCatalogItem as AggregateRoot with BranchId for multi-branch drug catalog isolation
+- [Phase 05]: IsActive soft-delete on DrugCatalogItem with Activate/Deactivate instead of Entity.MarkDeleted
+- [Phase 05]: DrugCatalogItemDto uses int for Form/Route (Contracts has no Domain reference -- enum normalization pattern)
 
 ### Roadmap Evolution
 
@@ -355,6 +374,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-05T15:59:47.978Z
-Stopped at: Phase 8 context gathered
-Resume file: .planning/phases/08-optical-center/08-CONTEXT.md
+Last session: 2026-03-05T16:18:31.529Z
+Stopped at: Completed 05-01-PLAN.md
+Resume file: None
