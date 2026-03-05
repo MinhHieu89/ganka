@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Application;
+using Shared.Application.Interfaces;
 using Shared.Application.Services;
 using Shared.Infrastructure.Services;
 
@@ -7,7 +8,7 @@ namespace Shared.Infrastructure;
 
 /// <summary>
 /// DI registration for the Shared Infrastructure layer.
-/// Registers HttpContextAccessor, CurrentUser, BranchContext, and AzureBlobService.
+/// Registers HttpContextAccessor, CurrentUser, BranchContext, AzureBlobService, and ClinicSettingsService.
 /// </summary>
 public static class IoC
 {
@@ -17,6 +18,7 @@ public static class IoC
         services.AddScoped<ICurrentUser, CurrentUser>();
         services.AddScoped<IBranchContext, BranchContext>();
         services.AddScoped<IAzureBlobService, AzureBlobService>();
+        services.AddScoped<IClinicSettingsService, ClinicSettingsService>();
 
         return services;
     }
