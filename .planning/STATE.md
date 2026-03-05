@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 04-01a-PLAN.md
-last_updated: "2026-03-05T06:14:36.552Z"
+stopped_at: Completed 04-07-PLAN.md
+last_updated: "2026-03-05T06:17:36.291Z"
 last_activity: 2026-03-05 -- Completed 03.1-01 Auth & Patient User Stories
 progress:
   total_phases: 13
   completed_phases: 7
   total_plans: 63
-  completed_plans: 56
+  completed_plans: 57
   percent: 98
 ---
 
@@ -145,6 +145,7 @@ Progress: [##########] 98%
 | Phase 03.1 P01 | 4min | 2 tasks | 2 files |
 | Phase 03.1 P02 | 5min | 2 tasks | 2 files |
 | Phase 04 P01a | 2min | 1 tasks | 12 files |
+| Phase 04 P07 | 5min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -317,6 +318,10 @@ Recent decisions affecting current work:
 - [Phase 03.1]: Allergy alerts cross-referenced from clinical to patient stories using Xem thêm pattern
 - [Phase 04]: DryEyeAssessment is Visit child (EnsureEditable), MedicalImage is NOT (append-only after sign-off)
 - [Phase 04]: OSDI score is patient-level (not per-eye); sealed record DTOs for all new contracts
+- [Phase 04]: 8 stories per file covering all Phase 4 requirements with OSDI scoring, image lightbox, cross-visit comparison
+- [Phase 04]: OSDI patient self-fill via QR code stories included following public-page pattern from Phase 2 self-booking
+- [Phase 04]: Image comparison with dry eye metrics (US-IMG-007) for holistic clinical assessment across modalities
+- [Phase 04]: File limits: 20MB images, 200MB videos, 50 files per visit
 
 ### Roadmap Evolution
 
@@ -338,6 +343,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-05T06:14:36.549Z
-Stopped at: Completed 04-01a-PLAN.md
+Last session: 2026-03-05T06:17:36.288Z
+Stopped at: Completed 04-07-PLAN.md
 Resume file: None
