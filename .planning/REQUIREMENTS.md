@@ -56,7 +56,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **DX-02**: System enforces ICD-10 laterality selection for ophthalmology codes (no unspecified eye)
 - [x] **RX-01**: Doctor can write drug prescription by selecting from pharmacy catalog or adding off-catalog drugs
 - [x] **RX-02**: Catalog-linked prescriptions auto-deduct stock when dispensed; off-catalog drugs flagged as manual
-- [ ] **RX-03**: Doctor can write glasses prescription (optical Rx) with full refraction parameters
+- [x] **RX-03**: Doctor can write glasses prescription (optical Rx) with full refraction parameters
 - [ ] **RX-04**: Prescriptions comply with MOH format requirements (required fields, dosage format per Bo Y te)
 - [ ] **RX-05**: System warns when prescribing drugs the patient is allergic to
 
@@ -126,8 +126,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Printing & Documents
 
-- [ ] **PRT-01**: System prints drug prescriptions with clinic header, doctor name, patient info, drug list with dosage
-- [ ] **PRT-02**: System prints glasses prescriptions (optical Rx) with refraction parameters
+- [x] **PRT-01**: System prints drug prescriptions with clinic header, doctor name, patient info, drug list with dosage
+- [x] **PRT-02**: System prints glasses prescriptions (optical Rx) with refraction parameters
 - [ ] **PRT-03**: System prints invoices/receipts with itemized charges and payment method
 - [ ] **PRT-04**: System prints referral letters (giay chuyen vien) with patient info, diagnosis, reason
 - [ ] **PRT-05**: System prints treatment consent forms with patient name, procedure type, date
@@ -259,7 +259,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DX-02 | Phase 3 | Complete |
 | RX-01 | Phase 5 | Complete |
 | RX-02 | Phase 5 | Complete |
-| RX-03 | Phase 5 | Pending |
+| RX-03 | Phase 5 | Complete |
 | RX-04 | Phase 5 | Pending |
 | RX-05 | Phase 5 | Pending |
 | SCH-01 | Phase 2 | Complete |
@@ -308,8 +308,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FIN-08 | Phase 7 | Pending |
 | FIN-09 | Phase 7 | Pending |
 | FIN-10 | Phase 7 | Pending |
-| PRT-01 | Phase 5 | Pending |
-| PRT-02 | Phase 5 | Pending |
+| PRT-01 | Phase 5 | Complete |
+| PRT-02 | Phase 5 | Complete |
 | PRT-03 | Phase 5 | Pending |
 | PRT-04 | Phase 5 | Pending |
 | PRT-05 | Phase 5 | Pending |

@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 05-01-PLAN.md
-last_updated: "2026-03-05T16:18:37.405Z"
+stopped_at: Completed 05-05a-PLAN.md
+last_updated: "2026-03-05T16:19:06.163Z"
 last_activity: 2026-03-05 -- Completed 05-01 Drug Catalog Domain Model
 progress:
   total_phases: 13
@@ -152,6 +152,9 @@ Progress: [███████░░░] 73%
 | Phase 04 P04 | 13min | 2 tasks | 16 files |
 | Phase 04 P06 | 3min | 2 tasks | 5 files |
 | Phase 05 P01 | 3min | 2 tasks | 5 files |
+| Phase 05 P04 | 4min | 2 tasks | 5 files |
+| Phase 05 P17b | 4min | 1 tasks | 3 files |
+| Phase 05 P05a | 4min | 1 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -353,6 +356,11 @@ Recent decisions affecting current work:
 - [Phase 05]: DrugCatalogItem as AggregateRoot with BranchId for multi-branch drug catalog isolation
 - [Phase 05]: IsActive soft-delete on DrugCatalogItem with Activate/Deactivate instead of Entity.MarkDeleted
 - [Phase 05]: DrugCatalogItemDto uses int for Form/Route (Contracts has no Domain reference -- enum normalization pattern)
+- [Phase 05]: Form/Route stored as plain int in PrescriptionItem to avoid cross-module dependency on Pharmacy.Domain enums
+- [Phase 05]: SetOpticalPrescription clears existing before adding -- one optical Rx per visit enforced at domain level
+- [Phase 05]: Vietnamese prescription terminology uses standard medical Vietnamese with proper diacritics
+- [Phase 05]: Pharmacy translations in separate namespace (pharmacy.json) to match module boundaries
+- [Phase 05]: Items collection on DrugPrescription uses PropertyAccessMode.Field for backing field _items
 
 ### Roadmap Evolution
 
@@ -374,6 +382,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-05T16:18:31.529Z
-Stopped at: Completed 05-01-PLAN.md
+Last session: 2026-03-05T16:19:06.157Z
+Stopped at: Completed 05-05a-PLAN.md
 Resume file: None
