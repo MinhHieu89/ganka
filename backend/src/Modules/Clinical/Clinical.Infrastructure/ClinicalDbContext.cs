@@ -17,6 +17,9 @@ public class ClinicalDbContext : DbContext
     public DbSet<DryEyeAssessment> DryEyeAssessments => Set<DryEyeAssessment>();
     public DbSet<MedicalImage> MedicalImages => Set<MedicalImage>();
     public DbSet<OsdiSubmission> OsdiSubmissions => Set<OsdiSubmission>();
+    public DbSet<DrugPrescription> DrugPrescriptions => Set<DrugPrescription>();
+    public DbSet<PrescriptionItem> PrescriptionItems => Set<PrescriptionItem>();
+    public DbSet<OpticalPrescription> OpticalPrescriptions => Set<OpticalPrescription>();
 
     public ClinicalDbContext(DbContextOptions<ClinicalDbContext> options) : base(options)
     {

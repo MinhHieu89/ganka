@@ -88,6 +88,24 @@ public class VisitConfiguration : IEntityTypeConfiguration<Visit>
         builder.Navigation(v => v.Amendments)
             .UsePropertyAccessMode(PropertyAccessMode.Field);
 
+        // Drug prescriptions navigation
+        builder.HasMany(v => v.DrugPrescriptions)
+            .WithOne()
+            .HasForeignKey(d => d.VisitId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Navigation(v => v.DrugPrescriptions)
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
+
+        // Optical prescriptions navigation
+        builder.HasMany(v => v.OpticalPrescriptions)
+            .WithOne()
+            .HasForeignKey(o => o.VisitId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Navigation(v => v.OpticalPrescriptions)
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
+
         // Performance indexes
         builder.HasIndex(v => v.PatientId);
         builder.HasIndex(v => v.DoctorId);
