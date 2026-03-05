@@ -328,7 +328,7 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 | 3. Clinical Workflow & Examination | 9/10 | In Progress | - |
 | 3.1 Vietnamese User Stories Documentation | 0/3 | Not started | - |
 | 4. Dry Eye Template & Medical Imaging | 7/8 | In Progress | - |
-| 5. Prescriptions & Document Printing | 9/25 | In Progress|  |
+| 5. Prescriptions & Document Printing | 23/25 | In Progress|  |
 | 6. Pharmacy & Consumables | 0/27 | Not started | - |
 | 7. Billing & Finance | 0/3 | Not started | - |
 | 8. Optical Center | 0/3 | Not started | - |

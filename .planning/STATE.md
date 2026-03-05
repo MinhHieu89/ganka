@@ -10,8 +10,8 @@ progress:
   total_phases: 13
   completed_phases: 8
   total_plans: 116
-  completed_plans: 85
-  percent: 73
+  completed_plans: 86
+  percent: 74
 ---
 
 ---
@@ -57,11 +57,11 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 ## Current Position
 
 Phase: 05 (Prescriptions & Document Printing) -- IN PROGRESS
-Plan: 18 of 25 in current phase (17 complete)
-Status: Completed 05-18 Clinic Settings Admin Page & Sidebar Navigation
-Last activity: 2026-03-06 -- Completed 05-18 Clinic Settings Admin Page & Sidebar Navigation
+Plan: 18 of 25 in current phase (18 complete)
+Status: Completed 05-16 Optical Prescription Section
+Last activity: 2026-03-06 -- Completed 05-16 Optical Prescription Section
 
-Progress: [███████░░░] 72%
+Progress: [███████░░░] 74%
 
 ## Performance Metrics
 
@@ -158,6 +158,7 @@ Progress: [███████░░░] 72%
 | Phase 05 P14 | 4min | 2 tasks | 4 files |
 | Phase 05 P15 | 3min | 2 tasks | 2 files |
 | Phase 05 P18 | 3min | 2 tasks | 7 files |
+| Phase 05 P16 | 3min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -399,6 +400,9 @@ Recent decisions affecting current work:
 - [Phase 05]: [05-18]: Logo upload uses native fetch + FormData following patient photo upload pattern (not openapi-fetch)
 - [Phase 05]: [05-18]: Pharmacy sidebar link enabled (disabled removed) since drug catalog page already exists from Plan 13
 - [Phase 05]: [05-18]: Clinic settings translations in common.json clinicSettings namespace rather than separate file
+- [Phase 05]: [05-16]: OpticalPrescriptionForm as separate component from Section for reusable form logic
+- [Phase 05]: [05-16]: Auto-fill uses manifest refraction (type 0) with PD averaging when both eyes have PD values
+- [Phase 05]: [05-16]: Near Rx section collapsible by default for distance-only prescription majority
 
 ### Roadmap Evolution
 
@@ -420,6 +424,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-05T17:22:20.668Z
-Stopped at: Completed 05-18-PLAN.md
+Last session: 2026-03-05T17:27:05Z
+Stopped at: Completed 05-16-PLAN.md
 Resume file: None
