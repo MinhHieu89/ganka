@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Phase 4 context gathered
-last_updated: "2026-03-05T05:26:16.188Z"
+stopped_at: Completed 04-01a-PLAN.md
+last_updated: "2026-03-05T06:14:36.552Z"
 last_activity: 2026-03-05 -- Completed 03.1-01 Auth & Patient User Stories
 progress:
   total_phases: 13
   completed_phases: 7
-  total_plans: 55
-  completed_plans: 55
+  total_plans: 63
+  completed_plans: 56
   percent: 98
 ---
 
@@ -144,6 +144,7 @@ Progress: [##########] 98%
 | Phase 03.1 P03 | 4min | 2 tasks | 2 files |
 | Phase 03.1 P01 | 4min | 2 tasks | 2 files |
 | Phase 03.1 P02 | 5min | 2 tasks | 2 files |
+| Phase 04 P01a | 2min | 1 tasks | 12 files |
 
 ## Accumulated Context
 
@@ -314,6 +315,8 @@ Recent decisions affecting current work:
 - [Phase 03.1]: REF-01, REF-02, REF-03 grouped into 2 stories (US-CLN-005 + US-CLN-006) for same refraction form/workflow
 - [Phase 03.1]: SCH-02 expanded into 3 stories (US-SCH-002, US-SCH-003, US-SCH-008) covering self-booking, status check, and staff approval
 - [Phase 03.1]: Allergy alerts cross-referenced from clinical to patient stories using Xem thêm pattern
+- [Phase 04]: DryEyeAssessment is Visit child (EnsureEditable), MedicalImage is NOT (append-only after sign-off)
+- [Phase 04]: OSDI score is patient-level (not per-eye); sealed record DTOs for all new contracts
 
 ### Roadmap Evolution
 
@@ -335,6 +338,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-05T05:26:16.184Z
-Stopped at: Phase 4 context gathered
-Resume file: .planning/phases/04-dry-eye-template-medical-imaging/04-CONTEXT.md
+Last session: 2026-03-05T06:14:36.549Z
+Stopped at: Completed 04-01a-PLAN.md
+Resume file: None

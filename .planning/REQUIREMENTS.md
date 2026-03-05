@@ -32,8 +32,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Dry Eye Template
 
-- [ ] **DRY-01**: Doctor can record Dry Eye exam with structured fields: OSDI score, TBUT, Schirmer, Meibomian gland grading, Tear meniscus, Staining score -- all per eye (left/right)
-- [ ] **DRY-02**: System calculates and displays OSDI severity classification (Normal 0-12, Mild 13-22, Moderate 23-32, Severe 33-100) with color coding
+- [x] **DRY-01**: Doctor can record Dry Eye exam with structured fields: OSDI score, TBUT, Schirmer, Meibomian gland grading, Tear meniscus, Staining score -- all per eye (left/right)
+- [x] **DRY-02**: System calculates and displays OSDI severity classification (Normal 0-12, Mild 13-22, Moderate 23-32, Severe 33-100) with color coding
 - [ ] **DRY-03**: Doctor can view OSDI trend chart across visits for a patient
 - [ ] **DRY-04**: Doctor can compare TBUT, Schirmer, and other metrics between visits side-by-side
 
@@ -45,8 +45,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Medical Imaging
 
-- [ ] **IMG-01**: Staff can upload medical images (Fluorescein, Meibography, Specular microscopy, Topography, OCT) and associate them with the correct visit
-- [ ] **IMG-02**: Staff can upload video files (e.g., lacrimal duct procedures) associated with visits
+- [x] **IMG-01**: Staff can upload medical images (Fluorescein, Meibography, Specular microscopy, Topography, OCT) and associate them with the correct visit
+- [x] **IMG-02**: Staff can upload video files (e.g., lacrimal duct procedures) associated with visits
 - [ ] **IMG-03**: Doctor can view images in a lightbox with zoom capability
 - [ ] **IMG-04**: Doctor can compare images side-by-side across two visits (same image type, same patient)
 
@@ -244,15 +244,15 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CLN-02 | Phase 3 | Complete |
 | CLN-03 | Phase 3 | Complete |
 | CLN-04 | Phase 3 | Complete |
-| DRY-01 | Phase 4 | Pending |
-| DRY-02 | Phase 4 | Pending |
+| DRY-01 | Phase 4 | Complete |
+| DRY-02 | Phase 4 | Complete |
 | DRY-03 | Phase 4 | Pending |
 | DRY-04 | Phase 4 | Pending |
 | REF-01 | Phase 3 | Complete |
 | REF-02 | Phase 3 | Complete |
 | REF-03 | Phase 3 | Complete |
-| IMG-01 | Phase 4 | Pending |
-| IMG-02 | Phase 4 | Pending |
+| IMG-01 | Phase 4 | Complete |
+| IMG-02 | Phase 4 | Complete |
 | IMG-03 | Phase 4 | Pending |
 | IMG-04 | Phase 4 | Pending |
 | DX-01 | Phase 3 | Complete |
