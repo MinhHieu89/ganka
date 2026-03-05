@@ -3,11 +3,27 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
+stopped_at: Completed 05-15-PLAN.md
+last_updated: "2026-03-05T17:21:36.749Z"
+last_activity: 2026-03-06 -- Completed 05-14 Prescription Frontend Components
+progress:
+  total_phases: 13
+  completed_phases: 8
+  total_plans: 116
+  completed_plans: 84
+  percent: 72
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: in-progress
 stopped_at: Completed 05-14-PLAN.md
 last_updated: "2026-03-05T17:15:01.872Z"
 last_activity: 2026-03-06 -- Completed 05-14 Prescription Frontend Components
 progress:
-  total_phases: 13
+  [███████░░░] 72%
   completed_phases: 8
   total_plans: 116
   completed_plans: 83
@@ -25,11 +41,11 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 ## Current Position
 
 Phase: 05 (Prescriptions & Document Printing) -- IN PROGRESS
-Plan: 14 of 25 in current phase (15 complete)
-Status: Completed 05-14 Prescription Frontend Components
-Last activity: 2026-03-06 -- Completed 05-14 Prescription Frontend Components
+Plan: 15 of 25 in current phase (16 complete)
+Status: Completed 05-15 Drug Prescription Section
+Last activity: 2026-03-06 -- Completed 05-15 Drug Prescription Section
 
-Progress: [████████░░] 84%
+Progress: [███████░░░] 72%
 
 ## Performance Metrics
 
@@ -124,6 +140,7 @@ Progress: [████████░░] 84%
 | Phase 05 P06 | 8min | 2 tasks | 9 files |
 | Phase 05 P13 | 4min | 2 tasks | 9 files |
 | Phase 05 P14 | 4min | 2 tasks | 4 files |
+| Phase 05 P15 | 3min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -359,6 +376,9 @@ Recent decisions affecting current work:
 - [Phase 05]: [05-13]: Single form instance with mode prop for DrugFormDialog instead of dual-form pattern used in UserFormDialog
 - [Phase 05]: [05-13]: DRUG_FORM_MAP and DRUG_ROUTE_MAP exported from pharmacy-api.ts for reuse in prescription forms and catalog display
 - [Phase 05]: [05-14]: prescription-api.ts as separate module from clinical-api.ts for modular prescription hooks
+- [Phase 05]: [05-15]: Patient allergies fetched within DrugPrescriptionSection via usePatientById (self-contained section)
+- [Phase 05]: [05-15]: Local unsaved items use dashed border to visually distinguish from server-persisted prescriptions
+- [Phase 05]: [05-15]: Allergy AlertDialog lists specific drug names with conflicts for informed doctor confirmation
 
 ### Roadmap Evolution
 
@@ -380,6 +400,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-05T17:14:47.514Z
-Stopped at: Completed 05-14-PLAN.md
+Last session: 2026-03-05T17:21:36.746Z
+Stopped at: Completed 05-15-PLAN.md
 Resume file: None
