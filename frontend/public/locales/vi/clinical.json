@@ -282,7 +282,13 @@
     "referralReason": "Lý do chuyển viện",
     "referralTo": "Chuyển đến",
     "procedureType": "Loại thủ thuật",
-    "printFailed": "Tạo tài liệu thất bại"
+    "printFailed": "Tạo tài liệu thất bại",
+    "notes": "Ghi chú",
+    "editOpticalRx": "Sửa đơn kính",
+    "saveOpticalRx": "Lưu đơn kính",
+    "opticalRxSaved": "Đã lưu đơn kính",
+    "opticalRxSaveFailed": "Lưu đơn kính thất bại",
+    "noOpticalRx": "Chưa có đơn kính"
   },
   "drugForm": {
     "eyeDrops": "Thuốc nhỏ mắt",

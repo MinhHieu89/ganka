@@ -282,7 +282,13 @@
     "referralReason": "Referral Reason",
     "referralTo": "Refer To",
     "procedureType": "Procedure Type",
-    "printFailed": "Failed to generate document"
+    "printFailed": "Failed to generate document",
+    "notes": "Notes",
+    "editOpticalRx": "Edit Optical Rx",
+    "saveOpticalRx": "Save Optical Rx",
+    "opticalRxSaved": "Optical prescription saved",
+    "opticalRxSaveFailed": "Failed to save optical prescription",
+    "noOpticalRx": "No optical prescription yet"
   },
   "drugForm": {
     "eyeDrops": "Eye Drops",
