@@ -34,7 +34,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. All login attempts and record access are logged immutably and retained for 10+ years
   4. User can switch between Vietnamese and English UI with all labels, menus, and system text translated
   5. System is deployed with schema-per-module database, Azure Blob Storage configured, daily backups enabled, and all module DbContexts scaffolded with BranchId on aggregate roots
-**Plans**: 7 plans in 4 waves
+**Plans**: 8 plans in 5 waves
 
 Plans:
 - [x] 01-01-PLAN.md — Backend scaffolding: .NET 10 solution, shared kernel, all module .csproj files, Bootstrapper host
@@ -166,10 +166,11 @@ Plans:
   3. Doctor can compare Dry Eye metrics (TBUT, Schirmer, etc.) between any two visits side-by-side
   4. Staff can upload medical images and videos (Fluorescein, Meibography, OCT, lacrimal duct video) associated with specific visits, and doctors can view them in a lightbox with zoom
   5. Doctor can compare images of the same type side-by-side across two visits for the same patient
-**Plans**: 7 plans in 4 waves
+**Plans**: 8 plans in 5 waves
 
 Plans:
-- [ ] 04-01-PLAN.md -- Backend domain entities, enums, contracts, EF Core configs, migration
+- [ ] 04-01a-PLAN.md -- Backend domain entities, enums, contracts DTOs
+- [ ] 04-01b-PLAN.md -- EF Core configs, repositories, migration
 - [ ] 04-02-PLAN.md -- Dry Eye + OSDI handlers (TDD): assessment CRUD, OSDI calculation, history, comparison
 - [ ] 04-03-PLAN.md -- Medical image handlers (TDD) + API endpoints + public OSDI endpoints + Bootstrapper wiring
 - [ ] 04-04-PLAN.md -- Frontend dry eye form, OSDI questionnaire, trend chart, comparison panel
@@ -277,7 +278,7 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 | 2.1 Frontend Bug Fixes + Auth Security | 4/4 | Complete | 2026-03-02 |
 | 3. Clinical Workflow & Examination | 9/10 | In Progress | - |
 | 3.1 Vietnamese User Stories Documentation | 0/3 | Not started | - |
-| 4. Dry Eye Template & Medical Imaging | 0/7 | Not started | - |
+| 4. Dry Eye Template & Medical Imaging | 0/8 | Not started | - |
 | 5. Prescriptions & Document Printing | 0/2 | Not started | - |
 | 6. Pharmacy & Consumables | 0/2 | Not started | - |
 | 7. Billing & Finance | 0/3 | Not started | - |

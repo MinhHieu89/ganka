@@ -1,6 +1,6 @@
 ---
 phase: 04-dry-eye-template-medical-imaging
-plan: 01
+plan: 01a
 type: execute
 wave: 1
 depends_on: []
@@ -11,30 +11,20 @@ files_modified:
   - backend/src/Modules/Clinical/Clinical.Domain/Enums/ImageType.cs
   - backend/src/Modules/Clinical/Clinical.Domain/Enums/EyeTag.cs
   - backend/src/Modules/Clinical/Clinical.Domain/Enums/OsdiSeverity.cs
+  - backend/src/Modules/Clinical/Clinical.Domain/Entities/Visit.cs
   - backend/src/Modules/Clinical/Clinical.Contracts/Dtos/DryEyeAssessmentDto.cs
   - backend/src/Modules/Clinical/Clinical.Contracts/Dtos/OsdiHistoryDto.cs
   - backend/src/Modules/Clinical/Clinical.Contracts/Dtos/MedicalImageDto.cs
   - backend/src/Modules/Clinical/Clinical.Contracts/Dtos/DryEyeComparisonDto.cs
   - backend/src/Modules/Clinical/Clinical.Contracts/Dtos/OsdiQuestionnaireDto.cs
-  - backend/src/Modules/Clinical/Clinical.Infrastructure/Configurations/DryEyeAssessmentConfiguration.cs
-  - backend/src/Modules/Clinical/Clinical.Infrastructure/Configurations/MedicalImageConfiguration.cs
-  - backend/src/Modules/Clinical/Clinical.Infrastructure/Configurations/OsdiSubmissionConfiguration.cs
-  - backend/src/Modules/Clinical/Clinical.Infrastructure/ClinicalDbContext.cs
-  - backend/src/Modules/Clinical/Clinical.Infrastructure/Repositories/VisitRepository.cs
-  - backend/src/Modules/Clinical/Clinical.Infrastructure/Repositories/MedicalImageRepository.cs
-  - backend/src/Modules/Clinical/Clinical.Application/Interfaces/IVisitRepository.cs
-  - backend/src/Modules/Clinical/Clinical.Application/Interfaces/IMedicalImageRepository.cs
-  - backend/src/Modules/Clinical/Clinical.Domain/Entities/Visit.cs
 autonomous: true
 requirements: [DRY-01, DRY-02, IMG-01, IMG-02]
 
 must_haves:
   truths:
-    - "DryEyeAssessment entity stores per-eye metrics (TBUT, Schirmer, Meibomian grading, Tear meniscus, Staining) and patient-level OSDI score"
-    - "MedicalImage entity stores image metadata (blob name, type, eye tag) independently from Visit aggregate (no EnsureEditable guard)"
-    - "OsdiSubmission entity stores 12-question answers with public token for patient self-fill"
-    - "EF Core configurations create proper database schema with indexes and constraints"
-    - "Migration applies cleanly and all 3 new DbSets are registered in ClinicalDbContext"
+    - "Dry eye assessment data can be modeled per visit with per-eye metrics (TBUT, Schirmer, Meibomian grading, Tear meniscus, Staining) and patient-level OSDI score"
+    - "Medical images can be stored independently of visit sign-off (append-only pattern)"
+    - "OSDI questionnaire tokens can be generated for patient self-fill without authentication"
   artifacts:
     - path: "backend/src/Modules/Clinical/Clinical.Domain/Entities/DryEyeAssessment.cs"
       provides: "Dry eye assessment entity with per-eye metrics and OSDI score"
@@ -45,9 +35,9 @@ must_haves:
     - path: "backend/src/Modules/Clinical/Clinical.Domain/Entities/OsdiSubmission.cs"
       provides: "OSDI questionnaire submission with public token"
       min_lines: 30
-    - path: "backend/src/Modules/Clinical/Clinical.Infrastructure/ClinicalDbContext.cs"
-      provides: "Updated DbContext with DryEyeAssessments, MedicalImages, OsdiSubmissions DbSets"
-      contains: "DbSet<DryEyeAssessment>"
+    - path: "backend/src/Modules/Clinical/Clinical.Contracts/Dtos/DryEyeAssessmentDto.cs"
+      provides: "All contract DTOs for dry eye, OSDI, and imaging features"
+      min_lines: 20
   key_links:
     - from: "DryEyeAssessment"
       to: "Visit"
@@ -60,10 +50,10 @@ must_haves:
 ---
 
 <objective>
-Create domain entities, enums, contracts DTOs, EF Core configurations, and database migration for Dry Eye assessment, Medical Imaging, and OSDI submission features.
+Create domain entities, enums, and contracts DTOs for Dry Eye assessment, Medical Imaging, and OSDI submission features. Modify Visit entity to add DryEyeAssessment as a child.
 
-Purpose: Establish the data model foundation that all subsequent backend handlers and frontend components will build upon.
-Output: 3 new domain entities (DryEyeAssessment, MedicalImage, OsdiSubmission), 3 new enums (ImageType, EyeTag, OsdiSeverity), contract DTOs, EF Core configurations, repository interfaces, and a database migration.
+Purpose: Define the domain model and data contracts that all subsequent plans (EF Core configs, handlers, frontend) will build upon.
+Output: 3 new domain entities (DryEyeAssessment, MedicalImage, OsdiSubmission), 3 new enums (ImageType, EyeTag, OsdiSeverity), 13 contract DTOs, and Visit entity modification.
 </objective>
 
 <execution_context>
@@ -109,40 +99,6 @@ public class Refraction : Entity
     public static Refraction Create(Guid visitId, RefractionType type) => new() { ... };
     public void Update(/* all fields */) { /* set all + SetUpdatedAt() */ }
 }
-```
-
-From backend/src/Shared/Shared.Application/Services/IAzureBlobService.cs:
-```csharp
-public interface IAzureBlobService
-{
-    Task<string> UploadAsync(string containerName, string blobName, Stream content, string contentType);
-    Task<Stream> DownloadAsync(string containerName, string blobName);
-    Task<bool> DeleteAsync(string containerName, string blobName);
-    Task<string> GetSasUrlAsync(string containerName, string blobName, TimeSpan expiry);
-    Task<IEnumerable<StorageBlobInfo>> ListBlobsAsync(string containerName, string prefix);
-}
-```
-
-From backend/src/Modules/Clinical/Clinical.Application/Interfaces/IVisitRepository.cs:
-```csharp
-public interface IVisitRepository
-{
-    Task<Visit?> GetByIdAsync(Guid id, CancellationToken ct = default);
-    Task<Visit?> GetByIdWithDetailsAsync(Guid id, CancellationToken ct = default);
-    Task<List<Visit>> GetActiveVisitsAsync(CancellationToken ct = default);
-    Task AddAsync(Visit visit, CancellationToken ct = default);
-    Task<bool> HasActiveVisitForPatientAsync(Guid patientId, CancellationToken ct = default);
-    void AddRefraction(Refraction refraction);
-    void AddDiagnosis(VisitDiagnosis diagnosis);
-    void AddAmendment(VisitAmendment amendment);
-}
-```
-
-From backend/src/Modules/Clinical/Clinical.Infrastructure/ClinicalDbContext.cs:
-```csharp
-// Has DbSets for Visit, Refraction, VisitDiagnosis, VisitAmendment, DoctorIcd10Favorite
-// Uses "clinical" schema
-// Assembly-based configuration scanning via ApplyConfigurationsFromAssembly
 ```
 </interfaces>
 </context>
@@ -225,97 +181,11 @@ From backend/src/Modules/Clinical/Clinical.Infrastructure/ClinicalDbContext.cs:
   <done>All 3 entities, 3 enums, and all contract DTOs compile successfully. DryEyeAssessment follows Refraction pattern with per-eye flat columns. MedicalImage is independent from Visit aggregate. Visit entity has _dryEyeAssessments backing field with AddDryEyeAssessment() method.</done>
 </task>
 
-<task type="auto">
-  <name>Task 2: EF Core configurations, repositories, and migration</name>
-  <files>
-    backend/src/Modules/Clinical/Clinical.Infrastructure/Configurations/DryEyeAssessmentConfiguration.cs,
-    backend/src/Modules/Clinical/Clinical.Infrastructure/Configurations/MedicalImageConfiguration.cs,
-    backend/src/Modules/Clinical/Clinical.Infrastructure/Configurations/OsdiSubmissionConfiguration.cs,
-    backend/src/Modules/Clinical/Clinical.Infrastructure/ClinicalDbContext.cs,
-    backend/src/Modules/Clinical/Clinical.Infrastructure/Repositories/VisitRepository.cs,
-    backend/src/Modules/Clinical/Clinical.Infrastructure/Repositories/MedicalImageRepository.cs,
-    backend/src/Modules/Clinical/Clinical.Application/Interfaces/IVisitRepository.cs,
-    backend/src/Modules/Clinical/Clinical.Application/Interfaces/IMedicalImageRepository.cs
-  </files>
-  <action>
-    **Create DryEyeAssessmentConfiguration:**
-    - Table "DryEyeAssessments" in "clinical" schema
-    - Required VisitId FK with index
-    - All decimal fields use precision(5,2) (consistent with Refraction)
-    - MeibomianGrading and Staining are int? (no precision needed)
-    - OsdiScore uses precision(7,2) (range 0.00-100.00)
-    - OsdiSeverity stored as int
-    - PropertyAccessMode.Field on Visit._dryEyeAssessments backing field
-
-    **Create MedicalImageConfiguration:**
-    - Table "MedicalImages" in "clinical" schema
-    - Required VisitId FK with index
-    - Required UploadedById FK (no navigation, just FK)
-    - ImageType stored as int, required
-    - EyeTag stored as int, nullable
-    - OriginalFileName max 500, required
-    - BlobName max 1000, required
-    - ContentType max 100, required
-    - Description max 500, nullable
-    - NO navigation property from Visit to MedicalImage (kept separate from aggregate)
-    - Index on (VisitId, Type) for same-type image queries
-
-    **Create OsdiSubmissionConfiguration:**
-    - Table "OsdiSubmissions" in "clinical" schema
-    - Required VisitId FK with index
-    - SubmittedBy max 100, required
-    - AnswersJson max 500
-    - PublicToken max 100, nullable, unique index with filter (IS NOT NULL)
-    - TokenExpiresAt nullable
-
-    **Update ClinicalDbContext:**
-    - Add DbSet<DryEyeAssessment>
-    - Add DbSet<MedicalImage>
-    - Add DbSet<OsdiSubmission>
-
-    **Update VisitConfiguration:**
-    - Add HasMany<DryEyeAssessment> with PropertyAccessMode.Field on "_dryEyeAssessments" backing field (same pattern as _refractions)
-
-    **Update IVisitRepository:**
-    - Add `void AddDryEyeAssessment(DryEyeAssessment assessment)` (same pattern as AddRefraction)
-    - Add `Task<List<DryEyeAssessment>> GetDryEyeAssessmentsByPatientAsync(Guid patientId, CancellationToken ct)` for trend chart
-    - Add `Task<DryEyeAssessment?> GetDryEyeAssessmentByVisitAsync(Guid visitId, CancellationToken ct)` for single visit lookup
-
-    **Update VisitRepository:**
-    - Implement the new IVisitRepository methods
-    - Extend GetByIdWithDetailsAsync to .Include(v => v.DryEyeAssessments)
-    - GetDryEyeAssessmentsByPatientAsync: query DryEyeAssessments where Visit.PatientId matches, Include Visit for VisitDate, order by VisitDate
-
-    **Create IMedicalImageRepository interface:**
-    - Task<MedicalImage?> GetByIdAsync(Guid id, CancellationToken ct)
-    - Task<List<MedicalImage>> GetByVisitIdAsync(Guid visitId, CancellationToken ct)
-    - Task<List<MedicalImage>> GetByVisitIdAndTypeAsync(Guid visitId, ImageType type, CancellationToken ct)
-    - Task AddAsync(MedicalImage image, CancellationToken ct)
-    - void Delete(MedicalImage image)
-
-    **Create MedicalImageRepository:**
-    - Implement all IMedicalImageRepository methods
-    - GetByVisitIdAsync ordered by CreatedAt descending
-
-    **Update Clinical.Infrastructure IoC.cs:**
-    - Register IMedicalImageRepository -> MedicalImageRepository as scoped
-
-    **Create and run migration:**
-    - `dotnet ef migrations add AddDryEyeAndImaging --project backend/src/Modules/Clinical/Clinical.Infrastructure --startup-project backend/src/Bootstrapper`
-    - `dotnet ef database update --project backend/src/Modules/Clinical/Clinical.Infrastructure --startup-project backend/src/Bootstrapper`
-  </action>
-  <verify>
-    <automated>dotnet build backend/ --no-restore && dotnet ef migrations list --project backend/src/Modules/Clinical/Clinical.Infrastructure --startup-project backend/src/Bootstrapper 2>&1 | tail -5</automated>
-  </verify>
-  <done>All 3 EF Core configurations created with proper schema, indexes, and constraints. ClinicalDbContext has 3 new DbSets. VisitRepository extended with DryEyeAssessment queries and Include. MedicalImageRepository created and registered in IoC. Migration created and applied successfully. Backend builds with 0 errors.</done>
-</task>
-
 </tasks>
 
 <verification>
-- `dotnet build backend/` succeeds with 0 errors
-- Migration exists and lists in `dotnet ef migrations list`
-- ClinicalDbContext has DbSet<DryEyeAssessment>, DbSet<MedicalImage>, DbSet<OsdiSubmission>
+- `dotnet build backend/src/Modules/Clinical/Clinical.Domain/` succeeds with 0 errors
+- `dotnet build backend/src/Modules/Clinical/Clinical.Contracts/` succeeds with 0 errors
 - Visit entity has _dryEyeAssessments backing field and AddDryEyeAssessment method
 - MedicalImage is NOT a Visit child (no navigation from Visit to MedicalImage, no AddImage method on Visit)
 </verification>
@@ -325,10 +195,9 @@ From backend/src/Modules/Clinical/Clinical.Infrastructure/ClinicalDbContext.cs:
 - DryEyeAssessment uses per-eye flat columns (OdTbut/OsTbut) consistent with Refraction
 - MedicalImage is independent from Visit aggregate (append-only after sign-off)
 - OSDI score is patient-level, NOT per-eye
-- All EF configs in "clinical" schema with proper indexes
-- Migration applies cleanly
+- All contract DTOs defined as sealed records
 </success_criteria>
 
 <output>
-After completion, create `.planning/phases/04-dry-eye-template-medical-imaging/04-01-SUMMARY.md`
+After completion, create `.planning/phases/04-dry-eye-template-medical-imaging/04-01a-SUMMARY.md`
 </output>
