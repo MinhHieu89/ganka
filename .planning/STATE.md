@@ -3,11 +3,27 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
+stopped_at: Completed 05-09-PLAN.md
+last_updated: "2026-03-05T16:23:09.068Z"
+last_activity: 2026-03-05 -- Completed 05-12a Remaining Document Types
+progress:
+  total_phases: 13
+  completed_phases: 8
+  total_plans: 88
+  completed_plans: 70
+  percent: 80
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: in-progress
 stopped_at: Completed 05-12a-PLAN.md
 last_updated: "2026-03-05T16:22:00Z"
 last_activity: 2026-03-05 -- Completed 05-12a Remaining Document Types
 progress:
-  total_phases: 13
+  [████████░░] 80%
   completed_phases: 8
   total_plans: 88
   completed_plans: 70
@@ -111,6 +127,7 @@ Progress: [████████░░] 80%
 | Phase 05 P05a | 4min | 1 tasks | 5 files |
 | Phase 05 P17a | 5min | 2 tasks | 8 files |
 | Phase 05 P12a | 5min | 2 tasks | 4 files |
+| Phase 05 P09 | 7min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -321,6 +338,9 @@ Recent decisions affecting current work:
 - [Phase 05]: [05-12a]: PharmacyLabelDocument uses 70x35mm custom PageSize with 3mm margins for standard adhesive label stock
 - [Phase 05]: [05-12a]: ConsentFormDocument includes fingerprint space alongside patient/doctor signature lines
 - [Phase 05]: [05-12a]: ReferralLetterDocument dual footer: receiving hospital stamp + referring doctor signature columns
+- [Phase 05]: ClinicSettings added to ReferenceDbContext (reference schema) as cross-module shared data
+- [Phase 05]: DTOs defined inline in interface file to avoid adding Shared.Contracts project reference to Shared.Application
+- [Phase 05]: Upsert pattern for CreateOrUpdateAsync -- single settings row per branch
 
 ### Roadmap Evolution
 
@@ -342,6 +362,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-05T16:22:00Z
-Stopped at: Completed 05-12a-PLAN.md
+Last session: 2026-03-05T16:23:09.063Z
+Stopped at: Completed 05-09-PLAN.md
 Resume file: None
