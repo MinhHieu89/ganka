@@ -1,5 +1,6 @@
 using Clinical.Application.Interfaces;
 using Clinical.Infrastructure.Repositories;
+using Clinical.Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Clinical.Infrastructure;
@@ -22,6 +23,9 @@ public static class IoC
 
         // Unit of Work
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        // Services
+        services.AddScoped<IDocumentService, DocumentService>();
 
         return services;
     }

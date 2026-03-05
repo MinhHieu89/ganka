@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Clinical.Application.Features;
+using Clinical.Application.Interfaces;
 using Clinical.Contracts.Dtos;
 using Shared.Domain;
 using Shared.Presentation;
@@ -25,6 +26,7 @@ public static class ClinicalApiEndpoints
         MapIcd10Endpoints(group);
         MapDryEyeEndpoints(group);
         MapMedicalImageEndpoints(group);
+        MapPrintEndpoints(group);
 
         return app;
     }
@@ -199,6 +201,38 @@ public static class ClinicalApiEndpoints
             var result = await bus.InvokeAsync<Result<ImageComparisonResponse>>(
                 new GetImageComparisonQuery(patientId, visitId1, visitId2, imageType), ct);
             return result.ToHttpResult();
+        });
+    }
+    private static void MapPrintEndpoints(RouteGroupBuilder group)
+    {
+        group.MapGet("/{visitId:guid}/print/drug-rx", async (Guid visitId, IDocumentService docs, CancellationToken ct) =>
+        {
+            var pdf = await docs.GenerateDrugPrescriptionAsync(visitId, ct);
+            return Results.File(pdf, "application/pdf", $"drug-rx-{visitId}.pdf");
+        });
+
+        group.MapGet("/{visitId:guid}/print/optical-rx", async (Guid visitId, IDocumentService docs, CancellationToken ct) =>
+        {
+            var pdf = await docs.GenerateOpticalPrescriptionAsync(visitId, ct);
+            return Results.File(pdf, "application/pdf", $"optical-rx-{visitId}.pdf");
+        });
+
+        group.MapGet("/{visitId:guid}/print/referral-letter", async (Guid visitId, string reason, string to, IDocumentService docs, CancellationToken ct) =>
+        {
+            var pdf = await docs.GenerateReferralLetterAsync(visitId, reason, to, ct);
+            return Results.File(pdf, "application/pdf", $"referral-{visitId}.pdf");
+        });
+
+        group.MapGet("/{visitId:guid}/print/consent-form", async (Guid visitId, string procedureType, IDocumentService docs, CancellationToken ct) =>
+        {
+            var pdf = await docs.GenerateConsentFormAsync(visitId, procedureType, ct);
+            return Results.File(pdf, "application/pdf", $"consent-{visitId}.pdf");
+        });
+
+        group.MapGet("/prescription-items/{itemId:guid}/print/label", async (Guid itemId, IDocumentService docs, CancellationToken ct) =>
+        {
+            var pdf = await docs.GeneratePharmacyLabelAsync(itemId, ct);
+            return Results.File(pdf, "application/pdf", $"label-{itemId}.pdf");
         });
     }
 }

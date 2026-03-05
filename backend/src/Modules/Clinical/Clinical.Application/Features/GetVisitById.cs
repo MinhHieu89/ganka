@@ -65,6 +65,43 @@ public static class GetVisitByIdHandler
                 d.OsdiScore,
                 d.OsdiSeverity.HasValue ? (int)d.OsdiSeverity.Value : null
             )).ToList(),
+            visit.DrugPrescriptions.Select(dp => new DrugPrescriptionDto(
+                dp.Id,
+                dp.VisitId,
+                dp.Notes,
+                dp.PrescriptionCode,
+                dp.PrescribedAt,
+                dp.Items.Select(i => new PrescriptionItemDto(
+                    i.Id,
+                    i.DrugCatalogItemId,
+                    i.DrugName,
+                    i.GenericName,
+                    i.Strength,
+                    i.Form,
+                    i.Route,
+                    i.Dosage,
+                    i.DosageOverride,
+                    i.Quantity,
+                    i.Unit,
+                    i.Frequency,
+                    i.DurationDays,
+                    i.IsOffCatalog,
+                    i.HasAllergyWarning,
+                    i.SortOrder
+                )).ToList()
+            )).ToList(),
+            visit.OpticalPrescriptions.Select(op => new OpticalPrescriptionDto(
+                op.Id,
+                op.VisitId,
+                op.OdSph, op.OdCyl, op.OdAxis, op.OdAdd,
+                op.OsSph, op.OsCyl, op.OsAxis, op.OsAdd,
+                op.FarPd, op.NearPd,
+                op.NearOdSph, op.NearOdCyl, op.NearOdAxis,
+                op.NearOsSph, op.NearOsCyl, op.NearOsAxis,
+                (int)op.LensType,
+                op.Notes,
+                op.PrescribedAt
+            )).ToList(),
             visit.SignedAt,
             visit.SignedById,
             visit.AppointmentId);

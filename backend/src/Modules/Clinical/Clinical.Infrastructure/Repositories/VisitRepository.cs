@@ -30,6 +30,9 @@ public sealed class VisitRepository : IVisitRepository
             .Include(v => v.Diagnoses)
             .Include(v => v.DryEyeAssessments)
             .Include(v => v.Amendments)
+            .Include(v => v.DrugPrescriptions)
+                .ThenInclude(dp => dp.Items)
+            .Include(v => v.OpticalPrescriptions)
             .FirstOrDefaultAsync(v => v.Id == id, ct);
     }
 

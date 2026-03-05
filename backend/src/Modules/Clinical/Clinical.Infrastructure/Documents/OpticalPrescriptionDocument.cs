@@ -75,8 +75,8 @@ public sealed class OpticalPrescriptionDocument : IDocument
                     col.Item().Text("K\u00cdNH NH\u00ccN G\u1ea6N").FontSize(11).Bold();
                     col.Item().Height(5);
                     ComposeRefractionTable(col,
-                        _data.NearOdSph, _data.NearOdCyl, _data.NearOdAxis, _data.NearOdAdd,
-                        _data.NearOsSph, _data.NearOsCyl, _data.NearOsAxis, _data.NearOsAdd);
+                        _data.NearOdSph, _data.NearOdCyl, _data.NearOdAxis, null,
+                        _data.NearOsSph, _data.NearOsCyl, _data.NearOsAxis, null);
                 }
 
                 col.Item().Height(10);
@@ -133,8 +133,8 @@ public sealed class OpticalPrescriptionDocument : IDocument
     }
 
     private static void ComposeRefractionTable(ColumnDescriptor col,
-        decimal? odSph, decimal? odCyl, decimal? odAxis, decimal? odAdd,
-        decimal? osSph, decimal? osCyl, decimal? osAxis, decimal? osAdd)
+        decimal? odSph, decimal? odCyl, int? odAxis, decimal? odAdd,
+        decimal? osSph, decimal? osCyl, int? osAxis, decimal? osAdd)
     {
         col.Item().Table(table =>
         {

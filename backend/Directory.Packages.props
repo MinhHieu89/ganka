@@ -29,6 +29,9 @@
     <!-- Azure -->
     <PackageVersion Include="Azure.Storage.Blobs" Version="12.*" />
 
+    <!-- Document Generation -->
+    <PackageVersion Include="QuestPDF" Version="2025.*" />
+
     <!-- API Documentation -->
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="7.*" />
 

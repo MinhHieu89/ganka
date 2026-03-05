@@ -18,6 +18,8 @@ public record VisitDetailDto(
     List<VisitDiagnosisDto> Diagnoses,
     List<VisitAmendmentDto> Amendments,
     List<DryEyeAssessmentDto> DryEyeAssessments,
+    List<DrugPrescriptionDto> DrugPrescriptions,
+    List<OpticalPrescriptionDto> OpticalPrescriptions,
     DateTime? SignedAt,
     Guid? SignedById,
     Guid? AppointmentId);
