@@ -40,14 +40,16 @@ export function MedicalImagesSection({ visitId, patientId }: MedicalImagesSectio
             <Badge variant="secondary" className="text-xs">
               {imageCount}
             </Badge>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setCompareOpen(true)}
-            >
-              <IconColumns className="h-4 w-4 mr-1" />
-              {t("images.compare")}
-            </Button>
+            {visitOptions.length >= 2 && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCompareOpen(true)}
+              >
+                <IconColumns className="h-4 w-4 mr-1" />
+                {t("images.compare")}
+              </Button>
+            )}
           </div>
         ) : undefined
       }
