@@ -15,3 +15,11 @@ public sealed record DryEyeComparisonVisitData(
     Guid VisitId,
     DateTime VisitDate,
     DryEyeAssessmentDto? Assessment);
+
+/// <summary>
+/// Query to compare dry eye assessment data across two visits.
+/// </summary>
+public sealed record GetDryEyeComparisonQuery(
+    Guid PatientId,
+    Guid VisitId1,
+    Guid VisitId2);

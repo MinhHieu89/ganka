@@ -291,6 +291,7 @@ app.MapAuditApiEndpoints();
 app.MapPatientApiEndpoints();
 app.MapSchedulingApiEndpoints();
 app.MapPublicBookingEndpoints();
+app.MapPublicOsdiEndpoints();
 app.MapClinicalApiEndpoints();
 
 app.Run();

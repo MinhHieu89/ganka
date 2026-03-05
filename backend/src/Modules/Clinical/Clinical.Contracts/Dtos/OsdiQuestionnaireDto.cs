@@ -37,3 +37,8 @@ public sealed record OsdiLinkResponse(
     string Token,
     string Url,
     DateTime ExpiresAt);
+
+/// <summary>
+/// Query to get OSDI questionnaire data by public token (patient self-fill).
+/// </summary>
+public sealed record GetOsdiByTokenQuery(string Token);

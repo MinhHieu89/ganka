@@ -14,3 +14,8 @@ public sealed record OsdiHistoryDto(
 /// </summary>
 public sealed record OsdiHistoryResponse(
     List<OsdiHistoryDto> Items);
+
+/// <summary>
+/// Query for OSDI history across all visits for a patient.
+/// </summary>
+public sealed record GetOsdiHistoryQuery(Guid PatientId);

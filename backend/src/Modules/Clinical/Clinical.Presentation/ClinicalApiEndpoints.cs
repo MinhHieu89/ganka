@@ -10,7 +10,8 @@ using Wolverine;
 namespace Clinical.Presentation;
 
 /// <summary>
-/// Clinical API endpoints for visit lifecycle, refraction, diagnosis, and ICD-10 management.
+/// Clinical API endpoints for visit lifecycle, refraction, diagnosis, ICD-10,
+/// dry eye assessment, and medical imaging management.
 /// All endpoints require authorization and are grouped under /api/clinical.
 /// </summary>
 public static class ClinicalApiEndpoints
@@ -22,6 +23,8 @@ public static class ClinicalApiEndpoints
         MapVisitLifecycleEndpoints(group);
         MapVisitDataEndpoints(group);
         MapIcd10Endpoints(group);
+        MapDryEyeEndpoints(group);
+        MapMedicalImageEndpoints(group);
 
         return app;
     }
@@ -129,4 +132,82 @@ public static class ClinicalApiEndpoints
             return Results.Ok(results);
         });
     }
+
+    private static void MapDryEyeEndpoints(RouteGroupBuilder group)
+    {
+        group.MapPut("/{visitId:guid}/dry-eye", async (Guid visitId, UpdateDryEyeAssessmentCommand command, IMessageBus bus, CancellationToken ct) =>
+        {
+            var enriched = new UpdateDryEyeAssessmentCommand(
+                visitId,
+                command.OdTbut, command.OsTbut,
+                command.OdSchirmer, command.OsSchirmer,
+                command.OdMeibomianGrading, command.OsMeibomianGrading,
+                command.OdTearMeniscus, command.OsTearMeniscus,
+                command.OdStaining, command.OsStaining);
+            var result = await bus.InvokeAsync<Result>(enriched, ct);
+            return result.ToHttpResult();
+        });
+
+        group.MapGet("/osdi-history/{patientId:guid}", async (Guid patientId, IMessageBus bus, CancellationToken ct) =>
+        {
+            var result = await bus.InvokeAsync<OsdiHistoryResponse>(new GetOsdiHistoryQuery(patientId), ct);
+            return Results.Ok(result);
+        });
+
+        group.MapGet("/dry-eye-comparison", async (Guid patientId, Guid visitId1, Guid visitId2, IMessageBus bus, CancellationToken ct) =>
+        {
+            var result = await bus.InvokeAsync<Result<DryEyeComparisonDto>>(
+                new GetDryEyeComparisonQuery(patientId, visitId1, visitId2), ct);
+            return result.ToHttpResult();
+        });
+
+        group.MapPost("/{visitId:guid}/osdi-link", async (Guid visitId, IMessageBus bus, CancellationToken ct) =>
+        {
+            var result = await bus.InvokeAsync<Result<OsdiLinkResponse>>(
+                new GenerateOsdiLinkCommand(visitId), ct);
+            return result.ToHttpResult();
+        });
+    }
+
+    private static void MapMedicalImageEndpoints(RouteGroupBuilder group)
+    {
+        group.MapPost("/{visitId:guid}/images", async (Guid visitId, IFormFile file, [AsParameters] ImageUploadParams uploadParams, IMessageBus bus, CancellationToken ct) =>
+        {
+            using var stream = file.OpenReadStream();
+            var command = new UploadMedicalImageCommand(
+                visitId, stream, file.FileName, file.ContentType, file.Length,
+                uploadParams.ImageType, uploadParams.EyeTag);
+            var result = await bus.InvokeAsync<Result<Guid>>(command, ct);
+            return result.ToCreatedHttpResult($"/api/clinical/{visitId}/images");
+        }).DisableAntiforgery();
+
+        group.MapGet("/{visitId:guid}/images", async (Guid visitId, IMessageBus bus, CancellationToken ct) =>
+        {
+            var images = await bus.InvokeAsync<List<MedicalImageDto>>(
+                new GetVisitImagesQuery(visitId), ct);
+            return Results.Ok(images);
+        });
+
+        group.MapDelete("/images/{imageId:guid}", async (Guid imageId, IMessageBus bus, CancellationToken ct) =>
+        {
+            var result = await bus.InvokeAsync<Result>(new DeleteMedicalImageCommand(imageId), ct);
+            return result.ToHttpResult();
+        });
+
+        group.MapGet("/image-comparison", async (Guid patientId, Guid visitId1, Guid visitId2, int imageType, IMessageBus bus, CancellationToken ct) =>
+        {
+            var result = await bus.InvokeAsync<Result<ImageComparisonResponse>>(
+                new GetImageComparisonQuery(patientId, visitId1, visitId2, imageType), ct);
+            return result.ToHttpResult();
+        });
+    }
+}
+
+/// <summary>
+/// Query parameter binding for image upload form data.
+/// </summary>
+public class ImageUploadParams
+{
+    public int ImageType { get; set; }
+    public int? EyeTag { get; set; }
 }
