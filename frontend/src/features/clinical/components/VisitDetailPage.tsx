@@ -122,6 +122,7 @@ export function VisitDetailPage({ visitId }: VisitDetailPageProps) {
       <OpticalPrescriptionSection
         visitId={visitId}
         prescriptions={visit.opticalPrescriptions ?? []}
+        refractions={visit.refractions}
         disabled={isReadOnly}
       />
 
