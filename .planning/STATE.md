@@ -3,11 +3,27 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
+stopped_at: Completed 05-20-PLAN.md
+last_updated: "2026-03-05T17:40:20.753Z"
+last_activity: 2026-03-06 -- Completed 05-16 Optical Prescription Section
+progress:
+  total_phases: 13
+  completed_phases: 8
+  total_plans: 116
+  completed_plans: 87
+  percent: 75
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: in-progress
 stopped_at: Completed 05-18-PLAN.md
 last_updated: "2026-03-05T17:22:20.672Z"
 last_activity: 2026-03-06 -- Completed 05-18 Clinic Settings Admin Page & Sidebar Navigation
 progress:
-  total_phases: 13
+  [████████░░] 75%
   completed_phases: 8
   total_plans: 116
   completed_plans: 86
@@ -57,9 +73,9 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 ## Current Position
 
 Phase: 05 (Prescriptions & Document Printing) -- IN PROGRESS
-Plan: 18 of 25 in current phase (18 complete)
-Status: Completed 05-16 Optical Prescription Section
-Last activity: 2026-03-06 -- Completed 05-16 Optical Prescription Section
+Plan: 20 of 25 in current phase (20 complete)
+Status: Completed 05-20 Vietnamese User Stories
+Last activity: 2026-03-06 -- Completed 05-20 Vietnamese User Stories for Phase 5
 
 Progress: [███████░░░] 74%
 
@@ -159,6 +175,7 @@ Progress: [███████░░░] 74%
 | Phase 05 P15 | 3min | 2 tasks | 2 files |
 | Phase 05 P18 | 3min | 2 tasks | 7 files |
 | Phase 05 P16 | 3min | 2 tasks | 5 files |
+| Phase 05 P20 | 9min | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -403,6 +420,7 @@ Recent decisions affecting current work:
 - [Phase 05]: [05-16]: OpticalPrescriptionForm as separate component from Section for reusable form logic
 - [Phase 05]: [05-16]: Auto-fill uses manifest refraction (type 0) with PD averaging when both eyes have PD values
 - [Phase 05]: [05-16]: Near Rx section collapsible by default for distance-only prescription majority
+- [Phase 05]: [05-20]: 16 Vietnamese user stories for Phase 5 with proper diacritics; PRT-03 deferred to Phase 7 with explicit reason
 
 ### Roadmap Evolution
 
@@ -424,6 +442,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-05T17:27:05Z
-Stopped at: Completed 05-16-PLAN.md
+Last session: 2026-03-05T17:40:20.750Z
+Stopped at: Completed 05-20-PLAN.md
 Resume file: None
