@@ -3,11 +3,27 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
+stopped_at: Completed 05-18-PLAN.md
+last_updated: "2026-03-05T17:22:20.672Z"
+last_activity: 2026-03-06 -- Completed 05-18 Clinic Settings Admin Page & Sidebar Navigation
+progress:
+  total_phases: 13
+  completed_phases: 8
+  total_plans: 116
+  completed_plans: 85
+  percent: 73
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: in-progress
 stopped_at: Completed 05-15-PLAN.md
 last_updated: "2026-03-05T17:21:36.749Z"
 last_activity: 2026-03-06 -- Completed 05-14 Prescription Frontend Components
 progress:
-  total_phases: 13
+  [███████░░░] 73%
   completed_phases: 8
   total_plans: 116
   completed_plans: 84
@@ -41,9 +57,9 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 ## Current Position
 
 Phase: 05 (Prescriptions & Document Printing) -- IN PROGRESS
-Plan: 15 of 25 in current phase (16 complete)
-Status: Completed 05-15 Drug Prescription Section
-Last activity: 2026-03-06 -- Completed 05-15 Drug Prescription Section
+Plan: 18 of 25 in current phase (17 complete)
+Status: Completed 05-18 Clinic Settings Admin Page & Sidebar Navigation
+Last activity: 2026-03-06 -- Completed 05-18 Clinic Settings Admin Page & Sidebar Navigation
 
 Progress: [███████░░░] 72%
 
@@ -141,6 +157,7 @@ Progress: [███████░░░] 72%
 | Phase 05 P13 | 4min | 2 tasks | 9 files |
 | Phase 05 P14 | 4min | 2 tasks | 4 files |
 | Phase 05 P15 | 3min | 2 tasks | 2 files |
+| Phase 05 P18 | 3min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -379,6 +396,9 @@ Recent decisions affecting current work:
 - [Phase 05]: [05-15]: Patient allergies fetched within DrugPrescriptionSection via usePatientById (self-contained section)
 - [Phase 05]: [05-15]: Local unsaved items use dashed border to visually distinguish from server-persisted prescriptions
 - [Phase 05]: [05-15]: Allergy AlertDialog lists specific drug names with conflicts for informed doctor confirmation
+- [Phase 05]: [05-18]: Logo upload uses native fetch + FormData following patient photo upload pattern (not openapi-fetch)
+- [Phase 05]: [05-18]: Pharmacy sidebar link enabled (disabled removed) since drug catalog page already exists from Plan 13
+- [Phase 05]: [05-18]: Clinic settings translations in common.json clinicSettings namespace rather than separate file
 
 ### Roadmap Evolution
 
@@ -400,6 +420,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-05T17:21:36.746Z
-Stopped at: Completed 05-15-PLAN.md
+Last session: 2026-03-05T17:22:20.668Z
+Stopped at: Completed 05-18-PLAN.md
 Resume file: None
