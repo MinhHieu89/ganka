@@ -4,13 +4,13 @@ milestone: v1.0
 milestone_name: milestone
 status: in-progress
 stopped_at: Completed 03.1-03-PLAN.md
-last_updated: "2026-03-05T04:27:24.227Z"
+last_updated: "2026-03-05T04:28:22.824Z"
 last_activity: 2026-03-05 -- Completed 03.1-01 Auth & Patient User Stories
 progress:
   total_phases: 13
-  completed_phases: 6
+  completed_phases: 7
   total_plans: 55
-  completed_plans: 54
+  completed_plans: 55
   percent: 98
 ---
 
@@ -143,6 +143,7 @@ Progress: [##########] 98%
 | Phase 03 P10 | 5min | 2 tasks | 4 files |
 | Phase 03.1 P03 | 4min | 2 tasks | 2 files |
 | Phase 03.1 P01 | 4min | 2 tasks | 2 files |
+| Phase 03.1 P02 | 5min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -310,6 +311,9 @@ Recent decisions affecting current work:
 - [Phase 03.1]: 6 admin workflow audit stories including viewer and export (not just 4 system-level)
 - [Phase 03.1]: Architecture stories framed from admin/manager perspective with business-value benefits
 - [Phase 03.1]: 8 stories per file covering 5 core requirements plus 3 admin/workflow stories each for comprehensive domain coverage
+- [Phase 03.1]: REF-01, REF-02, REF-03 grouped into 2 stories (US-CLN-005 + US-CLN-006) for same refraction form/workflow
+- [Phase 03.1]: SCH-02 expanded into 3 stories (US-SCH-002, US-SCH-003, US-SCH-008) covering self-booking, status check, and staff approval
+- [Phase 03.1]: Allergy alerts cross-referenced from clinical to patient stories using Xem thêm pattern
 
 ### Roadmap Evolution
 
