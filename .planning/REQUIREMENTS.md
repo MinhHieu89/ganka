@@ -34,8 +34,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **DRY-01**: Doctor can record Dry Eye exam with structured fields: OSDI score, TBUT, Schirmer, Meibomian gland grading, Tear meniscus, Staining score -- all per eye (left/right)
 - [x] **DRY-02**: System calculates and displays OSDI severity classification (Normal 0-12, Mild 13-22, Moderate 23-32, Severe 33-100) with color coding
-- [ ] **DRY-03**: Doctor can view OSDI trend chart across visits for a patient
-- [ ] **DRY-04**: Doctor can compare TBUT, Schirmer, and other metrics between visits side-by-side
+- [x] **DRY-03**: Doctor can view OSDI trend chart across visits for a patient
+- [x] **DRY-04**: Doctor can compare TBUT, Schirmer, and other metrics between visits side-by-side
 
 ### Refraction & Examination
 
@@ -246,8 +246,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CLN-04 | Phase 3 | Complete |
 | DRY-01 | Phase 4 | Complete |
 | DRY-02 | Phase 4 | Complete |
-| DRY-03 | Phase 4 | Pending |
-| DRY-04 | Phase 4 | Pending |
+| DRY-03 | Phase 4 | Complete |
+| DRY-04 | Phase 4 | Complete |
 | REF-01 | Phase 3 | Complete |
 | REF-02 | Phase 3 | Complete |
 | REF-03 | Phase 3 | Complete |
