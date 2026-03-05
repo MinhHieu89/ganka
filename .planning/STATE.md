@@ -151,6 +151,7 @@ Progress: [████████░░] 84%
 | Phase 05 P19 | 5min | 2 tasks | 9 files |
 | Phase 05 P02 | 5min | 2 tasks | 4 files |
 | Phase 05 P08 | 3min | 2 tasks | 8 files |
+| Phase 05 P07 | 3min | 1 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -376,6 +377,7 @@ Recent decisions affecting current work:
 - [Phase 05]: Used BranchId 00000000-0000-0000-0000-000000000001 for drug catalog seed data, matching ClinicScheduleSeeder pattern
 - [Phase 05]: GetAllActiveDrugsQuery handler added for admin list endpoint (not in original plan scope)
 - [Phase 05]: UnitOfWork implementation created as missing prerequisite for IoC registration
+- [Phase 05]: [05-07]: RemoveOpticalPrescriptions called before SetOpticalPrescription to sync EF Core change tracker with domain backing field clear
 
 ### Roadmap Evolution
 
