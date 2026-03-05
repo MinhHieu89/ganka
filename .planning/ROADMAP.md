@@ -227,11 +227,37 @@ Plans:
   3. Pharmacist can view pending prescriptions from HIS, dispense drugs with auto stock deduction per batch (FEFO), and the system enforces 7-day prescription validity
   4. Staff can process walk-in OTC sales without a prescription
   5. System maintains a separate consumables warehouse (IPL gel, eye shields, etc.) with stock levels, alerts, and auto-deduction when consumables are used in treatment sessions
-**Plans**: TBD
+**Plans**: 27 plans in 9 waves
 
 Plans:
-- [ ] 06-01: TBD
-- [ ] 06-02: TBD
+- [ ] 06-01-PLAN.md -- Pharmacy stock domain entities: Supplier, DrugBatch, SupplierDrugPrice, DrugCatalogItem pricing extension
+- [ ] 06-02-PLAN.md -- Stock import and adjustment domain entities: StockImport, StockImportLine, StockAdjustment
+- [ ] 06-03-PLAN.md -- Dispensing domain entities: DispensingRecord, DispensingLine, BatchDeduction
+- [ ] 06-04-PLAN.md -- OTC sale and consumables domain entities: OtcSale, ConsumableItem, ConsumableBatch
+- [ ] 06-05a-PLAN.md -- EF Core configs: Supplier, DrugBatch, StockImport, DrugCatalogItem update
+- [ ] 06-05b-PLAN.md -- EF Core configs: DispensingRecord, OtcSale, ConsumableItem, StockAdjustment
+- [ ] 06-06-PLAN.md -- PharmacyDbContext update + all Contracts DTOs
+- [ ] 06-07-PLAN.md -- Repository interfaces: Supplier, DrugBatch, StockImport, Dispensing, OtcSale, Consumable
+- [ ] 06-08-PLAN.md -- Repository implementations: Supplier, DrugBatch (FEFO), StockImport, Dispensing, OtcSale
+- [ ] 06-09-PLAN.md -- ConsumableRepository, ConsumableCatalogSeeder, Pharmacy IoC, DrugCatalogItemRepository update
+- [ ] 06-10-PLAN.md -- [TDD] FEFO Allocator domain service + Pharmacy.Unit.Tests project
+- [ ] 06-11-PLAN.md -- [TDD] Supplier CRUD handlers
+- [ ] 06-12-PLAN.md -- [TDD] Stock import handlers (supplier invoice + Excel bulk) + MiniExcel
+- [ ] 06-13-PLAN.md -- [TDD] Dispensing handlers with FEFO + 7-day expiry + cross-module query
+- [ ] 06-14-PLAN.md -- [TDD] OTC sale and inventory management handlers
+- [ ] 06-15-PLAN.md -- [TDD] Alert handlers (expiry + low stock) + ConsumableItem CRUD handlers
+- [ ] 06-16-PLAN.md -- [TDD] Consumable stock management handlers (add/adjust/alerts)
+- [ ] 06-17-PLAN.md -- Pharmacy.Presentation project + API endpoints (suppliers, inventory, stock import, alerts)
+- [ ] 06-18-PLAN.md -- Dispensing/OTC/Consumables API endpoints + cross-module handler + Bootstrapper wiring
+- [ ] 06-19-PLAN.md -- Frontend API layer: pharmacy + consumables API functions and TanStack Query hooks
+- [ ] 06-20-PLAN.md -- Frontend drug inventory page: table, batch details, alert banners
+- [ ] 06-21-PLAN.md -- Frontend supplier management + stock import pages
+- [ ] 06-22-PLAN.md -- Frontend dispensing queue page + dispensing dialog
+- [ ] 06-23-PLAN.md -- Frontend OTC sales page + stock adjustment dialog
+- [ ] 06-24-PLAN.md -- Frontend consumables warehouse page: table, forms, alerts
+- [ ] 06-25-PLAN.md -- Sidebar navigation update + i18n translations (EN/VI)
+- [ ] 06-26-PLAN.md -- Vietnamese user stories documentation (DOC-01)
+- [ ] 06-27-PLAN.md -- End-to-end verification checkpoint
 
 ### Phase 7: Billing & Finance
 **Goal**: Cashier can generate unified invoices across all departments, collect payments via multiple methods, and manage shifts with cash reconciliation
@@ -303,7 +329,7 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 | 3.1 Vietnamese User Stories Documentation | 0/3 | Not started | - |
 | 4. Dry Eye Template & Medical Imaging | 7/8 | In Progress | - |
 | 5. Prescriptions & Document Printing | 9/25 | In Progress|  |
-| 6. Pharmacy & Consumables | 0/2 | Not started | - |
+| 6. Pharmacy & Consumables | 0/27 | Not started | - |
 | 7. Billing & Finance | 0/3 | Not started | - |
 | 8. Optical Center | 0/3 | Not started | - |
 | 9. Treatment Protocols | 0/3 | Not started | - |
