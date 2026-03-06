@@ -35,6 +35,8 @@ using Scheduling.Application;
 using Scheduling.Presentation;
 using Pharmacy.Application;
 using Pharmacy.Presentation;
+using Billing.Application;
+using Billing.Presentation;
 using Shared.Infrastructure;
 using Shared.Presentation;
 using System.Threading.RateLimiting;
@@ -81,6 +83,11 @@ builder.Services.AddClinicalPresentation();
 builder.Services.AddPharmacyApplication();
 builder.Services.AddPharmacyInfrastructure();
 builder.Services.AddPharmacyPresentation();
+
+// Billing module
+builder.Services.AddBillingApplication();
+builder.Services.AddBillingInfrastructure();
+builder.Services.AddBillingPresentation();
 
 // ---------------------------------------------------------------------------
 // EF Core DbContexts -- module DbContexts with AuditInterceptor
@@ -304,6 +311,7 @@ app.MapClinicalApiEndpoints();
 app.MapPharmacyApiEndpoints();
 app.MapDispensingApiEndpoints();
 app.MapConsumablesApiEndpoints();
+app.MapBillingApiEndpoints();
 app.MapSettingsApiEndpoints();
 
 app.Run();
