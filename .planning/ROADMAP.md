@@ -217,6 +217,22 @@ Plans:
 - [ ] 05-20-PLAN.md -- Vietnamese user stories documentation (DOC-01)
 - [ ] 05-21-PLAN.md -- End-to-end verification checkpoint
 
+### Phase 05.1: Fix architecture test failures from prior phases (INSERTED)
+
+**Goal:** All 55 NetArchTest architecture rules pass with zero failures, restoring clean architecture boundaries across Patient and Clinical modules
+**Depends on:** Phase 5
+**Requirements**: ARCH-01, ARCH-02, ARCH-03, ARCH-04, ARCH-05
+**Plans:** 7 plans in 3 waves
+
+Plans:
+- [ ] 05.1-01-PLAN.md -- Move FieldChange record to Clinical.Domain.ValueObjects + remove stale Clinical.Contracts Domain reference
+- [ ] 05.1-02-PLAN.md -- Move PatientFieldValidationResult to Patient.Contracts + clean Presentation Domain imports
+- [ ] 05.1-03-PLAN.md -- Create Patient.Contracts.Enums (Gender, PatientType, AllergySeverity) + remove Domain reference from csproj
+- [ ] 05.1-04-PLAN.md -- Create IReferenceDataRepository interface + implementation + IoC registration
+- [ ] 05.1-05-PLAN.md -- Create enum mappers + update Patient.Application handlers with boundary conversion
+- [ ] 05.1-06-PLAN.md -- Update Clinical.Application handlers to use IReferenceDataRepository + update unit tests
+- [ ] 05.1-07-PLAN.md -- Full verification: all 55 architecture tests + full test suite regression check
+
 ### Phase 6: Pharmacy & Consumables
 **Goal**: Pharmacist can manage drug inventory with batch/expiry tracking and dispense against prescriptions, with a separate consumables warehouse for treatment supplies
 **Depends on**: Phase 5
@@ -352,6 +368,7 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 | 3.1 Vietnamese User Stories Documentation | 0/3 | Not started | - |
 | 4. Dry Eye Template & Medical Imaging | 7/8 | In Progress | - |
 | 5. Prescriptions & Document Printing | 23/25 | In Progress|  |
+| 5.1 Fix Architecture Test Failures | 0/7 | Not started | - |
 | 6. Pharmacy & Consumables | 0/27 | Not started | - |
 | 7. Billing & Finance | 0/26 | Not started | - |
 | 8. Optical Center | 0/3 | Not started | - |
