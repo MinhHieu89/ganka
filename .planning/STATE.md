@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 06-26-PLAN.md
-last_updated: "2026-03-06T09:39:28.569Z"
+stopped_at: "Checkpoint: 06-27 human-verify (Task 1 complete, awaiting human verification of pharmacy UI)"
+last_updated: "2026-03-06T10:02:40.032Z"
 last_activity: 2026-03-06 -- Completed 05.1-07 Full Verification (55/55 arch tests, 263 total tests pass)
 progress:
   total_phases: 14
-  completed_phases: 9
+  completed_phases: 10
   total_plans: 150
-  completed_plans: 122
+  completed_plans: 123
 ---
 
 ---
@@ -578,6 +578,7 @@ Recent decisions affecting current work:
 - [Phase 06-pharmacy-consumables]: Used Collapsible component for pharmacy sub-nav with SidebarMenuSub/SidebarMenuSubButton for shadcn-compatible collapsible sidebar navigation
 - [Phase 06-pharmacy-consumables]: Pending count badge displays only when pendingCount > 0 to avoid cluttering nav with zero badge
 - [Phase 06-pharmacy-consumables]: PHR-02 split into two user stories (invoice import + Excel bulk import) for clearer UX documentation; CON-03 documented as Phase 9 readiness scaffolding story
+- [Phase 06-pharmacy-consumables]: EF Core projection pattern: OrderBy must come before Join/Select projection for SQL translatability
 
 ### Roadmap Evolution
 
@@ -600,6 +601,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-06T09:39:28.564Z
-Stopped at: Completed 06-26-PLAN.md
+Last session: 2026-03-06T10:02:35.436Z
+Stopped at: Checkpoint: 06-27 human-verify (Task 1 complete, awaiting human verification of pharmacy UI)
 Resume file: None
