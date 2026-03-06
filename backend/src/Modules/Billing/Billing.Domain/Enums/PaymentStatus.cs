@@ -1,8 +1,7 @@
 namespace Billing.Domain.Enums;
 
 /// <summary>
-/// Status of a payment transaction against an invoice.
-/// Pending = awaiting confirmation, Confirmed = payment received, Refunded = payment reversed.
+/// Status of a payment transaction.
 /// </summary>
 public enum PaymentStatus
 {
@@ -12,8 +11,7 @@ public enum PaymentStatus
 }
 
 /// <summary>
-/// Approval status for discount requests.
-/// Discounts require manager approval before being applied to an invoice.
+/// Approval status for discounts requiring manager authorization.
 /// </summary>
 public enum ApprovalStatus
 {
@@ -23,8 +21,7 @@ public enum ApprovalStatus
 }
 
 /// <summary>
-/// Status of a refund request through the multi-step approval workflow.
-/// Requested -> Approved -> Processed (or Rejected at any point).
+/// Status of a refund request through the approval workflow.
 /// </summary>
 public enum RefundStatus
 {

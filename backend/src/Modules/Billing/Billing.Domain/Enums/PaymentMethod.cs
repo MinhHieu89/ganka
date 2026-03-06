@@ -1,8 +1,7 @@
 namespace Billing.Domain.Enums;
 
 /// <summary>
-/// Method used to collect payment from the patient.
-/// Covers cash, bank transfer, QR-based mobile wallets, and card payments.
+/// Payment method types accepted by the clinic.
 /// </summary>
 public enum PaymentMethod
 {
@@ -16,8 +15,7 @@ public enum PaymentMethod
 }
 
 /// <summary>
-/// Type of discount applied to an invoice or line item.
-/// Percentage discounts are relative (0-100), FixedAmount is an absolute VND value.
+/// Discount type: percentage off or fixed VND amount.
 /// </summary>
 public enum DiscountType
 {
