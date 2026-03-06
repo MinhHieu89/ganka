@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 06-03-PLAN.md
-last_updated: "2026-03-06T06:50:28.579Z"
+stopped_at: Completed 06-04-PLAN.md
+last_updated: "2026-03-06T06:54:35.667Z"
 last_activity: 2026-03-06 -- Completed 05.1-07 Full Verification (55/55 arch tests, 263 total tests pass)
 progress:
   total_phases: 14
   completed_phases: 9
   total_plans: 150
-  completed_plans: 98
+  completed_plans: 99
 ---
 
 ---
@@ -249,6 +249,7 @@ Progress: [██████░░░░] 63%
 | Phase 06 P01 | 2 | 2 tasks | 5 files |
 | Phase 06 P02 | 2 | 2 tasks | 4 files |
 | Phase 06 P03 | 1min | 2 tasks | 4 files |
+| Phase 06-pharmacy-consumables P04 | 2 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -508,6 +509,9 @@ Recent decisions affecting current work:
 - [Phase 06]: [06-02]: StockAdjustment uses dual nullable FK (DrugBatchId, ConsumableBatchId) with exactly-one-non-null domain guard for shared use across pharmacy and consumables warehouse
 - [Phase 06]: DispensingLine.Create() is internal — lines always created through DispensingRecord.AddLine() to enforce aggregate ownership
 - [Phase 06]: [06-03]: BatchDeduction dual nullable FK (DispensingLineId, OtcSaleLineId) with separate factory methods enables shared entity reuse for OTC sales in Plan 04
+- [Phase 06]: OtcSaleLine.Create() is internal -- lines always created through OtcSale.AddLine() to enforce aggregate ownership (same as DispensingLine pattern)
+- [Phase 06]: [06-04]: ConsumableItem.CurrentStock only used for SimpleStock mode -- ExpiryTracked stock computed from ConsumableBatch.CurrentQuantity sum
+- [Phase 06]: [06-04]: ConsumableItem.AddStock/RemoveStock throw InvalidOperationException if called on ExpiryTracked item to prevent incorrect runtime usage
 
 ### Roadmap Evolution
 
@@ -530,6 +534,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-06T06:50:28.575Z
-Stopped at: Completed 06-03-PLAN.md
+Last session: 2026-03-06T06:54:35.663Z
+Stopped at: Completed 06-04-PLAN.md
 Resume file: None

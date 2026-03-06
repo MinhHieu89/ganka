@@ -90,13 +90,13 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **PHR-03**: System tracks expiry dates and alerts at configurable thresholds (30/60/90 days before expiry)
 - [ ] **PHR-04**: System alerts when drug stock falls below configurable minimum level per drug
 - [x] **PHR-05**: Pharmacist can dispense drugs against HIS prescription with auto stock deduction
-- [ ] **PHR-06**: Staff can process walk-in OTC sales without prescription
+- [x] **PHR-06**: Staff can process walk-in OTC sales without prescription
 - [x] **PHR-07**: System enforces 7-day prescription validity and warns on expired prescriptions
 
 ### Consumables Warehouse
 
-- [ ] **CON-01**: System maintains separate consumables warehouse independent from pharmacy stock
-- [ ] **CON-02**: Staff can manage treatment supplies inventory (IPL gel, eye shields, etc.) with stock levels and alerts
+- [x] **CON-01**: System maintains separate consumables warehouse independent from pharmacy stock
+- [x] **CON-02**: Staff can manage treatment supplies inventory (IPL gel, eye shields, etc.) with stock levels and alerts
 - [ ] **CON-03**: Consumable usage per treatment session auto-deducts from consumables warehouse
 
 ### Optical Center
@@ -284,10 +284,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PHR-03 | Phase 6 | Pending |
 | PHR-04 | Phase 6 | Pending |
 | PHR-05 | Phase 6 | Complete |
-| PHR-06 | Phase 6 | Pending |
+| PHR-06 | Phase 6 | Complete |
 | PHR-07 | Phase 6 | Complete |
-| CON-01 | Phase 6 | Pending |
-| CON-02 | Phase 6 | Pending |
+| CON-01 | Phase 6 | Complete |
+| CON-02 | Phase 6 | Complete |
 | CON-03 | Phase 6 | Pending |
 | OPT-01 | Phase 8 | Pending |
 | OPT-02 | Phase 8 | Pending |
