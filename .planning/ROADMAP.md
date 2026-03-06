@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: Clinical Workflow & Examination** - Visit lifecycle, refraction recording, and ICD-10 diagnosis (completed 2026-03-05)
 - [ ] **Phase 4: Dry Eye Template & Medical Imaging** - Structured dry eye assessment and medical image management with comparison
 - [ ] **Phase 5: Prescriptions & Document Printing** - Drug and optical prescription writing with all printable documents
-- [ ] **Phase 6: Pharmacy & Consumables** - Drug inventory, dispensing, and consumables warehouse
+- [x] **Phase 6: Pharmacy & Consumables** - Drug inventory, dispensing, and consumables warehouse (completed 2026-03-06)
 - [ ] **Phase 7: Billing & Finance** - Unified invoicing, payment processing, and shift management
 - [ ] **Phase 8: Optical Center** - Frame/lens inventory, glasses order tracking, warranty, and stocktaking
 - [ ] **Phase 9: Treatment Protocols** - IPL/LLLT/lid care packages with session tracking and OSDI monitoring
@@ -370,7 +370,7 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 | 4. Dry Eye Template & Medical Imaging | 7/8 | In Progress | - |
 | 5. Prescriptions & Document Printing | 23/25 | In Progress|  |
 | 5.1 Fix Architecture Test Failures | 0/8 | Not started | - |
-| 6. Pharmacy & Consumables | 27/28 | In Progress|  |
+| 6. Pharmacy & Consumables | 28/28 | Complete   | 2026-03-06 |
 | 7. Billing & Finance | 0/26 | Not started | - |
 | 8. Optical Center | 0/3 | Not started | - |
 | 9. Treatment Protocols | 0/3 | Not started | - |
