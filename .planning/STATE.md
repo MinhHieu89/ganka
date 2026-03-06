@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 06-24-PLAN.md
-last_updated: "2026-03-06T09:27:37.458Z"
+stopped_at: Completed 06-25-PLAN.md
+last_updated: "2026-03-06T09:33:21.214Z"
 last_activity: 2026-03-06 -- Completed 05.1-07 Full Verification (55/55 arch tests, 263 total tests pass)
 progress:
   total_phases: 14
   completed_phases: 9
   total_plans: 150
-  completed_plans: 120
+  completed_plans: 121
 ---
 
 ---
@@ -271,6 +271,7 @@ Progress: [██████░░░░] 63%
 | Phase 06-pharmacy-consumables P22 | 7 | 2 tasks | 9 files |
 | Phase 06 P23 | 15 | 2 tasks | 5 files |
 | Phase 06-pharmacy-consumables P24 | 15 | 2 tasks | 9 files |
+| Phase 06-pharmacy-consumables P25 | 15 | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -573,6 +574,8 @@ Recent decisions affecting current work:
 - [Phase 06]: StockAdjustmentDialog uses drugCatalogItemId matching backend AdjustStockInput interface
 - [Phase 06-pharmacy-consumables]: ConsumableAdjustDialog added (not in plan) to complete Điều chỉnh action - required for full stock management
 - [Phase 06-pharmacy-consumables]: Create dialog handled by route page, not table - cleaner separation of concerns for consumables UI
+- [Phase 06-pharmacy-consumables]: Used Collapsible component for pharmacy sub-nav with SidebarMenuSub/SidebarMenuSubButton for shadcn-compatible collapsible sidebar navigation
+- [Phase 06-pharmacy-consumables]: Pending count badge displays only when pendingCount > 0 to avoid cluttering nav with zero badge
 
 ### Roadmap Evolution
 
@@ -595,6 +598,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-06T09:27:37.455Z
-Stopped at: Completed 06-24-PLAN.md
+Last session: 2026-03-06T09:33:21.210Z
+Stopped at: Completed 06-25-PLAN.md
 Resume file: None
