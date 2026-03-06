@@ -55,6 +55,15 @@ public class DrugCatalogItemConfiguration : IEntityTypeConfiguration<DrugCatalog
             .IsRequired()
             .HasDefaultValue(true);
 
+        // Nullable selling price — set via UpdatePricing, null until configured
+        builder.Property(d => d.SellingPrice)
+            .HasPrecision(18, 2);
+
+        // Minimum stock level for low-stock alerts; defaults to 0 (no alert)
+        builder.Property(d => d.MinStockLevel)
+            .IsRequired()
+            .HasDefaultValue(0);
+
         builder.Property(d => d.BranchId)
             .HasConversion(
                 b => b.Value,

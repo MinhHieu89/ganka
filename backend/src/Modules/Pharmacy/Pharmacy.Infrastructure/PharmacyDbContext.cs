@@ -13,6 +13,8 @@ public class PharmacyDbContext : DbContext
     public DbSet<Supplier> Suppliers => Set<Supplier>();
     public DbSet<SupplierDrugPrice> SupplierDrugPrices => Set<SupplierDrugPrice>();
     public DbSet<DrugBatch> DrugBatches => Set<DrugBatch>();
+    public DbSet<StockImport> StockImports => Set<StockImport>();
+    public DbSet<StockImportLine> StockImportLines => Set<StockImportLine>();
 
     public PharmacyDbContext(DbContextOptions<PharmacyDbContext> options) : base(options)
     {
