@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 05.1-01-PLAN.md
-last_updated: "2026-03-06T04:57:20.837Z"
+stopped_at: Completed 05.1-02-PLAN.md
+last_updated: "2026-03-06T04:59:25.394Z"
 last_activity: 2026-03-06 -- Completed 05.1-03a Patient Contracts Enums
 progress:
   total_phases: 14
   completed_phases: 8
   total_plans: 150
-  completed_plans: 90
+  completed_plans: 91
   percent: 59
 ---
 
@@ -210,6 +210,7 @@ Progress: [██████░░░░] 59%
 | Phase 05.1 P03a | 1min | 1 tasks | 4 files |
 | Phase 05.1 P04 | 1min | 2 tasks | 3 files |
 | Phase 05.1 P01 | 4min | 1 tasks | 3 files |
+| Phase 05.1 P02 | 6min | 1 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -458,6 +459,8 @@ Recent decisions affecting current work:
 - [Phase 05.1]: Contracts enums mirror Domain enums with identical values for int-cast compatibility
 - [Phase 05.1]: IReferenceDataRepository interface exposes SearchAsync and GetByCodesAsync matching existing handler query patterns
 - [Phase 05.1]: FieldChange moved to ValueObjects namespace -- correct DDD classification for records used in JSON serialization
+- [Phase 05.1]: [05.1-02]: Tuple return from Domain validator to avoid Domain->Contracts dependency; Application maps to DTO
+- [Phase 05.1]: [05.1-02]: Removed both Patient.Domain.Enums and Patient.Domain.Services from PatientApiEndpoints (neither was used)
 
 ### Roadmap Evolution
 
@@ -480,6 +483,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-06T04:57:20.833Z
-Stopped at: Completed 05.1-01-PLAN.md
+Last session: 2026-03-06T04:59:25.389Z
+Stopped at: Completed 05.1-02-PLAN.md
 Resume file: None
