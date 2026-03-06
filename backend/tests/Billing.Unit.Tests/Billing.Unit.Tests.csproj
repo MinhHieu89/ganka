@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Modules\Auth\Auth.Contracts\Auth.Contracts.csproj" />
     <ProjectReference Include="..\..\src\Modules\Billing\Billing.Application\Billing.Application.csproj" />
     <ProjectReference Include="..\..\src\Modules\Billing\Billing.Domain\Billing.Domain.csproj" />
     <ProjectReference Include="..\..\src\Modules\Billing\Billing.Contracts\Billing.Contracts.csproj" />

@@ -16,6 +16,7 @@
     <ProjectReference Include="..\Billing.Domain\Billing.Domain.csproj" />
     <ProjectReference Include="..\Billing.Contracts\Billing.Contracts.csproj" />
     <ProjectReference Include="..\..\..\Shared\Shared.Application\Shared.Application.csproj" />
+    <ProjectReference Include="..\..\Auth\Auth.Contracts\Auth.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

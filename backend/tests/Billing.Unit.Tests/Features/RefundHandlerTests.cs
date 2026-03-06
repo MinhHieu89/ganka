@@ -1,3 +1,4 @@
+using Auth.Contracts.Queries;
 using Billing.Application.Features;
 using Billing.Application.Interfaces;
 using Billing.Contracts.Dtos;

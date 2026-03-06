@@ -1,3 +1,4 @@
+using Auth.Contracts.Queries;
 using Billing.Application.Interfaces;
 using Billing.Domain.Entities;
 using Billing.Domain.Enums;
@@ -15,16 +16,7 @@ public sealed record ApproveDiscountCommand(
     Guid ManagerId,
     string ManagerPin);
 
-/// <summary>
-/// Cross-module query to verify a manager's PIN.
-/// Sent to Auth module via IMessageBus.
-/// </summary>
-public sealed record VerifyManagerPinQuery(Guid ManagerId, string Pin);
-
-/// <summary>
-/// Response from Auth module for PIN verification.
-/// </summary>
-public sealed record VerifyManagerPinResponse(bool IsValid);
+// VerifyManagerPinQuery/Response moved to Auth.Contracts.Queries
 
 /// <summary>
 /// Wolverine handler for <see cref="ApproveDiscountCommand"/>.
