@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 06-04-PLAN.md
-last_updated: "2026-03-06T06:54:35.667Z"
+stopped_at: Completed 06-05a-PLAN.md
+last_updated: "2026-03-06T07:00:30.974Z"
 last_activity: 2026-03-06 -- Completed 05.1-07 Full Verification (55/55 arch tests, 263 total tests pass)
 progress:
   total_phases: 14
   completed_phases: 9
   total_plans: 150
-  completed_plans: 99
+  completed_plans: 100
 ---
 
 ---
@@ -250,6 +250,7 @@ Progress: [██████░░░░] 63%
 | Phase 06 P02 | 2 | 2 tasks | 4 files |
 | Phase 06 P03 | 1min | 2 tasks | 4 files |
 | Phase 06-pharmacy-consumables P04 | 2 | 2 tasks | 5 files |
+| Phase 06 P05a | 3 | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -512,6 +513,8 @@ Recent decisions affecting current work:
 - [Phase 06]: OtcSaleLine.Create() is internal -- lines always created through OtcSale.AddLine() to enforce aggregate ownership (same as DispensingLine pattern)
 - [Phase 06]: [06-04]: ConsumableItem.CurrentStock only used for SimpleStock mode -- ExpiryTracked stock computed from ConsumableBatch.CurrentQuantity sum
 - [Phase 06]: [06-04]: ConsumableItem.AddStock/RemoveStock throw InvalidOperationException if called on ExpiryTracked item to prevent incorrect runtime usage
+- [Phase 06]: DrugBatchConfiguration uses IsRowVersion() for optimistic concurrency -- prevents concurrent dispensing double-deduction
+- [Phase 06]: FEFO composite index on (DrugCatalogItemId, ExpiryDate) -- primary query pattern for batch selection in dispensing
 
 ### Roadmap Evolution
 
@@ -534,6 +537,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-06T06:54:35.663Z
-Stopped at: Completed 06-04-PLAN.md
+Last session: 2026-03-06T07:00:30.969Z
+Stopped at: Completed 06-05a-PLAN.md
 Resume file: None

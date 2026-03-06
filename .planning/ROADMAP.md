@@ -370,7 +370,7 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 | 4. Dry Eye Template & Medical Imaging | 7/8 | In Progress | - |
 | 5. Prescriptions & Document Printing | 23/25 | In Progress|  |
 | 5.1 Fix Architecture Test Failures | 0/8 | Not started | - |
-| 6. Pharmacy & Consumables | 4/28 | In Progress|  |
+| 6. Pharmacy & Consumables | 5/28 | In Progress|  |
 | 7. Billing & Finance | 0/26 | Not started | - |
 | 8. Optical Center | 0/3 | Not started | - |
 | 9. Treatment Protocols | 0/3 | Not started | - |
