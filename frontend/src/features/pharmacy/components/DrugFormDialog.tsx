@@ -27,9 +27,11 @@ import {
   type DrugCatalogItemDto,
   DRUG_FORM_MAP,
   DRUG_ROUTE_MAP,
+} from "@/features/pharmacy/api/pharmacy-api"
+import {
   useCreateDrugCatalogItem,
   useUpdateDrugCatalogItem,
-} from "@/features/pharmacy/api/pharmacy-api"
+} from "@/features/pharmacy/api/pharmacy-queries"
 
 const drugFormSchema = z.object({
   name: z.string().min(1, "required").max(200),

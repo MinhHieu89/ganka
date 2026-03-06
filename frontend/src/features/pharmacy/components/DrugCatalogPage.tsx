@@ -5,10 +5,8 @@ import { Button } from "@/shared/components/Button"
 import { Skeleton } from "@/shared/components/Skeleton"
 import { DrugCatalogTable } from "./DrugCatalogTable"
 import { DrugFormDialog } from "./DrugFormDialog"
-import {
-  useDrugCatalogList,
-  type DrugCatalogItemDto,
-} from "@/features/pharmacy/api/pharmacy-api"
+import { type DrugCatalogItemDto } from "@/features/pharmacy/api/pharmacy-api"
+import { useDrugCatalogList } from "@/features/pharmacy/api/pharmacy-queries"
 
 export function DrugCatalogPage() {
   const { t } = useTranslation("pharmacy")
