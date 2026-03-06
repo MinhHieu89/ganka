@@ -221,7 +221,7 @@ public class DispensingHandlerTests
 
         // Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.Message.Should().Contain("Tobramycin 0.3%");
+        result.Error.Description.Should().Contain("Tobramycin 0.3%");
         _dispensingRepository.DidNotReceive().Add(Arg.Any<DispensingRecord>());
         await _unitOfWork.DidNotReceive().SaveChangesAsync(Arg.Any<CancellationToken>());
     }
