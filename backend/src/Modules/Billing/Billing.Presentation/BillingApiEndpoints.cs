@@ -38,28 +38,25 @@ public static class BillingApiEndpoints
             return result.ToCreatedHttpResult("/api/billing/invoices");
         });
 
-        // POST /api/billing/invoices/{invoiceId}/line-items -- add line item to invoice
-        group.MapPost("/invoices/{invoiceId:guid}/line-items",
-            async (Guid invoiceId, AddInvoiceLineItemCommand command, IMessageBus bus, CancellationToken ct) =>
+        // GET /api/billing/invoices/{invoiceId} -- get invoice by ID with full details
+        group.MapGet("/invoices/{invoiceId:guid}",
+            async (Guid invoiceId, IMessageBus bus, CancellationToken ct) =>
         {
-            var enriched = new AddInvoiceLineItemCommand(
-                invoiceId, command.Description, command.DescriptionVi,
-                command.UnitPrice, command.Quantity, command.Department,
-                command.SourceId, command.SourceType);
-            var result = await bus.InvokeAsync<Result<InvoiceDto>>(enriched, ct);
+            var result = await bus.InvokeAsync<Result<InvoiceDto>>(
+                new GetInvoiceByIdQuery(invoiceId), ct);
             return result.ToHttpResult();
         });
 
-        // POST /api/billing/invoices/{invoiceId}/finalize -- finalize a paid invoice
-        group.MapPost("/invoices/{invoiceId:guid}/finalize",
-            async (Guid invoiceId, FinalizeInvoiceCommand command, IMessageBus bus, CancellationToken ct) =>
+        // GET /api/billing/invoices/by-visit/{visitId} -- get all invoices for a visit (summary list)
+        group.MapGet("/invoices/by-visit/{visitId:guid}",
+            async (Guid visitId, IMessageBus bus, CancellationToken ct) =>
         {
-            var enriched = new FinalizeInvoiceCommand(invoiceId, command.CashierShiftId);
-            var result = await bus.InvokeAsync<Result>(enriched, ct);
+            var result = await bus.InvokeAsync<Result<List<InvoiceSummaryDto>>>(
+                new GetInvoicesByVisitQuery(visitId), ct);
             return result.ToHttpResult();
         });
 
-        // GET /api/billing/invoices/visit/{visitId} -- get invoice by visit
+        // GET /api/billing/invoices/visit/{visitId} -- get single invoice by visit (cross-module)
         group.MapGet("/invoices/visit/{visitId:guid}",
             async (Guid visitId, IMessageBus bus, CancellationToken ct) =>
         {
@@ -74,6 +71,36 @@ public static class BillingApiEndpoints
         {
             var result = await bus.InvokeAsync<Result<List<InvoiceDto>>>(
                 new GetPendingInvoicesQuery(cashierShiftId), ct);
+            return result.ToHttpResult();
+        });
+
+        // POST /api/billing/invoices/{invoiceId}/line-items -- add line item to invoice
+        group.MapPost("/invoices/{invoiceId:guid}/line-items",
+            async (Guid invoiceId, AddInvoiceLineItemCommand command, IMessageBus bus, CancellationToken ct) =>
+        {
+            var enriched = new AddInvoiceLineItemCommand(
+                invoiceId, command.Description, command.DescriptionVi,
+                command.UnitPrice, command.Quantity, command.Department,
+                command.SourceId, command.SourceType);
+            var result = await bus.InvokeAsync<Result<InvoiceDto>>(enriched, ct);
+            return result.ToHttpResult();
+        });
+
+        // DELETE /api/billing/invoices/{invoiceId}/line-items/{lineItemId} -- remove line item from draft invoice
+        group.MapDelete("/invoices/{invoiceId:guid}/line-items/{lineItemId:guid}",
+            async (Guid invoiceId, Guid lineItemId, IMessageBus bus, CancellationToken ct) =>
+        {
+            var result = await bus.InvokeAsync<Result<InvoiceDto>>(
+                new RemoveInvoiceLineItemCommand(invoiceId, lineItemId), ct);
+            return result.ToHttpResult();
+        });
+
+        // POST /api/billing/invoices/{invoiceId}/finalize -- finalize a paid invoice
+        group.MapPost("/invoices/{invoiceId:guid}/finalize",
+            async (Guid invoiceId, FinalizeInvoiceCommand command, IMessageBus bus, CancellationToken ct) =>
+        {
+            var enriched = new FinalizeInvoiceCommand(invoiceId, command.CashierShiftId);
+            var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
         });
     }
@@ -115,6 +142,17 @@ public static class BillingApiEndpoints
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
         });
+
+        // POST /api/billing/discounts/{discountId}/reject -- reject a pending discount
+        group.MapPost("/discounts/{discountId:guid}/reject",
+            async (Guid discountId, RejectDiscountCommand command, IMessageBus bus, CancellationToken ct) =>
+        {
+            var enriched = new RejectDiscountCommand(
+                command.InvoiceId, discountId, command.RejectionReason,
+                command.ManagerId, command.ManagerPin);
+            var result = await bus.InvokeAsync<Result>(enriched, ct);
+            return result.ToHttpResult();
+        });
     }
 
     private static void MapRefundEndpoints(RouteGroupBuilder group)
@@ -124,6 +162,26 @@ public static class BillingApiEndpoints
         {
             var result = await bus.InvokeAsync<Result<RefundDto>>(command, ct);
             return result.ToCreatedHttpResult("/api/billing/refunds");
+        });
+
+        // POST /api/billing/refunds/{refundId}/approve -- approve a requested refund
+        group.MapPost("/refunds/{refundId:guid}/approve",
+            async (Guid refundId, ApproveRefundCommand command, IMessageBus bus, CancellationToken ct) =>
+        {
+            var enriched = new ApproveRefundCommand(
+                command.InvoiceId, refundId, command.ManagerId, command.ManagerPin);
+            var result = await bus.InvokeAsync<Result>(enriched, ct);
+            return result.ToHttpResult();
+        });
+
+        // POST /api/billing/refunds/{refundId}/process -- process an approved refund
+        group.MapPost("/refunds/{refundId:guid}/process",
+            async (Guid refundId, ProcessRefundCommand command, IMessageBus bus, CancellationToken ct) =>
+        {
+            var enriched = new ProcessRefundCommand(
+                command.InvoiceId, refundId, command.RefundMethod, command.Notes);
+            var result = await bus.InvokeAsync<Result<RefundDto>>(enriched, ct);
+            return result.ToHttpResult();
         });
     }
 
@@ -157,6 +215,14 @@ public static class BillingApiEndpoints
         {
             var result = await bus.InvokeAsync<Result<ShiftReportDto>>(
                 new GetShiftReportQuery(shiftId), ct);
+            return result.ToHttpResult();
+        });
+
+        // GET /api/billing/shifts/templates -- get active shift templates for current branch
+        group.MapGet("/shifts/templates", async (IMessageBus bus, CancellationToken ct) =>
+        {
+            var result = await bus.InvokeAsync<Result<List<ShiftTemplateDto>>>(
+                new GetShiftTemplatesQuery(), ct);
             return result.ToHttpResult();
         });
     }
