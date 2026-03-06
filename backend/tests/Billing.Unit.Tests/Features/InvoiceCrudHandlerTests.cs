@@ -1,0 +1,259 @@
+using Billing.Application.Features;
+using Billing.Application.Interfaces;
+using Billing.Contracts.Dtos;
+using Billing.Domain.Entities;
+using Billing.Domain.Enums;
+using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
+using NSubstitute;
+using Shared.Application;
+using Shared.Domain;
+
+namespace Billing.Unit.Tests.Features;
+
+public class InvoiceCrudHandlerTests
+{
+    private readonly IInvoiceRepository _invoiceRepository = Substitute.For<IInvoiceRepository>();
+    private readonly IUnitOfWork _unitOfWork = Substitute.For<IUnitOfWork>();
+    private readonly ICurrentUser _currentUser = Substitute.For<ICurrentUser>();
+
+    private readonly IValidator<CreateInvoiceCommand> _createValidator =
+        Substitute.For<IValidator<CreateInvoiceCommand>>();
+
+    private static readonly Guid DefaultBranchId = Guid.Parse("00000000-0000-0000-0000-000000000001");
+    private static readonly Guid DefaultUserId = Guid.Parse("00000000-0000-0000-0000-000000000002");
+
+    public InvoiceCrudHandlerTests()
+    {
+        _currentUser.BranchId.Returns(DefaultBranchId);
+        _currentUser.UserId.Returns(DefaultUserId);
+    }
+
+    private void SetupValidCreateValidator()
+    {
+        _createValidator
+            .ValidateAsync(Arg.Any<CreateInvoiceCommand>(), Arg.Any<CancellationToken>())
+            .Returns(new ValidationResult());
+    }
+
+    #region CreateInvoice Tests
+
+    [Fact]
+    public async Task CreateInvoice_ValidInput_CreatesInvoiceWithGeneratedNumber()
+    {
+        // Arrange
+        SetupValidCreateValidator();
+        var patientId = Guid.NewGuid();
+        var visitId = Guid.NewGuid();
+        var command = new CreateInvoiceCommand(patientId, "Nguyen Van A", visitId);
+
+        _invoiceRepository.GetNextInvoiceNumberAsync(Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns("HD-2026-00001");
+
+        // Act
+        var result = await CreateInvoiceHandler.Handle(
+            command, _invoiceRepository, _unitOfWork, _createValidator, _currentUser,
+            CancellationToken.None);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().NotBeNull();
+        result.Value.InvoiceNumber.Should().Be("HD-2026-00001");
+        result.Value.PatientId.Should().Be(patientId);
+        result.Value.PatientName.Should().Be("Nguyen Van A");
+        result.Value.VisitId.Should().Be(visitId);
+        result.Value.Status.Should().Be((int)InvoiceStatus.Draft);
+        _invoiceRepository.Received(1).Add(Arg.Any<Invoice>());
+        await _unitOfWork.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task CreateInvoice_MissingPatientId_ReturnsValidationError()
+    {
+        // Arrange
+        var command = new CreateInvoiceCommand(Guid.Empty, "Nguyen Van A", null);
+        _createValidator
+            .ValidateAsync(Arg.Any<CreateInvoiceCommand>(), Arg.Any<CancellationToken>())
+            .Returns(new ValidationResult(new[]
+            {
+                new ValidationFailure("PatientId", "Patient ID is required.")
+            }));
+
+        // Act
+        var result = await CreateInvoiceHandler.Handle(
+            command, _invoiceRepository, _unitOfWork, _createValidator, _currentUser,
+            CancellationToken.None);
+
+        // Assert
+        result.IsFailure.Should().BeTrue();
+        result.Error.Code.Should().Be("Error.Validation");
+    }
+
+    #endregion
+
+    #region AddInvoiceLineItem Tests
+
+    [Fact]
+    public async Task AddInvoiceLineItem_DraftInvoice_AddsItemAndRecalculatesTotals()
+    {
+        // Arrange
+        var invoice = Invoice.Create(
+            "HD-2026-00001", Guid.NewGuid(), "Nguyen Van A", Guid.NewGuid(),
+            new BranchId(DefaultBranchId));
+
+        var command = new AddInvoiceLineItemCommand(
+            InvoiceId: invoice.Id,
+            Description: "Eye Examination",
+            DescriptionVi: "Kham mat",
+            UnitPrice: 200000m,
+            Quantity: 1,
+            Department: (int)Department.Medical,
+            SourceId: null,
+            SourceType: null);
+
+        _invoiceRepository.GetByIdAsync(invoice.Id, Arg.Any<CancellationToken>())
+            .Returns(invoice);
+
+        // Act
+        var result = await AddInvoiceLineItemHandler.Handle(
+            command, _invoiceRepository, _unitOfWork, CancellationToken.None);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().NotBeNull();
+        result.Value.LineItems.Should().HaveCount(1);
+        result.Value.LineItems[0].Description.Should().Be("Eye Examination");
+        result.Value.LineItems[0].Department.Should().Be((int)Department.Medical);
+        result.Value.SubTotal.Should().Be(200000m);
+        result.Value.TotalAmount.Should().Be(200000m);
+        await _unitOfWork.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task AddInvoiceLineItem_FinalizedInvoice_ReturnsError()
+    {
+        // Arrange
+        var invoice = CreateFinalizedInvoice();
+
+        var command = new AddInvoiceLineItemCommand(
+            InvoiceId: invoice.Id,
+            Description: "Eye Drops",
+            DescriptionVi: "Thuoc nho mat",
+            UnitPrice: 50000m,
+            Quantity: 2,
+            Department: (int)Department.Pharmacy,
+            SourceId: null,
+            SourceType: null);
+
+        _invoiceRepository.GetByIdAsync(invoice.Id, Arg.Any<CancellationToken>())
+            .Returns(invoice);
+
+        // Act
+        var result = await AddInvoiceLineItemHandler.Handle(
+            command, _invoiceRepository, _unitOfWork, CancellationToken.None);
+
+        // Assert
+        result.IsFailure.Should().BeTrue();
+        result.Error.Description.Should().ContainAny("not in draft status", "Draft");
+    }
+
+    #endregion
+
+    #region FinalizeInvoice Tests
+
+    [Fact]
+    public async Task FinalizeInvoice_FullyPaid_SetsStatusAndRecordsFinalizer()
+    {
+        // Arrange
+        var invoice = CreateFullyPaidInvoice();
+        var cashierShiftId = Guid.NewGuid();
+
+        var command = new FinalizeInvoiceCommand(invoice.Id, cashierShiftId);
+
+        _invoiceRepository.GetByIdAsync(invoice.Id, Arg.Any<CancellationToken>())
+            .Returns(invoice);
+
+        // Act
+        var result = await FinalizeInvoiceHandler.Handle(
+            command, _invoiceRepository, _unitOfWork, _currentUser, CancellationToken.None);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        invoice.Status.Should().Be(InvoiceStatus.Finalized);
+        invoice.CashierShiftId.Should().Be(cashierShiftId);
+        invoice.FinalizedById.Should().Be(DefaultUserId);
+        invoice.FinalizedAt.Should().NotBeNull();
+        await _unitOfWork.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task FinalizeInvoice_OutstandingBalance_ReturnsError()
+    {
+        // Arrange - invoice with line item but no payment (has outstanding balance)
+        var invoice = Invoice.Create(
+            "HD-2026-00003", Guid.NewGuid(), "Tran Van C", Guid.NewGuid(),
+            new BranchId(DefaultBranchId));
+        invoice.AddLineItem("Consultation", "Kham benh", 500000m, 1, Department.Medical);
+
+        var command = new FinalizeInvoiceCommand(invoice.Id, Guid.NewGuid());
+
+        _invoiceRepository.GetByIdAsync(invoice.Id, Arg.Any<CancellationToken>())
+            .Returns(invoice);
+
+        // Act
+        var result = await FinalizeInvoiceHandler.Handle(
+            command, _invoiceRepository, _unitOfWork, _currentUser, CancellationToken.None);
+
+        // Assert
+        result.IsFailure.Should().BeTrue();
+        result.Error.Description.Should().Contain("outstanding balance");
+    }
+
+    #endregion
+
+    #region Helper Methods
+
+    /// <summary>
+    /// Creates a finalized invoice for testing operations that should be rejected on non-draft invoices.
+    /// </summary>
+    private Invoice CreateFinalizedInvoice()
+    {
+        var invoice = Invoice.Create(
+            "HD-2026-00002", Guid.NewGuid(), "Le Thi B", Guid.NewGuid(),
+            new BranchId(DefaultBranchId));
+        invoice.AddLineItem("Eye Exam", "Kham mat", 200000m, 1, Department.Medical);
+
+        // Record confirmed payment to make fully paid
+        var payment = Payment.Create(
+            invoice.Id, PaymentMethod.Cash, 200000m, DefaultUserId, Guid.NewGuid());
+        payment.Confirm();
+        invoice.RecordPayment(payment);
+
+        // Finalize
+        invoice.Finalize(Guid.NewGuid(), DefaultUserId);
+
+        return invoice;
+    }
+
+    /// <summary>
+    /// Creates a fully paid draft invoice ready for finalization.
+    /// </summary>
+    private Invoice CreateFullyPaidInvoice()
+    {
+        var invoice = Invoice.Create(
+            "HD-2026-00004", Guid.NewGuid(), "Pham Van D", Guid.NewGuid(),
+            new BranchId(DefaultBranchId));
+        invoice.AddLineItem("Laser Treatment", "Dieu tri laser", 1000000m, 1, Department.Treatment);
+
+        // Record confirmed payment to cover full amount
+        var payment = Payment.Create(
+            invoice.Id, PaymentMethod.Cash, 1000000m, DefaultUserId, Guid.NewGuid());
+        payment.Confirm();
+        invoice.RecordPayment(payment);
+
+        return invoice;
+    }
+
+    #endregion
+}
