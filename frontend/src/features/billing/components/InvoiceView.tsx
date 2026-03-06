@@ -1,26 +1,51 @@
+import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { format } from "date-fns"
+import { toast } from "sonner"
 import {
   IconCash,
   IconBuildingBank,
   IconQrcode,
   IconCreditCard,
   IconReceipt,
+  IconPrinter,
+  IconCheck,
+  IconLoader2,
+  IconDiscount2,
+  IconReceiptRefund,
 } from "@tabler/icons-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card"
 import { Badge } from "@/shared/components/Badge"
+import { Button } from "@/shared/components/Button"
 import { Separator } from "@/shared/components/Separator"
 import { Skeleton } from "@/shared/components/Skeleton"
-import { formatVND } from "@/shared/lib/format-vnd"
-import { useInvoice } from "@/features/billing/api/billing-api"
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/shared/components/AlertDialog"
+import { formatVND } from "@/shared/lib/format-vnd"
+import {
+  useInvoice,
+  useFinalizeInvoice,
   PAYMENT_METHOD_MAP,
   PAYMENT_STATUS_MAP,
   APPROVAL_STATUS_MAP,
   DISCOUNT_TYPE_MAP,
 } from "@/features/billing/api/billing-api"
 import type { PaymentDto, DiscountDto } from "@/features/billing/api/billing-api"
+import { useCurrentShift, getInvoicePdf } from "@/features/billing/api/shift-api"
 import { InvoiceLineItemsTable } from "./InvoiceLineItemsTable"
+import { PaymentForm } from "./PaymentForm"
+import { DiscountDialog } from "./DiscountDialog"
+import { RefundDialog } from "./RefundDialog"
+import { EInvoiceExportButton } from "./EInvoiceExportButton"
 
 interface InvoiceViewProps {
   invoiceId: string
@@ -45,6 +70,14 @@ const PAYMENT_METHOD_ICON: Record<number, React.ComponentType<{ className?: stri
 export function InvoiceView({ invoiceId }: InvoiceViewProps) {
   const { t } = useTranslation("billing")
   const { data: invoice, isLoading } = useInvoice(invoiceId)
+  const { data: currentShift } = useCurrentShift()
+  const finalizeInvoice = useFinalizeInvoice()
+
+  // Dialog state
+  const [paymentOpen, setPaymentOpen] = useState(false)
+  const [discountOpen, setDiscountOpen] = useState(false)
+  const [refundOpen, setRefundOpen] = useState(false)
+  const [isPrinting, setIsPrinting] = useState(false)
 
   if (isLoading) {
     return <InvoiceViewSkeleton />
@@ -59,6 +92,40 @@ export function InvoiceView({ invoiceId }: InvoiceViewProps) {
   }
 
   const statusKey = invoice.status === 0 ? "draft" : invoice.status === 1 ? "finalized" : "voided"
+  const isDraft = invoice.status === 0
+  const isFinalized = invoice.status === 1
+  const hasBalance = invoice.balanceDue > 0
+  const isFullyPaid = invoice.balanceDue <= 0
+  const hasPayments = invoice.payments.length > 0
+
+  const handlePrintInvoice = async () => {
+    setIsPrinting(true)
+    try {
+      const blob = await getInvoicePdf(invoiceId)
+      const url = URL.createObjectURL(blob)
+      window.open(url, "_blank")
+      setTimeout(() => URL.revokeObjectURL(url), 30000)
+    } catch {
+      toast.error("Failed to print invoice")
+    } finally {
+      setIsPrinting(false)
+    }
+  }
+
+  const handleFinalize = () => {
+    if (!currentShift?.id) {
+      toast.error(t("noOpenShift"))
+      return
+    }
+    finalizeInvoice.mutate(
+      { invoiceId, cashierShiftId: currentShift.id },
+      {
+        onSuccess: () => {
+          toast.success(t("invoiceFinalized"))
+        },
+      },
+    )
+  }
 
   return (
     <div className="space-y-6">
@@ -168,10 +235,126 @@ export function InvoiceView({ invoiceId }: InvoiceViewProps) {
         </Card>
       )}
 
-      {/* Action buttons placeholder area (for payment, discount, finalize -- implemented in later plans) */}
-      <div className="flex gap-2">
-        {/* Placeholder: action buttons will be added in plans 07-19, 07-20, 07-21 */}
+      {/* Action buttons */}
+      <div className="flex flex-wrap gap-2">
+        {/* Collect Payment -- only when Draft and has balance */}
+        {isDraft && hasBalance && (
+          <Button onClick={() => setPaymentOpen(true)}>
+            <IconCash className="mr-2 h-4 w-4" />
+            {t("collectPayment")}
+          </Button>
+        )}
+
+        {/* Apply Discount -- only for Draft invoices */}
+        {isDraft && (
+          <Button
+            variant="outline"
+            onClick={() => setDiscountOpen(true)}
+          >
+            <IconDiscount2 className="mr-2 h-4 w-4" />
+            {t("applyDiscount")}
+          </Button>
+        )}
+
+        {/* Finalize Invoice -- only when Draft and fully paid */}
+        {isDraft && isFullyPaid && (
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="default">
+                <IconCheck className="mr-2 h-4 w-4" />
+                {t("finalize")}
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>{t("finalize")}</AlertDialogTitle>
+                <AlertDialogDescription>
+                  {t("finalizeConfirm")}
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>{t("buttons.cancel", { ns: "common" })}</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleFinalize}
+                  disabled={finalizeInvoice.isPending}
+                >
+                  {finalizeInvoice.isPending && (
+                    <IconLoader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
+                  {t("buttons.confirm", { ns: "common" })}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )}
+
+        {/* Request Refund -- only for Finalized invoices */}
+        {isFinalized && (
+          <Button
+            variant="outline"
+            onClick={() => setRefundOpen(true)}
+          >
+            <IconReceiptRefund className="mr-2 h-4 w-4" />
+            {t("requestRefund")}
+          </Button>
+        )}
+
+        {/* E-Invoice Export -- only for Finalized invoices */}
+        {isFinalized && (
+          <EInvoiceExportButton
+            invoiceId={invoiceId}
+            invoiceNumber={invoice.invoiceNumber}
+          />
+        )}
+
+        {/* Print Invoice -- always available */}
+        <Button
+          variant="outline"
+          onClick={handlePrintInvoice}
+          disabled={isPrinting}
+        >
+          {isPrinting ? (
+            <IconLoader2 className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <IconPrinter className="mr-2 h-4 w-4" />
+          )}
+          {t("printInvoice")}
+        </Button>
+
+        {/* Print Receipt -- visible when at least one payment exists */}
+        {hasPayments && (
+          <Button variant="outline" onClick={handlePrintInvoice}>
+            <IconReceipt className="mr-2 h-4 w-4" />
+            {t("printReceipt")}
+          </Button>
+        )}
       </div>
+
+      {/* Payment Form Dialog */}
+      <PaymentForm
+        invoiceId={invoiceId}
+        balanceDue={invoice.balanceDue}
+        open={paymentOpen}
+        onOpenChange={setPaymentOpen}
+      />
+
+      {/* Discount Dialog */}
+      <DiscountDialog
+        open={discountOpen}
+        onOpenChange={setDiscountOpen}
+        invoiceId={invoiceId}
+        subTotal={invoice.subTotal}
+        lineItems={invoice.lineItems}
+      />
+
+      {/* Refund Dialog */}
+      <RefundDialog
+        open={refundOpen}
+        onOpenChange={setRefundOpen}
+        invoiceId={invoiceId}
+        totalAmount={invoice.totalAmount}
+        lineItems={invoice.lineItems}
+      />
     </div>
   )
 }
