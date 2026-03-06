@@ -10,6 +10,9 @@ namespace Pharmacy.Infrastructure;
 public class PharmacyDbContext : DbContext
 {
     public DbSet<DrugCatalogItem> DrugCatalogItems => Set<DrugCatalogItem>();
+    public DbSet<Supplier> Suppliers => Set<Supplier>();
+    public DbSet<SupplierDrugPrice> SupplierDrugPrices => Set<SupplierDrugPrice>();
+    public DbSet<DrugBatch> DrugBatches => Set<DrugBatch>();
 
     public PharmacyDbContext(DbContextOptions<PharmacyDbContext> options) : base(options)
     {
