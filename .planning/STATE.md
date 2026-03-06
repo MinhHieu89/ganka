@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 07-03-PLAN.md
-last_updated: "2026-03-06T14:02:36.754Z"
+stopped_at: Completed 07-01-PLAN.md
+last_updated: "2026-03-06T14:04:24.139Z"
 last_activity: 2026-03-06 -- Completed 05.1-07 Full Verification (55/55 arch tests, 263 total tests pass)
 progress:
   total_phases: 14
   completed_phases: 10
   total_plans: 152
-  completed_plans: 128
+  completed_plans: 130
 ---
 
 ---
@@ -308,6 +308,7 @@ Progress: [██████░░░░] 63%
 | Phase 07-billing-finance P06 | 2min | 2 tasks | 5 files |
 | Phase 07 P02 | 2min | 2 tasks | 5 files |
 | Phase 07 P03 | 3min | 2 tasks | 4 files |
+| Phase 07 P01 | 6min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -624,6 +625,8 @@ Recent decisions affecting current work:
 - [Phase 07]: CalculateAmount rounds to 0 decimal places (VND has no fractional units)
 - [Phase 07]: Refund rejection allowed from both Requested and Approved states
 - [Phase 07]: ExpectedCashAmount as computed property for always-consistent reconciliation
+- [Phase 07]: Invoice.RecordPayment does not enforce Draft status to allow payments before finalization
+- [Phase 07]: RecalculateTotals only sums approved discounts for correctness
 
 ### Roadmap Evolution
 
@@ -646,6 +649,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-06T14:02:36.749Z
-Stopped at: Completed 07-03-PLAN.md
+Last session: 2026-03-06T14:04:24.135Z
+Stopped at: Completed 07-01-PLAN.md
 Resume file: None

@@ -121,7 +121,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **FIN-06**: System enforces 50/50 split rule: 2nd payment due before mid-course session (5-session -> before session 3, 3-session -> before session 2)
 - [x] **FIN-07**: Manual discounts require manager approval before applying
 - [x] **FIN-08**: Refund processing requires manager/owner approval with full audit trail
-- [ ] **FIN-09**: System maintains price change audit log (who changed, when, old/new values)
+- [x] **FIN-09**: System maintains price change audit log (who changed, when, old/new values)
 - [x] **FIN-10**: System supports shift management: define shifts, assign staff, track revenue per shift, cash reconciliation at shift end
 
 ### Printing & Documents
@@ -306,7 +306,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FIN-06 | Phase 7 | Pending |
 | FIN-07 | Phase 7 | Complete |
 | FIN-08 | Phase 7 | Complete |
-| FIN-09 | Phase 7 | Pending |
+| FIN-09 | Phase 7 | Complete |
 | FIN-10 | Phase 7 | Complete |
 | PRT-01 | Phase 5 | Complete |
 | PRT-02 | Phase 5 | Complete |
