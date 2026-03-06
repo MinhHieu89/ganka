@@ -117,10 +117,10 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **FIN-02**: System tracks internal revenue allocation per department on each invoice line item
 - [x] **FIN-03**: System supports payment methods: cash, bank transfer, QR (VNPay/MoMo/ZaloPay), card (Visa/MC)
 - [x] **FIN-04**: System generates e-invoice (hoa don dien tu) per Vietnamese tax law
-- [ ] **FIN-05**: System supports treatment package payments: full upfront or 50/50 split
+- [x] **FIN-05**: System supports treatment package payments: full upfront or 50/50 split
 - [ ] **FIN-06**: System enforces 50/50 split rule: 2nd payment due before mid-course session (5-session -> before session 3, 3-session -> before session 2)
-- [ ] **FIN-07**: Manual discounts require manager approval before applying
-- [ ] **FIN-08**: Refund processing requires manager/owner approval with full audit trail
+- [x] **FIN-07**: Manual discounts require manager approval before applying
+- [x] **FIN-08**: Refund processing requires manager/owner approval with full audit trail
 - [ ] **FIN-09**: System maintains price change audit log (who changed, when, old/new values)
 - [x] **FIN-10**: System supports shift management: define shifts, assign staff, track revenue per shift, cash reconciliation at shift end
 
@@ -302,10 +302,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FIN-02 | Phase 7 | Complete |
 | FIN-03 | Phase 7 | Complete |
 | FIN-04 | Phase 7 | Complete |
-| FIN-05 | Phase 7 | Pending |
+| FIN-05 | Phase 7 | Complete |
 | FIN-06 | Phase 7 | Pending |
-| FIN-07 | Phase 7 | Pending |
-| FIN-08 | Phase 7 | Pending |
+| FIN-07 | Phase 7 | Complete |
+| FIN-08 | Phase 7 | Complete |
 | FIN-09 | Phase 7 | Pending |
 | FIN-10 | Phase 7 | Complete |
 | PRT-01 | Phase 5 | Complete |

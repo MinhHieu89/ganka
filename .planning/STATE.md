@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 07-06-PLAN.md
-last_updated: "2026-03-06T14:00:51.510Z"
+stopped_at: Completed 07-02-PLAN.md
+last_updated: "2026-03-06T14:01:15.967Z"
 last_activity: 2026-03-06 -- Completed 05.1-07 Full Verification (55/55 arch tests, 263 total tests pass)
 progress:
   total_phases: 14
@@ -620,6 +620,8 @@ Recent decisions affecting current work:
 - [Phase 07-billing-finance]: All Billing DTOs use int for enum values -- Contracts has no Domain reference
 - [Phase 07-billing-finance]: EInvoiceExportDto includes all Vietnamese Decree 123/2020 mandatory fields
 - [Phase 07]: Multiple related enums per file to stay within 5-file plan constraint
+- [Phase 07]: CalculateAmount rounds to 0 decimal places (VND has no fractional units)
+- [Phase 07]: Refund rejection allowed from both Requested and Approved states
 
 ### Roadmap Evolution
 
@@ -642,6 +644,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-06T14:00:35.743Z
-Stopped at: Completed 07-06-PLAN.md
+Last session: 2026-03-06T14:01:15.955Z
+Stopped at: Completed 07-02-PLAN.md
 Resume file: None
