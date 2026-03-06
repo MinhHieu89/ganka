@@ -1,9 +1,9 @@
 ---
-status: diagnosed
+status: resolved
 phase: 07-billing-finance
 source: 07-01-SUMMARY.md, 07-02-SUMMARY.md, 07-03-SUMMARY.md, 07-04-SUMMARY.md, 07-05-SUMMARY.md, 07-06-SUMMARY.md, 07-07-SUMMARY.md, 07-08-SUMMARY.md, 07-09-SUMMARY.md, 07-10-SUMMARY.md, 07-11-SUMMARY.md, 07-12-SUMMARY.md, 07-13-SUMMARY.md, 07-14-SUMMARY.md, 07-15-SUMMARY.md, 07-16-SUMMARY.md, 07-17-SUMMARY.md, 07-18-SUMMARY.md, 07-19-SUMMARY.md, 07-20-SUMMARY.md, 07-21-SUMMARY.md, 07-22-SUMMARY.md, 07-23-SUMMARY.md, 07-25-SUMMARY.md, 07-26-SUMMARY.md
 started: 2026-03-06T00:00:00Z
-updated: 2026-03-06T16:12:00Z
+updated: 2026-03-06T18:00:00Z
 ---
 
 ## Current Test
@@ -246,7 +246,7 @@ skipped: 18
 ## Gaps
 
 - truth: "Adding line item to draft invoice updates totals and shows department grouping"
-  status: failed
+  status: resolved
   reason: "User reported: API returns 500 DbUpdateConcurrencyException when adding line items. The RowVersion concurrency token on Invoice entity causes optimistic concurrency failure on every write operation that modifies the invoice after initial creation."
   severity: blocker
   test: 3
@@ -273,7 +273,7 @@ skipped: 18
   debug_session: ".planning/debug/invoice-rowversion-concurrency.md"
 
 - truth: "Billing dashboard displays all Draft status invoices with quick-view summary"
-  status: failed
+  status: resolved
   reason: "User reported: API returns 500 on GET /api/billing/invoices/pending. The GetPendingInvoicesQuery has no Wolverine handler implementation."
   severity: blocker
   test: 6
@@ -290,7 +290,7 @@ skipped: 18
   debug_session: ".planning/debug/pending-invoices-500.md"
 
 - truth: "Finalize validates invoice has line items and balance before finalizing"
-  status: failed
+  status: resolved
   reason: "User reported: Finalize succeeds (HTTP 200) but allows finalizing invoices with zero balance and no line items. No validation prevents finalizing an empty invoice."
   severity: major
   test: 7
@@ -307,7 +307,7 @@ skipped: 18
   debug_session: ".planning/debug/finalize-invoice-zero-balance.md"
 
 - truth: "Apply discount endpoint auto-populates RequestedById from current user"
-  status: failed
+  status: resolved
   reason: "User reported: Endpoint does not auto-populate RequestedById from ICurrentUser — client must send it explicitly. Also blocked by DbUpdateConcurrencyException."
   severity: blocker
   test: 15
@@ -323,7 +323,7 @@ skipped: 18
   debug_session: ".planning/debug/billing-requestedbyid-not-auto-populated.md"
 
 - truth: "Record payment against finalized invoice with balance"
-  status: failed
+  status: resolved
   reason: "User reported: Cannot create invoices with balance to pay because adding line items fails due to concurrency issue."
   severity: blocker
   test: 8
@@ -336,7 +336,7 @@ skipped: 18
   debug_session: ".planning/debug/invoice-rowversion-concurrency.md"
 
 - truth: "Request refund endpoint auto-populates RequestedById from current user"
-  status: failed
+  status: resolved
   reason: "User reported: Endpoint does not auto-populate RequestedById from ICurrentUser — client must send it explicitly."
   severity: major
   test: 21
