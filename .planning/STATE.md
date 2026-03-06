@@ -4,7 +4,7 @@ milestone: v1.0
 milestone_name: milestone
 status: in-progress
 stopped_at: Completed 07-09-PLAN.md
-last_updated: "2026-03-06T14:26:39.942Z"
+last_updated: "2026-03-06T14:26:51.516Z"
 last_activity: 2026-03-06 -- Completed 05.1-07 Full Verification (55/55 arch tests, 263 total tests pass)
 progress:
   total_phases: 14
@@ -409,6 +409,7 @@ Progress: [██████░░░░] 63%
 | Phase 07-billing-finance P18 | 7min | 2 tasks | 7 files |
 | Phase 07-billing-finance P19 | 9min | 2 tasks | 3 files |
 | Phase 07-billing-finance P04 | 1min | 2 tasks | 5 files |
+| Phase 07-billing-finance P09 | 7min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -742,6 +743,7 @@ Recent decisions affecting current work:
 - [Phase 07-billing-finance]: VND precision convention: (18,0) for money, (18,2) only for percentage values
 - [Phase 07]: Payments confirmed immediately on creation (manual confirmation, not async approval)
 - [Phase 07-billing-finance]: Shift handlers: used Email as cashierName (ICurrentUser has no Name), combined Lock+Close in single handler, PaymentMethod.ToString() as revenue dict keys
+- [Phase 07-billing-finance]: Reused MapToDto as internal static on CreateInvoiceHandler for DRY invoice-to-DTO mapping across handlers
 
 ### Roadmap Evolution
 
