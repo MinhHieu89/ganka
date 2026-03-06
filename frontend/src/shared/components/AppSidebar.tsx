@@ -15,6 +15,7 @@ import {
   IconEyeglass,
   IconHeartbeat,
   IconBuilding,
+  IconBoxSeam,
 } from "@tabler/icons-react"
 import {
   Sidebar,
@@ -103,6 +104,11 @@ export function AppSidebar({ ...sidebarProps }: ComponentProps<typeof Sidebar>) 
       titleKey: "sidebar.pharmacy",
       to: "/pharmacy",
       icon: IconMedicineSyrup,
+    },
+    {
+      titleKey: "sidebar.consumables",
+      to: "/consumables",
+      icon: IconBoxSeam,
     },
     {
       titleKey: "sidebar.billing",
