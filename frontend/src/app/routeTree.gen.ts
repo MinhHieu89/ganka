@@ -21,6 +21,9 @@ import { Route as AuthenticatedPatientsIndexRouteImport } from './routes/_authen
 import { Route as AuthenticatedClinicalIndexRouteImport } from './routes/_authenticated/clinical/index'
 import { Route as AuthenticatedAppointmentsIndexRouteImport } from './routes/_authenticated/appointments/index'
 import { Route as AuthenticatedVisitsVisitIdRouteImport } from './routes/_authenticated/visits/$visitId'
+import { Route as AuthenticatedPharmacySuppliersRouteImport } from './routes/_authenticated/pharmacy/suppliers'
+import { Route as AuthenticatedPharmacyStockImportRouteImport } from './routes/_authenticated/pharmacy/stock-import'
+import { Route as AuthenticatedPharmacyQueueRouteImport } from './routes/_authenticated/pharmacy/queue'
 import { Route as AuthenticatedPatientsPatientIdRouteImport } from './routes/_authenticated/patients/$patientId'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin/users'
 import { Route as AuthenticatedAdminRolesRouteImport } from './routes/_authenticated/admin/roles'
@@ -91,6 +94,24 @@ const AuthenticatedVisitsVisitIdRoute =
     path: '/visits/$visitId',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedPharmacySuppliersRoute =
+  AuthenticatedPharmacySuppliersRouteImport.update({
+    id: '/pharmacy/suppliers',
+    path: '/pharmacy/suppliers',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedPharmacyStockImportRoute =
+  AuthenticatedPharmacyStockImportRouteImport.update({
+    id: '/pharmacy/stock-import',
+    path: '/pharmacy/stock-import',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedPharmacyQueueRoute =
+  AuthenticatedPharmacyQueueRouteImport.update({
+    id: '/pharmacy/queue',
+    path: '/pharmacy/queue',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedPatientsPatientIdRoute =
   AuthenticatedPatientsPatientIdRouteImport.update({
     id: '/patients/$patientId',
@@ -132,6 +153,9 @@ export interface FileRoutesByFullPath {
   '/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/patients/$patientId': typeof AuthenticatedPatientsPatientIdRoute
+  '/pharmacy/queue': typeof AuthenticatedPharmacyQueueRoute
+  '/pharmacy/stock-import': typeof AuthenticatedPharmacyStockImportRoute
+  '/pharmacy/suppliers': typeof AuthenticatedPharmacySuppliersRoute
   '/visits/$visitId': typeof AuthenticatedVisitsVisitIdRoute
   '/appointments/': typeof AuthenticatedAppointmentsIndexRoute
   '/clinical/': typeof AuthenticatedClinicalIndexRoute
@@ -150,6 +174,9 @@ export interface FileRoutesByTo {
   '/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/patients/$patientId': typeof AuthenticatedPatientsPatientIdRoute
+  '/pharmacy/queue': typeof AuthenticatedPharmacyQueueRoute
+  '/pharmacy/stock-import': typeof AuthenticatedPharmacyStockImportRoute
+  '/pharmacy/suppliers': typeof AuthenticatedPharmacySuppliersRoute
   '/visits/$visitId': typeof AuthenticatedVisitsVisitIdRoute
   '/appointments': typeof AuthenticatedAppointmentsIndexRoute
   '/clinical': typeof AuthenticatedClinicalIndexRoute
@@ -170,6 +197,9 @@ export interface FileRoutesById {
   '/_authenticated/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/patients/$patientId': typeof AuthenticatedPatientsPatientIdRoute
+  '/_authenticated/pharmacy/queue': typeof AuthenticatedPharmacyQueueRoute
+  '/_authenticated/pharmacy/stock-import': typeof AuthenticatedPharmacyStockImportRoute
+  '/_authenticated/pharmacy/suppliers': typeof AuthenticatedPharmacySuppliersRoute
   '/_authenticated/visits/$visitId': typeof AuthenticatedVisitsVisitIdRoute
   '/_authenticated/appointments/': typeof AuthenticatedAppointmentsIndexRoute
   '/_authenticated/clinical/': typeof AuthenticatedClinicalIndexRoute
@@ -190,6 +220,9 @@ export interface FileRouteTypes {
     | '/admin/roles'
     | '/admin/users'
     | '/patients/$patientId'
+    | '/pharmacy/queue'
+    | '/pharmacy/stock-import'
+    | '/pharmacy/suppliers'
     | '/visits/$visitId'
     | '/appointments/'
     | '/clinical/'
@@ -208,6 +241,9 @@ export interface FileRouteTypes {
     | '/admin/roles'
     | '/admin/users'
     | '/patients/$patientId'
+    | '/pharmacy/queue'
+    | '/pharmacy/stock-import'
+    | '/pharmacy/suppliers'
     | '/visits/$visitId'
     | '/appointments'
     | '/clinical'
@@ -227,6 +263,9 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/roles'
     | '/_authenticated/admin/users'
     | '/_authenticated/patients/$patientId'
+    | '/_authenticated/pharmacy/queue'
+    | '/_authenticated/pharmacy/stock-import'
+    | '/_authenticated/pharmacy/suppliers'
     | '/_authenticated/visits/$visitId'
     | '/_authenticated/appointments/'
     | '/_authenticated/clinical/'
@@ -329,6 +368,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedVisitsVisitIdRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/pharmacy/suppliers': {
+      id: '/_authenticated/pharmacy/suppliers'
+      path: '/pharmacy/suppliers'
+      fullPath: '/pharmacy/suppliers'
+      preLoaderRoute: typeof AuthenticatedPharmacySuppliersRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/pharmacy/stock-import': {
+      id: '/_authenticated/pharmacy/stock-import'
+      path: '/pharmacy/stock-import'
+      fullPath: '/pharmacy/stock-import'
+      preLoaderRoute: typeof AuthenticatedPharmacyStockImportRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/pharmacy/queue': {
+      id: '/_authenticated/pharmacy/queue'
+      path: '/pharmacy/queue'
+      fullPath: '/pharmacy/queue'
+      preLoaderRoute: typeof AuthenticatedPharmacyQueueRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/patients/$patientId': {
       id: '/_authenticated/patients/$patientId'
       path: '/patients/$patientId'
@@ -374,6 +434,9 @@ interface AuthenticatedRouteChildren {
   AuthenticatedAdminRolesRoute: typeof AuthenticatedAdminRolesRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedPatientsPatientIdRoute: typeof AuthenticatedPatientsPatientIdRoute
+  AuthenticatedPharmacyQueueRoute: typeof AuthenticatedPharmacyQueueRoute
+  AuthenticatedPharmacyStockImportRoute: typeof AuthenticatedPharmacyStockImportRoute
+  AuthenticatedPharmacySuppliersRoute: typeof AuthenticatedPharmacySuppliersRoute
   AuthenticatedVisitsVisitIdRoute: typeof AuthenticatedVisitsVisitIdRoute
   AuthenticatedAppointmentsIndexRoute: typeof AuthenticatedAppointmentsIndexRoute
   AuthenticatedClinicalIndexRoute: typeof AuthenticatedClinicalIndexRoute
@@ -388,6 +451,9 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAdminRolesRoute: AuthenticatedAdminRolesRoute,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
   AuthenticatedPatientsPatientIdRoute: AuthenticatedPatientsPatientIdRoute,
+  AuthenticatedPharmacyQueueRoute: AuthenticatedPharmacyQueueRoute,
+  AuthenticatedPharmacyStockImportRoute: AuthenticatedPharmacyStockImportRoute,
+  AuthenticatedPharmacySuppliersRoute: AuthenticatedPharmacySuppliersRoute,
   AuthenticatedVisitsVisitIdRoute: AuthenticatedVisitsVisitIdRoute,
   AuthenticatedAppointmentsIndexRoute: AuthenticatedAppointmentsIndexRoute,
   AuthenticatedClinicalIndexRoute: AuthenticatedClinicalIndexRoute,
