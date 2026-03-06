@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 06-10-PLAN.md
-last_updated: "2026-03-06T07:34:26.209Z"
+stopped_at: Completed 06-11-PLAN.md
+last_updated: "2026-03-06T07:38:30.008Z"
 last_activity: 2026-03-06 -- Completed 05.1-07 Full Verification (55/55 arch tests, 263 total tests pass)
 progress:
   total_phases: 14
   completed_phases: 9
   total_plans: 150
-  completed_plans: 106
+  completed_plans: 107
 ---
 
 ---
@@ -257,6 +257,7 @@ Progress: [██████░░░░] 63%
 | Phase 06-pharmacy-consumables P08 | 6 | 2 tasks | 6 files |
 | Phase 06 P09 | 5 | 2 tasks | 5 files |
 | Phase 06 P10 | 2 | 2 tasks | 3 files |
+| Phase 06 P11 | 2 | 1 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -531,6 +532,8 @@ Recent decisions affecting current work:
 - [Phase 06]: ConsumableRepository.GetAlertsAsync uses two-step query for ExpiryTracked items to avoid N+1 queries (batch aggregation in single GroupBy)
 - [Phase 06]: DrugCatalogItemRepository.GetAllWithInventoryAsync two-step aggregation (catalog + batch GroupBy) matches existing LowStockAlerts pattern
 - [Phase 06]: FEFOAllocator as static class (not instance service) -- pure function with no state, no DI needed; reused by dispensing and OTC sale
+- [Phase 06-11]: CreateSupplierHandler requires ICurrentUser for BranchId on Supplier.Create following DrugCatalogItem pattern
+- [Phase 06-11]: Handlers placed in Pharmacy.Application.Features.Suppliers subfolder namespace matching research architecture
 
 ### Roadmap Evolution
 
@@ -553,6 +556,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-06T07:34:26.204Z
-Stopped at: Completed 06-10-PLAN.md
+Last session: 2026-03-06T07:38:30.003Z
+Stopped at: Completed 06-11-PLAN.md
 Resume file: None
