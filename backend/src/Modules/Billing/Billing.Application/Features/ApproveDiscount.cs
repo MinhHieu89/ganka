@@ -1,7 +1,6 @@
 using Billing.Application.Interfaces;
 using Billing.Domain.Entities;
 using Billing.Domain.Enums;
-using FluentValidation;
 using Shared.Domain;
 using Wolverine;
 
@@ -40,6 +39,31 @@ public static class ApproveDiscountHandler
         IMessageBus messageBus,
         CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var invoice = await invoiceRepository.GetByIdAsync(command.InvoiceId, cancellationToken);
+        if (invoice is null)
+            return Result.Failure(Error.NotFound("Invoice", command.InvoiceId));
+
+        var discount = invoice.Discounts.FirstOrDefault(d => d.Id == command.DiscountId);
+        if (discount is null)
+            return Result.Failure(Error.NotFound("Discount", command.DiscountId));
+
+        if (discount.ApprovalStatus != ApprovalStatus.Pending)
+            return Result.Failure(Error.Validation("Discount has already been processed."));
+
+        // Verify manager PIN via cross-module query to Auth module
+        var pinResponse = await messageBus.InvokeAsync<VerifyManagerPinResponse>(
+            new VerifyManagerPinQuery(command.ManagerId, command.ManagerPin), cancellationToken);
+
+        if (!pinResponse.IsValid)
+            return Result.Failure(Error.Validation("Invalid manager PIN."));
+
+        // Approve the discount and recalculate invoice totals
+        discount.Approve(command.ManagerId);
+        invoice.RecalculateAfterDiscountApproval();
+
+        invoiceRepository.Update(invoice);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        return Result.Success();
     }
 }

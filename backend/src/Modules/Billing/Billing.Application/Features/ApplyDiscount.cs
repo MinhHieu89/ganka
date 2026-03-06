@@ -49,6 +49,70 @@ public static class ApplyDiscountHandler
         IValidator<ApplyDiscountCommand> validator,
         CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var validationResult = await validator.ValidateAsync(command, cancellationToken);
+        if (!validationResult.IsValid)
+        {
+            var errors = validationResult.Errors
+                .GroupBy(e => e.PropertyName)
+                .ToDictionary(g => g.Key, g => g.Select(e => e.ErrorMessage).ToArray());
+            return Result<DiscountDto>.Failure(Error.ValidationWithDetails(errors));
+        }
+
+        var invoice = await invoiceRepository.GetByIdAsync(command.InvoiceId, cancellationToken);
+        if (invoice is null)
+            return Result<DiscountDto>.Failure(Error.NotFound("Invoice", command.InvoiceId));
+
+        // Only draft invoices can have discounts applied
+        if (invoice.Status != InvoiceStatus.Draft)
+            return Result<DiscountDto>.Failure(
+                Error.Validation("Cannot apply discount to a non-draft invoice. Only Draft invoices can be modified."));
+
+        var discountType = (DiscountType)command.DiscountType;
+
+        // Create the discount entity
+        var discount = Discount.Create(
+            command.InvoiceId,
+            discountType,
+            command.Value,
+            command.Reason,
+            command.RequestedById,
+            command.InvoiceLineItemId);
+
+        // Calculate the discount amount based on the base amount
+        decimal baseAmount;
+        if (command.InvoiceLineItemId.HasValue)
+        {
+            var lineItem = invoice.LineItems.FirstOrDefault(li => li.Id == command.InvoiceLineItemId.Value);
+            if (lineItem is null)
+                return Result<DiscountDto>.Failure(
+                    Error.NotFound("InvoiceLineItem", command.InvoiceLineItemId.Value));
+            baseAmount = lineItem.LineTotal;
+        }
+        else
+        {
+            baseAmount = invoice.SubTotal;
+        }
+
+        discount.CalculateAmount(baseAmount);
+
+        // Apply discount to invoice (adds to collection and recalculates totals)
+        invoice.ApplyDiscount(discount);
+        invoiceRepository.Update(invoice);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        var dto = new DiscountDto(
+            discount.Id,
+            discount.InvoiceLineItemId,
+            (int)discount.Type,
+            discount.Value,
+            discount.CalculatedAmount,
+            discount.Reason,
+            (int)discount.ApprovalStatus,
+            discount.RequestedById,
+            discount.RequestedAt,
+            discount.ApprovedById,
+            discount.ApprovedAt);
+
+        return dto;
     }
 }

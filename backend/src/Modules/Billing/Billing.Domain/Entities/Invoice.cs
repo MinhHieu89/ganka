@@ -169,6 +169,30 @@ public class Invoice : AggregateRoot, IAuditable
     }
 
     /// <summary>
+    /// Adds a refund request to this invoice.
+    /// Only allowed when invoice is in Finalized status.
+    /// </summary>
+    public void AddRefund(Refund refund)
+    {
+        if (Status != InvoiceStatus.Finalized)
+            throw new InvalidOperationException(
+                "Refunds can only be requested on finalized invoices.");
+
+        _refunds.Add(refund);
+        SetUpdatedAt();
+    }
+
+    /// <summary>
+    /// Recalculates totals after a discount status change (e.g., approval).
+    /// Call this after approving/rejecting a discount to update DiscountTotal and TotalAmount.
+    /// </summary>
+    public void RecalculateAfterDiscountApproval()
+    {
+        RecalculateTotals();
+        SetUpdatedAt();
+    }
+
+    /// <summary>
     /// Finalizes the invoice after full payment.
     /// Sets status to Finalized, records cashier shift and finalizing user,
     /// and raises InvoiceFinalizedEvent.

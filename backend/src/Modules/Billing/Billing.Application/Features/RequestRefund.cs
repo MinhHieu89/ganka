@@ -45,6 +45,67 @@ public static class RequestRefundHandler
         IValidator<RequestRefundCommand> validator,
         CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var validationResult = await validator.ValidateAsync(command, cancellationToken);
+        if (!validationResult.IsValid)
+        {
+            var errors = validationResult.Errors
+                .GroupBy(e => e.PropertyName)
+                .ToDictionary(g => g.Key, g => g.Select(e => e.ErrorMessage).ToArray());
+            return Result<RefundDto>.Failure(Error.ValidationWithDetails(errors));
+        }
+
+        var invoice = await invoiceRepository.GetByIdAsync(command.InvoiceId, cancellationToken);
+        if (invoice is null)
+            return Result<RefundDto>.Failure(Error.NotFound("Invoice", command.InvoiceId));
+
+        // Refunds can only be requested on finalized invoices
+        if (invoice.Status != InvoiceStatus.Finalized)
+            return Result<RefundDto>.Failure(
+                Error.Validation("Refunds can only be requested on finalized invoices."));
+
+        // Validate refund amount does not exceed invoice total
+        if (command.Amount > invoice.TotalAmount)
+            return Result<RefundDto>.Failure(
+                Error.Validation("Refund amount cannot exceed the invoice total amount."));
+
+        // If line item specified, validate it exists and amount does not exceed line total
+        if (command.InvoiceLineItemId.HasValue)
+        {
+            var lineItem = invoice.LineItems.FirstOrDefault(li => li.Id == command.InvoiceLineItemId.Value);
+            if (lineItem is null)
+                return Result<RefundDto>.Failure(
+                    Error.NotFound("InvoiceLineItem", command.InvoiceLineItemId.Value));
+
+            if (command.Amount > lineItem.LineTotal)
+                return Result<RefundDto>.Failure(
+                    Error.Validation("Refund amount cannot exceed the line item total."));
+        }
+
+        // Create refund in Requested status
+        var refund = Refund.Create(
+            command.InvoiceId,
+            command.Amount,
+            command.Reason,
+            command.RequestedById,
+            command.InvoiceLineItemId);
+
+        invoice.AddRefund(refund);
+        invoiceRepository.Update(invoice);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        var dto = new RefundDto(
+            refund.Id,
+            refund.InvoiceLineItemId,
+            refund.Amount,
+            refund.Reason,
+            (int)refund.Status,
+            refund.RequestedById,
+            refund.RequestedAt,
+            refund.ApprovedById,
+            refund.ApprovedAt,
+            refund.ProcessedById,
+            refund.ProcessedAt);
+
+        return dto;
     }
 }
