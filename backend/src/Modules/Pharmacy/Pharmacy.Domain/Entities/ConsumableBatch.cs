@@ -65,6 +65,20 @@ public class ConsumableBatch : Entity
     }
 
     /// <summary>
+    /// Adds stock to the current batch for manual adjustments or correction entries.
+    /// Mirrors DrugBatch.AddStock for symmetry.
+    /// </summary>
+    /// <param name="qty">Quantity to add (must be positive).</param>
+    public void AddStock(int qty)
+    {
+        if (qty <= 0)
+            throw new ArgumentException("Stock addition quantity must be positive.", nameof(qty));
+
+        CurrentQuantity += qty;
+        SetUpdatedAt();
+    }
+
+    /// <summary>
     /// Deducts the specified quantity from this batch's current stock.
     /// Used during FEFO-ordered consumable deduction from treatment sessions (Phase 9)
     /// and manual stock removal workflows.
