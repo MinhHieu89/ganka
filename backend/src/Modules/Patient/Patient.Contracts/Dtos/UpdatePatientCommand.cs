@@ -1,4 +1,4 @@
-using Patient.Domain.Enums;
+using Patient.Contracts.Enums;
 
 namespace Patient.Contracts.Dtos;
 
