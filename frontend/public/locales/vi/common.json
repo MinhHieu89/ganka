@@ -19,6 +19,8 @@
     "consumables": "Vật tư tiêu hao",
     "optical": "Kính mắt",
     "billing": "Thu ngân",
+    "billingDashboard": "Quầy thanh toán",
+    "billingShifts": "Quản lý ca",
     "treatment": "Điều trị",
     "clinic": "Phòng khám",
     "operations": "Vận hành",

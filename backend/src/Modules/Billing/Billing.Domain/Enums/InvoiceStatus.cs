@@ -1,8 +1,7 @@
 namespace Billing.Domain.Enums;
 
 /// <summary>
-/// Status of an invoice in its lifecycle.
-/// Draft = editable, Finalized = locked and paid, Voided = cancelled.
+/// Lifecycle status of an invoice.
 /// </summary>
 public enum InvoiceStatus
 {

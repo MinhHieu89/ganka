@@ -1,7 +1,7 @@
 namespace Billing.Domain.Enums;
 
 /// <summary>
-/// Department categories for revenue allocation on invoice line items.
+/// Department categories for revenue allocation.
 /// Maps to Vietnamese grouping: Kham benh, Duoc pham, Kinh, Dieu tri.
 /// </summary>
 public enum Department

@@ -3,13 +3,13 @@ using Shared.Domain;
 namespace Billing.Domain.Events;
 
 /// <summary>
-/// Published when an invoice is finalized (fully paid and locked).
+/// Domain event raised when an invoice is finalized (fully paid and closed).
 /// </summary>
-public sealed record InvoiceFinalizedEvent : IDomainEvent
+public sealed record InvoiceFinalizedEvent(
+    Guid InvoiceId,
+    string InvoiceNumber,
+    decimal TotalAmount) : IDomainEvent
 {
     public Guid EventId { get; } = Guid.NewGuid();
     public DateTime OccurredAt { get; } = DateTime.UtcNow;
-    public Guid InvoiceId { get; init; }
-    public string InvoiceNumber { get; init; } = default!;
-    public decimal TotalAmount { get; init; }
 }

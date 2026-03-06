@@ -19,6 +19,8 @@
     "consumables": "Consumables",
     "optical": "Optical Center",
     "billing": "Billing",
+    "billingDashboard": "Dashboard",
+    "billingShifts": "Shifts",
     "treatment": "Treatment",
     "clinic": "Clinic",
     "operations": "Operations",
