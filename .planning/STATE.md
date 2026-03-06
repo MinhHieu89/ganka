@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 07-17-PLAN.md
-last_updated: "2026-03-06T14:04:00Z"
-last_activity: 2026-03-06 -- Completed 07-17 Billing Frontend API Layer (billing-api.ts, shift-api.ts, format-vnd.ts)
+stopped_at: Completed 07-20-PLAN.md
+last_updated: "2026-03-06T14:04:50Z"
+last_activity: 2026-03-06 -- Completed 07-20 Discount/Refund/PIN Approval/E-Invoice Export UI (4 components)
 progress:
   total_phases: 14
   completed_phases: 10
   total_plans: 152
-  completed_plans: 134
+  completed_plans: 135
 ---
 
 ---
