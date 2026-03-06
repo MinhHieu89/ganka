@@ -42,6 +42,7 @@ public static class GetPendingPrescriptionsHandler
                     VisitId: pw.Visit.Id,
                     PatientId: pw.Visit.PatientId,
                     PatientName: pw.Visit.PatientName,
+                    PrescriptionCode: pw.Prescription.PrescriptionCode,
                     PrescribedAt: pw.Prescription.PrescribedAt,
                     IsExpired: isExpired,
                     DaysRemaining: Math.Max(0, daysRemaining),

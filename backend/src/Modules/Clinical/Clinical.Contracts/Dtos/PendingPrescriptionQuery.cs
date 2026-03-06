@@ -17,6 +17,7 @@ public sealed record ClinicalPendingPrescriptionDto(
     Guid VisitId,
     Guid PatientId,
     string PatientName,
+    string? PrescriptionCode,
     DateTime PrescribedAt,
     bool IsExpired,
     int DaysRemaining,

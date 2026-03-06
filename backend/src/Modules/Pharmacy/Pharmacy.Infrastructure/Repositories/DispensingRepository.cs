@@ -112,6 +112,7 @@ public sealed class DispensingRepository(PharmacyDbContext context, IMessageBus 
                 VisitId: p.VisitId,
                 PatientId: p.PatientId,
                 PatientName: p.PatientName,
+                PrescriptionCode: p.PrescriptionCode,
                 PrescribedAt: p.PrescribedAt,
                 IsExpired: p.IsExpired,
                 DaysRemaining: p.DaysRemaining,
