@@ -1,0 +1,61 @@
+{
+  "warehouse": {
+    "title": "Kho vật tư tiêu hao",
+    "subtitle": "Quản lý tồn kho vật tư lâm sàng",
+    "empty": "Kho vật tư trống",
+    "search": "Tìm kiếm vật tư..."
+  },
+  "item": {
+    "name": "Tên vật tư",
+    "nameVi": "Tên tiếng Việt",
+    "trackingMode": "Phương thức theo dõi",
+    "trackingExpiryBased": "Theo dõi hạn sử dụng",
+    "trackingSimple": "Theo dõi số lượng",
+    "currentStock": "Tồn kho hiện tại",
+    "minStockLevel": "Tồn kho tối thiểu",
+    "unit": "Đơn vị",
+    "active": "Hoạt động",
+    "inactive": "Ngừng hoạt động",
+    "status": "Trạng thái",
+    "statusOk": "Bình thường",
+    "statusLow": "Sắp hết",
+    "created": "Thêm vật tư thành công",
+    "updated": "Cập nhật vật tư thành công"
+  },
+  "actions": {
+    "addConsumable": "Thêm vật tư",
+    "editConsumable": "Sửa vật tư",
+    "addStock": "Thêm hàng",
+    "adjustStock": "Điều chỉnh"
+  },
+  "stock": {
+    "addTitle": "Thêm hàng vào kho",
+    "adjustTitle": "Điều chỉnh tồn kho",
+    "batchNumber": "Số lô",
+    "expiryDate": "Ngày hết hạn",
+    "quantity": "Số lượng",
+    "quantityChange": "Thay đổi số lượng",
+    "quantityChangeHint": "Nhập số dương để tăng, số âm để giảm",
+    "reason": "Lý do",
+    "reasonCorrection": "Điều chỉnh",
+    "reasonWriteOff": "Xuất hủy",
+    "reasonDamage": "Hư hỏng",
+    "reasonExpired": "Hết hạn",
+    "reasonOther": "Khác",
+    "notes": "Ghi chú",
+    "confirm": "Xác nhận",
+    "stockAdded": "Thêm hàng thành công",
+    "stockAdjusted": "Điều chỉnh tồn kho thành công",
+    "errorBelowZero": "Tồn kho không được dưới 0"
+  },
+  "alerts": {
+    "lowStockTitle": "Cảnh báo tồn kho thấp",
+    "lowStockDescription": "{{count}} vật tư dưới mức tồn kho tối thiểu",
+    "lowStockNone": "Tất cả vật tư đều trên mức tồn kho tối thiểu",
+    "showDetails": "Xem chi tiết",
+    "hideDetails": "Ẩn chi tiết",
+    "itemName": "Vật tư",
+    "currentStock": "Tồn kho",
+    "minRequired": "Tối thiểu"
+  }
+}

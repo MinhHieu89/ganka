@@ -1,0 +1,61 @@
+{
+  "warehouse": {
+    "title": "Consumables Warehouse",
+    "subtitle": "Manage clinical supply stock",
+    "empty": "No consumables in warehouse",
+    "search": "Search consumables..."
+  },
+  "item": {
+    "name": "Item Name",
+    "nameVi": "Vietnamese Name",
+    "trackingMode": "Tracking Mode",
+    "trackingExpiryBased": "Expiry Tracked",
+    "trackingSimple": "Simple Stock",
+    "currentStock": "Current Stock",
+    "minStockLevel": "Min Stock",
+    "unit": "Unit",
+    "active": "Active",
+    "inactive": "Inactive",
+    "status": "Status",
+    "statusOk": "OK",
+    "statusLow": "Low Stock",
+    "created": "Consumable added successfully",
+    "updated": "Consumable updated successfully"
+  },
+  "actions": {
+    "addConsumable": "Add Consumable",
+    "editConsumable": "Edit Consumable",
+    "addStock": "Add Stock",
+    "adjustStock": "Adjust Stock"
+  },
+  "stock": {
+    "addTitle": "Add Stock",
+    "adjustTitle": "Stock Adjustment",
+    "batchNumber": "Batch Number",
+    "expiryDate": "Expiry Date",
+    "quantity": "Quantity",
+    "quantityChange": "Quantity Change",
+    "quantityChangeHint": "Enter positive number to add, negative to subtract",
+    "reason": "Reason",
+    "reasonCorrection": "Correction",
+    "reasonWriteOff": "Write-off",
+    "reasonDamage": "Damage",
+    "reasonExpired": "Expired",
+    "reasonOther": "Other",
+    "notes": "Notes",
+    "confirm": "Confirm",
+    "stockAdded": "Stock added successfully",
+    "stockAdjusted": "Stock adjusted successfully",
+    "errorBelowZero": "Stock cannot go below zero"
+  },
+  "alerts": {
+    "lowStockTitle": "Low Stock Alert",
+    "lowStockDescription": "{{count}} consumable(s) below minimum stock level",
+    "lowStockNone": "All consumables are above minimum stock levels",
+    "showDetails": "Show details",
+    "hideDetails": "Hide details",
+    "itemName": "Item",
+    "currentStock": "Stock",
+    "minRequired": "Min"
+  }
+}
