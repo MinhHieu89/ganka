@@ -1,352 +1,202 @@
 ---
-status: resolved
+status: testing
 phase: 07-billing-finance
-source: 07-01-SUMMARY.md, 07-02-SUMMARY.md, 07-03-SUMMARY.md, 07-04-SUMMARY.md, 07-05-SUMMARY.md, 07-06-SUMMARY.md, 07-07-SUMMARY.md, 07-08-SUMMARY.md, 07-09-SUMMARY.md, 07-10-SUMMARY.md, 07-11-SUMMARY.md, 07-12-SUMMARY.md, 07-13-SUMMARY.md, 07-14-SUMMARY.md, 07-15-SUMMARY.md, 07-16-SUMMARY.md, 07-17-SUMMARY.md, 07-18-SUMMARY.md, 07-19-SUMMARY.md, 07-20-SUMMARY.md, 07-21-SUMMARY.md, 07-22-SUMMARY.md, 07-23-SUMMARY.md, 07-25-SUMMARY.md, 07-26-SUMMARY.md
-started: 2026-03-06T00:00:00Z
-updated: 2026-03-06T18:00:00Z
+source: 07-01-SUMMARY.md, 07-02-SUMMARY.md, 07-03-SUMMARY.md, 07-04-SUMMARY.md, 07-05-SUMMARY.md, 07-06-SUMMARY.md, 07-07-SUMMARY.md, 07-08-SUMMARY.md, 07-09-SUMMARY.md, 07-10-SUMMARY.md, 07-11-SUMMARY.md, 07-12-SUMMARY.md, 07-13-SUMMARY.md, 07-14-SUMMARY.md, 07-15-SUMMARY.md, 07-16-SUMMARY.md, 07-17-SUMMARY.md, 07-18-SUMMARY.md, 07-19-SUMMARY.md, 07-20-SUMMARY.md, 07-21-SUMMARY.md, 07-22-SUMMARY.md, 07-23-SUMMARY.md, 07-25-SUMMARY.md, 07-26-SUMMARY.md, 07-27-SUMMARY.md, 07-28-SUMMARY.md
+started: 2026-03-06T19:00:00Z
+updated: 2026-03-06T19:00:00Z
 ---
 
 ## Current Test
+<!-- OVERWRITE each test - shows where we are -->
 
-[testing complete]
+number: 1
+name: Cold Start Smoke Test
+expected: |
+  Kill any running server/service. Start backend (port 5255) and frontend (port 3000) from scratch. Server boots without errors, migrations complete, and the billing dashboard loads in the browser at /billing.
+awaiting: user response
 
 ## Tests
 
 ### 1. Cold Start Smoke Test
-expected: Kill any running server/service. Start backend (port 5255) and frontend (port 3000) from scratch. Server boots without errors, migrations complete, and the app loads in the browser.
-result: pass
+expected: Kill any running server/service. Start backend (port 5255) and frontend (port 3000) from scratch. Server boots without errors, migrations complete, and the billing dashboard loads at /billing.
+result: [pending]
 
-### 2. Create Invoice
-expected: Navigate to billing. Creating a new invoice generates an auto-numbered HD-YYYY-NNNNN invoice in Draft status.
-result: pass
+### 2. Billing Dashboard Two-Column Layout
+expected: The billing dashboard (/billing) renders a two-column layout. Left column shows pending (Draft) invoices list. Right column shows current shift status card. If no shift is open, an "Open Shift" button appears instead.
+result: [pending]
 
-### 3. Add Line Item to Draft Invoice
-expected: Adding a line item to a draft invoice shows the item in the invoice detail with department-based grouping (Medical/Pharmacy/Optical/Treatment) and totals recalculate.
-result: issue
-reported: "API returns 500 DbUpdateConcurrencyException when adding line items. The RowVersion concurrency token on Invoice entity causes optimistic concurrency failure on every write operation that modifies the invoice after initial creation."
-severity: blocker
+### 3. Billing Sidebar Navigation
+expected: The sidebar has a "Billing" collapsible section with two child links: "Billing Dashboard" (/billing) and "Shifts" (/billing/shifts). Both links navigate correctly.
+result: [pending]
 
-### 4. Remove Line Item from Draft Invoice
-expected: Removing a line item updates the invoice — item disappears and totals recalculate automatically.
-result: issue
-reported: "Blocked by same DbUpdateConcurrencyException as Test 3. All operations that modify a loaded Invoice entity fail because RowVersion concurrency check fails."
-severity: blocker
+### 4. Create Invoice
+expected: Creating a new invoice generates an auto-numbered invoice in HD-YYYY-NNNNN format (e.g., HD-2026-00001) in Draft status. The invoice appears in the pending invoices list on the dashboard.
+result: [pending]
 
 ### 5. View Invoice Detail
-expected: Invoice detail page shows grouped line items by department, payments list, discounts list, and balance due.
-result: pass
+expected: Navigating to an invoice detail page shows: invoice number, patient info, status badge, line items grouped by department, payment history, discount list, balance due, and breadcrumb navigation back to dashboard.
+result: [pending]
 
-### 6. View Pending Invoices List
-expected: Billing dashboard displays all Draft status invoices with quick-view summary in the left column.
-result: issue
-reported: "API returns 500 on GET /api/billing/invoices/pending. The GetPendingInvoicesQuery has no Wolverine handler implementation — query is defined in Contracts but no handler exists in Application."
-severity: blocker
+### 6. Add Line Item to Draft Invoice
+expected: Adding a line item to a Draft invoice shows the item in the line items table grouped under its department section (Kham benh / Duoc pham / Kinh mat / Dieu tri). Section subtotals and grand total update immediately.
+result: [pending]
 
-### 7. Finalize Invoice
-expected: Clicking Finalize changes invoice status from Draft to Finalized. Success notification appears. Finalized invoice cannot be edited.
-result: issue
-reported: "Finalize succeeds (HTTP 200) but allows finalizing invoices with zero balance and no line items. No validation prevents finalizing an empty invoice. Also, the finalize endpoint requires a JSON body with CashierShiftId but does not auto-populate from current shift."
-severity: major
+### 7. Remove Line Item from Draft Invoice
+expected: Removing a line item from a Draft invoice removes it from the table. Department section subtotal and invoice grand total recalculate. Remove button is hidden/disabled on Finalized invoices.
+result: [pending]
 
-### 8. Record Cash Payment
-expected: Recording a cash payment on a finalized invoice shows payment in payments list, updates balance due, and increments the cashier shift's CashReceived.
-result: issue
-reported: "Cannot fully test because adding line items fails (Test 3). On a zero-balance invoice, payment correctly returns 400 'Payment exceeds balance due'. The underlying payment handler logic passes all 45 unit tests, but integration is blocked by the concurrency issue."
-severity: blocker
+### 8. View Pending Invoices List
+expected: The billing dashboard left panel lists all Draft invoices. Each entry shows invoice number, patient name, and total in VND. Clicking an entry navigates to invoice detail.
+result: [pending]
 
-### 9. Record Bank Transfer Payment
-expected: Recording a bank transfer payment with reference number shows it in payments list and shift non-cash revenue.
-result: skipped
-reason: Blocked by concurrency issue (Test 3) — cannot create invoices with balance to pay
+### 9. Finalize Invoice
+expected: Clicking Finalize on a Draft invoice with line items and fully paid balance triggers an AlertDialog confirmation. Confirming changes status to Finalized. Action buttons switch to show Print/Export/Refund instead of Payment/Discount/Finalize.
+result: [pending]
 
-### 10. Record QR Payment (VnPay/Momo/ZaloPay)
-expected: Recording a QR payment with reference number shows it in payments list and shift non-cash revenue.
-result: skipped
-reason: Blocked by concurrency issue (Test 3)
+### 10. Cannot Finalize Empty Invoice
+expected: Attempting to finalize an invoice with no line items or zero total returns an error. The invoice remains in Draft status.
+result: [pending]
 
-### 11. Record Card Payment
-expected: Recording a card payment with last-4 digits shows it in payments list and shift non-cash revenue.
-result: skipped
-reason: Blocked by concurrency issue (Test 3)
+### 11. Cannot Finalize Invoice with Outstanding Balance
+expected: Attempting to finalize an invoice where balance due > 0 returns a validation error. The invoice remains in Draft.
+result: [pending]
 
-### 12. Record Split Payment for Treatment Package
-expected: When recording payment for a treatment package, sequence selector appears. Payment records with TreatmentPackageId and SplitSequence, shown with split indicator.
-result: skipped
-reason: Blocked by concurrency issue (Test 3)
+### 12. Invoice Status Badges
+expected: Draft invoices show a muted/secondary status badge. Finalized invoices show a green/primary badge. Balance Due shows red when outstanding (> 0) and green when fully paid (0).
+result: [pending]
 
-### 13. Record Payment Exceeding Balance Due
-expected: Attempting to pay more than balance due shows error "Payment amount cannot exceed outstanding balance".
-result: pass
+### 13. Open New Cashier Shift
+expected: On the Shifts page, clicking "Open Shift" shows a dialog with shift template dropdown (Morning 08:00-12:00, Afternoon 13:00-20:00) and opening balance input. Confirming creates an Open shift displayed on the shift card.
+result: [pending]
 
-### 14. Record Payment When No Open Shift
-expected: Attempting to record payment without an open shift shows error "No open shift for this branch".
-result: skipped
-reason: Cannot test without a valid invoice with balance
+### 14. Cannot Open Second Shift
+expected: Attempting to open a new shift while one is already Open returns an error "Only one open shift allowed per branch at a time".
+result: [pending]
 
-### 15. Apply Percentage Discount to Invoice
-expected: Applying a percentage discount shows it as Pending status with calculated VND amount displayed.
-result: issue
-reported: "API returns 500 DbUpdateConcurrencyException when applying discount (same root cause as Test 3). Additionally, the endpoint does not auto-populate RequestedById from ICurrentUser — the client must send it explicitly, causing validation error 'RequestedById must not be empty' when not provided."
-severity: blocker
+### 15. Record Cash Payment
+expected: On a Draft invoice with balance due, opening the payment dialog, selecting "Cash", entering an amount, and submitting records the payment. Payment appears in the invoice's payment history. Shift Cash Received increases.
+result: [pending]
 
-### 16. Apply Fixed-Amount Discount to Line Item
-expected: Applying a fixed-amount discount to a specific line item shows the VND discount on that line item.
-result: skipped
-reason: Blocked by concurrency issue (Test 3) and missing RequestedById enrichment
+### 16. Record Bank Transfer Payment
+expected: Selecting "Bank Transfer" reveals a Reference Number field. Submitting with reference records the payment. Payment appears in payment list. Shift non-cash revenue increases.
+result: [pending]
 
-### 17. Approve Discount with Manager PIN
-expected: Entering valid manager PIN changes discount status from Pending to Approved. Invoice total recalculates excluding the discount.
-result: skipped
-reason: Blocked by discount creation failure (Test 15)
+### 17. Record QR Payment (VNPay/MoMo/ZaloPay)
+expected: Selecting a QR method reveals a Reference Number field. Submitting records the payment. Shift non-cash revenue increases.
+result: [pending]
 
-### 18. Reject Discount with Manager PIN
-expected: Entering valid manager PIN to reject changes discount status to Rejected. Invoice total recalculates without the rejected discount.
-result: skipped
-reason: Blocked by discount creation failure (Test 15)
+### 18. Record Card Payment (Visa/Mastercard)
+expected: Selecting a Card method reveals a "Last 4 Digits" field. Submitting records the payment. Payment appears in payment list.
+result: [pending]
 
-### 19. View Live Discount Preview
-expected: As user types discount amount, the calculated VND amount updates in real-time before submitting.
-result: skipped
-reason: Frontend-only test, needs manual verification
+### 19. Payment Method Selector UI
+expected: Payment form shows 7 selectable method cards in a grid: Cash, Bank Transfer, QR VNPay, QR MoMo, QR ZaloPay, Card Visa, Card Mastercard. Selecting one highlights it with primary color. Method-specific fields (Reference Number / Last 4 Digits) appear conditionally.
+result: [pending]
 
-### 20. Approve Discount with Invalid PIN
-expected: Entering an invalid manager PIN shows error message "Invalid manager PIN".
-result: skipped
-reason: Blocked by discount creation failure (Test 15)
+### 20. Split Payment for Treatment Package
+expected: When a treatment package is involved, a split payment toggle appears. Selecting it shows a sequence selector (Lan 1, Lan 2). Payment records with split metadata and shows split indicator in payment history.
+result: [pending]
 
-### 21. Request Refund on Finalized Invoice
-expected: Requesting a refund on a finalized invoice creates refund in Requested status with reason displayed.
-result: issue
-reported: "Endpoint does not auto-populate RequestedById from ICurrentUser — client must send it explicitly. When RequestedById is provided, the refund request should work but is blocked by concurrency issue on the invoice entity."
-severity: major
+### 21. Cannot Pay Without Open Shift
+expected: Attempting to record a payment without an open cashier shift returns an error "No open shift for this branch".
+result: [pending]
 
-### 22. Request Refund Exceeding Invoice Total
-expected: Attempting refund exceeding invoice total shows error "Refund amount cannot exceed invoice total".
-result: skipped
-reason: Blocked by concurrency issue
+### 22. Payment Cannot Exceed Balance Due
+expected: Attempting to pay more than the outstanding balance shows error "Payment amount cannot exceed outstanding balance".
+result: [pending]
 
-### 23. Approve Refund with Manager PIN
-expected: Entering valid manager PIN approves refund — status changes to Approved.
-result: skipped
-reason: Blocked by refund creation failure (Test 21)
+### 23. Apply Percentage Discount with Live Preview
+expected: Opening the Discount dialog, selecting Percentage type, entering a value (e.g., 10%) shows a live VND preview that updates instantly as you type. Submitting creates a Pending discount in the invoice's discount list. RequestedById is auto-populated (no need to send it).
+result: [pending]
 
-### 24. Process Full Refund
-expected: Processing approved refund marks all payments as Refunded. Refund status changes to Processed. CashierShift CashRefunds increments.
-result: skipped
-reason: Blocked by refund creation failure (Test 21)
+### 24. Apply Fixed-Amount Discount
+expected: Selecting Fixed Amount type, entering a VND amount, and submitting creates a Pending discount. The discount appears in the invoice discount list.
+result: [pending]
 
-### 25. Request Refund on Draft Invoice
-expected: Attempting refund on a draft invoice shows error "Refund can only be requested on finalized invoices".
-result: pass
+### 25. Approve Discount with Manager PIN
+expected: Clicking Approve on a Pending discount opens a PIN dialog. Entering a valid 4-6 digit manager PIN approves it. Status changes to Approved. Invoice total and balance due recalculate to reflect the discount.
+result: [pending]
 
-### 26. Open New Shift
-expected: Opening a new shift shows shift card with selected template (Morning/Afternoon), opening balance, and Open status.
-result: pass
+### 26. Reject Discount with Manager PIN
+expected: Choosing Reject, entering a valid manager PIN, changes discount status to Rejected. Invoice total recalculates to exclude the rejected discount.
+result: [pending]
 
-### 27. Close Shift with Matching Cash
-expected: Entering actual cash matching expected amount shows "Match" in green. Shift closes successfully (Open -> Locked -> Closed).
-result: pass
+### 27. Invalid Manager PIN Shows Error
+expected: Entering an incorrect PIN in the Manager PIN dialog shows an error. The discount/refund remains unchanged.
+result: [pending]
 
-### 28. Close Shift with Cash Surplus
-expected: Entering actual cash higher than expected shows surplus amount in blue. Shift closes with surplus noted.
-result: skipped
-reason: Needs manual frontend verification
+### 28. Cannot Apply Discount to Finalized Invoice
+expected: The "Apply Discount" button is hidden/disabled on Finalized invoices. Attempting via API returns an error.
+result: [pending]
 
-### 29. Close Shift with Cash Deficit
-expected: Entering actual cash lower than expected shows deficit in red. AlertDialog asks for manager note before closing.
-result: skipped
-reason: Needs manual frontend verification
+### 29. Request Refund on Finalized Invoice
+expected: Opening the Refund dialog on a Finalized invoice, entering an amount, and submitting creates a refund in Requested status. RequestedById is auto-populated from current user. The refund appears in the invoice's refund list.
+result: [pending]
 
-### 30. View Shift History
-expected: Shift history table shows past shifts with open/closed dates, status, totals, and expandable rows for detailed report.
-result: skipped
-reason: Needs manual frontend verification
+### 30. Cannot Refund Draft Invoice
+expected: The "Request Refund" button is hidden/disabled on Draft invoices. Attempting via API returns error "Refund can only be requested on finalized invoices".
+result: [pending]
 
-### 31. View Shift Report
-expected: Expanding a shift shows revenue breakdown by payment method (Cash, Bank, QR, Cards) and cash reconciliation (expected vs actual).
-result: pass
+### 31. Refund Cannot Exceed Invoice Total
+expected: Entering a refund amount greater than the invoice total is blocked by validation with an error message.
+result: [pending]
 
-### 32. Print Shift Report PDF
-expected: Clicking print on shift report downloads PDF with shift date, revenue table, and cash reconciliation.
-result: skipped
-reason: PDF download needs manual verification
+### 32. Approve and Process Refund
+expected: Approving a Requested refund with valid manager PIN moves it to Approved status. For cash refunds, the shift's Cash Refunds total increases. The refund status transitions to Processed.
+result: [pending]
 
-### 33. Cannot Open Multiple Shifts Per Branch
-expected: Attempting to open a second shift while one is already open shows error "Only one open shift allowed per branch at a time".
-result: pass
+### 33. Close Shift with Matching Cash
+expected: Entering actual cash count matching the expected amount shows discrepancy as 0 (green). Confirming closes the shift. No AlertDialog confirmation needed when matching.
+result: [pending]
 
-### 34. Print Invoice PDF
-expected: Clicking print on invoice downloads PDF showing invoice number, patient info, department-grouped line items, totals, and payments.
-result: pass
+### 34. Close Shift with Discrepancy
+expected: Entering actual cash different from expected shows live discrepancy in red (deficit) or blue (surplus). Confirming shows AlertDialog. Manager Note field is highlighted when discrepancy exists.
+result: [pending]
 
-### 35. Print Payment Receipt PDF
-expected: Clicking print receipt downloads A5 PDF with payment method, amount, reference number, and cashier name.
-result: pass
+### 35. View Shift History with Expandable Rows
+expected: Shifts page shows a table of past shifts with date, cashier name, status, opening balance, and totals. Clicking a row expands it inline to show the full shift report (no page navigation).
+result: [pending]
 
-### 36. Print E-Invoice PDF
-expected: Exporting e-invoice as PDF opens in new tab with Vietnamese Decree 123/2020 fields, tax codes, and 8% tax calculation.
-result: pass
+### 36. View Shift Report
+expected: Expanded shift report shows revenue breakdown by payment method (Cash, Bank, QR VNPay, QR MoMo, QR ZaloPay, Visa, Mastercard) and cash reconciliation (Opening Balance, Cash Received, Cash Refunds, Expected Cash, Actual Cash, Discrepancy).
+result: [pending]
 
-### 37. Export E-Invoice as JSON
-expected: Exporting e-invoice as JSON downloads file with MISA-compatible structure.
-result: pass
+### 37. Print Invoice PDF
+expected: Clicking "Print Invoice" on a Finalized invoice generates an A4 PDF with clinic header, MST tax code, patient info, department-grouped line items in VND, payment summary, and cashier signature area.
+result: [pending]
 
-### 38. Export E-Invoice as XML
-expected: Exporting e-invoice as XML downloads file with all mandatory e-invoice fields.
-result: pass
+### 38. Print Receipt PDF (A5)
+expected: Clicking "Print Receipt" generates a compact A5 PDF receipt with payment methods, amounts in VND, and reference numbers.
+result: [pending]
 
-### 39. Billing Dashboard Layout
-expected: Billing page shows two-column layout: pending draft invoices on left, current shift status on right.
-result: pass
+### 39. E-Invoice PDF (Decree 123/2020)
+expected: Clicking "E-Invoice PDF" opens a new browser tab with the e-invoice. It includes: invoice template/symbol, seller and buyer tax codes, pre-tax amount, 8% GTGT tax rate, tax amount, total with tax, and total amount written in Vietnamese words (e.g., "Hai trieu dong").
+result: [pending]
 
-### 40. Action Buttons Context-Sensitive
-expected: Invoice action buttons (Collect Payment, Apply Discount, Request Refund, Print, Finalize) show/hide based on invoice status (Draft vs Finalized).
-result: pass
+### 40. E-Invoice Export JSON
+expected: Clicking "Export JSON" downloads a JSON file with all Decree 123/2020 mandatory fields in Vietnamese (Unicode preserved) in MISA-compatible format.
+result: [pending]
 
-### 41. VND Currency Formatting
-expected: All currency amounts display with Vietnamese locale using dot thousands separator (e.g., 1.000.000 VND).
-result: pass
+### 41. E-Invoice Export XML
+expected: Clicking "Export XML" downloads a well-formed XML file with all mandatory e-invoice elements in MISA-compatible format.
+result: [pending]
 
-### 42. Payment Method Selector UI
-expected: Payment form shows 7 payment method cards with icons and labels. Clicking a method highlights it with primary color.
-result: pass
+### 42. VND Currency Formatting Throughout
+expected: All monetary amounts across the billing UI use Vietnamese locale: dot (.) thousands separator, no decimal places, "₫" symbol (e.g., 1.500.000 ₫). No fractional VND anywhere.
+result: [pending]
 
-### 43. E-Invoice Export Dropdown
-expected: E-invoice export menu shows PDF (opens new tab), JSON (file download), XML (file download) options.
-result: pass
-
-### 44. Shift Management Page Loads
-expected: Shift management page shows current shift card and shift history table with expandable rows.
-result: pass
-
-### 45. Shift Open Dialog
-expected: Open shift dialog shows template selector dropdown, opening balance input, and "Open Shift" button.
-result: pass
-
-### 46. Shift Close Dialog
-expected: Close shift dialog shows actual cash count input with live discrepancy calculation updating as user types.
-result: pass
-
-### 47. Payment Form Dialog
-expected: Payment form shows amount input (validates against balance due), method selector, and split payment toggle for treatment packages.
-result: pass
-
-### 48. Manager PIN Verification
-expected: Discount/Refund approval dialogs show PIN input. Valid PIN from manager account processes the action. Invalid PIN shows error.
-result: pass
+### 43. Print Shift Report PDF
+expected: Clicking print on the shift report downloads/opens a PDF with clinic header, revenue-by-payment-method table, and cash reconciliation section.
+result: [pending]
 
 ## Summary
 
-total: 48
-passed: 24
-issues: 6
-pending: 0
-skipped: 18
+total: 43
+passed: 0
+issues: 0
+pending: 43
+skipped: 0
 
 ## Gaps
 
-- truth: "Adding line item to draft invoice updates totals and shows department grouping"
-  status: resolved
-  reason: "User reported: API returns 500 DbUpdateConcurrencyException when adding line items. The RowVersion concurrency token on Invoice entity causes optimistic concurrency failure on every write operation that modifies the invoice after initial creation."
-  severity: blocker
-  test: 3
-  root_cause: "InvoiceRepository.Update() calls context.Invoices.Update(invoice) which marks ALL properties Modified including RowVersion. For SQL Server rowversion columns (auto-generated, read-only), EF tries to include RowVersion in SET clause which SQL Server rejects. Handlers that don't call Update() still fail because child collection changes may not trigger invoice entity to be marked Modified."
-  artifacts:
-    - path: "backend/src/Modules/Billing/Billing.Infrastructure/Repositories/InvoiceRepository.cs"
-      issue: "Line 96: context.Invoices.Update(invoice) marks RowVersion as Modified"
-    - path: "backend/src/Modules/Billing/Billing.Application/Features/RecordPayment.cs"
-      issue: "Line 143: unnecessary invoiceRepository.Update(invoice) call"
-    - path: "backend/src/Modules/Billing/Billing.Application/Features/ApplyDiscount.cs"
-      issue: "Line 100: unnecessary invoiceRepository.Update(invoice) call"
-    - path: "backend/src/Modules/Billing/Billing.Application/Features/ApproveDiscount.cs"
-      issue: "Line 64: unnecessary invoiceRepository.Update(invoice) call"
-    - path: "backend/src/Modules/Billing/Billing.Application/Features/RejectDiscount.cs"
-      issue: "Line 68: unnecessary invoiceRepository.Update(invoice) call"
-    - path: "backend/src/Modules/Billing/Billing.Application/Features/RequestRefund.cs"
-      issue: "Line 93: unnecessary invoiceRepository.Update(invoice) call"
-    - path: "backend/src/Modules/Billing/Billing.Application/Features/ApproveRefund.cs"
-      issue: "Line 67: unnecessary invoiceRepository.Update(invoice) call"
-    - path: "backend/src/Modules/Billing/Billing.Application/Features/ProcessRefund.cs"
-      issue: "Line 93: unnecessary invoiceRepository.Update(invoice) call"
-  missing:
-    - "Remove all invoiceRepository.Update(invoice) calls — entities are already tracked by DbContext via GetByIdAsync"
-  debug_session: ".planning/debug/invoice-rowversion-concurrency.md"
-
-- truth: "Billing dashboard displays all Draft status invoices with quick-view summary"
-  status: resolved
-  reason: "User reported: API returns 500 on GET /api/billing/invoices/pending. The GetPendingInvoicesQuery has no Wolverine handler implementation."
-  severity: blocker
-  test: 6
-  root_cause: "GetPendingInvoicesQuery is defined in Billing.Contracts and dispatched by the API endpoint, but no Wolverine handler exists in Billing.Application to process it. Also IInvoiceRepository lacks a GetPendingAsync method."
-  artifacts:
-    - path: "backend/src/Modules/Billing/Billing.Contracts/Queries/GetVisitInvoiceQuery.cs"
-      issue: "Line 14: query defined but no handler exists"
-    - path: "backend/src/Modules/Billing/Billing.Presentation/BillingApiEndpoints.cs"
-      issue: "Lines 72-78: endpoint dispatches query that has no handler"
-  missing:
-    - "Create GetPendingInvoices.cs handler in Billing.Application/Features/"
-    - "Add GetPendingAsync(Guid? cashierShiftId, CancellationToken ct) to IInvoiceRepository"
-    - "Implement GetPendingAsync in InvoiceRepository filtering by Status == Draft"
-  debug_session: ".planning/debug/pending-invoices-500.md"
-
-- truth: "Finalize validates invoice has line items and balance before finalizing"
-  status: resolved
-  reason: "User reported: Finalize succeeds (HTTP 200) but allows finalizing invoices with zero balance and no line items. No validation prevents finalizing an empty invoice."
-  severity: major
-  test: 7
-  root_cause: "Invoice.Finalize() only checks EnsureDraft() and IsFullyPaid. Empty invoice has BalanceDue=0 (TotalAmount-PaidAmount=0-0), so IsFullyPaid=true (BalanceDue<=0). No check for line items count or positive total amount."
-  artifacts:
-    - path: "backend/src/Modules/Billing/Billing.Domain/Entities/Invoice.cs"
-      issue: "Lines 200-215: Finalize() missing line item and total amount validation"
-    - path: "backend/src/Modules/Billing/Billing.Application/Features/FinalizeInvoice.cs"
-      issue: "Lines 20-46: handler delegates entirely to domain, no additional guards"
-  missing:
-    - "Add guard in Invoice.Finalize(): if (_lineItems.Count == 0) throw InvalidOperationException"
-    - "Add guard in Invoice.Finalize(): if (TotalAmount <= 0) throw InvalidOperationException"
-    - "Add unit tests for finalize-empty-invoice scenarios"
-  debug_session: ".planning/debug/finalize-invoice-zero-balance.md"
-
-- truth: "Apply discount endpoint auto-populates RequestedById from current user"
-  status: resolved
-  reason: "User reported: Endpoint does not auto-populate RequestedById from ICurrentUser — client must send it explicitly. Also blocked by DbUpdateConcurrencyException."
-  severity: blocker
-  test: 15
-  root_cause: "ApplyDiscountHandler does not inject ICurrentUser. It exposes RequestedById as required Guid on command record, forcing client to send it. Every other billing handler injects ICurrentUser and reads currentUser.UserId server-side."
-  artifacts:
-    - path: "backend/src/Modules/Billing/Billing.Application/Features/ApplyDiscount.cs"
-      issue: "Lines 45-50: Handle() missing ICurrentUser parameter; line 78 uses command.RequestedById"
-  missing:
-    - "Remove RequestedById from ApplyDiscountCommand record"
-    - "Remove RuleFor(x => x.RequestedById).NotEmpty() validator"
-    - "Add ICurrentUser currentUser to Handle() parameters"
-    - "Replace command.RequestedById with currentUser.UserId"
-  debug_session: ".planning/debug/billing-requestedbyid-not-auto-populated.md"
-
-- truth: "Record payment against finalized invoice with balance"
-  status: resolved
-  reason: "User reported: Cannot create invoices with balance to pay because adding line items fails due to concurrency issue."
-  severity: blocker
-  test: 8
-  root_cause: "Blocked by the same DbUpdateConcurrencyException root cause as Test 3. Once concurrency fix is applied, payments should work (45 unit tests pass for payment logic)."
-  artifacts:
-    - path: "backend/src/Modules/Billing/Billing.Infrastructure/Repositories/InvoiceRepository.cs"
-      issue: "Line 96: same Update() issue as Test 3"
-  missing:
-    - "Fix concurrency issue (Test 3 fix) unblocks this"
-  debug_session: ".planning/debug/invoice-rowversion-concurrency.md"
-
-- truth: "Request refund endpoint auto-populates RequestedById from current user"
-  status: resolved
-  reason: "User reported: Endpoint does not auto-populate RequestedById from ICurrentUser — client must send it explicitly."
-  severity: major
-  test: 21
-  root_cause: "RequestRefundHandler does not inject ICurrentUser. Same pattern issue as ApplyDiscountHandler (Test 15)."
-  artifacts:
-    - path: "backend/src/Modules/Billing/Billing.Application/Features/RequestRefund.cs"
-      issue: "Lines 41-46: Handle() missing ICurrentUser parameter; line 89 uses command.RequestedById"
-  missing:
-    - "Remove RequestedById from RequestRefundCommand record"
-    - "Remove RuleFor(x => x.RequestedById).NotEmpty() validator"
-    - "Add ICurrentUser currentUser to Handle() parameters"
-    - "Replace command.RequestedById with currentUser.UserId"
-  debug_session: ".planning/debug/billing-requestedbyid-not-auto-populated.md"
+[none yet]
