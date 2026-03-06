@@ -23,20 +23,20 @@ function PharmacyInventoryPage() {
         <div>
           <h1 className="text-2xl font-bold">{t("inventory.title")}</h1>
           <p className="text-sm text-muted-foreground mt-0.5">
-            Quản lý kho thuốc và theo dõi tồn kho
+            {t("inventory.subtitle")}
           </p>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" asChild>
             <Link to={"/pharmacy/suppliers" as string}>
               <IconTruck className="h-4 w-4 mr-2" />
-              Quản lý nhà cung cấp
+              {t("supplier.manageLink")}
             </Link>
           </Button>
           <Button asChild>
             <Link to={"/pharmacy/stock-import" as string}>
               <IconBuildingWarehouse className="h-4 w-4 mr-2" />
-              Nhập kho
+              {t("stockImport.importLink")}
             </Link>
           </Button>
         </div>

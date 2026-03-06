@@ -31,7 +31,8 @@
     "statusExpiry": "Sắp hết hạn",
     "editPricing": "Sửa giá",
     "pricingUpdated": "Cập nhật giá thành công",
-    "empty": "Kho thuốc trống"
+    "empty": "Kho thuốc trống",
+    "subtitle": "Quản lý kho thuốc và theo dõi tồn kho"
   },
   "batch": {
     "title": "Lô thuốc",
@@ -98,6 +99,7 @@
     "empty": "Không có nhà cung cấp",
     "created": "Thêm nhà cung cấp thành công",
     "updated": "Cập nhật nhà cung cấp thành công",
+    "manageLink": "Quản lý nhà cung cấp",
     "activated": "Đã kích hoạt nhà cung cấp",
     "deactivated": "Đã ngừng nhà cung cấp",
     "activate": "Kích hoạt",
@@ -237,6 +239,7 @@
     "excelConfirming": "Đang nhập...",
     "excelSuccess": "Nhập Excel thành công",
     "excelNoFile": "Vui lòng chọn file",
-    "excelNoSupplier": "Vui lòng chọn nhà cung cấp"
+    "excelNoSupplier": "Vui lòng chọn nhà cung cấp",
+    "importLink": "Nhập kho"
   }
 }

@@ -31,7 +31,8 @@
     "statusExpiry": "Expiry Alert",
     "editPricing": "Edit Pricing",
     "pricingUpdated": "Pricing updated successfully",
-    "empty": "No drugs in inventory"
+    "empty": "No drugs in inventory",
+    "subtitle": "Manage drug inventory and track stock levels"
   },
   "batch": {
     "title": "Batches",
@@ -98,6 +99,7 @@
     "empty": "No suppliers found",
     "created": "Supplier added successfully",
     "updated": "Supplier updated successfully",
+    "manageLink": "Manage Suppliers",
     "activated": "Supplier activated",
     "deactivated": "Supplier deactivated",
     "activate": "Activate",
@@ -237,6 +239,7 @@
     "excelConfirming": "Importing...",
     "excelSuccess": "Excel import completed",
     "excelNoFile": "Please select a file",
-    "excelNoSupplier": "Please select a supplier"
+    "excelNoSupplier": "Please select a supplier",
+    "importLink": "Stock Import"
   }
 }
