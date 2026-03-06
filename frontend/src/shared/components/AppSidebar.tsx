@@ -16,7 +16,13 @@ import {
   IconHeartbeat,
   IconBuilding,
   IconBoxSeam,
+  IconChevronDown,
 } from "@tabler/icons-react"
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/shared/components/Collapsible"
 import {
   Sidebar,
   SidebarContent,
@@ -26,8 +32,12 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
+  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
   SidebarRail,
 } from "@/shared/components/Sidebar"
 import {
@@ -37,12 +47,19 @@ import {
 } from "@/shared/components/Tooltip"
 import { NavUser } from "@/shared/components/NavUser"
 import { useAuthStore } from "@/shared/stores/authStore"
+import { usePendingCount } from "@/features/pharmacy/api/pharmacy-queries"
+
+interface NavSubItem {
+  titleKey: string
+  to: string
+}
 
 interface NavItem {
   titleKey: string
   to: string
   icon: React.ComponentType<{ className?: string }>
   disabled?: boolean
+  children?: NavSubItem[]
 }
 
 export function AppSidebar({ ...sidebarProps }: ComponentProps<typeof Sidebar>) {
@@ -50,6 +67,7 @@ export function AppSidebar({ ...sidebarProps }: ComponentProps<typeof Sidebar>) 
   const routerState = useRouterState()
   const currentPath = routerState.location.pathname
   const user = useAuthStore((s) => s.user)
+  const { data: pendingCount } = usePendingCount()
 
   // Check if user has admin permissions
   const hasAdminAccess =
@@ -104,6 +122,13 @@ export function AppSidebar({ ...sidebarProps }: ComponentProps<typeof Sidebar>) 
       titleKey: "sidebar.pharmacy",
       to: "/pharmacy",
       icon: IconMedicineSyrup,
+      children: [
+        { titleKey: "sidebar.pharmacyInventory", to: "/pharmacy" },
+        { titleKey: "sidebar.pharmacyQueue", to: "/pharmacy/queue" },
+        { titleKey: "sidebar.pharmacySuppliers", to: "/pharmacy/suppliers" },
+        { titleKey: "sidebar.pharmacyStockImport", to: "/pharmacy/stock-import" },
+        { titleKey: "sidebar.pharmacyOtcSales", to: "/pharmacy/otc-sales" },
+      ],
     },
     {
       titleKey: "sidebar.consumables",
@@ -156,9 +181,10 @@ export function AppSidebar({ ...sidebarProps }: ComponentProps<typeof Sidebar>) 
   const renderNavItems = (items: NavItem[]) =>
     items.map((item) => {
       const isActive = currentPath === item.to || currentPath.startsWith(item.to + "/")
-      return (
-        <SidebarMenuItem key={item.to}>
-          {item.disabled ? (
+
+      if (item.disabled) {
+        return (
+          <SidebarMenuItem key={item.to}>
             <Tooltip>
               <TooltipTrigger asChild>
                 <SidebarMenuButton
@@ -174,19 +200,70 @@ export function AppSidebar({ ...sidebarProps }: ComponentProps<typeof Sidebar>) 
                 {t("sidebar.comingSoon")}
               </TooltipContent>
             </Tooltip>
-          ) : (
-            <SidebarMenuButton
-              asChild
-              isActive={isActive}
-              tooltip={t(item.titleKey)}
-              className={isActive ? "font-medium" : ""}
-            >
-              <Link to={item.to}>
-                <item.icon className="h-4 w-4" />
-                <span>{t(item.titleKey)}</span>
-              </Link>
-            </SidebarMenuButton>
-          )}
+          </SidebarMenuItem>
+        )
+      }
+
+      if (item.children && item.children.length > 0) {
+        const isParentActive = currentPath === item.to || currentPath.startsWith(item.to + "/")
+        const hasBadge = item.titleKey === "sidebar.pharmacy" && pendingCount != null && pendingCount > 0
+
+        return (
+          <Collapsible key={item.to} defaultOpen={isParentActive} className="group/collapsible">
+            <SidebarMenuItem>
+              <CollapsibleTrigger asChild>
+                <SidebarMenuButton
+                  isActive={isParentActive}
+                  tooltip={t(item.titleKey)}
+                  className={isParentActive ? "font-medium" : ""}
+                >
+                  <item.icon className="h-4 w-4" />
+                  <span>{t(item.titleKey)}</span>
+                  <IconChevronDown className="ml-auto h-4 w-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-180" />
+                </SidebarMenuButton>
+              </CollapsibleTrigger>
+              {hasBadge && (
+                <SidebarMenuBadge className="bg-primary text-primary-foreground text-xs font-medium px-1.5 py-0.5 rounded-full">
+                  {pendingCount}
+                </SidebarMenuBadge>
+              )}
+              <CollapsibleContent>
+                <SidebarMenuSub>
+                  {item.children.map((child) => {
+                    const isChildActive =
+                      child.to === item.to
+                        ? currentPath === child.to
+                        : currentPath === child.to || currentPath.startsWith(child.to + "/")
+                    return (
+                      <SidebarMenuSubItem key={child.to}>
+                        <SidebarMenuSubButton asChild isActive={isChildActive}>
+                          <Link to={child.to}>
+                            <span>{t(child.titleKey)}</span>
+                          </Link>
+                        </SidebarMenuSubButton>
+                      </SidebarMenuSubItem>
+                    )
+                  })}
+                </SidebarMenuSub>
+              </CollapsibleContent>
+            </SidebarMenuItem>
+          </Collapsible>
+        )
+      }
+
+      return (
+        <SidebarMenuItem key={item.to}>
+          <SidebarMenuButton
+            asChild
+            isActive={isActive}
+            tooltip={t(item.titleKey)}
+            className={isActive ? "font-medium" : ""}
+          >
+            <Link to={item.to}>
+              <item.icon className="h-4 w-4" />
+              <span>{t(item.titleKey)}</span>
+            </Link>
+          </SidebarMenuButton>
         </SidebarMenuItem>
       )
     })
