@@ -31,6 +31,14 @@ public sealed class InvoiceRepository(BillingDbContext context) : IInvoiceReposi
             .FirstOrDefaultAsync(i => i.VisitId == visitId, ct);
     }
 
+    public async Task<List<Invoice>> GetAllByVisitIdAsync(Guid visitId, CancellationToken ct)
+    {
+        return await context.Invoices
+            .Where(i => i.VisitId == visitId)
+            .OrderByDescending(i => i.CreatedAt)
+            .ToListAsync(ct);
+    }
+
     public async Task<Invoice?> GetByInvoiceNumberAsync(string invoiceNumber, CancellationToken ct)
     {
         return await context.Invoices

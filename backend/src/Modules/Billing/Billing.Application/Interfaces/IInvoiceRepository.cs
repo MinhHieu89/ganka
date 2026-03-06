@@ -20,6 +20,12 @@ public interface IInvoiceRepository
     Task<Invoice?> GetByVisitIdAsync(Guid visitId, CancellationToken ct);
 
     /// <summary>
+    /// Gets all invoices for a specific visit (summary list).
+    /// Returns empty list if no invoices exist for the visit.
+    /// </summary>
+    Task<List<Invoice>> GetAllByVisitIdAsync(Guid visitId, CancellationToken ct);
+
+    /// <summary>
     /// Gets an invoice by its formatted invoice number (e.g., HD-2026-00001).
     /// </summary>
     Task<Invoice?> GetByInvoiceNumberAsync(string invoiceNumber, CancellationToken ct);
