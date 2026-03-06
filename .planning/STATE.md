@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 06-08-PLAN.md
-last_updated: "2026-03-06T07:22:43.264Z"
+stopped_at: Completed 06-09-PLAN.md
+last_updated: "2026-03-06T07:30:31.582Z"
 last_activity: 2026-03-06 -- Completed 05.1-07 Full Verification (55/55 arch tests, 263 total tests pass)
 progress:
   total_phases: 14
   completed_phases: 9
   total_plans: 150
-  completed_plans: 104
+  completed_plans: 105
 ---
 
 ---
@@ -255,6 +255,7 @@ Progress: [██████░░░░] 63%
 | Phase 06-pharmacy-consumables P06 | 3min | 2 tasks | 7 files |
 | Phase 06 P07 | 2min | 2 tasks | 6 files |
 | Phase 06-pharmacy-consumables P08 | 6 | 2 tasks | 6 files |
+| Phase 06 P09 | 5 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -526,6 +527,8 @@ Recent decisions affecting current work:
 - [Phase 06-07]: IDispensingRepository.GetByPrescriptionIdAsync returns nullable to support duplicate-dispensing-check without separate Exists() call
 - [Phase 06-08]: Vietnam timezone cross-platform pattern (SE Asia Standard Time / Asia/Ho_Chi_Minh via OperatingSystem.IsWindows()) applied in DrugBatchRepository for DateOnly FEFO comparisons
 - [Phase 06-08]: Low stock alert includes zero-stock drugs by querying all active drugs with MinStockLevel>0 (two-step: batch aggregation + dictionary lookup) to avoid EF Core GroupBy translation issues
+- [Phase 06]: ConsumableRepository.GetAlertsAsync uses two-step query for ExpiryTracked items to avoid N+1 queries (batch aggregation in single GroupBy)
+- [Phase 06]: DrugCatalogItemRepository.GetAllWithInventoryAsync two-step aggregation (catalog + batch GroupBy) matches existing LowStockAlerts pattern
 
 ### Roadmap Evolution
 
@@ -548,6 +551,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-06T07:22:43.260Z
-Stopped at: Completed 06-08-PLAN.md
+Last session: 2026-03-06T07:30:31.577Z
+Stopped at: Completed 06-09-PLAN.md
 Resume file: None
