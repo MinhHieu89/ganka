@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Shared.Application;
 using Shared.Application.Interfaces;
 using Shared.Application.Services;
+using Shared.Infrastructure.Repositories;
 using Shared.Infrastructure.Services;
 
 namespace Shared.Infrastructure;
@@ -19,6 +20,7 @@ public static class IoC
         services.AddScoped<IBranchContext, BranchContext>();
         services.AddScoped<IAzureBlobService, AzureBlobService>();
         services.AddScoped<IClinicSettingsService, ClinicSettingsService>();
+        services.AddScoped<IReferenceDataRepository, ReferenceDataRepository>();
 
         return services;
     }
