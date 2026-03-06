@@ -373,6 +373,6 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 | 5. Prescriptions & Document Printing | 23/25 | In Progress|  |
 | 5.1 Fix Architecture Test Failures | 0/8 | Not started | - |
 | 6. Pharmacy & Consumables | 29/29 | Complete   | 2026-03-06 |
-| 7. Billing & Finance | 21/26 | In Progress|  |
+| 7. Billing & Finance | 24/26 | In Progress|  |
 | 8. Optical Center | 0/3 | Not started | - |
 | 9. Treatment Protocols | 0/3 | Not started | - |

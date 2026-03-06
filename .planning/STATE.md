@@ -3,15 +3,30 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 07-13-PLAN.md
-last_updated: "2026-03-06T14:47:38.456Z"
+stopped_at: Completed 07-16-PLAN.md
+last_updated: "2026-03-06T14:55:39.047Z"
 last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
 progress:
   total_phases: 14
   completed_phases: 10
   total_plans: 152
-  completed_plans: 148
-  percent: 97
+  completed_plans: 149
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: in-progress
+stopped_at: Completed 07-16-PLAN.md
+last_updated: "2026-03-06T14:53:57Z"
+last_activity: 2026-03-06 -- Completed 07-16 Document Services (BillingDocumentService PDF generation, EInvoiceExportService JSON/XML, 6 print/export endpoints)
+progress:
+  total_phases: 14
+  completed_phases: 10
+  total_plans: 152
+  completed_plans: 149
+  percent: 98
 ---
 
 ---
@@ -802,6 +817,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-06T14:47:38.452Z
-Stopped at: Completed 07-13-PLAN.md
+Last session: 2026-03-06T14:55:39.043Z
+Stopped at: Completed 07-16-PLAN.md
 Resume file: None
