@@ -3,14 +3,29 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 06-27-PLAN.md
-last_updated: "2026-03-06T10:26:02.766Z"
-last_activity: 2026-03-06 -- Completed 05.1-07 Full Verification (55/55 arch tests, 263 total tests pass)
+stopped_at: Completed 06-28-PLAN.md
+last_updated: "2026-03-06T12:01:50.789Z"
+last_activity: 2026-03-06 -- Completed 06-28 Gap Closure (CON-03 descope + PrescriptionCode fix, Phase 6 Complete)
+progress:
+  total_phases: 14
+  completed_phases: 11
+  total_plans: 150
+  completed_plans: 124
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: in-progress
+stopped_at: Completed 06-28-PLAN.md
+last_updated: "2026-03-06T12:00:05Z"
+last_activity: 2026-03-06 -- Completed 06-28 Gap Closure (CON-03 descope + PrescriptionCode fix)
 progress:
   total_phases: 14
   completed_phases: 10
   total_plans: 150
-  completed_plans: 123
+  completed_plans: 124
 ---
 
 ---
@@ -582,6 +597,7 @@ Recent decisions affecting current work:
 - [Phase 06-pharmacy-consumables]: EF Core projection pattern: OrderBy must come before Join/Select projection for SQL translatability
 - [Phase 06-pharmacy-consumables]: EF Core projection pattern: always OrderBy on raw entity properties before .Select() or .Join() projections for SQL translatability
 - [Phase 06-pharmacy-consumables]: Null-guard pattern for optional numeric fields before calling toLocaleString() — use optional chaining with fallback display value
+- [Phase 06]: CON-03 auto-deduction descoped from Phase 6 to Phase 9; ROADMAP updated; domain comments reframed from deferred to implemented-in
 
 ### Roadmap Evolution
 
