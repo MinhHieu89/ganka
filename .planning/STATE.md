@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 06-21-PLAN.md
-last_updated: "2026-03-06T09:03:40.254Z"
+stopped_at: Completed 06-22-PLAN.md
+last_updated: "2026-03-06T09:13:12.196Z"
 last_activity: 2026-03-06 -- Completed 05.1-07 Full Verification (55/55 arch tests, 263 total tests pass)
 progress:
   total_phases: 14
   completed_phases: 9
   total_plans: 150
-  completed_plans: 117
+  completed_plans: 118
 ---
 
 ---
@@ -268,6 +268,7 @@ Progress: [██████░░░░] 63%
 | Phase 06 P19 | 3 | 2 tasks | 6 files |
 | Phase 06 P20 | 4 | 2 tasks | 7 files |
 | Phase 06-pharmacy-consumables P21 | 5 | 2 tasks | 8 files |
+| Phase 06-pharmacy-consumables P22 | 7 | 2 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -564,6 +565,8 @@ Recent decisions affecting current work:
 - [Phase 06-20]: Action buttons (suppliers, stock-import) rendered as disabled placeholders since routes don't exist yet
 - [Phase 06-20]: FEFO ordering enforced by default sort (ExpiryDate ASC) in DrugBatchTable
 - [Phase 06-pharmacy-consumables]: SupplierForm single-form pattern with isEdit flag, DrugCombobox loads full catalog for instant filtering, ExcelImportDialog client-side TSV template with BOM, StockImportPage Tabs layout with history table
+- [Phase 06-pharmacy-consumables]: FEFO batch suggestion computed client-side using useDrugBatches per line
+- [Phase 06-pharmacy-consumables]: PatientProfilePage Prescriptions tab placed after appointments, before dry-eye per locked user decision
 
 ### Roadmap Evolution
 
@@ -586,6 +589,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-06T09:03:40.250Z
-Stopped at: Completed 06-21-PLAN.md
+Last session: 2026-03-06T09:13:12.192Z
+Stopped at: Completed 06-22-PLAN.md
 Resume file: None
