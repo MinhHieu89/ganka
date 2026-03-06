@@ -104,6 +104,8 @@ export interface PendingPrescriptionItemDto {
   drugName: string
   quantity: number
   unit: string
+  dosage: string | null
+  isOffCatalog: boolean
 }
 
 export interface PendingPrescriptionDto {
@@ -178,20 +180,23 @@ export interface DispenseDrugsInput {
   visitId: string
   patientId: string
   patientName: string
+  prescribedAt: string
   overrideReason?: string | null
   lines: DispenseLineInput[]
 }
 
 export interface DispenseLineInput {
   prescriptionItemId: string
-  drugCatalogItemId: string
+  drugCatalogItemId: string | null
   drugName: string
   quantity: number
-  batchAllocations: BatchAllocationInput[]
+  isOffCatalog: boolean
+  skip: boolean
+  manualBatches?: BatchOverride[] | null
 }
 
-export interface BatchAllocationInput {
-  drugBatchId: string
+export interface BatchOverride {
+  batchId: string
   quantity: number
 }
 
@@ -428,8 +433,9 @@ export async function getLowStockAlerts(): Promise<LowStockAlertDto[]> {
 
 // Dispensing
 
-export async function getPendingPrescriptions(): Promise<PendingPrescriptionDto[]> {
-  const { data, error } = await api.GET("/api/pharmacy/dispensing/pending" as never)
+export async function getPendingPrescriptions(patientId?: string | null): Promise<PendingPrescriptionDto[]> {
+  const params = patientId ? { params: { query: { patientId } } } : {}
+  const { data, error } = await api.GET("/api/pharmacy/dispensing/pending" as never, params as never)
   if (error) throw new Error("Failed to fetch pending prescriptions")
   return (data as PendingPrescriptionDto[]) ?? []
 }
@@ -455,12 +461,25 @@ export async function dispenseDrugs(input: DispenseDrugsInput): Promise<{ id: st
 export async function getDispensingHistory(
   page: number = 1,
   pageSize: number = 20,
-): Promise<DispensingRecordDto[]> {
+  patientId?: string | null,
+): Promise<DispensingHistoryResult> {
+  const queryParams: Record<string, unknown> = { page, pageSize }
+  if (patientId) queryParams.patientId = patientId
   const { data, error } = await api.GET("/api/pharmacy/dispensing/history" as never, {
-    params: { query: { page, pageSize } },
+    params: { query: queryParams },
   } as never)
   if (error) throw new Error("Failed to fetch dispensing history")
-  return (data as DispensingRecordDto[]) ?? []
+  // Backend returns { items, totalCount }
+  const result = data as { items: DispensingRecordDto[]; totalCount: number } | null
+  if (result && "items" in result) {
+    return { items: result.items ?? [], totalCount: result.totalCount ?? 0 }
+  }
+  return { items: (data as DispensingRecordDto[]) ?? [], totalCount: 0 }
+}
+
+export interface DispensingHistoryResult {
+  items: DispensingRecordDto[]
+  totalCount: number
 }
 
 // OTC sales

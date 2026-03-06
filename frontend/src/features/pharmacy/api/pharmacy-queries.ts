@@ -130,7 +130,9 @@ export function useLowStockAlerts() {
 export function usePendingPrescriptions() {
   return useQuery({
     queryKey: pharmacyKeys.dispensing.pending(),
-    queryFn: getPendingPrescriptions,
+    queryFn: () => getPendingPrescriptions(),
+    refetchInterval: 30_000,
+    refetchIntervalInBackground: false,
   })
 }
 
@@ -143,10 +145,12 @@ export function usePendingCount() {
   })
 }
 
-export function useDispensingHistory(page: number = 1) {
+export function useDispensingHistory(page: number = 1, patientId?: string | null) {
   return useQuery({
-    queryKey: pharmacyKeys.dispensing.history(page),
-    queryFn: () => getDispensingHistory(page),
+    queryKey: patientId
+      ? [...pharmacyKeys.dispensing.history(page), patientId]
+      : pharmacyKeys.dispensing.history(page),
+    queryFn: () => getDispensingHistory(page, 20, patientId),
   })
 }
 
