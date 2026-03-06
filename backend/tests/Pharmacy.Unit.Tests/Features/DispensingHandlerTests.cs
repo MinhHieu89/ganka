@@ -318,6 +318,7 @@ public class DispensingHandlerTests
                 VisitId: DefaultVisitId,
                 PatientId: DefaultPatientId,
                 PatientName: "Nguyễn Văn An",
+                PrescriptionCode: "RX-2026-001",
                 PrescribedAt: DateTime.UtcNow.AddDays(-1),
                 IsExpired: false,
                 DaysRemaining: 6,
@@ -347,6 +348,7 @@ public class DispensingHandlerTests
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().HaveCount(1);
         result.Value[0].PrescriptionId.Should().Be(DefaultPrescriptionId);
+        result.Value[0].PrescriptionCode.Should().Be("RX-2026-001");
         result.Value[0].IsExpired.Should().BeFalse();
     }
 
