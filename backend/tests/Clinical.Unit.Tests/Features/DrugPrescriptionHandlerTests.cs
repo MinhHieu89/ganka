@@ -7,7 +7,7 @@ using FluentValidation;
 using FluentValidation.Results;
 using NSubstitute;
 using Patient.Contracts.Dtos;
-using Patient.Domain.Enums;
+using Patient.Contracts.Enums;
 using Shared.Domain;
 using Wolverine;
 
