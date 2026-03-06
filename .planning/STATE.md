@@ -3,15 +3,31 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 07-25-PLAN.md
-last_updated: "2026-03-06T14:32:09Z"
-last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
+stopped_at: Completed 07-26-PLAN.md
+last_updated: "2026-03-06T14:35:37.106Z"
+last_activity: 2026-03-06 -- Completed 07-26 Supplementary Discount/Refund Handlers (RejectDiscount, ApproveRefund, ProcessRefund, 12 new tests, 45 total pass)
 progress:
   total_phases: 14
   completed_phases: 10
   total_plans: 152
-  completed_plans: 146
-  percent: 96
+  completed_plans: 147
+  percent: 97
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: in-progress
+stopped_at: Completed 07-26-PLAN.md
+last_updated: "2026-03-06T14:34:04Z"
+last_activity: 2026-03-06 -- Completed 07-26 Supplementary Discount/Refund Handlers (RejectDiscount, ApproveRefund, ProcessRefund, 12 new tests, 45 total pass)
+progress:
+  total_phases: 14
+  completed_phases: 10
+  total_plans: 152
+  completed_plans: 147
+  percent: 97
 ---
 
 ---
@@ -768,6 +784,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-06T14:26:36.237Z
-Stopped at: Completed 07-09-PLAN.md
+Last session: 2026-03-06T14:35:37.102Z
+Stopped at: Completed 07-26-PLAN.md
 Resume file: None
