@@ -3,11 +3,27 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
+stopped_at: Completed 07-13-PLAN.md
+last_updated: "2026-03-06T14:47:38.456Z"
+last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
+progress:
+  total_phases: 14
+  completed_phases: 10
+  total_plans: 152
+  completed_plans: 148
+  percent: 97
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: in-progress
 stopped_at: Completed 07-14-PLAN.md
 last_updated: "2026-03-06T14:41:18Z"
 last_activity: 2026-03-06 -- Completed 07-14 Bootstrapper Integration (Billing.Presentation, EF migration, full API endpoints, 45 tests pass)
 progress:
-  total_phases: 14
+  [██████████] 97%
   completed_phases: 10
   total_plans: 152
   completed_plans: 148
@@ -428,6 +444,7 @@ Progress: [█████████░] 96%
 | Phase 07-billing-finance P04 | 1min | 2 tasks | 5 files |
 | Phase 07-billing-finance P09 | 7min | 2 tasks | 5 files |
 | Phase 07-billing-finance P25 | 3min | 2 tasks | 8 files |
+| Phase 07 P13 | 2min | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -762,6 +779,7 @@ Recent decisions affecting current work:
 - [Phase 07]: Payments confirmed immediately on creation (manual confirmation, not async approval)
 - [Phase 07-billing-finance]: Shift handlers: used Email as cashierName (ICurrentUser has no Name), combined Lock+Close in single handler, PaymentMethod.ToString() as revenue dict keys
 - [Phase 07-billing-finance]: Reused MapToDto as internal static on CreateInvoiceHandler for DRY invoice-to-DTO mapping across handlers
+- [Phase 07]: Billing API: 21 endpoints under /api/billing with group-level RequireAuthorization, route parameter enrichment for ID safety, Wolverine bus dispatch
 
 ### Roadmap Evolution
 
@@ -784,6 +802,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-06T14:35:37.102Z
-Stopped at: Completed 07-26-PLAN.md
+Last session: 2026-03-06T14:47:38.452Z
+Stopped at: Completed 07-13-PLAN.md
 Resume file: None
