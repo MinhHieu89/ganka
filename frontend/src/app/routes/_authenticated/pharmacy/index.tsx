@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router"
+import { createFileRoute, Link } from "@tanstack/react-router"
 import { useTranslation } from "react-i18next"
 import { IconBuildingWarehouse, IconTruck } from "@tabler/icons-react"
 import { Button } from "@/shared/components/Button"
@@ -27,14 +27,17 @@ function PharmacyInventoryPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          {/* Links to sub-routes added in future plans (suppliers, stock-import) */}
-          <Button variant="outline" disabled>
-            <IconTruck className="h-4 w-4 mr-2" />
-            Quản lý nhà cung cấp
+          <Button variant="outline" asChild>
+            <Link to={"/pharmacy/suppliers" as string}>
+              <IconTruck className="h-4 w-4 mr-2" />
+              Quản lý nhà cung cấp
+            </Link>
           </Button>
-          <Button disabled>
-            <IconBuildingWarehouse className="h-4 w-4 mr-2" />
-            Nhập kho
+          <Button asChild>
+            <Link to={"/pharmacy/stock-import" as string}>
+              <IconBuildingWarehouse className="h-4 w-4 mr-2" />
+              Nhập kho
+            </Link>
           </Button>
         </div>
       </div>
