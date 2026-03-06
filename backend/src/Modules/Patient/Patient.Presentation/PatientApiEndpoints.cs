@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Patient.Application.Features;
 using Patient.Contracts.Dtos;
-using Patient.Domain.Enums;
-using Patient.Domain.Services;
 using Shared.Domain;
 using Shared.Presentation;
 using Wolverine;
