@@ -34,6 +34,7 @@
 
     <!-- Excel Import -->
     <PackageVersion Include="ClosedXML" Version="0.104.*" />
+    <PackageVersion Include="MiniExcel" Version="1.*" />
 
     <!-- API Documentation -->
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="7.*" />
