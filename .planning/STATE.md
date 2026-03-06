@@ -3,11 +3,27 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
+stopped_at: Completed 07-04-PLAN.md
+last_updated: "2026-03-06T14:15:22.708Z"
+last_activity: 2026-03-06 -- Completed 05.1-07 Full Verification (55/55 arch tests, 263 total tests pass)
+progress:
+  total_phases: 14
+  completed_phases: 10
+  total_plans: 152
+  completed_plans: 140
+  percent: 92
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: in-progress
 stopped_at: Completed 07-22-PLAN.md
 last_updated: "2026-03-06T14:09:32Z"
 last_activity: 2026-03-06 -- Completed 07-22 Billing Frontend Integration (i18n extensions, sidebar verified, InvoiceView verified)
 progress:
-  total_phases: 14
+  [█████████░] 92%
   completed_phases: 10
   total_plans: 152
   completed_plans: 139
@@ -345,6 +361,7 @@ Progress: [██████░░░░] 63%
 | Phase 07-billing-finance P05 | 8min | 2 tasks | 5 files |
 | Phase 07-billing-finance P18 | 7min | 2 tasks | 7 files |
 | Phase 07-billing-finance P19 | 9min | 2 tasks | 3 files |
+| Phase 07-billing-finance P04 | 1min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -674,6 +691,8 @@ Recent decisions affecting current work:
 - [Phase 07-billing-finance]: Used department enum number as grouping key with Vietnamese section headers from i18n for line items table
 - [Phase 07-billing-finance]: Used custom card selector pattern for PaymentMethodSelector over shadcn ToggleGroup for better icon/label mobile UX
 - [Phase 07-billing-finance]: Used expandable DataTable rows for shift history instead of separate detail page for faster cashier workflow
+- [Phase 07-billing-finance]: Refund HasMany uses Cascade delete matching Discount behavior
+- [Phase 07-billing-finance]: VND precision convention: (18,0) for money, (18,2) only for percentage values
 
 ### Roadmap Evolution
 
@@ -696,6 +715,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-06T14:09:55.632Z
-Stopped at: Completed 07-21-PLAN.md
+Last session: 2026-03-06T14:15:16.374Z
+Stopped at: Completed 07-04-PLAN.md
 Resume file: None
