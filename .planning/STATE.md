@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 06-23-PLAN.md
-last_updated: "2026-03-06T09:18:44.913Z"
+stopped_at: Completed 06-24-PLAN.md
+last_updated: "2026-03-06T09:27:37.458Z"
 last_activity: 2026-03-06 -- Completed 05.1-07 Full Verification (55/55 arch tests, 263 total tests pass)
 progress:
   total_phases: 14
   completed_phases: 9
   total_plans: 150
-  completed_plans: 119
+  completed_plans: 120
 ---
 
 ---
@@ -270,6 +270,7 @@ Progress: [██████░░░░] 63%
 | Phase 06-pharmacy-consumables P21 | 5 | 2 tasks | 8 files |
 | Phase 06-pharmacy-consumables P22 | 7 | 2 tasks | 9 files |
 | Phase 06 P23 | 15 | 2 tasks | 5 files |
+| Phase 06-pharmacy-consumables P24 | 15 | 2 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -570,6 +571,8 @@ Recent decisions affecting current work:
 - [Phase 06-pharmacy-consumables]: PatientProfilePage Prescriptions tab placed after appointments, before dry-eye per locked user decision
 - [Phase 06]: OTC sale form uses isAnonymous toggle (walk-in vs named customer) rather than patient search combobox
 - [Phase 06]: StockAdjustmentDialog uses drugCatalogItemId matching backend AdjustStockInput interface
+- [Phase 06-pharmacy-consumables]: ConsumableAdjustDialog added (not in plan) to complete Điều chỉnh action - required for full stock management
+- [Phase 06-pharmacy-consumables]: Create dialog handled by route page, not table - cleaner separation of concerns for consumables UI
 
 ### Roadmap Evolution
 
@@ -592,6 +595,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-06T09:18:44.909Z
-Stopped at: Completed 06-23-PLAN.md
+Last session: 2026-03-06T09:27:37.455Z
+Stopped at: Completed 06-24-PLAN.md
 Resume file: None
