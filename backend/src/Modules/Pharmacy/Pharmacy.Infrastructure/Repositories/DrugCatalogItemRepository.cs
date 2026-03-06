@@ -5,6 +5,7 @@ using Pharmacy.Domain.Entities;
 
 namespace Pharmacy.Infrastructure.Repositories;
 
+
 /// <summary>
 /// EF Core implementation of <see cref="IDrugCatalogItemRepository"/>.
 /// Leverages Vietnamese_CI_AI collation on Name, NameVi, and GenericName columns
@@ -68,5 +69,69 @@ public sealed class DrugCatalogItemRepository : IDrugCatalogItemRepository
     public void Update(DrugCatalogItem item)
     {
         _dbContext.DrugCatalogItems.Update(item);
+    }
+
+    /// <summary>
+    /// Returns all active drug catalog items joined with their batch inventory data.
+    /// Computes TotalStock (sum of non-expired batch quantities), BatchCount, IsLowStock,
+    /// and HasExpiryAlert (any batch expiring within expiryAlertDays).
+    /// Uses two-step query to work around EF Core GroupBy translation limitations.
+    /// </summary>
+    public async Task<List<DrugInventoryDto>> GetAllWithInventoryAsync(int expiryAlertDays, CancellationToken ct)
+    {
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var alertDate = today.AddDays(expiryAlertDays);
+
+        // Step 1: Load all active catalog items
+        var drugs = await _dbContext.DrugCatalogItems
+            .AsNoTracking()
+            .Where(d => d.IsActive)
+            .OrderBy(d => d.Name)
+            .ToListAsync(ct);
+
+        var drugIds = drugs.Select(d => d.Id).ToList();
+
+        // Step 2: Aggregate batch data for all drugs in one query
+        var batchAggregates = await _dbContext.DrugBatches
+            .AsNoTracking()
+            .Where(b => drugIds.Contains(b.DrugCatalogItemId))
+            .GroupBy(b => b.DrugCatalogItemId)
+            .Select(g => new
+            {
+                DrugCatalogItemId = g.Key,
+                TotalStock = g.Where(b => b.CurrentQuantity > 0 && b.ExpiryDate > today)
+                              .Sum(b => (int?)b.CurrentQuantity) ?? 0,
+                BatchCount = g.Count(),
+                HasExpiryAlert = g.Any(b => b.CurrentQuantity > 0
+                                         && b.ExpiryDate > today
+                                         && b.ExpiryDate <= alertDate)
+            })
+            .ToListAsync(ct);
+
+        var batchLookup = batchAggregates.ToDictionary(x => x.DrugCatalogItemId);
+
+        return drugs.Select(d =>
+        {
+            var agg = batchLookup.TryGetValue(d.Id, out var found) ? found : null;
+            var totalStock = agg?.TotalStock ?? 0;
+            var batchCount = agg?.BatchCount ?? 0;
+            var hasExpiryAlert = agg?.HasExpiryAlert ?? false;
+            var isLowStock = d.MinStockLevel > 0 && totalStock < d.MinStockLevel;
+
+            return new DrugInventoryDto(
+                d.Id,
+                d.Name,
+                d.NameVi,
+                d.GenericName,
+                d.Unit,
+                (int)d.Form,
+                (int)d.Route,
+                d.SellingPrice,
+                d.MinStockLevel,
+                totalStock,
+                batchCount,
+                isLowStock,
+                hasExpiryAlert);
+        }).ToList();
     }
 }

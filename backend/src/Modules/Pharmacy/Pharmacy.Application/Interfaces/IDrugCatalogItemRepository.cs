@@ -34,4 +34,11 @@ public interface IDrugCatalogItemRepository
     /// Marks a drug catalog item as modified in the change tracker.
     /// </summary>
     void Update(DrugCatalogItem item);
+
+    /// <summary>
+    /// Gets all active drug catalog items with aggregated inventory data from DrugBatches.
+    /// Returns inventory summary including TotalStock, BatchCount, IsLowStock, and HasExpiryAlert.
+    /// Used for the pharmacy inventory management list view.
+    /// </summary>
+    Task<List<DrugInventoryDto>> GetAllWithInventoryAsync(int expiryAlertDays, CancellationToken ct);
 }
