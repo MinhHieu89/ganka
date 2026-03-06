@@ -74,13 +74,13 @@ public class RefundHandlerTests
         SetupValidValidator();
         var invoice = CreateFinalizedInvoice(500_000m, 1); // TotalAmount = 500,000
         var command = new RequestRefundCommand(
-            invoice.Id, null, 100_000m, "Customer complaint", Guid.NewGuid());
+            invoice.Id, null, 100_000m, "Customer complaint");
 
         _invoiceRepository.GetByIdAsync(invoice.Id, Arg.Any<CancellationToken>()).Returns(invoice);
 
         // Act
         var result = await RequestRefundHandler.Handle(
-            command, _invoiceRepository, _unitOfWork, _validator, CancellationToken.None);
+            command, _invoiceRepository, _unitOfWork, _validator, _currentUser, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -97,13 +97,13 @@ public class RefundHandlerTests
         SetupValidValidator();
         var invoice = CreateDraftInvoice(500_000m, 1);
         var command = new RequestRefundCommand(
-            invoice.Id, null, 100_000m, "Refund attempt on draft", Guid.NewGuid());
+            invoice.Id, null, 100_000m, "Refund attempt on draft");
 
         _invoiceRepository.GetByIdAsync(invoice.Id, Arg.Any<CancellationToken>()).Returns(invoice);
 
         // Act
         var result = await RequestRefundHandler.Handle(
-            command, _invoiceRepository, _unitOfWork, _validator, CancellationToken.None);
+            command, _invoiceRepository, _unitOfWork, _validator, _currentUser, CancellationToken.None);
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -117,13 +117,13 @@ public class RefundHandlerTests
         SetupValidValidator();
         var invoice = CreateFinalizedInvoice(500_000m, 1); // TotalAmount = 500,000
         var command = new RequestRefundCommand(
-            invoice.Id, null, 999_999m, "Excessive refund", Guid.NewGuid());
+            invoice.Id, null, 999_999m, "Excessive refund");
 
         _invoiceRepository.GetByIdAsync(invoice.Id, Arg.Any<CancellationToken>()).Returns(invoice);
 
         // Act
         var result = await RequestRefundHandler.Handle(
-            command, _invoiceRepository, _unitOfWork, _validator, CancellationToken.None);
+            command, _invoiceRepository, _unitOfWork, _validator, _currentUser, CancellationToken.None);
 
         // Assert
         result.IsFailure.Should().BeTrue();

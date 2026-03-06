@@ -120,9 +120,8 @@ public class PaymentHandlerTests
         shift.CashReceived.Should().Be(500_000m);
         shift.TotalRevenue.Should().BeGreaterThan(0);
 
-        // Verify persistence
+        // Verify persistence (invoice tracked via GetByIdAsync -- no Update() needed)
         _paymentRepository.Received(1).Add(Arg.Any<Payment>());
-        _invoiceRepository.Received(1).Update(invoice);
         _cashierShiftRepository.Received(1).Update(shift);
         await _unitOfWork.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
     }

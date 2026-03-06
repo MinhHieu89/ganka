@@ -7,6 +7,7 @@ using FluentAssertions;
 using FluentValidation;
 using FluentValidation.Results;
 using NSubstitute;
+using Shared.Application;
 using Shared.Domain;
 using Wolverine;
 
@@ -20,7 +21,14 @@ public class DiscountHandlerTests
     private readonly IInvoiceRepository _invoiceRepository = Substitute.For<IInvoiceRepository>();
     private readonly IUnitOfWork _unitOfWork = Substitute.For<IUnitOfWork>();
     private readonly IValidator<ApplyDiscountCommand> _applyValidator = Substitute.For<IValidator<ApplyDiscountCommand>>();
+    private readonly ICurrentUser _currentUser = Substitute.For<ICurrentUser>();
     private readonly IMessageBus _messageBus = Substitute.For<IMessageBus>();
+
+    public DiscountHandlerTests()
+    {
+        _currentUser.UserId.Returns(Guid.Parse("00000000-0000-0000-0000-000000000002"));
+        _currentUser.BranchId.Returns(Guid.Parse("00000000-0000-0000-0000-000000000001"));
+    }
 
     private void SetupValidApplyValidator()
     {
@@ -55,13 +63,13 @@ public class DiscountHandlerTests
         SetupValidApplyValidator();
         var invoice = CreateDraftInvoice(500_000m, 2); // SubTotal = 1,000,000
         var command = new ApplyDiscountCommand(
-            invoice.Id, null, (int)DiscountType.Percentage, 10m, "Loyalty discount", Guid.NewGuid());
+            invoice.Id, null, (int)DiscountType.Percentage, 10m, "Loyalty discount");
 
         _invoiceRepository.GetByIdAsync(invoice.Id, Arg.Any<CancellationToken>()).Returns(invoice);
 
         // Act
         var result = await ApplyDiscountHandler.Handle(
-            command, _invoiceRepository, _unitOfWork, _applyValidator, CancellationToken.None);
+            command, _invoiceRepository, _unitOfWork, _applyValidator, _currentUser, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -78,13 +86,13 @@ public class DiscountHandlerTests
         SetupValidApplyValidator();
         var invoice = CreateDraftInvoice(500_000m, 2); // SubTotal = 1,000,000
         var command = new ApplyDiscountCommand(
-            invoice.Id, null, (int)DiscountType.FixedAmount, 50_000m, "Special offer", Guid.NewGuid());
+            invoice.Id, null, (int)DiscountType.FixedAmount, 50_000m, "Special offer");
 
         _invoiceRepository.GetByIdAsync(invoice.Id, Arg.Any<CancellationToken>()).Returns(invoice);
 
         // Act
         var result = await ApplyDiscountHandler.Handle(
-            command, _invoiceRepository, _unitOfWork, _applyValidator, CancellationToken.None);
+            command, _invoiceRepository, _unitOfWork, _applyValidator, _currentUser, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -100,13 +108,13 @@ public class DiscountHandlerTests
         var invoice = CreateDraftInvoice(500_000m, 2);
         var lineItemId = invoice.LineItems[0].Id;
         var command = new ApplyDiscountCommand(
-            invoice.Id, lineItemId, (int)DiscountType.Percentage, 20m, "Line item discount", Guid.NewGuid());
+            invoice.Id, lineItemId, (int)DiscountType.Percentage, 20m, "Line item discount");
 
         _invoiceRepository.GetByIdAsync(invoice.Id, Arg.Any<CancellationToken>()).Returns(invoice);
 
         // Act
         var result = await ApplyDiscountHandler.Handle(
-            command, _invoiceRepository, _unitOfWork, _applyValidator, CancellationToken.None);
+            command, _invoiceRepository, _unitOfWork, _applyValidator, _currentUser, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -122,13 +130,13 @@ public class DiscountHandlerTests
         SetupValidApplyValidator();
         var invoice = CreateFinalizedInvoice();
         var command = new ApplyDiscountCommand(
-            invoice.Id, null, (int)DiscountType.Percentage, 10m, "Too late", Guid.NewGuid());
+            invoice.Id, null, (int)DiscountType.Percentage, 10m, "Too late");
 
         _invoiceRepository.GetByIdAsync(invoice.Id, Arg.Any<CancellationToken>()).Returns(invoice);
 
         // Act
         var result = await ApplyDiscountHandler.Handle(
-            command, _invoiceRepository, _unitOfWork, _applyValidator, CancellationToken.None);
+            command, _invoiceRepository, _unitOfWork, _applyValidator, _currentUser, CancellationToken.None);
 
         // Assert
         result.IsFailure.Should().BeTrue();
