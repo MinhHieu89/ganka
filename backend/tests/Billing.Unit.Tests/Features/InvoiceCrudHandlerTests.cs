@@ -7,6 +7,7 @@ using FluentAssertions;
 using FluentValidation;
 using FluentValidation.Results;
 using NSubstitute;
+using Billing.Contracts.Queries;
 using Shared.Application;
 using Shared.Domain;
 
@@ -271,6 +272,53 @@ public class InvoiceCrudHandlerTests
 
         // Assert
         result.IsSuccess.Should().BeTrue();
+    }
+
+    #endregion
+
+    #region GetPendingInvoices Tests
+
+    [Fact]
+    public async Task GetPendingInvoices_ReturnsDraftInvoices()
+    {
+        // Arrange
+        var invoice1 = Invoice.Create("HD-2026-00001", Guid.NewGuid(), "Patient A", Guid.NewGuid(),
+            new BranchId(DefaultBranchId));
+        var invoice2 = Invoice.Create("HD-2026-00002", Guid.NewGuid(), "Patient B", null,
+            new BranchId(DefaultBranchId));
+
+        _invoiceRepository.GetPendingAsync(null, Arg.Any<CancellationToken>())
+            .Returns(new List<Invoice> { invoice1, invoice2 });
+
+        var query = new GetPendingInvoicesQuery();
+
+        // Act
+        var result = await GetPendingInvoicesHandler.Handle(
+            query, _invoiceRepository, CancellationToken.None);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().HaveCount(2);
+        result.Value[0].InvoiceNumber.Should().Be("HD-2026-00001");
+        result.Value[1].InvoiceNumber.Should().Be("HD-2026-00002");
+    }
+
+    [Fact]
+    public async Task GetPendingInvoices_NoDraftInvoices_ReturnsEmptyList()
+    {
+        // Arrange
+        _invoiceRepository.GetPendingAsync(null, Arg.Any<CancellationToken>())
+            .Returns(new List<Invoice>());
+
+        var query = new GetPendingInvoicesQuery();
+
+        // Act
+        var result = await GetPendingInvoicesHandler.Handle(
+            query, _invoiceRepository, CancellationToken.None);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().BeEmpty();
     }
 
     #endregion
