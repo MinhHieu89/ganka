@@ -328,12 +328,46 @@ Plans:
   3. Staff can create preset and custom combo pricing (frame + lens combinations) and manage warranty claims with supporting documents (replace/repair/discount)
   4. System stores lens prescription history per patient with year-over-year comparison and lens replacement history
   5. Staff can perform barcode-based stocktaking with physical count entry and a discrepancy report comparing physical vs. system inventory
-**Plans**: TBD
+**Plans**: 37 plans in 15 waves
 
 Plans:
-- [ ] 08-01: TBD
-- [ ] 08-02: TBD
-- [ ] 08-03: TBD
+- [ ] 08-01-PLAN.md -- Domain enums: FrameMaterial, FrameType, FrameGender, GlassesOrderStatus, ProcessingType
+- [ ] 08-02-PLAN.md -- Domain enums: LensMaterial, LensCoating, WarrantyResolution, WarrantyApprovalStatus, StocktakingStatus
+- [ ] 08-03-PLAN.md -- Frame aggregate root entity, EAN-13 generator, LowStockAlertEvent
+- [ ] 08-04-PLAN.md -- LensCatalogItem, LensStockEntry, LensOrder entities
+- [ ] 08-05-PLAN.md -- GlassesOrder aggregate root with status state machine, GlassesOrderItem, status change event
+- [ ] 08-06-PLAN.md -- ComboPackage, WarrantyClaim, StocktakingSession, StocktakingItem entities
+- [ ] 08-07-PLAN.md -- Contracts DTOs: Frame, LensCatalogItem, GlassesOrder, ComboPackage
+- [ ] 08-08-PLAN.md -- Contracts DTOs: WarrantyClaim, StocktakingReport, cross-module queries
+- [ ] 08-09-PLAN.md -- EF Core configs: Frame, LensCatalogItem, LensOrder
+- [ ] 08-10-PLAN.md -- EF Core configs: GlassesOrder, ComboPackage, WarrantyClaim, StocktakingSession
+- [ ] 08-11-PLAN.md -- OpticalDbContext update, IFrameRepository, ILensCatalogRepository, IUnitOfWork
+- [ ] 08-12-PLAN.md -- IGlassesOrderRepository, IComboPackageRepository, IWarrantyClaimRepository, IStocktakingRepository
+- [ ] 08-13-PLAN.md -- FrameRepository, LensCatalogRepository, UnitOfWork implementations
+- [ ] 08-14-PLAN.md -- GlassesOrderRepository, ComboPackageRepository, WarrantyClaimRepository, StocktakingRepository
+- [ ] 08-15-PLAN.md -- [TDD] Optical.Unit.Tests project + domain entity tests (Frame, GlassesOrder, EAN-13)
+- [ ] 08-16-PLAN.md -- [TDD] Frame CRUD handlers: CreateFrame, UpdateFrame, GetFrames, SearchFrames, GenerateBarcode
+- [ ] 08-17-PLAN.md -- [TDD] Lens catalog handlers: CreateLensCatalogItem, UpdateLensCatalogItem, GetLensCatalog, AdjustLensStock
+- [ ] 08-18-PLAN.md -- [TDD] Order handlers: CreateGlassesOrder, UpdateOrderStatus (payment gate), GetOrders, GetOverdue
+- [ ] 08-19-PLAN.md -- [TDD] Combo + warranty handlers: CreateComboPackage, CreateWarrantyClaim, ApproveWarrantyClaim
+- [ ] 08-20-PLAN.md -- [TDD] Stocktaking handlers: StartSession, RecordItem, CompleteStocktaking, GetDiscrepancyReport
+- [ ] 08-21-PLAN.md -- [TDD] PrescriptionHistory, PrescriptionComparison, LowLensStockAlerts, UploadWarrantyDocument
+- [ ] 08-22-PLAN.md -- Optical Application + Infrastructure IoC, OpticalSupplierSeeder
+- [ ] 08-23-PLAN.md -- Optical.Presentation project + all API endpoints (Frame, Lens, Order, Combo, Warranty, Stocktaking)
+- [ ] 08-24-PLAN.md -- Bootstrapper wiring, cross-module .csproj references, EF Core migration
+- [ ] 08-25-PLAN.md -- Frontend: npm deps (JsBarcode, html5-qrcode) + optical-api.ts + optical-queries.ts
+- [ ] 08-26-PLAN.md -- Frontend: BarcodeScannerInput, CameraScanner, BarcodeDisplay components
+- [ ] 08-27-PLAN.md -- Frontend: Frame catalog page, table, form dialog, route
+- [ ] 08-28-PLAN.md -- Frontend: Lens catalog page, table, form dialog, route
+- [ ] 08-29-PLAN.md -- Frontend: Glasses orders page, table, create form, status badge, route
+- [ ] 08-30-PLAN.md -- Frontend: Order detail page, status timeline, payment gate UI, route
+- [ ] 08-31-PLAN.md -- Frontend: Combo package page, form, route
+- [ ] 08-32-PLAN.md -- Frontend: Warranty claims page, form, document upload, route
+- [ ] 08-33-PLAN.md -- Frontend: Prescription history tab + comparison view
+- [ ] 08-34-PLAN.md -- Frontend: Stocktaking page, scanner, discrepancy report, route
+- [ ] 08-35-PLAN.md -- i18n translations (EN/VI) + sidebar navigation update
+- [ ] 08-36-PLAN.md -- End-to-end verification checkpoint
+- [ ] 08-37-PLAN.md -- Vietnamese user stories documentation (DOC-01)
 
 ### Phase 9: Treatment Protocols
 **Goal**: Doctors can create and manage IPL/LLLT/lid care treatment packages with session tracking, OSDI monitoring per session, and configurable business rules
@@ -374,5 +408,5 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 | 5.1 Fix Architecture Test Failures | 0/8 | Not started | - |
 | 6. Pharmacy & Consumables | 29/29 | Complete   | 2026-03-06 |
 | 7. Billing & Finance | 24/26 | In Progress|  |
-| 8. Optical Center | 0/3 | Not started | - |
+| 8. Optical Center | 0/37 | Not started | - |
 | 9. Treatment Protocols | 0/3 | Not started | - |
