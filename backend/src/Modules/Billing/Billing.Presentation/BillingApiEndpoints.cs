@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Billing.Application.Features;
+using Billing.Application.Interfaces;
 using Billing.Contracts.Dtos;
 using Billing.Contracts.Queries;
 using Shared.Domain;
@@ -25,6 +26,8 @@ public static class BillingApiEndpoints
         MapDiscountEndpoints(group);
         MapRefundEndpoints(group);
         MapShiftEndpoints(group);
+        MapPrintEndpoints(group);
+        MapExportEndpoints(group);
 
         return app;
     }
@@ -224,6 +227,60 @@ public static class BillingApiEndpoints
             var result = await bus.InvokeAsync<Result<List<ShiftTemplateDto>>>(
                 new GetShiftTemplatesQuery(), ct);
             return result.ToHttpResult();
+        });
+
+        // GET /api/billing/shifts/{shiftId}/report/pdf -- print shift report as PDF
+        group.MapGet("/shifts/{shiftId:guid}/report/pdf",
+            async (Guid shiftId, IBillingDocumentService docs, CancellationToken ct) =>
+        {
+            var pdf = await docs.GenerateShiftReportPdfAsync(shiftId, ct);
+            return Results.File(pdf, "application/pdf", $"shift-report-{shiftId}.pdf");
+        });
+    }
+
+    private static void MapPrintEndpoints(RouteGroupBuilder group)
+    {
+        // GET /api/billing/print/{invoiceId}/invoice -- print invoice PDF
+        group.MapGet("/print/{invoiceId:guid}/invoice",
+            async (Guid invoiceId, IBillingDocumentService docs, CancellationToken ct) =>
+        {
+            var pdf = await docs.GenerateInvoicePdfAsync(invoiceId, ct);
+            return Results.File(pdf, "application/pdf", $"invoice-{invoiceId}.pdf");
+        });
+
+        // GET /api/billing/print/{invoiceId}/receipt -- print receipt PDF
+        group.MapGet("/print/{invoiceId:guid}/receipt",
+            async (Guid invoiceId, IBillingDocumentService docs, CancellationToken ct) =>
+        {
+            var pdf = await docs.GenerateReceiptPdfAsync(invoiceId, ct);
+            return Results.File(pdf, "application/pdf", $"receipt-{invoiceId}.pdf");
+        });
+
+        // GET /api/billing/print/{invoiceId}/e-invoice -- print e-invoice PDF
+        group.MapGet("/print/{invoiceId:guid}/e-invoice",
+            async (Guid invoiceId, IBillingDocumentService docs, CancellationToken ct) =>
+        {
+            var pdf = await docs.GenerateEInvoicePdfAsync(invoiceId, ct);
+            return Results.File(pdf, "application/pdf", $"e-invoice-{invoiceId}.pdf");
+        });
+    }
+
+    private static void MapExportEndpoints(RouteGroupBuilder group)
+    {
+        // GET /api/billing/export/{invoiceId}/e-invoice/json -- export e-invoice as JSON
+        group.MapGet("/export/{invoiceId:guid}/e-invoice/json",
+            async (Guid invoiceId, IBillingDocumentService docs, CancellationToken ct) =>
+        {
+            var json = await docs.ExportEInvoiceJsonAsync(invoiceId, ct);
+            return Results.Content(json, "application/json");
+        });
+
+        // GET /api/billing/export/{invoiceId}/e-invoice/xml -- export e-invoice as XML
+        group.MapGet("/export/{invoiceId:guid}/e-invoice/xml",
+            async (Guid invoiceId, IBillingDocumentService docs, CancellationToken ct) =>
+        {
+            var xml = await docs.ExportEInvoiceXmlAsync(invoiceId, ct);
+            return Results.Content(xml, "application/xml");
         });
     }
 }
