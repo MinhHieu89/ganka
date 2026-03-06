@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 05.1-06-PLAN.md
-last_updated: "2026-03-06T05:08:04.727Z"
+stopped_at: Completed 05.1-05-PLAN.md
+last_updated: "2026-03-06T05:14:22.460Z"
 last_activity: 2026-03-06 -- Completed 05.1-03b Patient Contracts DTO Enum References
 progress:
   total_phases: 14
   completed_phases: 8
   total_plans: 150
-  completed_plans: 93
+  completed_plans: 94
   percent: 62
 ---
 
@@ -229,6 +229,7 @@ Progress: [██████░░░░] 61%
 | Phase 05.1 P02 | 6min | 1 tasks | 4 files |
 | Phase 05.1 P03b | 1min | 1 tasks | 5 files |
 | Phase 05.1 P06 | 6min | 2 tasks | 5 files |
+| Phase 05.1 P05 | 4min | 1 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -480,6 +481,7 @@ Recent decisions affecting current work:
 - [Phase 05.1]: [05.1-02]: Tuple return from Domain validator to avoid Domain->Contracts dependency; Application maps to DTO
 - [Phase 05.1]: [05.1-02]: Removed both Patient.Domain.Enums and Patient.Domain.Services from PatientApiEndpoints (neither was used)
 - [Phase 05.1]: Added WolverineFx PackageReference to Clinical.Application for IMessageBus (was transitively via Shared.Infrastructure)
+- [Phase 05.1]: [05.1-05]: Extended enum mapper usage to 3 additional handler files (GetPatientAllergies, GetRecentPatients, UpdatePatient) to fix build errors
 
 ### Roadmap Evolution
 
@@ -502,6 +504,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-06T05:08:04.723Z
-Stopped at: Completed 05.1-06-PLAN.md
+Last session: 2026-03-06T05:14:22.456Z
+Stopped at: Completed 05.1-05-PLAN.md
 Resume file: None
