@@ -68,12 +68,15 @@ public sealed class DrugBatchRepository(PharmacyDbContext context) : IDrugBatchR
     {
         var today = GetVietnamToday();
         var alertDate = today.AddDays(daysThreshold);
+        var todayDayNumber = today.DayNumber;
 
+        // Order by ExpiryDate before projection so EF Core can translate the OrderBy to SQL
         return await context.DrugBatches
             .AsNoTracking()
             .Where(b => b.CurrentQuantity > 0
                      && b.ExpiryDate > today
                      && b.ExpiryDate <= alertDate)
+            .OrderBy(b => b.ExpiryDate)
             .Join(
                 context.DrugCatalogItems,
                 b => b.DrugCatalogItemId,
@@ -84,8 +87,7 @@ public sealed class DrugBatchRepository(PharmacyDbContext context) : IDrugBatchR
                     b.BatchNumber,
                     b.ExpiryDate,
                     b.CurrentQuantity,
-                    b.ExpiryDate.DayNumber - today.DayNumber))
-            .OrderBy(dto => dto.ExpiryDate)
+                    b.ExpiryDate.DayNumber - todayDayNumber))
             .ToListAsync(ct);
     }
 
