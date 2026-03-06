@@ -17,6 +17,11 @@ public static class IoC
     {
         // Repositories
         services.AddScoped<IDrugCatalogItemRepository, DrugCatalogItemRepository>();
+        services.AddScoped<ISupplierRepository, SupplierRepository>();
+        services.AddScoped<IDrugBatchRepository, DrugBatchRepository>();
+        services.AddScoped<IStockImportRepository, StockImportRepository>();
+        services.AddScoped<IDispensingRepository, DispensingRepository>();
+        services.AddScoped<IOtcSaleRepository, OtcSaleRepository>();
 
         // Unit of Work
         services.AddScoped<IUnitOfWork, UnitOfWork>();
