@@ -1,34 +1,26 @@
 using Clinical.Application.Interfaces;
 using Clinical.Contracts.Dtos;
-using Microsoft.EntityFrameworkCore;
-using Shared.Infrastructure;
+using Shared.Application.Interfaces;
 
 namespace Clinical.Application.Features;
 
 /// <summary>
 /// Wolverine handler for searching ICD-10 codes.
-/// Queries ReferenceDbContext for bilingual search (English + Vietnamese descriptions).
+/// Queries IReferenceDataRepository for bilingual search (English + Vietnamese descriptions).
 /// Doctor favorites are pinned to the top of results.
 /// </summary>
 public static class SearchIcd10CodesHandler
 {
     public static async Task<List<Icd10SearchResultDto>> Handle(
         SearchIcd10CodesQuery query,
-        ReferenceDbContext referenceDb,
+        IReferenceDataRepository referenceDataRepository,
         IDoctorIcd10FavoriteRepository favoriteRepository,
         CancellationToken ct)
     {
         var term = query.SearchTerm.Trim();
 
         // Search by code, English description, or Vietnamese description
-        var codes = await referenceDb.Icd10Codes
-            .Where(c =>
-                c.Code.Contains(term) ||
-                c.DescriptionEn.Contains(term) ||
-                c.DescriptionVi.Contains(term))
-            .OrderBy(c => c.Code)
-            .Take(50)
-            .ToListAsync(ct);
+        var codes = await referenceDataRepository.SearchAsync(term, 50, ct);
 
         // Get doctor's favorites if DoctorId provided
         var favoriteCodes = new HashSet<string>();
