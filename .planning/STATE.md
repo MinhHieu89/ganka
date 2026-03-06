@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 06-19-PLAN.md
-last_updated: "2026-03-06T08:48:55.625Z"
+stopped_at: Completed 06-20-PLAN.md
+last_updated: "2026-03-06T08:55:11.485Z"
 last_activity: 2026-03-06 -- Completed 05.1-07 Full Verification (55/55 arch tests, 263 total tests pass)
 progress:
   total_phases: 14
   completed_phases: 9
   total_plans: 150
-  completed_plans: 115
+  completed_plans: 116
 ---
 
 ---
@@ -266,6 +266,7 @@ Progress: [██████░░░░] 63%
 | Phase 06-pharmacy-consumables P17 | 12 | 2 tasks | 8 files |
 | Phase 06-pharmacy-consumables P18 | 8min | 2 tasks | 4 files |
 | Phase 06 P19 | 3 | 2 tasks | 6 files |
+| Phase 06 P20 | 4 | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -558,6 +559,9 @@ Recent decisions affecting current work:
 - [Phase 06-pharmacy-consumables]: [06-17]: Prescription validity window of 7 days from PrescribedAt for pharmacy dispensing queue expiry calculation
 - [Phase 06-18]: MapDispensingApiEndpoints and MapConsumablesApiEndpoints kept separate from MapPharmacyApiEndpoints for clear domain separation between drug dispensing and consumables warehouse
 - [Phase 06-19]: Hooks separated into pharmacy-queries.ts while types/functions remain in pharmacy-api.ts for clean separation of concerns
+- [Phase 06-20]: DrugInventoryTable uses inline EditPricingDialog rather than separate file for cohesion
+- [Phase 06-20]: Action buttons (suppliers, stock-import) rendered as disabled placeholders since routes don't exist yet
+- [Phase 06-20]: FEFO ordering enforced by default sort (ExpiryDate ASC) in DrugBatchTable
 
 ### Roadmap Evolution
 
@@ -580,6 +584,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-06T08:48:55.621Z
-Stopped at: Completed 06-19-PLAN.md
+Last session: 2026-03-06T08:55:11.481Z
+Stopped at: Completed 06-20-PLAN.md
 Resume file: None
