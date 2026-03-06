@@ -38,6 +38,18 @@ public class DrugCatalogItem : AggregateRoot, IAuditable
     /// <summary>Whether the catalog item is active. Inactive items are hidden from search.</summary>
     public bool IsActive { get; private set; } = true;
 
+    /// <summary>
+    /// Selling price per unit in VND. Null until pricing is configured.
+    /// Set separately via UpdatePricing to keep catalog management and pricing as distinct operations.
+    /// </summary>
+    public decimal? SellingPrice { get; private set; }
+
+    /// <summary>
+    /// Minimum stock level threshold. Low-stock alerts fire when total available quantity drops below this value.
+    /// Defaults to 0 (no alert).
+    /// </summary>
+    public int MinStockLevel { get; private set; } = 0;
+
     /// <summary>Private constructor for EF Core materialization.</summary>
     private DrugCatalogItem() { }
 
@@ -112,6 +124,23 @@ public class DrugCatalogItem : AggregateRoot, IAuditable
     public void Activate()
     {
         IsActive = true;
+        SetUpdatedAt();
+    }
+
+    /// <summary>
+    /// Updates the pricing configuration for this drug catalog item.
+    /// Kept separate from Update() to allow independent pricing management.
+    /// </summary>
+    /// <param name="sellingPrice">Selling price per unit in VND. Null to clear the price.</param>
+    /// <param name="minStockLevel">Minimum stock level threshold for low-stock alerts (must be non-negative).</param>
+    public void UpdatePricing(decimal? sellingPrice, int minStockLevel)
+    {
+        if (minStockLevel < 0)
+            throw new ArgumentException("Minimum stock level cannot be negative.", nameof(minStockLevel));
+
+        SellingPrice = sellingPrice;
+        MinStockLevel = minStockLevel;
+
         SetUpdatedAt();
     }
 }
