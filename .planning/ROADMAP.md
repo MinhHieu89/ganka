@@ -288,7 +288,7 @@ Plans:
   3. System generates e-invoice (hoa don dien tu) compliant with Vietnamese tax law for MISA export
   4. System supports treatment package payments (full upfront or 50/50 split) and enforces the rule that the 2nd payment must be received before the mid-course session
   5. Manual discounts require manager approval, refunds require manager/owner approval with full audit trail, and all price changes are logged with who/when/old/new values
-**Plans**: 26 plans in 12 waves
+**Plans**: 28 plans (26 original + 2 UAT gap closure)
 
 Plans:
 - [ ] 07-01-PLAN.md -- Invoice aggregate + InvoiceLineItem domain entities, enums, domain event (includes _payments/_discounts backing fields + RecordPayment/ApplyDiscount stubs)
@@ -317,6 +317,8 @@ Plans:
 - [ ] 07-24-PLAN.md -- End-to-end verification checkpoint
 - [ ] 07-25-PLAN.md -- Supplementary invoice/shift handlers: RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates
 - [ ] 07-26-PLAN.md -- Supplementary discount/refund handlers: RejectDiscount, ApproveRefund, ProcessRefund
+- [ ] 07-27-PLAN.md -- [UAT GAP] Fix DbUpdateConcurrencyException (remove redundant Update calls) + auto-populate RequestedById from ICurrentUser
+- [ ] 07-28-PLAN.md -- [UAT GAP] Add finalize-empty-invoice validation guards + create GetPendingInvoices handler
 
 ### Phase 8: Optical Center
 **Goal**: Staff can manage frame/lens inventory with barcodes, track glasses orders through their full lifecycle, and handle warranty claims
@@ -409,6 +411,6 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 | 5. Prescriptions & Document Printing | 23/25 | In Progress|  |
 | 5.1 Fix Architecture Test Failures | 0/8 | Not started | - |
 | 6. Pharmacy & Consumables | 29/29 | Complete   | 2026-03-06 |
-| 7. Billing & Finance | 24/26 | In Progress|  |
+| 7. Billing & Finance | 24/28 | In Progress|  |
 | 8. Optical Center | 0/39 | Not started | - |
 | 9. Treatment Protocols | 0/3 | Not started | - |
