@@ -3,14 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 07-09-PLAN.md
-last_updated: "2026-03-06T14:26:51.516Z"
-last_activity: 2026-03-06 -- Completed 05.1-07 Full Verification (55/55 arch tests, 263 total tests pass)
+stopped_at: Completed 07-25-PLAN.md
+last_updated: "2026-03-06T14:32:09Z"
+last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
 progress:
   total_phases: 14
   completed_phases: 10
   total_plans: 152
-  completed_plans: 144
+  completed_plans: 146
+  percent: 96
 ---
 
 ---
@@ -257,12 +258,12 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 
 ## Current Position
 
-Phase: 05.1 (Fix Architecture Test Failures) -- COMPLETE
-Plan: 07 of 07 in 05.1 (8 plans complete -- phase done)
-Status: Phase 05.1 complete -- all 5 architecture test failures fixed and verified
-Last activity: 2026-03-06 -- Completed 05.1-07 Full Verification (55/55 arch tests, 263 total tests pass)
+Phase: 07-billing-finance
+Plan: 25 complete
+Status: Supplementary invoice & shift handlers complete
+Last activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
 
-Progress: [██████░░░░] 63%
+Progress: [█████████░] 96%
 
 ## Performance Metrics
 
@@ -410,6 +411,7 @@ Progress: [██████░░░░] 63%
 | Phase 07-billing-finance P19 | 9min | 2 tasks | 3 files |
 | Phase 07-billing-finance P04 | 1min | 2 tasks | 5 files |
 | Phase 07-billing-finance P09 | 7min | 2 tasks | 5 files |
+| Phase 07-billing-finance P25 | 3min | 2 tasks | 8 files |
 
 ## Accumulated Context
 
