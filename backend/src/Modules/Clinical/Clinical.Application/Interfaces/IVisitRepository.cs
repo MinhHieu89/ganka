@@ -89,4 +89,14 @@ public interface IVisitRepository
     /// Gets the dry eye assessment for a specific visit.
     /// </summary>
     Task<DryEyeAssessment?> GetDryEyeAssessmentByVisitAsync(Guid visitId, CancellationToken ct = default);
+
+    /// <summary>
+    /// Gets pending drug prescriptions not yet dispensed, with optional patient filter.
+    /// A prescription is "pending" when its visit has a DrugPrescription with no corresponding
+    /// dispensing record in the Pharmacy module. This query returns the clinical-side data;
+    /// the Pharmacy module checks which ones are already dispensed.
+    /// </summary>
+    Task<List<(DrugPrescription Prescription, Visit Visit)>> GetPrescriptionsWithVisitsAsync(
+        Guid? patientId,
+        CancellationToken ct = default);
 }

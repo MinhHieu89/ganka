@@ -1,15 +1,18 @@
+using Clinical.Contracts.Dtos;
 using Microsoft.EntityFrameworkCore;
 using Pharmacy.Application.Interfaces;
 using Pharmacy.Contracts.Dtos;
 using Pharmacy.Domain.Entities;
+using Wolverine;
 
 namespace Pharmacy.Infrastructure.Repositories;
 
 /// <summary>
 /// EF Core implementation of <see cref="IDispensingRepository"/>.
 /// Provides eager loading for DispensingRecord aggregate including Lines and BatchDeductions.
+/// GetPendingPrescriptionsAsync delegates to Clinical module via IMessageBus cross-module query.
 /// </summary>
-public sealed class DispensingRepository(PharmacyDbContext context) : IDispensingRepository
+public sealed class DispensingRepository(PharmacyDbContext context, IMessageBus bus) : IDispensingRepository
 {
     public async Task<DispensingRecord?> GetByIdAsync(Guid id, CancellationToken ct)
     {
@@ -78,5 +81,48 @@ public sealed class DispensingRepository(PharmacyDbContext context) : IDispensin
     public void Add(DispensingRecord record)
     {
         context.DispensingRecords.Add(record);
+    }
+
+    public async Task<List<PendingPrescriptionDto>> GetPendingPrescriptionsAsync(
+        Guid? patientId,
+        CancellationToken ct)
+    {
+        // Cross-module: retrieve all prescriptions from Clinical module via IMessageBus
+        var clinicalPrescriptions = await bus.InvokeAsync<List<ClinicalPendingPrescriptionDto>>(
+            new GetPendingPrescriptionsQuery(patientId), ct);
+
+        if (clinicalPrescriptions is null || clinicalPrescriptions.Count == 0)
+            return [];
+
+        // Get IDs of prescriptions already dispensed in this module
+        var prescriptionIds = clinicalPrescriptions.Select(p => p.PrescriptionId).ToList();
+        var dispensedIds = await context.DispensingRecords
+            .AsNoTracking()
+            .Where(r => prescriptionIds.Contains(r.PrescriptionId))
+            .Select(r => r.PrescriptionId)
+            .ToListAsync(ct);
+
+        var dispensedSet = new HashSet<Guid>(dispensedIds);
+
+        // Filter out already-dispensed prescriptions and map to Pharmacy.Contracts DTO
+        return clinicalPrescriptions
+            .Where(p => !dispensedSet.Contains(p.PrescriptionId))
+            .Select(p => new PendingPrescriptionDto(
+                PrescriptionId: p.PrescriptionId,
+                VisitId: p.VisitId,
+                PatientId: p.PatientId,
+                PatientName: p.PatientName,
+                PrescribedAt: p.PrescribedAt,
+                IsExpired: p.IsExpired,
+                DaysRemaining: p.DaysRemaining,
+                Items: p.Items.Select(item => new PendingPrescriptionItemDto(
+                    PrescriptionItemId: item.PrescriptionItemId,
+                    DrugCatalogItemId: item.DrugCatalogItemId,
+                    DrugName: item.DrugName,
+                    Quantity: item.Quantity,
+                    Unit: item.Unit,
+                    Dosage: item.Dosage,
+                    IsOffCatalog: item.IsOffCatalog)).ToList()))
+            .ToList();
     }
 }

@@ -123,4 +123,28 @@ public sealed class VisitRepository : IVisitRepository
         return await _dbContext.DryEyeAssessments
             .FirstOrDefaultAsync(d => d.VisitId == visitId, ct);
     }
+
+    public async Task<List<(DrugPrescription Prescription, Visit Visit)>> GetPrescriptionsWithVisitsAsync(
+        Guid? patientId,
+        CancellationToken ct = default)
+    {
+        var query = _dbContext.DrugPrescriptions
+            .AsNoTracking()
+            .Include(dp => dp.Items)
+            .Join(
+                _dbContext.Visits.AsNoTracking(),
+                dp => dp.VisitId,
+                v => v.Id,
+                (dp, v) => new { Prescription = dp, Visit = v })
+            .Where(x => !x.Visit.IsDeleted);
+
+        if (patientId.HasValue)
+            query = query.Where(x => x.Visit.PatientId == patientId.Value);
+
+        var results = await query
+            .OrderByDescending(x => x.Prescription.PrescribedAt)
+            .ToListAsync(ct);
+
+        return results.Select(x => (x.Prescription, x.Visit)).ToList();
+    }
 }
