@@ -41,6 +41,14 @@ public sealed class CashierShiftRepository(BillingDbContext context) : ICashierS
             .FirstOrDefaultAsync(ct);
     }
 
+    public async Task<List<ShiftTemplate>> GetActiveShiftTemplatesAsync(BranchId branchId, CancellationToken ct)
+    {
+        return await context.ShiftTemplates
+            .Where(st => st.BranchId == branchId && st.IsActive)
+            .OrderBy(st => st.DefaultStartTime)
+            .ToListAsync(ct);
+    }
+
     public void Add(CashierShift shift)
     {
         context.CashierShifts.Add(shift);
