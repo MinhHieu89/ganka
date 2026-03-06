@@ -14,7 +14,8 @@ namespace Pharmacy.Domain.Entities;
 /// - SimpleStock: Simple quantity counter on the entity itself. No batch records.
 ///   AddStock()/RemoveStock() mutate CurrentStock directly.
 ///
-/// Auto-deduction from treatment sessions is deferred to Phase 9 (Treatment Protocols).
+/// Auto-deduction from treatment sessions is implemented in Phase 9 (Treatment Protocols)
+/// via the Treatment module's session completion workflow.
 /// </summary>
 public class ConsumableItem : AggregateRoot, IAuditable
 {

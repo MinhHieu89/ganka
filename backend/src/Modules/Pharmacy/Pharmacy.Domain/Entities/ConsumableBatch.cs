@@ -80,8 +80,8 @@ public class ConsumableBatch : Entity
 
     /// <summary>
     /// Deducts the specified quantity from this batch's current stock.
-    /// Used during FEFO-ordered consumable deduction from treatment sessions (Phase 9)
-    /// and manual stock removal workflows.
+    /// Used during FEFO-ordered consumable deduction -- manually via stock management,
+    /// or automatically from treatment sessions (Phase 9 Treatment Protocols).
     /// </summary>
     /// <param name="qty">Quantity to deduct (must be positive and not exceed CurrentQuantity).</param>
     /// <exception cref="InvalidOperationException">Thrown when qty exceeds available stock.</exception>
