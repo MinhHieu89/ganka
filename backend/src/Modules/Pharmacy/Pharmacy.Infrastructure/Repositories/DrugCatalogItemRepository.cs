@@ -39,7 +39,9 @@ public sealed class DrugCatalogItemRepository : IDrugCatalogItemRepository
                 (int)d.Route,
                 d.Unit,
                 d.DefaultDosageTemplate,
-                d.IsActive))
+                d.IsActive,
+                d.SellingPrice,
+                d.MinStockLevel))
             .ToListAsync(ct);
     }
 

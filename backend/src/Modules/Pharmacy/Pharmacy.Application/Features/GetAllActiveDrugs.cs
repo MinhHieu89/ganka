@@ -31,6 +31,8 @@ public static class GetAllActiveDrugsHandler
             (int)d.Route,
             d.Unit,
             d.DefaultDosageTemplate,
-            d.IsActive)).ToList();
+            d.IsActive,
+            d.SellingPrice,
+            d.MinStockLevel)).ToList();
     }
 }
