@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 06-15-PLAN.md
-last_updated: "2026-03-06T08:10:42.342Z"
+stopped_at: Completed 06-16-PLAN.md
+last_updated: "2026-03-06T08:19:31.244Z"
 last_activity: 2026-03-06 -- Completed 05.1-07 Full Verification (55/55 arch tests, 263 total tests pass)
 progress:
   total_phases: 14
   completed_phases: 9
   total_plans: 150
-  completed_plans: 111
+  completed_plans: 112
 ---
 
 ---
@@ -262,6 +262,7 @@ Progress: [██████░░░░] 63%
 | Phase 06 P13 | 7 | 2 tasks | 6 files |
 | Phase 06 P14 | 3 | 1 tasks | 6 files |
 | Phase 06 P15 | 2 | 1 tasks | 5 files |
+| Phase 06-pharmacy-consumables P16 | 5 | 1 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -547,6 +548,8 @@ Recent decisions affecting current work:
 - [Phase 06]: [06-15]: GetExpiryAlerts handler delegates threshold directly to repository -- no application-layer date filtering needed
 - [Phase 06]: [06-15]: CreateConsumableItem uses int TrackingMode (not enum type) matching Contracts DTO normalization pattern
 - [Phase 06]: [06-15]: UpdateConsumableItem returns Result (not Result<Guid>) matching UpdateSupplierHandler pattern
+- [Phase 06-16]: StockAdjustment not created for SimpleStock consumable adjustments: domain constraint requires exactly one non-null batch FK; SimpleStock has no batch, IAuditable covers change tracking
+- [Phase 06-16]: ConsumableBatch.AddStock added to mirror DrugBatch.AddStock for symmetric positive/negative batch adjustments without reflection in production handlers
 
 ### Roadmap Evolution
 
@@ -569,6 +572,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-06T08:10:42.337Z
-Stopped at: Completed 06-15-PLAN.md
+Last session: 2026-03-06T08:19:31.240Z
+Stopped at: Completed 06-16-PLAN.md
 Resume file: None
