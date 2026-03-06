@@ -3,6 +3,7 @@ using Billing.Contracts.Dtos;
 using Billing.Domain.Entities;
 using Billing.Domain.Enums;
 using FluentValidation;
+using Shared.Application;
 using Shared.Domain;
 
 namespace Billing.Application.Features;
@@ -16,8 +17,7 @@ public sealed record ApplyDiscountCommand(
     Guid? InvoiceLineItemId,
     int DiscountType,
     decimal Value,
-    string Reason,
-    Guid RequestedById);
+    string Reason);
 
 /// <summary>
 /// Validator for <see cref="ApplyDiscountCommand"/>.
@@ -32,7 +32,6 @@ public class ApplyDiscountCommandValidator : AbstractValidator<ApplyDiscountComm
         RuleFor(x => x.Value).LessThanOrEqualTo(100)
             .When(x => x.DiscountType == (int)Billing.Domain.Enums.DiscountType.Percentage)
             .WithMessage("Percentage discount cannot exceed 100%.");
-        RuleFor(x => x.RequestedById).NotEmpty();
     }
 }
 
@@ -47,6 +46,7 @@ public static class ApplyDiscountHandler
         IInvoiceRepository invoiceRepository,
         IUnitOfWork unitOfWork,
         IValidator<ApplyDiscountCommand> validator,
+        ICurrentUser currentUser,
         CancellationToken cancellationToken)
     {
         var validationResult = await validator.ValidateAsync(command, cancellationToken);
@@ -75,7 +75,7 @@ public static class ApplyDiscountHandler
             discountType,
             command.Value,
             command.Reason,
-            command.RequestedById,
+            currentUser.UserId,
             command.InvoiceLineItemId);
 
         // Calculate the discount amount based on the base amount
@@ -96,8 +96,9 @@ public static class ApplyDiscountHandler
         discount.CalculateAmount(baseAmount);
 
         // Apply discount to invoice (adds to collection and recalculates totals)
+        // Apply discount to invoice (adds to collection and recalculates totals)
+        // Invoice is tracked via GetByIdAsync -- no Update() needed
         invoice.ApplyDiscount(discount);
-        invoiceRepository.Update(invoice);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         var dto = new DiscountDto(

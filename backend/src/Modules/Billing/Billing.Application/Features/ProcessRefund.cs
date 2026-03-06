@@ -84,13 +84,13 @@ public static class ProcessRefundHandler
             .Where(p => p.Status == PaymentStatus.Confirmed)
             .ToList();
 
+        // Payments are tracked via Invoice Include(i => i.Payments) -- no Update() needed
         foreach (var payment in confirmedPayments)
         {
             payment.MarkRefunded();
-            paymentRepository.Update(payment);
         }
 
-        invoiceRepository.Update(invoice);
+        // Invoice is tracked via GetByIdAsync -- no Update() needed
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         var dto = new RefundDto(

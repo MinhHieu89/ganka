@@ -62,10 +62,10 @@ public static class RejectDiscountHandler
             return Result.Failure(Error.Validation("Invalid manager PIN."));
 
         // Reject the discount with reason and recalculate invoice totals
+        // Invoice is tracked via GetByIdAsync -- no Update() needed
         discount.Reject(command.ManagerId, command.RejectionReason);
         invoice.RecalculateAfterDiscountApproval();
 
-        invoiceRepository.Update(invoice);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();

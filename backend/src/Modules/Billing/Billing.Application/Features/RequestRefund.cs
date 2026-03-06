@@ -3,6 +3,7 @@ using Billing.Contracts.Dtos;
 using Billing.Domain.Entities;
 using Billing.Domain.Enums;
 using FluentValidation;
+using Shared.Application;
 using Shared.Domain;
 
 namespace Billing.Application.Features;
@@ -15,8 +16,7 @@ public sealed record RequestRefundCommand(
     Guid InvoiceId,
     Guid? InvoiceLineItemId,
     decimal Amount,
-    string Reason,
-    Guid RequestedById);
+    string Reason);
 
 /// <summary>
 /// Validator for <see cref="RequestRefundCommand"/>.
@@ -28,7 +28,6 @@ public class RequestRefundCommandValidator : AbstractValidator<RequestRefundComm
         RuleFor(x => x.InvoiceId).NotEmpty();
         RuleFor(x => x.Amount).GreaterThan(0).WithMessage("Refund amount must be greater than zero.");
         RuleFor(x => x.Reason).NotEmpty().WithMessage("Refund reason is required.");
-        RuleFor(x => x.RequestedById).NotEmpty();
     }
 }
 
@@ -43,6 +42,7 @@ public static class RequestRefundHandler
         IInvoiceRepository invoiceRepository,
         IUnitOfWork unitOfWork,
         IValidator<RequestRefundCommand> validator,
+        ICurrentUser currentUser,
         CancellationToken cancellationToken)
     {
         var validationResult = await validator.ValidateAsync(command, cancellationToken);
@@ -86,11 +86,11 @@ public static class RequestRefundHandler
             command.InvoiceId,
             command.Amount,
             command.Reason,
-            command.RequestedById,
+            currentUser.UserId,
             command.InvoiceLineItemId);
 
+        // Invoice is tracked via GetByIdAsync -- no Update() needed
         invoice.AddRefund(refund);
-        invoiceRepository.Update(invoice);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         var dto = new RefundDto(

@@ -62,9 +62,9 @@ public static class ApproveRefundHandler
             return Result.Failure(Error.Validation("Invalid manager PIN."));
 
         // Approve the refund (domain method validates status is Requested)
+        // Invoice is tracked via GetByIdAsync -- no Update() needed
         refund.Approve(command.ManagerId);
 
-        invoiceRepository.Update(invoice);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();

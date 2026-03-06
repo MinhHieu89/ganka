@@ -58,10 +58,10 @@ public static class ApproveDiscountHandler
             return Result.Failure(Error.Validation("Invalid manager PIN."));
 
         // Approve the discount and recalculate invoice totals
+        // Invoice is tracked via GetByIdAsync -- no Update() needed
         discount.Approve(command.ManagerId);
         invoice.RecalculateAfterDiscountApproval();
 
-        invoiceRepository.Update(invoice);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();

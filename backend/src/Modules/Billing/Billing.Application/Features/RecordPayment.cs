@@ -138,9 +138,8 @@ public static class RecordPaymentHandler
 
         shift.IncrementTransactionCount();
 
-        // Persist
+        // Persist (invoice is tracked via GetByIdAsync -- no Update() needed)
         paymentRepository.Add(payment);
-        invoiceRepository.Update(invoice);
         cashierShiftRepository.Update(shift);
         await unitOfWork.SaveChangesAsync(ct);
 
