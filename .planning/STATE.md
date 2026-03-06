@@ -3,14 +3,29 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 07-23-PLAN.md
-last_updated: "2026-03-06T15:18:16.660Z"
+stopped_at: Completed 07-27-PLAN.md
+last_updated: "2026-03-06T16:38:52.514Z"
 last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
 progress:
   total_phases: 14
   completed_phases: 10
+  total_plans: 193
+  completed_plans: 152
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: in-progress
+stopped_at: Completed 07-27-PLAN.md
+last_updated: "2026-03-06T16:37:29Z"
+last_activity: 2026-03-06 -- Completed 07-27 Billing Handler Concurrency & RequestedById Fixes (removed Update() from 7 handlers, ICurrentUser for discounts/refunds, 50 tests pass)
+progress:
+  total_phases: 14
+  completed_phases: 10
   total_plans: 162
-  completed_plans: 150
+  completed_plans: 151
 ---
 
 ---
@@ -819,6 +834,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-06T15:08:22.400Z
-Stopped at: Completed 07-23-PLAN.md
+Last session: 2026-03-06T16:38:52.510Z
+Stopped at: Completed 07-27-PLAN.md
 Resume file: None
