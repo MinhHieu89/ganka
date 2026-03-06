@@ -194,4 +194,111 @@ public class DiscountHandlerTests
         result.IsFailure.Should().BeTrue();
         result.Error.Description.Should().Contain("Invalid manager PIN");
     }
+
+    // ===== RejectDiscount Tests =====
+
+    [Fact]
+    public async Task RejectDiscount_ValidPin_RejectsDiscountWithReason()
+    {
+        // Arrange
+        var invoice = CreateDraftInvoice(500_000m, 2);
+        var discount = Discount.Create(
+            invoice.Id, DiscountType.Percentage, 10m, "Test discount", Guid.NewGuid());
+        discount.CalculateAmount(invoice.SubTotal);
+        invoice.ApplyDiscount(discount);
+
+        var managerId = Guid.NewGuid();
+        var command = new RejectDiscountCommand(
+            invoice.Id, discount.Id, "Not eligible for this discount", managerId, "1234");
+
+        _invoiceRepository.GetByIdAsync(invoice.Id, Arg.Any<CancellationToken>()).Returns(invoice);
+        _messageBus.InvokeAsync<VerifyManagerPinResponse>(
+            Arg.Any<VerifyManagerPinQuery>(), Arg.Any<CancellationToken>())
+            .Returns(new VerifyManagerPinResponse(true));
+
+        // Act
+        var result = await RejectDiscountHandler.Handle(
+            command, _invoiceRepository, _unitOfWork, _messageBus, CancellationToken.None);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        discount.ApprovalStatus.Should().Be(ApprovalStatus.Rejected);
+        discount.RejectionReason.Should().Be("Not eligible for this discount");
+        // After rejection, invoice totals should be recalculated (rejected discount excluded)
+        invoice.DiscountTotal.Should().Be(0m);
+        await _unitOfWork.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task RejectDiscount_InvalidPin_ReturnsError()
+    {
+        // Arrange
+        var invoice = CreateDraftInvoice(500_000m, 2);
+        var discount = Discount.Create(
+            invoice.Id, DiscountType.FixedAmount, 50_000m, "Test", Guid.NewGuid());
+        discount.CalculateAmount(invoice.SubTotal);
+        invoice.ApplyDiscount(discount);
+
+        var command = new RejectDiscountCommand(
+            invoice.Id, discount.Id, "Rejected", Guid.NewGuid(), "wrong-pin");
+
+        _invoiceRepository.GetByIdAsync(invoice.Id, Arg.Any<CancellationToken>()).Returns(invoice);
+        _messageBus.InvokeAsync<VerifyManagerPinResponse>(
+            Arg.Any<VerifyManagerPinQuery>(), Arg.Any<CancellationToken>())
+            .Returns(new VerifyManagerPinResponse(false));
+
+        // Act
+        var result = await RejectDiscountHandler.Handle(
+            command, _invoiceRepository, _unitOfWork, _messageBus, CancellationToken.None);
+
+        // Assert
+        result.IsFailure.Should().BeTrue();
+        result.Error.Description.Should().Contain("Invalid manager PIN");
+    }
+
+    [Fact]
+    public async Task RejectDiscount_AlreadyProcessed_ReturnsError()
+    {
+        // Arrange
+        var invoice = CreateDraftInvoice(500_000m, 2);
+        var discount = Discount.Create(
+            invoice.Id, DiscountType.Percentage, 10m, "Test", Guid.NewGuid());
+        discount.CalculateAmount(invoice.SubTotal);
+        invoice.ApplyDiscount(discount);
+        // Approve the discount first so it's no longer Pending
+        discount.Approve(Guid.NewGuid());
+
+        var command = new RejectDiscountCommand(
+            invoice.Id, discount.Id, "Too late", Guid.NewGuid(), "1234");
+
+        _invoiceRepository.GetByIdAsync(invoice.Id, Arg.Any<CancellationToken>()).Returns(invoice);
+
+        // Act
+        var result = await RejectDiscountHandler.Handle(
+            command, _invoiceRepository, _unitOfWork, _messageBus, CancellationToken.None);
+
+        // Assert
+        result.IsFailure.Should().BeTrue();
+        result.Error.Description.Should().Contain("already been processed");
+    }
+
+    [Fact]
+    public async Task RejectDiscount_DiscountNotFound_ReturnsError()
+    {
+        // Arrange
+        var invoice = CreateDraftInvoice(500_000m, 2);
+
+        var command = new RejectDiscountCommand(
+            invoice.Id, Guid.NewGuid(), "Not found", Guid.NewGuid(), "1234");
+
+        _invoiceRepository.GetByIdAsync(invoice.Id, Arg.Any<CancellationToken>()).Returns(invoice);
+
+        // Act
+        var result = await RejectDiscountHandler.Handle(
+            command, _invoiceRepository, _unitOfWork, _messageBus, CancellationToken.None);
+
+        // Assert
+        result.IsFailure.Should().BeTrue();
+        result.Error.Code.Should().Be("Error.NotFound");
+    }
 }
