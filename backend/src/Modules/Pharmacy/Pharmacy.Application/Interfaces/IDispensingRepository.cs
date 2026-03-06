@@ -30,6 +30,13 @@ public interface IDispensingRepository
         CancellationToken ct);
 
     /// <summary>
+    /// Gets pending (not yet dispensed) prescriptions with expiry information.
+    /// These are prescriptions from the Clinical module that have no corresponding DispensingRecord.
+    /// Used by the pharmacy dispensing queue page.
+    /// </summary>
+    Task<List<PendingPrescriptionDto>> GetPendingPrescriptionsAsync(Guid? patientId, CancellationToken ct);
+
+    /// <summary>
     /// Adds a new dispensing record to the change tracker.
     /// </summary>
     void Add(DispensingRecord record);
