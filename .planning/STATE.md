@@ -3,14 +3,30 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 07-11-PLAN.md
-last_updated: "2026-03-06T14:26:05.570Z"
+stopped_at: Completed 07-09-PLAN.md
+last_updated: "2026-03-06T14:26:39.942Z"
 last_activity: 2026-03-06 -- Completed 05.1-07 Full Verification (55/55 arch tests, 263 total tests pass)
 progress:
   total_phases: 14
   completed_phases: 10
   total_plans: 152
   completed_plans: 144
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: in-progress
+stopped_at: Completed 07-12-PLAN.md
+last_updated: "2026-03-06T14:25:11Z"
+last_activity: 2026-03-06 -- Completed 07-12 Shift Management Handlers (OpenShift, CloseShift, GetCurrentShift, GetShiftReport, 7 tests pass)
+progress:
+  total_phases: 14
+  completed_phases: 10
+  total_plans: 152
+  completed_plans: 145
+  percent: 95
 ---
 
 ---
@@ -725,6 +741,7 @@ Recent decisions affecting current work:
 - [Phase 07-billing-finance]: Refund HasMany uses Cascade delete matching Discount behavior
 - [Phase 07-billing-finance]: VND precision convention: (18,0) for money, (18,2) only for percentage values
 - [Phase 07]: Payments confirmed immediately on creation (manual confirmation, not async approval)
+- [Phase 07-billing-finance]: Shift handlers: used Email as cashierName (ICurrentUser has no Name), combined Lock+Close in single handler, PaymentMethod.ToString() as revenue dict keys
 
 ### Roadmap Evolution
 
@@ -747,6 +764,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-06T14:26:05.565Z
-Stopped at: Completed 07-11-PLAN.md
+Last session: 2026-03-06T14:26:36.237Z
+Stopped at: Completed 07-09-PLAN.md
 Resume file: None
