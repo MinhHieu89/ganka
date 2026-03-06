@@ -201,6 +201,14 @@ public class Invoice : AggregateRoot, IAuditable
     {
         EnsureDraft();
 
+        if (_lineItems.Count == 0)
+            throw new InvalidOperationException(
+                "Cannot finalize an invoice with no line items.");
+
+        if (TotalAmount <= 0)
+            throw new InvalidOperationException(
+                "Cannot finalize an invoice with zero or negative total amount.");
+
         if (!IsFullyPaid)
             throw new InvalidOperationException(
                 "Cannot finalize invoice with outstanding balance.");

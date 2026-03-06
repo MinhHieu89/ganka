@@ -48,6 +48,12 @@ public interface IInvoiceRepository
     Task<string> GetNextInvoiceNumberAsync(int year, CancellationToken ct);
 
     /// <summary>
+    /// Gets all draft invoices, optionally filtered by cashier shift.
+    /// Used for the cashier dashboard pending invoices panel.
+    /// </summary>
+    Task<List<Invoice>> GetPendingAsync(Guid? cashierShiftId, CancellationToken ct);
+
+    /// <summary>
     /// Adds a new invoice to the change tracker.
     /// </summary>
     void Add(Invoice invoice);

@@ -64,6 +64,21 @@ public sealed class InvoiceRepository(BillingDbContext context) : IInvoiceReposi
             .ToListAsync(ct);
     }
 
+    public async Task<List<Invoice>> GetPendingAsync(Guid? cashierShiftId, CancellationToken ct)
+    {
+        var query = context.Invoices
+            .Include(i => i.LineItems)
+            .Include(i => i.Payments)
+            .Include(i => i.Discounts)
+            .Include(i => i.Refunds)
+            .Where(i => i.Status == InvoiceStatus.Draft);
+
+        if (cashierShiftId.HasValue)
+            query = query.Where(i => i.CashierShiftId == cashierShiftId.Value);
+
+        return await query.OrderByDescending(i => i.CreatedAt).ToListAsync(ct);
+    }
+
     public async Task<string> GetNextInvoiceNumberAsync(int year, CancellationToken ct)
     {
         var prefix = $"HD-{year}-";
