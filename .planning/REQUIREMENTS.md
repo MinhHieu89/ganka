@@ -85,7 +85,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Pharmacy
 
-- [ ] **PHR-01**: Staff can manage drug inventory with batch tracking and multiple suppliers
+- [x] **PHR-01**: Staff can manage drug inventory with batch tracking and multiple suppliers
 - [ ] **PHR-02**: Staff can import stock via supplier invoice (manual entry) or Excel bulk import
 - [ ] **PHR-03**: System tracks expiry dates and alerts at configurable thresholds (30/60/90 days before expiry)
 - [ ] **PHR-04**: System alerts when drug stock falls below configurable minimum level per drug
@@ -279,7 +279,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TRT-09 | Phase 9 | Pending |
 | TRT-10 | Phase 9 | Pending |
 | TRT-11 | Phase 9 | Pending |
-| PHR-01 | Phase 6 | Pending |
+| PHR-01 | Phase 6 | Complete |
 | PHR-02 | Phase 6 | Pending |
 | PHR-03 | Phase 6 | Pending |
 | PHR-04 | Phase 6 | Pending |

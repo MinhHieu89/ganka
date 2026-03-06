@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 05.1-07-PLAN.md
-last_updated: "2026-03-06T05:27:30.183Z"
+stopped_at: Completed 06-01-PLAN.md
+last_updated: "2026-03-06T06:41:55.803Z"
 last_activity: 2026-03-06 -- Completed 05.1-07 Full Verification (55/55 arch tests, 263 total tests pass)
 progress:
   total_phases: 14
   completed_phases: 9
   total_plans: 150
-  completed_plans: 95
+  completed_plans: 96
 ---
 
 ---
@@ -246,6 +246,7 @@ Progress: [██████░░░░] 63%
 | Phase 05.1 P06 | 6min | 2 tasks | 5 files |
 | Phase 05.1 P05 | 4min | 1 tasks | 7 files |
 | Phase 05.1 P07 | 4min | 1 tasks | 0 files |
+| Phase 06 P01 | 2 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -499,6 +500,9 @@ Recent decisions affecting current work:
 - [Phase 05.1]: Added WolverineFx PackageReference to Clinical.Application for IMessageBus (was transitively via Shared.Infrastructure)
 - [Phase 05.1]: [05.1-05]: Extended enum mapper usage to 3 additional handler files (GetPatientAllergies, GetRecentPatients, UpdatePatient) to fix build errors
 - [Phase 05.1]: No code changes needed for verification plan -- all 5 arch test fixes from plans 01-06 confirmed working
+- [Phase 06]: DrugBatch.Deduct() throws InvalidOperationException (not Result<T>) -- domain invariant violation is exceptional; application layer catches and converts to Result at service boundary
+- [Phase 06]: [06-01]: RowVersion on DrugBatch for optimistic concurrency -- concurrent dispensing of same batch must not double-deduct stock
+- [Phase 06]: [06-01]: UpdatePricing() kept separate from Update() on DrugCatalogItem -- maintains backward compatibility with all Phase 5 handlers
 
 ### Roadmap Evolution
 
@@ -521,6 +525,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-06T05:20:40.110Z
-Stopped at: Completed 05.1-07-PLAN.md
+Last session: 2026-03-06T06:41:55.799Z
+Stopped at: Completed 06-01-PLAN.md
 Resume file: None
