@@ -424,6 +424,15 @@ export function useInvoice(invoiceId: string | undefined) {
   })
 }
 
+export function usePendingInvoices() {
+  return useQuery({
+    queryKey: billingKeys.pendingInvoices(),
+    queryFn: getPendingInvoices,
+    refetchInterval: 30_000,
+    refetchIntervalInBackground: false,
+  })
+}
+
 export function usePaymentsByInvoice(invoiceId: string | undefined) {
   return useQuery({
     queryKey: billingKeys.paymentsByInvoice(invoiceId ?? ""),
@@ -629,6 +638,7 @@ export function useFinalizeInvoice() {
 export {
   getInvoiceById,
   getInvoiceByVisit,
+  getPendingInvoices,
   createInvoice,
   addLineItem,
   removeLineItem,
