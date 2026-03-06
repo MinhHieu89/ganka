@@ -3,14 +3,29 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 07-18-PLAN.md
-last_updated: "2026-03-06T14:08:55.014Z"
+stopped_at: Completed 07-21-PLAN.md
+last_updated: "2026-03-06T14:10:03.730Z"
 last_activity: 2026-03-06 -- Completed 05.1-07 Full Verification (55/55 arch tests, 263 total tests pass)
 progress:
   total_phases: 14
   completed_phases: 10
   total_plans: 152
-  completed_plans: 136
+  completed_plans: 138
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: in-progress
+stopped_at: Completed 07-21-PLAN.md
+last_updated: "2026-03-06T14:08:24Z"
+last_activity: 2026-03-06 -- Completed 07-21 Shift Management UI (ShiftReportView, shifts page, history table)
+progress:
+  total_phases: 14
+  completed_phases: 10
+  total_plans: 152
+  completed_plans: 137
 ---
 
 ---
@@ -329,6 +344,7 @@ Progress: [██████░░░░] 63%
 | Phase 07 P08 | 6min | 2 tasks | 18 files |
 | Phase 07-billing-finance P05 | 8min | 2 tasks | 5 files |
 | Phase 07-billing-finance P18 | 7min | 2 tasks | 7 files |
+| Phase 07-billing-finance P19 | 9min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -656,6 +672,8 @@ Recent decisions affecting current work:
 - [Phase 07-billing-finance]: Used filtered unique index for single open shift per branch enforcement
 - [Phase 07-billing-finance]: Added usePendingInvoices hook with 30s refetch for billing dashboard real-time updates
 - [Phase 07-billing-finance]: Used department enum number as grouping key with Vietnamese section headers from i18n for line items table
+- [Phase 07-billing-finance]: Used custom card selector pattern for PaymentMethodSelector over shadcn ToggleGroup for better icon/label mobile UX
+- [Phase 07-billing-finance]: Used expandable DataTable rows for shift history instead of separate detail page for faster cashier workflow
 
 ### Roadmap Evolution
 
@@ -678,6 +696,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-06T14:08:55.009Z
-Stopped at: Completed 07-18-PLAN.md
+Last session: 2026-03-06T14:09:55.632Z
+Stopped at: Completed 07-21-PLAN.md
 Resume file: None
