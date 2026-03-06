@@ -269,12 +269,33 @@ Plans:
   3. System generates e-invoice (hoa don dien tu) compliant with Vietnamese tax law for MISA export
   4. System supports treatment package payments (full upfront or 50/50 split) and enforces the rule that the 2nd payment must be received before the mid-course session
   5. Manual discounts require manager approval, refunds require manager/owner approval with full audit trail, and all price changes are logged with who/when/old/new values
-**Plans**: TBD
+**Plans**: 24 plans in 12 waves
 
 Plans:
-- [ ] 07-01: TBD
-- [ ] 07-02: TBD
-- [ ] 07-03: TBD
+- [ ] 07-01-PLAN.md -- Invoice aggregate + InvoiceLineItem domain entities, enums, domain event
+- [ ] 07-02-PLAN.md -- Payment, Discount, Refund domain entities + enums
+- [ ] 07-03-PLAN.md -- CashierShift aggregate + ShiftTemplate entity + ShiftStatus enum
+- [ ] 07-04-PLAN.md -- EF Core configs: Invoice, InvoiceLineItem, Payment, Discount, Refund
+- [ ] 07-05-PLAN.md -- EF Core configs: CashierShift, ShiftTemplate + BillingDbContext update + ShiftTemplateSeeder
+- [ ] 07-06-PLAN.md -- Billing.Contracts DTOs (Invoice, Payment, Shift, EInvoice) + cross-module queries
+- [ ] 07-07-PLAN.md -- Repository interfaces + Invoice/Payment repository implementations
+- [ ] 07-08-PLAN.md -- CashierShift repository + UnitOfWork + IoC registration + IBillingDocumentService
+- [ ] 07-09-PLAN.md -- [TDD] Invoice CRUD handlers: CreateInvoice, AddLineItem, FinalizeInvoice
+- [ ] 07-10-PLAN.md -- [TDD] Payment handlers: RecordPayment with all methods, split payment
+- [ ] 07-11-PLAN.md -- [TDD] Discount + Refund handlers with manager PIN approval
+- [ ] 07-12-PLAN.md -- [TDD] Shift handlers: OpenShift, CloseShift, GetCurrentShift, GetShiftReport
+- [ ] 07-13-PLAN.md -- Billing.Presentation project + all API endpoints
+- [ ] 07-14-PLAN.md -- Bootstrapper wiring, solution update, Invoice entity update, migration
+- [ ] 07-15-PLAN.md -- QuestPDF documents: Invoice, Receipt, EInvoice, ShiftReport
+- [ ] 07-16-PLAN.md -- BillingDocumentService + EInvoiceExportService + print/export endpoints
+- [ ] 07-17-PLAN.md -- Frontend API layer: billing-api.ts, shift-api.ts, VND formatter
+- [ ] 07-18-PLAN.md -- Frontend cashier dashboard + invoice detail page + components
+- [ ] 07-19-PLAN.md -- Frontend PaymentForm + PaymentMethodSelector + InvoiceView integration
+- [ ] 07-20-PLAN.md -- Frontend DiscountDialog, RefundDialog, ApprovalPinDialog, EInvoiceExportButton
+- [ ] 07-21-PLAN.md -- Frontend shift management page + ShiftOpen/Close/Report components
+- [ ] 07-22-PLAN.md -- i18n translations (EN/VI) + sidebar navigation + InvoiceView integration
+- [ ] 07-23-PLAN.md -- Vietnamese user stories documentation (DOC-01)
+- [ ] 07-24-PLAN.md -- End-to-end verification checkpoint
 
 ### Phase 8: Optical Center
 **Goal**: Staff can manage frame/lens inventory with barcodes, track glasses orders through their full lifecycle, and handle warranty claims
@@ -330,6 +351,6 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 | 4. Dry Eye Template & Medical Imaging | 7/8 | In Progress | - |
 | 5. Prescriptions & Document Printing | 23/25 | In Progress|  |
 | 6. Pharmacy & Consumables | 0/27 | Not started | - |
-| 7. Billing & Finance | 0/3 | Not started | - |
+| 7. Billing & Finance | 0/24 | Not started | - |
 | 8. Optical Center | 0/3 | Not started | - |
 | 9. Treatment Protocols | 0/3 | Not started | - |
