@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 06-17-PLAN.md
-last_updated: "2026-03-06T08:36:25.126Z"
+stopped_at: Completed 06-18-PLAN.md
+last_updated: "2026-03-06T08:42:50.996Z"
 last_activity: 2026-03-06 -- Completed 05.1-07 Full Verification (55/55 arch tests, 263 total tests pass)
 progress:
   total_phases: 14
   completed_phases: 9
   total_plans: 150
-  completed_plans: 113
+  completed_plans: 114
 ---
 
 ---
@@ -264,6 +264,7 @@ Progress: [██████░░░░] 63%
 | Phase 06 P15 | 2 | 1 tasks | 5 files |
 | Phase 06-pharmacy-consumables P16 | 5 | 1 tasks | 6 files |
 | Phase 06-pharmacy-consumables P17 | 12 | 2 tasks | 8 files |
+| Phase 06-pharmacy-consumables P18 | 8min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -554,6 +555,7 @@ Recent decisions affecting current work:
 - [Phase 06-pharmacy-consumables]: [06-17]: Cross-module pending prescriptions: ClinicalPendingPrescriptionDto in Clinical.Contracts, Clinical.Application handler returns it, Pharmacy.Infrastructure maps to Pharmacy.Contracts via IMessageBus
 - [Phase 06-pharmacy-consumables]: [06-17]: UpdateDrugCatalogPricingCommand kept separate from UpdateDrugCatalogItemCommand for role-based access (pharmacist updates pricing, catalog admin updates catalog attributes)
 - [Phase 06-pharmacy-consumables]: [06-17]: Prescription validity window of 7 days from PrescribedAt for pharmacy dispensing queue expiry calculation
+- [Phase 06-18]: MapDispensingApiEndpoints and MapConsumablesApiEndpoints kept separate from MapPharmacyApiEndpoints for clear domain separation between drug dispensing and consumables warehouse
 
 ### Roadmap Evolution
 
@@ -576,6 +578,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-06T08:36:25.121Z
-Stopped at: Completed 06-17-PLAN.md
+Last session: 2026-03-06T08:42:50.992Z
+Stopped at: Completed 06-18-PLAN.md
 Resume file: None
