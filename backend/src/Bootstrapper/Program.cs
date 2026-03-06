@@ -302,6 +302,8 @@ app.MapPublicBookingEndpoints();
 app.MapPublicOsdiEndpoints();
 app.MapClinicalApiEndpoints();
 app.MapPharmacyApiEndpoints();
+app.MapDispensingApiEndpoints();
+app.MapConsumablesApiEndpoints();
 app.MapSettingsApiEndpoints();
 
 app.Run();
