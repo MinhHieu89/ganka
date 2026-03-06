@@ -1,9 +1,9 @@
 ---
-status: complete
+status: resolved
 phase: 06-pharmacy-consumables
 source: 06-01 through 06-28 SUMMARY.md
 started: 2026-03-06T12:10:00Z
-updated: 2026-03-06T13:17:00Z
+updated: 2026-03-06T14:00:00Z
 ---
 
 ## Current Test
@@ -145,7 +145,7 @@ skipped: 0
 ## Gaps
 
 - truth: "Clicking expand on drug row shows batch details in nested table"
-  status: failed
+  status: resolved
   reason: "User reported: Expand panel shows 'Khong co lo thuoc' (No batches) despite API returning batch data. Network log confirms no /inventory/{drugId}/batches API call is made when expanding. Frontend DrugInventoryDto has 'id' field but backend returns 'drugCatalogItemId' - field name mismatch causes drugId to be undefined, so useDrugBatches query never fires."
   severity: major
   test: 17
@@ -162,7 +162,7 @@ skipped: 0
   debug_session: ""
 
 - truth: "English mode shows all labels in English"
-  status: failed
+  status: resolved
   reason: "User reported: Vietnamese is fully translated and correct. English toggle works for sidebar, table headers, alert banners, search placeholders. But some elements stay Vietnamese in English mode: page subtitle, action buttons 'Quan ly nha cung cap' and 'Nhap kho'. Partial English translation."
   severity: minor
   test: 24
