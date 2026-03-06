@@ -79,7 +79,7 @@ function EditPricingDialog({ drug, open, onOpenChange }: EditPricingDialogProps)
     if (!drug) return
     try {
       await updatePricing.mutateAsync({
-        drugId: drug.id,
+        drugId: drug.drugCatalogItemId,
         sellingPrice: data.sellingPrice,
         minStockLevel: data.minStockLevel,
       })
@@ -333,7 +333,7 @@ export function DrugInventoryTable({ drugs }: DrugInventoryTableProps) {
         emptyMessage={t("inventory.empty")}
         renderSubRow={(drug) => (
           <div className="p-4 bg-muted/30">
-            <DrugBatchTable drugId={drug.id} drugName={drug.nameVi || drug.name} />
+            <DrugBatchTable drugId={drug.drugCatalogItemId} drugName={drug.nameVi || drug.name} />
           </div>
         )}
       />

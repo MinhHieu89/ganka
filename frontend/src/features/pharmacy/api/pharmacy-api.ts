@@ -48,7 +48,7 @@ export interface DrugBatchDto {
 }
 
 export interface DrugInventoryDto {
-  id: string
+  drugCatalogItemId: string
   name: string
   nameVi: string
   genericName: string
