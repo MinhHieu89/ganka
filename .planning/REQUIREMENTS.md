@@ -113,16 +113,16 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Billing & Finance
 
-- [ ] **FIN-01**: System generates single consolidated invoice per visit with charges from all departments (medical, optical, pharmacy, treatment)
-- [ ] **FIN-02**: System tracks internal revenue allocation per department on each invoice line item
-- [ ] **FIN-03**: System supports payment methods: cash, bank transfer, QR (VNPay/MoMo/ZaloPay), card (Visa/MC)
-- [ ] **FIN-04**: System generates e-invoice (hoa don dien tu) per Vietnamese tax law
+- [x] **FIN-01**: System generates single consolidated invoice per visit with charges from all departments (medical, optical, pharmacy, treatment)
+- [x] **FIN-02**: System tracks internal revenue allocation per department on each invoice line item
+- [x] **FIN-03**: System supports payment methods: cash, bank transfer, QR (VNPay/MoMo/ZaloPay), card (Visa/MC)
+- [x] **FIN-04**: System generates e-invoice (hoa don dien tu) per Vietnamese tax law
 - [ ] **FIN-05**: System supports treatment package payments: full upfront or 50/50 split
 - [ ] **FIN-06**: System enforces 50/50 split rule: 2nd payment due before mid-course session (5-session -> before session 3, 3-session -> before session 2)
 - [ ] **FIN-07**: Manual discounts require manager approval before applying
 - [ ] **FIN-08**: Refund processing requires manager/owner approval with full audit trail
 - [ ] **FIN-09**: System maintains price change audit log (who changed, when, old/new values)
-- [ ] **FIN-10**: System supports shift management: define shifts, assign staff, track revenue per shift, cash reconciliation at shift end
+- [x] **FIN-10**: System supports shift management: define shifts, assign staff, track revenue per shift, cash reconciliation at shift end
 
 ### Printing & Documents
 
@@ -298,16 +298,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | OPT-07 | Phase 8 | Pending |
 | OPT-08 | Phase 8 | Pending |
 | OPT-09 | Phase 8 | Pending |
-| FIN-01 | Phase 7 | Pending |
-| FIN-02 | Phase 7 | Pending |
-| FIN-03 | Phase 7 | Pending |
-| FIN-04 | Phase 7 | Pending |
+| FIN-01 | Phase 7 | Complete |
+| FIN-02 | Phase 7 | Complete |
+| FIN-03 | Phase 7 | Complete |
+| FIN-04 | Phase 7 | Complete |
 | FIN-05 | Phase 7 | Pending |
 | FIN-06 | Phase 7 | Pending |
 | FIN-07 | Phase 7 | Pending |
 | FIN-08 | Phase 7 | Pending |
 | FIN-09 | Phase 7 | Pending |
-| FIN-10 | Phase 7 | Pending |
+| FIN-10 | Phase 7 | Complete |
 | PRT-01 | Phase 5 | Complete |
 | PRT-02 | Phase 5 | Complete |
 | PRT-03 | Phase 5 | Pending |
