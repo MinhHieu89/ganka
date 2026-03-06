@@ -1,4 +1,5 @@
 using Patient.Application.Interfaces;
+using Patient.Application.Mappers;
 using Patient.Contracts.Dtos;
 using Shared.Domain;
 
@@ -31,14 +32,14 @@ public static class GetPatientByIdHandler
             patient.FullName,
             patient.Phone,
             patient.PatientCode,
-            patient.PatientType,
+            patient.PatientType.ToContractEnum(),
             patient.DateOfBirth,
-            patient.Gender,
+            patient.Gender?.ToContractEnum(),
             patient.Address,
             patient.Cccd,
             patient.PhotoUrl,
             patient.IsActive,
             patient.CreatedAt,
-            patient.Allergies.Select(a => new AllergyDto(a.Id, a.Name, a.Severity)).ToList());
+            patient.Allergies.Select(a => new AllergyDto(a.Id, a.Name, a.Severity.ToContractEnum())).ToList());
     }
 }

@@ -1,4 +1,5 @@
 using Patient.Application.Interfaces;
+using Patient.Application.Mappers;
 using Patient.Contracts.Dtos;
 
 namespace Patient.Application.Features;
@@ -19,7 +20,7 @@ public static class GetPatientAllergiesHandler
             return [];
 
         return patient.Allergies
-            .Select(a => new AllergyDto(a.Id, a.Name, a.Severity))
+            .Select(a => new AllergyDto(a.Id, a.Name, a.Severity.ToContractEnum()))
             .ToList();
     }
 }

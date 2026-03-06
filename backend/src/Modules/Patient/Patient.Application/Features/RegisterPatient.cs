@@ -1,7 +1,8 @@
 using FluentValidation;
 using Patient.Application.Interfaces;
+using Patient.Application.Mappers;
 using Patient.Contracts.Dtos;
-using Patient.Domain.Enums;
+using Patient.Contracts.Enums;
 using Shared.Domain;
 
 namespace Patient.Application.Features;
@@ -74,10 +75,10 @@ public static class RegisterPatientHandler
         var patient = Domain.Entities.Patient.Create(
             command.FullName,
             command.Phone,
-            command.PatientType,
+            command.PatientType.ToDomainEnum(),
             branchId,
             command.DateOfBirth,
-            command.Gender,
+            command.Gender?.ToDomainEnum(),
             command.Address,
             command.Cccd);
 
@@ -86,7 +87,7 @@ public static class RegisterPatientHandler
         {
             foreach (var allergy in command.Allergies)
             {
-                patient.AddAllergy(allergy.Name, allergy.Severity);
+                patient.AddAllergy(allergy.Name, allergy.Severity.ToDomainEnum());
             }
         }
 

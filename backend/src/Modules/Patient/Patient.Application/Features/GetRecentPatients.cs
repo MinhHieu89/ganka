@@ -1,4 +1,5 @@
 using Patient.Application.Interfaces;
+using Patient.Application.Mappers;
 using Patient.Contracts.Dtos;
 using Shared.Domain;
 
@@ -23,7 +24,7 @@ public static class GetRecentPatientsHandler
             p.FullName,
             p.Phone,
             p.PatientCode,
-            p.PatientType)).ToList();
+            p.PatientType.ToContractEnum())).ToList();
 
         return results;
     }

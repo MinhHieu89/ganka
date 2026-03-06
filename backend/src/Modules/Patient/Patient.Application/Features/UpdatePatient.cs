@@ -1,6 +1,7 @@
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Patient.Application.Interfaces;
+using Patient.Application.Mappers;
 using Patient.Contracts.Dtos;
 using Shared.Domain;
 
@@ -55,7 +56,7 @@ public static class UpdatePatientHandler
             command.FullName,
             command.Phone,
             command.DateOfBirth,
-            command.Gender,
+            command.Gender?.ToDomainEnum(),
             command.Address,
             command.Cccd);
 
