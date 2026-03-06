@@ -1,0 +1,245 @@
+import { useEffect } from "react"
+import { useForm, Controller } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from "zod"
+import { toast } from "sonner"
+import { IconLoader2, IconArrowRight } from "@tabler/icons-react"
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/shared/components/Dialog"
+import { Input } from "@/shared/components/Input"
+import { Textarea } from "@/shared/components/Textarea"
+import { Button } from "@/shared/components/Button"
+import { Field, FieldLabel, FieldError } from "@/shared/components/Field"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/shared/components/Select"
+import { type ConsumableItemDto } from "@/features/consumables/api/consumables-api"
+import { useAdjustConsumableStock } from "@/features/consumables/api/consumables-queries"
+
+// Must match backend ConsumableAdjustmentReason enum
+const ADJUSTMENT_REASON = {
+  Correction: 0,
+  WriteOff: 1,
+  Damage: 2,
+  Expired: 3,
+  Other: 4,
+} as const
+
+const adjustmentSchema = z.object({
+  quantity: z.coerce
+    .number()
+    .int("Phải là số nguyên")
+    .refine((v) => v !== 0, { message: "Số lượng không được bằng 0" }),
+  reason: z.coerce.number().int(),
+  notes: z.string().max(500).optional().or(z.literal("")),
+})
+
+type AdjustmentValues = z.infer<typeof adjustmentSchema>
+
+interface ConsumableAdjustDialogProps {
+  item: ConsumableItemDto | null
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}
+
+export function ConsumableAdjustDialog({
+  item,
+  open,
+  onOpenChange,
+}: ConsumableAdjustDialogProps) {
+  const adjustStock = useAdjustConsumableStock()
+
+  const form = useForm<AdjustmentValues>({
+    resolver: zodResolver(adjustmentSchema),
+    defaultValues: {
+      quantity: 0,
+      reason: ADJUSTMENT_REASON.Correction,
+      notes: "",
+    },
+  })
+
+  useEffect(() => {
+    if (open) {
+      form.reset({
+        quantity: 0,
+        reason: ADJUSTMENT_REASON.Correction,
+        notes: "",
+      })
+    }
+  }, [open, form])
+
+  const quantity = form.watch("quantity")
+  const newQuantity = item ? item.currentStock + (Number(quantity) || 0) : 0
+  const isInvalid = newQuantity < 0
+
+  const handleSubmit = async (data: AdjustmentValues) => {
+    if (!item) return
+    if (isInvalid) {
+      form.setError("quantity", { message: "Số lượng mới không được âm" })
+      return
+    }
+    try {
+      await adjustStock.mutateAsync({
+        id: item.id,
+        quantity: data.quantity,
+        reason: data.reason,
+        notes: data.notes || null,
+      })
+      toast.success("Đã điều chỉnh tồn kho")
+      onOpenChange(false)
+    } catch {
+      // onError in mutation handles toast
+    }
+  }
+
+  if (!item) return null
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Điều chỉnh tồn kho</DialogTitle>
+          <p className="text-sm text-muted-foreground">{item.nameVi || item.name}</p>
+        </DialogHeader>
+
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          {/* Current → New preview */}
+          <div className="flex items-center gap-3 rounded-lg border bg-muted/30 px-4 py-3">
+            <div className="text-center">
+              <p className="text-xs text-muted-foreground">Hiện tại</p>
+              <p className="text-xl font-bold">{item.currentStock}</p>
+            </div>
+            <IconArrowRight className="h-5 w-5 text-muted-foreground shrink-0" />
+            <div className="text-center">
+              <p className="text-xs text-muted-foreground">Sau điều chỉnh</p>
+              <p
+                className={`text-xl font-bold ${
+                  isInvalid
+                    ? "text-destructive"
+                    : newQuantity !== item.currentStock
+                      ? "text-primary"
+                      : ""
+                }`}
+              >
+                {newQuantity}
+              </p>
+            </div>
+          </div>
+
+          {isInvalid && (
+            <p className="text-sm text-destructive">Số lượng mới không được âm</p>
+          )}
+
+          {/* Quantity change */}
+          <Controller
+            name="quantity"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid || undefined}>
+                <FieldLabel htmlFor={field.name}>Thay đổi số lượng</FieldLabel>
+                <Input
+                  {...field}
+                  id={field.name}
+                  type="number"
+                  step={1}
+                  aria-invalid={fieldState.invalid || undefined}
+                />
+                <p className="text-xs text-muted-foreground">
+                  Nhập số dương để tăng, số âm để giảm
+                </p>
+                {fieldState.error && (
+                  <FieldError>{fieldState.error.message}</FieldError>
+                )}
+              </Field>
+            )}
+          />
+
+          {/* Reason */}
+          <Controller
+            name="reason"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid || undefined}>
+                <FieldLabel>Lý do điều chỉnh</FieldLabel>
+                <Select
+                  value={String(field.value)}
+                  onValueChange={(v) => field.onChange(Number(v))}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={String(ADJUSTMENT_REASON.Correction)}>
+                      Hiệu chỉnh
+                    </SelectItem>
+                    <SelectItem value={String(ADJUSTMENT_REASON.WriteOff)}>
+                      Xuất bỏ
+                    </SelectItem>
+                    <SelectItem value={String(ADJUSTMENT_REASON.Damage)}>
+                      Hư hỏng
+                    </SelectItem>
+                    <SelectItem value={String(ADJUSTMENT_REASON.Expired)}>
+                      Hết hạn
+                    </SelectItem>
+                    <SelectItem value={String(ADJUSTMENT_REASON.Other)}>
+                      Khác
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+                {fieldState.error && (
+                  <FieldError>{fieldState.error.message}</FieldError>
+                )}
+              </Field>
+            )}
+          />
+
+          {/* Notes */}
+          <Controller
+            name="notes"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid || undefined}>
+                <FieldLabel htmlFor={field.name}>Ghi chú</FieldLabel>
+                <Textarea
+                  {...field}
+                  id={field.name}
+                  rows={2}
+                  aria-invalid={fieldState.invalid || undefined}
+                />
+                {fieldState.error && (
+                  <FieldError>{fieldState.error.message}</FieldError>
+                )}
+              </Field>
+            )}
+          />
+
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+              disabled={adjustStock.isPending}
+            >
+              Huỷ
+            </Button>
+            <Button type="submit" disabled={adjustStock.isPending || isInvalid}>
+              {adjustStock.isPending && (
+                <IconLoader2 className="h-4 w-4 mr-2 animate-spin" />
+              )}
+              Xác nhận
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  )
+}
