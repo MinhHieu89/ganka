@@ -228,11 +228,14 @@ export function DrugInventoryTable({ drugs }: DrugInventoryTableProps) {
       }),
       columnHelper.accessor("sellingPrice", {
         header: () => t("inventory.sellingPrice"),
-        cell: (info) => (
-          <span className="text-sm font-medium">
-            {info.getValue().toLocaleString("vi-VN")} ₫
-          </span>
-        ),
+        cell: (info) => {
+          const value = info.getValue();
+          return (
+            <span className="text-sm font-medium">
+              {value != null ? `${value.toLocaleString("vi-VN")} ₫` : "—"}
+            </span>
+          );
+        },
         enableSorting: true,
       }),
       columnHelper.accessor("totalStock", {
