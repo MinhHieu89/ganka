@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 06-06-PLAN.md
-last_updated: "2026-03-06T07:09:45.352Z"
+stopped_at: Completed 06-07-PLAN.md
+last_updated: "2026-03-06T07:12:54.545Z"
 last_activity: 2026-03-06 -- Completed 05.1-07 Full Verification (55/55 arch tests, 263 total tests pass)
 progress:
   total_phases: 14
   completed_phases: 9
   total_plans: 150
-  completed_plans: 102
+  completed_plans: 103
 ---
 
 ---
@@ -253,6 +253,7 @@ Progress: [██████░░░░] 63%
 | Phase 06 P05a | 3 | 2 tasks | 7 files |
 | Phase 06-pharmacy-consumables P05b | 2min | 2 tasks | 5 files |
 | Phase 06-pharmacy-consumables P06 | 3min | 2 tasks | 7 files |
+| Phase 06 P07 | 2min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -520,6 +521,8 @@ Recent decisions affecting current work:
 - [Phase 06-pharmacy-consumables]: BatchDeductionConfiguration placed in DispensingRecordConfiguration.cs since BatchDeduction is the shared child entity first introduced by dispensing hierarchy
 - [Phase 06-pharmacy-consumables]: ConsumableBatch uses HasOne<ConsumableItem>().WithMany() since ConsumableItem has no navigation property to batches
 - [Phase 06-pharmacy-consumables]: [06-06]: DrugCatalogItemDto extended with SellingPrice/MinStockLevel as optional C# record params for backward compatibility
+- [Phase 06-07]: IDrugBatchRepository.GetAvailableBatchesFEFOAsync filters CurrentQuantity > 0 and not expired, ordered by ExpiryDate ASC -- batch selection order enforced at interface contract level
+- [Phase 06-07]: IDispensingRepository.GetByPrescriptionIdAsync returns nullable to support duplicate-dispensing-check without separate Exists() call
 
 ### Roadmap Evolution
 
@@ -542,6 +545,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-06T07:09:45.348Z
-Stopped at: Completed 06-06-PLAN.md
+Last session: 2026-03-06T07:12:54.542Z
+Stopped at: Completed 06-07-PLAN.md
 Resume file: None
