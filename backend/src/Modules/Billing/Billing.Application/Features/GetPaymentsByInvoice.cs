@@ -10,16 +10,32 @@ public sealed record GetPaymentsByInvoiceQuery(Guid InvoiceId);
 
 /// <summary>
 /// Wolverine handler for retrieving payments by invoice ID.
-/// Stub: returns empty list until implemented.
+/// Maps Payment domain entities to PaymentDto records.
 /// </summary>
 public static class GetPaymentsByInvoiceHandler
 {
-    public static Task<List<PaymentDto>> Handle(
+    public static async Task<List<PaymentDto>> Handle(
         GetPaymentsByInvoiceQuery query,
         IPaymentRepository paymentRepository,
         CancellationToken ct)
     {
-        // Stub: not implemented yet (TDD RED phase)
-        return Task.FromResult(new List<PaymentDto>());
+        var payments = await paymentRepository.GetByInvoiceIdAsync(query.InvoiceId, ct);
+
+        return payments.Select(p => new PaymentDto(
+            p.Id,
+            p.InvoiceId,
+            (int)p.Method,
+            p.Amount,
+            (int)p.Status,
+            p.ReferenceNumber,
+            p.CardLast4,
+            p.CardType,
+            p.Notes,
+            p.RecordedById,
+            p.RecordedAt,
+            p.CashierShiftId,
+            p.TreatmentPackageId,
+            p.IsSplitPayment,
+            p.SplitSequence)).ToList();
     }
 }
