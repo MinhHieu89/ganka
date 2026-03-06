@@ -244,7 +244,7 @@ Plans:
   3. Pharmacist can view pending prescriptions from HIS, dispense drugs with auto stock deduction per batch (FEFO), and the system enforces 7-day prescription validity
   4. Staff can process walk-in OTC sales without a prescription
   5. System maintains a separate consumables warehouse (IPL gel, eye shields, etc.) with stock levels and alerts (auto-deduction from treatment sessions delivered in Phase 9)
-**Plans**: 29 plans (27 original + 1 verification + 1 gap closure)
+**Plans**: 30 plans (27 original + 1 verification + 2 gap closure)
 
 Plans:
 - [ ] 06-01-PLAN.md -- Pharmacy stock domain entities: Supplier, DrugBatch, SupplierDrugPrice, DrugCatalogItem pricing extension
@@ -276,6 +276,7 @@ Plans:
 - [ ] 06-26-PLAN.md -- Vietnamese user stories documentation (DOC-01)
 - [ ] 06-27-PLAN.md -- End-to-end verification checkpoint
 - [ ] 06-28-PLAN.md -- [GAP] Descope CON-03 auto-deduction to Phase 9 + fix PrescriptionCode in dispensing queue
+- [ ] 06-29-PLAN.md -- [UAT GAP] Fix DrugInventoryDto field mismatch (batch expand) + missing EN translations
 
 ### Phase 7: Billing & Finance
 **Goal**: Cashier can generate unified invoices across all departments, collect payments via multiple methods, and manage shifts with cash reconciliation
