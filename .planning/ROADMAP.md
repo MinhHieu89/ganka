@@ -222,7 +222,7 @@ Plans:
 **Goal:** All 55 NetArchTest architecture rules pass with zero failures, restoring clean architecture boundaries across Patient and Clinical modules
 **Depends on:** Phase 5
 **Requirements**: ARCH-01, ARCH-02, ARCH-03, ARCH-04, ARCH-05
-**Plans:** 8 plans in 4 waves
+**Plans:** 2/8 plans executed
 
 Plans:
 - [ ] 05.1-01-PLAN.md -- Move FieldChange record to Clinical.Domain.ValueObjects + remove stale Clinical.Contracts Domain reference
