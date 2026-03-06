@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 07-05-PLAN.md
-last_updated: "2026-03-06T14:07:35.058Z"
+stopped_at: Completed 07-18-PLAN.md
+last_updated: "2026-03-06T14:08:55.014Z"
 last_activity: 2026-03-06 -- Completed 05.1-07 Full Verification (55/55 arch tests, 263 total tests pass)
 progress:
   total_phases: 14
   completed_phases: 10
   total_plans: 152
-  completed_plans: 135
+  completed_plans: 136
 ---
 
 ---
@@ -328,6 +328,7 @@ Progress: [██████░░░░] 63%
 | Phase 07-15 P15 | 6min | 2 tasks | 9 files |
 | Phase 07 P08 | 6min | 2 tasks | 18 files |
 | Phase 07-billing-finance P05 | 8min | 2 tasks | 5 files |
+| Phase 07-billing-finance P18 | 7min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -653,6 +654,8 @@ Recent decisions affecting current work:
 - [Phase 07]: Created prerequisite EF configs, repos, seeder inline since dependent plans 04-07 not fully executed (Rule 3)
 - [Phase 07-billing-finance]: Added BranchId to ShiftTemplate entity for multi-tenant isolation
 - [Phase 07-billing-finance]: Used filtered unique index for single open shift per branch enforcement
+- [Phase 07-billing-finance]: Added usePendingInvoices hook with 30s refetch for billing dashboard real-time updates
+- [Phase 07-billing-finance]: Used department enum number as grouping key with Vietnamese section headers from i18n for line items table
 
 ### Roadmap Evolution
 
@@ -675,6 +678,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-06T14:07:35.053Z
-Stopped at: Completed 07-05-PLAN.md
+Last session: 2026-03-06T14:08:55.009Z
+Stopped at: Completed 07-18-PLAN.md
 Resume file: None
