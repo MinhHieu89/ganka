@@ -83,5 +83,21 @@
   "confirmClose": "Confirm closing this shift? This action cannot be undone.",
   "shiftHistory": "Shift History",
   "totalRevenue": "Total Revenue",
-  "transactionCount": "Transactions"
+  "transactionCount": "Transactions",
+  "lineItems": {
+    "index": "#",
+    "description": "Description",
+    "quantity": "Qty",
+    "unitPrice": "Unit Price",
+    "total": "Total",
+    "sectionTotal": "Subtotal",
+    "grandTotal": "Grand Total"
+  },
+  "noPayments": "No payments yet",
+  "noDiscounts": "No discounts",
+  "patientName": "Patient",
+  "invoiceNumber": "Invoice #",
+  "createdAt": "Created",
+  "cashierName": "Cashier",
+  "openedAt": "Opened at"
 }

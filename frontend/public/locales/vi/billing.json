@@ -83,5 +83,21 @@
   "confirmClose": "Xác nhận đóng ca? Hành động này không thể hoàn tác.",
   "shiftHistory": "Lịch sử ca",
   "totalRevenue": "Tổng doanh thu",
-  "transactionCount": "Số giao dịch"
+  "transactionCount": "Số giao dịch",
+  "lineItems": {
+    "index": "STT",
+    "description": "Mô tả",
+    "quantity": "SL",
+    "unitPrice": "Đơn giá",
+    "total": "Thành tiền",
+    "sectionTotal": "Cộng",
+    "grandTotal": "Tổng cộng"
+  },
+  "noPayments": "Chưa có thanh toán",
+  "noDiscounts": "Không có giảm giá",
+  "patientName": "Bệnh nhân",
+  "invoiceNumber": "Số hóa đơn",
+  "createdAt": "Ngày tạo",
+  "cashierName": "Thu ngân",
+  "openedAt": "Mở lúc"
 }
