@@ -1,5 +1,5 @@
 ---
-status: complete
+status: diagnosed
 phase: 07-billing-finance
 source: 07-01-SUMMARY.md, 07-02-SUMMARY.md, 07-03-SUMMARY.md, 07-04-SUMMARY.md, 07-05-SUMMARY.md, 07-06-SUMMARY.md, 07-07-SUMMARY.md, 07-08-SUMMARY.md, 07-09-SUMMARY.md, 07-10-SUMMARY.md, 07-11-SUMMARY.md, 07-12-SUMMARY.md, 07-13-SUMMARY.md, 07-14-SUMMARY.md, 07-15-SUMMARY.md, 07-16-SUMMARY.md, 07-17-SUMMARY.md, 07-18-SUMMARY.md, 07-19-SUMMARY.md, 07-20-SUMMARY.md, 07-21-SUMMARY.md, 07-22-SUMMARY.md, 07-23-SUMMARY.md, 07-25-SUMMARY.md, 07-26-SUMMARY.md
 started: 2026-03-06T00:00:00Z
@@ -250,45 +250,103 @@ skipped: 18
   reason: "User reported: API returns 500 DbUpdateConcurrencyException when adding line items. The RowVersion concurrency token on Invoice entity causes optimistic concurrency failure on every write operation that modifies the invoice after initial creation."
   severity: blocker
   test: 3
-  artifacts: []
-  missing: []
+  root_cause: "InvoiceRepository.Update() calls context.Invoices.Update(invoice) which marks ALL properties Modified including RowVersion. For SQL Server rowversion columns (auto-generated, read-only), EF tries to include RowVersion in SET clause which SQL Server rejects. Handlers that don't call Update() still fail because child collection changes may not trigger invoice entity to be marked Modified."
+  artifacts:
+    - path: "backend/src/Modules/Billing/Billing.Infrastructure/Repositories/InvoiceRepository.cs"
+      issue: "Line 96: context.Invoices.Update(invoice) marks RowVersion as Modified"
+    - path: "backend/src/Modules/Billing/Billing.Application/Features/RecordPayment.cs"
+      issue: "Line 143: unnecessary invoiceRepository.Update(invoice) call"
+    - path: "backend/src/Modules/Billing/Billing.Application/Features/ApplyDiscount.cs"
+      issue: "Line 100: unnecessary invoiceRepository.Update(invoice) call"
+    - path: "backend/src/Modules/Billing/Billing.Application/Features/ApproveDiscount.cs"
+      issue: "Line 64: unnecessary invoiceRepository.Update(invoice) call"
+    - path: "backend/src/Modules/Billing/Billing.Application/Features/RejectDiscount.cs"
+      issue: "Line 68: unnecessary invoiceRepository.Update(invoice) call"
+    - path: "backend/src/Modules/Billing/Billing.Application/Features/RequestRefund.cs"
+      issue: "Line 93: unnecessary invoiceRepository.Update(invoice) call"
+    - path: "backend/src/Modules/Billing/Billing.Application/Features/ApproveRefund.cs"
+      issue: "Line 67: unnecessary invoiceRepository.Update(invoice) call"
+    - path: "backend/src/Modules/Billing/Billing.Application/Features/ProcessRefund.cs"
+      issue: "Line 93: unnecessary invoiceRepository.Update(invoice) call"
+  missing:
+    - "Remove all invoiceRepository.Update(invoice) calls — entities are already tracked by DbContext via GetByIdAsync"
+  debug_session: ".planning/debug/invoice-rowversion-concurrency.md"
 
 - truth: "Billing dashboard displays all Draft status invoices with quick-view summary"
   status: failed
   reason: "User reported: API returns 500 on GET /api/billing/invoices/pending. The GetPendingInvoicesQuery has no Wolverine handler implementation."
   severity: blocker
   test: 6
-  artifacts: []
-  missing: []
+  root_cause: "GetPendingInvoicesQuery is defined in Billing.Contracts and dispatched by the API endpoint, but no Wolverine handler exists in Billing.Application to process it. Also IInvoiceRepository lacks a GetPendingAsync method."
+  artifacts:
+    - path: "backend/src/Modules/Billing/Billing.Contracts/Queries/GetVisitInvoiceQuery.cs"
+      issue: "Line 14: query defined but no handler exists"
+    - path: "backend/src/Modules/Billing/Billing.Presentation/BillingApiEndpoints.cs"
+      issue: "Lines 72-78: endpoint dispatches query that has no handler"
+  missing:
+    - "Create GetPendingInvoices.cs handler in Billing.Application/Features/"
+    - "Add GetPendingAsync(Guid? cashierShiftId, CancellationToken ct) to IInvoiceRepository"
+    - "Implement GetPendingAsync in InvoiceRepository filtering by Status == Draft"
+  debug_session: ".planning/debug/pending-invoices-500.md"
 
 - truth: "Finalize validates invoice has line items and balance before finalizing"
   status: failed
   reason: "User reported: Finalize succeeds (HTTP 200) but allows finalizing invoices with zero balance and no line items. No validation prevents finalizing an empty invoice."
   severity: major
   test: 7
-  artifacts: []
-  missing: []
+  root_cause: "Invoice.Finalize() only checks EnsureDraft() and IsFullyPaid. Empty invoice has BalanceDue=0 (TotalAmount-PaidAmount=0-0), so IsFullyPaid=true (BalanceDue<=0). No check for line items count or positive total amount."
+  artifacts:
+    - path: "backend/src/Modules/Billing/Billing.Domain/Entities/Invoice.cs"
+      issue: "Lines 200-215: Finalize() missing line item and total amount validation"
+    - path: "backend/src/Modules/Billing/Billing.Application/Features/FinalizeInvoice.cs"
+      issue: "Lines 20-46: handler delegates entirely to domain, no additional guards"
+  missing:
+    - "Add guard in Invoice.Finalize(): if (_lineItems.Count == 0) throw InvalidOperationException"
+    - "Add guard in Invoice.Finalize(): if (TotalAmount <= 0) throw InvalidOperationException"
+    - "Add unit tests for finalize-empty-invoice scenarios"
+  debug_session: ".planning/debug/finalize-invoice-zero-balance.md"
 
 - truth: "Apply discount endpoint auto-populates RequestedById from current user"
   status: failed
   reason: "User reported: Endpoint does not auto-populate RequestedById from ICurrentUser — client must send it explicitly. Also blocked by DbUpdateConcurrencyException."
   severity: blocker
   test: 15
-  artifacts: []
-  missing: []
+  root_cause: "ApplyDiscountHandler does not inject ICurrentUser. It exposes RequestedById as required Guid on command record, forcing client to send it. Every other billing handler injects ICurrentUser and reads currentUser.UserId server-side."
+  artifacts:
+    - path: "backend/src/Modules/Billing/Billing.Application/Features/ApplyDiscount.cs"
+      issue: "Lines 45-50: Handle() missing ICurrentUser parameter; line 78 uses command.RequestedById"
+  missing:
+    - "Remove RequestedById from ApplyDiscountCommand record"
+    - "Remove RuleFor(x => x.RequestedById).NotEmpty() validator"
+    - "Add ICurrentUser currentUser to Handle() parameters"
+    - "Replace command.RequestedById with currentUser.UserId"
+  debug_session: ".planning/debug/billing-requestedbyid-not-auto-populated.md"
 
 - truth: "Record payment against finalized invoice with balance"
   status: failed
   reason: "User reported: Cannot create invoices with balance to pay because adding line items fails due to concurrency issue."
   severity: blocker
   test: 8
-  artifacts: []
-  missing: []
+  root_cause: "Blocked by the same DbUpdateConcurrencyException root cause as Test 3. Once concurrency fix is applied, payments should work (45 unit tests pass for payment logic)."
+  artifacts:
+    - path: "backend/src/Modules/Billing/Billing.Infrastructure/Repositories/InvoiceRepository.cs"
+      issue: "Line 96: same Update() issue as Test 3"
+  missing:
+    - "Fix concurrency issue (Test 3 fix) unblocks this"
+  debug_session: ".planning/debug/invoice-rowversion-concurrency.md"
 
 - truth: "Request refund endpoint auto-populates RequestedById from current user"
   status: failed
   reason: "User reported: Endpoint does not auto-populate RequestedById from ICurrentUser — client must send it explicitly."
   severity: major
   test: 21
-  artifacts: []
-  missing: []
+  root_cause: "RequestRefundHandler does not inject ICurrentUser. Same pattern issue as ApplyDiscountHandler (Test 15)."
+  artifacts:
+    - path: "backend/src/Modules/Billing/Billing.Application/Features/RequestRefund.cs"
+      issue: "Lines 41-46: Handle() missing ICurrentUser parameter; line 89 uses command.RequestedById"
+  missing:
+    - "Remove RequestedById from RequestRefundCommand record"
+    - "Remove RuleFor(x => x.RequestedById).NotEmpty() validator"
+    - "Add ICurrentUser currentUser to Handle() parameters"
+    - "Replace command.RequestedById with currentUser.UserId"
+  debug_session: ".planning/debug/billing-requestedbyid-not-auto-populated.md"
