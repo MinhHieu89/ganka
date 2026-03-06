@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 07-27-PLAN.md
-last_updated: "2026-03-06T16:38:52.514Z"
+stopped_at: Completed 07-28-PLAN.md
+last_updated: "2026-03-06T16:39:15.425Z"
 last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
 progress:
   total_phases: 14
@@ -476,6 +476,7 @@ Progress: [█████████░] 96%
 | Phase 07-billing-finance P25 | 3min | 2 tasks | 8 files |
 | Phase 07 P13 | 2min | 2 tasks | 1 files |
 | Phase 07 P23 | 10min | 1 tasks | 1 files |
+| Phase 07 P28 | 8min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -812,6 +813,7 @@ Recent decisions affecting current work:
 - [Phase 07-billing-finance]: Reused MapToDto as internal static on CreateInvoiceHandler for DRY invoice-to-DTO mapping across handlers
 - [Phase 07]: Billing API: 21 endpoints under /api/billing with group-level RequireAuthorization, route parameter enrichment for ID safety, Wolverine bus dispatch
 - [Phase 07]: 11 Vietnamese user stories for billing/finance covering FIN-01 through FIN-10 and PRT-03, with Phase 7 vs Phase 9 scope clarification for 50/50 payment enforcement
+- [Phase 07]: Guard order in Finalize(): line items first, then total amount, then IsFullyPaid for clearest error messages
 
 ### Roadmap Evolution
 
@@ -834,6 +836,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-06T16:38:52.510Z
-Stopped at: Completed 07-27-PLAN.md
+Last session: 2026-03-06T16:39:15.420Z
+Stopped at: Completed 07-28-PLAN.md
 Resume file: None
