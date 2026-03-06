@@ -1,3 +1,4 @@
+using Billing.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Billing.Infrastructure;
@@ -5,7 +6,6 @@ namespace Billing.Infrastructure;
 /// <summary>
 /// EF Core DbContext for the Billing module.
 /// Uses schema-per-module isolation with the "billing" schema.
-/// Entity configurations and DbSets will be added as the module is implemented.
 /// </summary>
 public class BillingDbContext : DbContext
 {
@@ -13,12 +13,19 @@ public class BillingDbContext : DbContext
     {
     }
 
+    public DbSet<Invoice> Invoices => Set<Invoice>();
+    public DbSet<InvoiceLineItem> InvoiceLineItems => Set<InvoiceLineItem>();
+    public DbSet<Payment> Payments => Set<Payment>();
+    public DbSet<Discount> Discounts => Set<Discount>();
+    public DbSet<Refund> Refunds => Set<Refund>();
+    public DbSet<CashierShift> CashierShifts => Set<CashierShift>();
+    public DbSet<ShiftTemplate> ShiftTemplates => Set<ShiftTemplate>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("billing");
 
-        // Entity configurations will be added as this module is implemented
-        // in its respective phase plan.
+        // Entity configurations will be added by Plan 07-04 (EF Core configurations).
 
         base.OnModelCreating(modelBuilder);
     }
