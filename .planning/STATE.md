@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 06-27-PLAN.md
-last_updated: "2026-03-06T12:07:51.523Z"
+stopped_at: Completed 06-29-PLAN.md
+last_updated: "2026-03-06T13:30:53.584Z"
 last_activity: 2026-03-06 -- Completed 05.1-07 Full Verification (55/55 arch tests, 263 total tests pass)
 progress:
   total_phases: 14
   completed_phases: 10
-  total_plans: 151
-  completed_plans: 124
+  total_plans: 152
+  completed_plans: 125
 ---
 
 ---
@@ -304,6 +304,7 @@ Progress: [██████░░░░] 63%
 | Phase 06-pharmacy-consumables P25 | 15 | 2 tasks | 6 files |
 | Phase 06-pharmacy-consumables P26 | 4 | 1 tasks | 1 files |
 | Phase 06-pharmacy-consumables P27 | 60 | 2 tasks | 2 files |
+| Phase 06 P29 | 2min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -613,6 +614,7 @@ Recent decisions affecting current work:
 - [Phase 06-pharmacy-consumables]: EF Core projection pattern: always OrderBy on raw entity properties before .Select() or .Join() projections for SQL translatability
 - [Phase 06-pharmacy-consumables]: Null-guard pattern for optional numeric fields before calling toLocaleString() — use optional chaining with fallback display value
 - [Phase 06]: CON-03 auto-deduction descoped from Phase 6 to Phase 9; ROADMAP updated; domain comments reframed from deferred to implemented-in
+- [Phase 06]: Renamed DrugInventoryDto.id to drugCatalogItemId to match backend camelCase JSON serialization
 
 ### Roadmap Evolution
 
@@ -635,6 +637,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-06T10:26:02.762Z
-Stopped at: Completed 06-27-PLAN.md
+Last session: 2026-03-06T13:30:53.580Z
+Stopped at: Completed 06-29-PLAN.md
 Resume file: None
