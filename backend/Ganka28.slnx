@@ -80,5 +80,6 @@
     <Project Path="tests/Shared.Unit.Tests/Shared.Unit.Tests.csproj" />
     <Project Path="tests/Clinical.Unit.Tests/Clinical.Unit.Tests.csproj" />
     <Project Path="tests/Pharmacy.Unit.Tests/Pharmacy.Unit.Tests.csproj" />
+    <Project Path="tests/Billing.Unit.Tests/Billing.Unit.Tests.csproj" />
   </Folder>
 </Solution>
