@@ -15,6 +15,11 @@ public sealed class InvoiceConfiguration : IEntityTypeConfiguration<Invoice>
     {
         builder.ToTable("Invoices");
 
+        builder.Property(i => i.BranchId)
+            .HasConversion(
+                b => b.Value,
+                v => new Shared.Domain.BranchId(v));
+
         builder.Property(i => i.InvoiceNumber)
             .HasMaxLength(30)
             .IsRequired();

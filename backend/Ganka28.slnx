@@ -22,6 +22,7 @@
     <Project Path="src/Modules/Billing/Billing.Contracts/Billing.Contracts.csproj" />
     <Project Path="src/Modules/Billing/Billing.Domain/Billing.Domain.csproj" />
     <Project Path="src/Modules/Billing/Billing.Infrastructure/Billing.Infrastructure.csproj" />
+    <Project Path="src/Modules/Billing/Billing.Presentation/Billing.Presentation.csproj" />
   </Folder>
   <Folder Name="/src/Modules/Clinical/">
     <Project Path="src/Modules/Clinical/Clinical.Application/Clinical.Application.csproj" />

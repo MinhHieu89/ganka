@@ -27,8 +27,9 @@ public class InvoiceLineItem : Entity
     /// <summary>Department for revenue allocation.</summary>
     public Department Department { get; private set; }
 
-    /// <summary>Computed line total: UnitPrice * Quantity.</summary>
-    public decimal LineTotal => UnitPrice * Quantity;
+    /// <summary>Computed line total: UnitPrice * Quantity. Backed by field for EF Core materialization.</summary>
+    public decimal LineTotal { get; private set; }
+
 
     /// <summary>References the originating record (dispensing record, visit service, optical order, etc.).</summary>
     public Guid? SourceId { get; private set; }
@@ -65,6 +66,7 @@ public class InvoiceLineItem : Entity
             DescriptionVi = descriptionVi,
             UnitPrice = unitPrice,
             Quantity = quantity,
+            LineTotal = unitPrice * quantity,
             Department = department,
             SourceId = sourceId,
             SourceType = sourceType
