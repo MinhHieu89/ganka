@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: Clinical Workflow & Examination** - Visit lifecycle, refraction recording, and ICD-10 diagnosis (completed 2026-03-05)
 - [ ] **Phase 4: Dry Eye Template & Medical Imaging** - Structured dry eye assessment and medical image management with comparison
 - [ ] **Phase 5: Prescriptions & Document Printing** - Drug and optical prescription writing with all printable documents
-- [x] **Phase 6: Pharmacy & Consumables** - Drug inventory, dispensing, and consumables warehouse (completed 2026-03-06)
+- [ ] **Phase 6: Pharmacy & Consumables** - Drug inventory, dispensing, and consumables warehouse
 - [ ] **Phase 7: Billing & Finance** - Unified invoicing, payment processing, and shift management
 - [ ] **Phase 8: Optical Center** - Frame/lens inventory, glasses order tracking, warranty, and stocktaking
 - [ ] **Phase 9: Treatment Protocols** - IPL/LLLT/lid care packages with session tracking and OSDI monitoring
@@ -243,8 +243,8 @@ Plans:
   2. System alerts when drugs approach expiry (configurable 30/60/90 day thresholds) or fall below minimum stock levels
   3. Pharmacist can view pending prescriptions from HIS, dispense drugs with auto stock deduction per batch (FEFO), and the system enforces 7-day prescription validity
   4. Staff can process walk-in OTC sales without a prescription
-  5. System maintains a separate consumables warehouse (IPL gel, eye shields, etc.) with stock levels, alerts, and auto-deduction when consumables are used in treatment sessions
-**Plans**: 27 plans in 9 waves
+  5. System maintains a separate consumables warehouse (IPL gel, eye shields, etc.) with stock levels and alerts (auto-deduction from treatment sessions delivered in Phase 9)
+**Plans**: 29 plans (27 original + 1 verification + 1 gap closure)
 
 Plans:
 - [ ] 06-01-PLAN.md -- Pharmacy stock domain entities: Supplier, DrugBatch, SupplierDrugPrice, DrugCatalogItem pricing extension
@@ -275,6 +275,7 @@ Plans:
 - [ ] 06-25-PLAN.md -- Sidebar navigation update + i18n translations (EN/VI)
 - [ ] 06-26-PLAN.md -- Vietnamese user stories documentation (DOC-01)
 - [ ] 06-27-PLAN.md -- End-to-end verification checkpoint
+- [ ] 06-28-PLAN.md -- [GAP] Descope CON-03 auto-deduction to Phase 9 + fix PrescriptionCode in dispensing queue
 
 ### Phase 7: Billing & Finance
 **Goal**: Cashier can generate unified invoices across all departments, collect payments via multiple methods, and manage shifts with cash reconciliation
@@ -370,7 +371,7 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 | 4. Dry Eye Template & Medical Imaging | 7/8 | In Progress | - |
 | 5. Prescriptions & Document Printing | 23/25 | In Progress|  |
 | 5.1 Fix Architecture Test Failures | 0/8 | Not started | - |
-| 6. Pharmacy & Consumables | 28/28 | Complete   | 2026-03-06 |
+| 6. Pharmacy & Consumables | 28/29 | In Progress | - |
 | 7. Billing & Finance | 0/26 | Not started | - |
 | 8. Optical Center | 0/3 | Not started | - |
 | 9. Treatment Protocols | 0/3 | Not started | - |
