@@ -3,11 +3,27 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
+stopped_at: Completed 05.1-06-PLAN.md
+last_updated: "2026-03-06T05:08:04.727Z"
+last_activity: 2026-03-06 -- Completed 05.1-03b Patient Contracts DTO Enum References
+progress:
+  total_phases: 14
+  completed_phases: 8
+  total_plans: 150
+  completed_plans: 93
+  percent: 62
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: in-progress
 stopped_at: Completed 05.1-03b-PLAN.md
 last_updated: "2026-03-06T05:02:25.893Z"
 last_activity: 2026-03-06 -- Completed 05.1-03a Patient Contracts Enums
 progress:
-  total_phases: 14
+  [██████░░░░] 62%
   completed_phases: 8
   total_plans: 150
   completed_plans: 92
@@ -212,6 +228,7 @@ Progress: [██████░░░░] 61%
 | Phase 05.1 P01 | 4min | 1 tasks | 3 files |
 | Phase 05.1 P02 | 6min | 1 tasks | 4 files |
 | Phase 05.1 P03b | 1min | 1 tasks | 5 files |
+| Phase 05.1 P06 | 6min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -462,6 +479,7 @@ Recent decisions affecting current work:
 - [Phase 05.1]: FieldChange moved to ValueObjects namespace -- correct DDD classification for records used in JSON serialization
 - [Phase 05.1]: [05.1-02]: Tuple return from Domain validator to avoid Domain->Contracts dependency; Application maps to DTO
 - [Phase 05.1]: [05.1-02]: Removed both Patient.Domain.Enums and Patient.Domain.Services from PatientApiEndpoints (neither was used)
+- [Phase 05.1]: Added WolverineFx PackageReference to Clinical.Application for IMessageBus (was transitively via Shared.Infrastructure)
 
 ### Roadmap Evolution
 
@@ -484,6 +502,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-06T05:02:25.890Z
-Stopped at: Completed 05.1-03b-PLAN.md
+Last session: 2026-03-06T05:08:04.723Z
+Stopped at: Completed 05.1-06-PLAN.md
 Resume file: None
