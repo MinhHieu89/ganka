@@ -1,7 +1,7 @@
 using Billing.Application.Interfaces;
+using Billing.Contracts.Dtos;
 using Shared.Application;
 using Shared.Domain;
-using Billing.Contracts.Dtos;
 
 namespace Billing.Application.Features;
 
@@ -12,15 +12,24 @@ public sealed record GetCurrentShiftQuery();
 
 /// <summary>
 /// Wolverine static handler for retrieving the current open shift.
+/// Returns null if no shift is currently open.
 /// </summary>
 public static class GetCurrentShiftHandler
 {
-    public static Task<Result<CashierShiftDto?>> Handle(
+    public static async Task<Result<CashierShiftDto?>> Handle(
         GetCurrentShiftQuery query,
         ICashierShiftRepository shiftRepository,
         ICurrentUser currentUser,
         CancellationToken ct)
     {
-        throw new NotImplementedException();
+        var branchId = new BranchId(currentUser.BranchId);
+        var shift = await shiftRepository.GetCurrentOpenAsync(branchId, ct);
+
+        if (shift is null)
+        {
+            return Result.Success<CashierShiftDto?>(null);
+        }
+
+        return Result.Success<CashierShiftDto?>(OpenShiftHandler.MapToDto(shift));
     }
 }
