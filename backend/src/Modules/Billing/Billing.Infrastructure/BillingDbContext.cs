@@ -25,7 +25,7 @@ public class BillingDbContext : DbContext
     {
         modelBuilder.HasDefaultSchema("billing");
 
-        // Entity configurations will be added by Plan 07-04 (EF Core configurations).
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(BillingDbContext).Assembly);
 
         base.OnModelCreating(modelBuilder);
     }

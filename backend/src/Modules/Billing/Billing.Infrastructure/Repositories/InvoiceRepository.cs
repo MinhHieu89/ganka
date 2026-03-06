@@ -7,20 +7,13 @@ namespace Billing.Infrastructure.Repositories;
 
 /// <summary>
 /// EF Core implementation of <see cref="IInvoiceRepository"/>.
-/// Provides eager loading for Invoice aggregate including LineItems, Payments, Discounts, and Refunds.
+/// Provides CRUD operations with eager loading of child entities.
 /// </summary>
-public sealed class InvoiceRepository : IInvoiceRepository
+public sealed class InvoiceRepository(BillingDbContext context) : IInvoiceRepository
 {
-    private readonly BillingDbContext _context;
-
-    public InvoiceRepository(BillingDbContext context)
-    {
-        _context = context;
-    }
-
     public async Task<Invoice?> GetByIdAsync(Guid id, CancellationToken ct)
     {
-        return await _context.Invoices
+        return await context.Invoices
             .Include(i => i.LineItems)
             .Include(i => i.Payments)
             .Include(i => i.Discounts)
@@ -30,7 +23,7 @@ public sealed class InvoiceRepository : IInvoiceRepository
 
     public async Task<Invoice?> GetByVisitIdAsync(Guid visitId, CancellationToken ct)
     {
-        return await _context.Invoices
+        return await context.Invoices
             .Include(i => i.LineItems)
             .Include(i => i.Payments)
             .Include(i => i.Discounts)
@@ -40,7 +33,7 @@ public sealed class InvoiceRepository : IInvoiceRepository
 
     public async Task<Invoice?> GetByInvoiceNumberAsync(string invoiceNumber, CancellationToken ct)
     {
-        return await _context.Invoices
+        return await context.Invoices
             .Include(i => i.LineItems)
             .Include(i => i.Payments)
             .Include(i => i.Discounts)
@@ -50,21 +43,16 @@ public sealed class InvoiceRepository : IInvoiceRepository
 
     public async Task<List<Invoice>> GetByShiftIdAsync(Guid shiftId, CancellationToken ct)
     {
-        return await _context.Invoices
+        return await context.Invoices
             .Include(i => i.LineItems)
             .Where(i => i.CashierShiftId == shiftId)
-            .OrderByDescending(i => i.CreatedAt)
             .ToListAsync(ct);
     }
 
     public async Task<List<Invoice>> GetPendingByPatientIdAsync(Guid patientId, CancellationToken ct)
     {
-        return await _context.Invoices
-            .Include(i => i.LineItems)
-            .Include(i => i.Payments)
-            .Include(i => i.Discounts)
+        return await context.Invoices
             .Where(i => i.PatientId == patientId && i.Status == InvoiceStatus.Draft)
-            .OrderByDescending(i => i.CreatedAt)
             .ToListAsync(ct);
     }
 
@@ -72,34 +60,31 @@ public sealed class InvoiceRepository : IInvoiceRepository
     {
         var prefix = $"HD-{year}-";
 
-        var maxNumber = await _context.Invoices
+        var lastInvoice = await context.Invoices
             .IgnoreQueryFilters()
             .Where(i => i.InvoiceNumber.StartsWith(prefix))
-            .Select(i => (string?)i.InvoiceNumber)
-            .MaxAsync(ct);
+            .OrderByDescending(i => i.InvoiceNumber)
+            .Select(i => i.InvoiceNumber)
+            .FirstOrDefaultAsync(ct);
 
-        if (maxNumber is null)
+        var nextSequence = 1;
+        if (lastInvoice is not null)
         {
-            return $"HD-{year}-00001";
+            var sequencePart = lastInvoice[(prefix.Length)..];
+            if (int.TryParse(sequencePart, out var currentSequence))
+                nextSequence = currentSequence + 1;
         }
 
-        // Parse the sequence number from HD-YYYY-NNNNN format
-        var sequencePart = maxNumber[prefix.Length..];
-        if (int.TryParse(sequencePart, out var currentSequence))
-        {
-            return $"HD-{year}-{(currentSequence + 1):D5}";
-        }
-
-        return $"HD-{year}-00001";
+        return $"{prefix}{nextSequence:D5}";
     }
 
     public void Add(Invoice invoice)
     {
-        _context.Invoices.Add(invoice);
+        context.Invoices.Add(invoice);
     }
 
     public void Update(Invoice invoice)
     {
-        _context.Invoices.Update(invoice);
+        context.Invoices.Update(invoice);
     }
 }
