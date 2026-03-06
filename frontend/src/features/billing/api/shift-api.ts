@@ -71,9 +71,18 @@ export const SHIFT_STATUS_MAP: Record<number, string> = {
 
 // -- Query key factory --
 
+export interface ShiftHistoryResult {
+  items: CashierShiftDto[]
+  totalCount: number
+}
+
 export const shiftKeys = {
   all: ["shifts"] as const,
   current: () => [...shiftKeys.all, "current"] as const,
+  list: (page?: number) =>
+    page != null
+      ? ([...shiftKeys.all, "list", page] as const)
+      : ([...shiftKeys.all, "list"] as const),
   report: (id: string) => [...shiftKeys.all, "report", id] as const,
   templates: () => [...shiftKeys.all, "templates"] as const,
 }
@@ -131,6 +140,21 @@ async function getShiftTemplates(): Promise<ShiftTemplateDto[]> {
   )
   if (error) throw new Error("Failed to fetch shift templates")
   return (data as ShiftTemplateDto[]) ?? []
+}
+
+async function getShiftHistory(
+  page: number = 1,
+  pageSize: number = 20,
+): Promise<ShiftHistoryResult> {
+  const { data, error } = await api.GET("/api/billing/shifts" as never, {
+    params: { query: { page, pageSize } },
+  } as never)
+  if (error) throw new Error("Failed to fetch shift history")
+  const result = data as { items: CashierShiftDto[]; totalCount: number } | null
+  if (result && "items" in result) {
+    return { items: result.items ?? [], totalCount: result.totalCount ?? 0 }
+  }
+  return { items: (data as CashierShiftDto[]) ?? [], totalCount: 0 }
 }
 
 // -- PDF / Print functions (native fetch for blob responses) --
@@ -221,6 +245,13 @@ export function useShiftTemplates() {
   })
 }
 
+export function useShiftHistory(page: number = 1) {
+  return useQuery({
+    queryKey: shiftKeys.list(page),
+    queryFn: () => getShiftHistory(page),
+  })
+}
+
 export function useOpenShift() {
   const queryClient = useQueryClient()
   return useMutation({
@@ -262,4 +293,5 @@ export {
   closeShift,
   getShiftReport,
   getShiftTemplates,
+  getShiftHistory,
 }

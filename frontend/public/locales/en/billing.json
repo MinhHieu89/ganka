@@ -99,5 +99,14 @@
   "invoiceNumber": "Invoice #",
   "createdAt": "Created",
   "cashierName": "Cashier",
-  "openedAt": "Opened at"
+  "openedAt": "Opened at",
+  "closedAt": "Closed at",
+  "date": "Date",
+  "shiftStatus": {
+    "open": "Open",
+    "closed": "Closed"
+  },
+  "noShiftHistory": "No shift history",
+  "viewReport": "View Report",
+  "shiftsSubtitle": "Manage shifts and cash reconciliation"
 }

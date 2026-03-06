@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 07-20-PLAN.md
-last_updated: "2026-03-06T14:06:19.715Z"
+stopped_at: Completed 07-05-PLAN.md
+last_updated: "2026-03-06T14:07:35.058Z"
 last_activity: 2026-03-06 -- Completed 05.1-07 Full Verification (55/55 arch tests, 263 total tests pass)
 progress:
   total_phases: 14
   completed_phases: 10
   total_plans: 152
-  completed_plans: 133
+  completed_plans: 135
 ---
 
 ---
@@ -326,6 +326,8 @@ Progress: [██████░░░░] 63%
 | Phase 07 P01 | 6min | 2 tasks | 4 files |
 | Phase 07 P07 | 4min | 2 tasks | 20 files |
 | Phase 07-15 P15 | 6min | 2 tasks | 9 files |
+| Phase 07 P08 | 6min | 2 tasks | 18 files |
+| Phase 07-billing-finance P05 | 8min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -648,6 +650,9 @@ Recent decisions affecting current work:
 - [Phase 07]: Used nullable string cast in MaxAsync for safe invoice number generation on empty sequences
 - [Phase 07-billing-finance]: Duplicated ClinicHeaderComponent in Billing.Infrastructure instead of cross-module reference to maintain modular monolith boundary
 - [Phase 07]: Used button-based toggle instead of ToggleGroup (not available in shadcn/ui)
+- [Phase 07]: Created prerequisite EF configs, repos, seeder inline since dependent plans 04-07 not fully executed (Rule 3)
+- [Phase 07-billing-finance]: Added BranchId to ShiftTemplate entity for multi-tenant isolation
+- [Phase 07-billing-finance]: Used filtered unique index for single open shift per branch enforcement
 
 ### Roadmap Evolution
 
@@ -670,6 +675,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-06T14:06:19.711Z
-Stopped at: Completed 07-20-PLAN.md
+Last session: 2026-03-06T14:07:35.053Z
+Stopped at: Completed 07-05-PLAN.md
 Resume file: None

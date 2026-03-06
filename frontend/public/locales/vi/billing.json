@@ -99,5 +99,14 @@
   "invoiceNumber": "Số hóa đơn",
   "createdAt": "Ngày tạo",
   "cashierName": "Thu ngân",
-  "openedAt": "Mở lúc"
+  "openedAt": "Mở lúc",
+  "closedAt": "Đóng lúc",
+  "date": "Ngày",
+  "shiftStatus": {
+    "open": "Đang mở",
+    "closed": "Đã đóng"
+  },
+  "noShiftHistory": "Chưa có lịch sử ca",
+  "viewReport": "Xem báo cáo",
+  "shiftsSubtitle": "Quản lý ca làm việc và đối chiếu tiền mặt"
 }

@@ -17,6 +17,7 @@ import {
   IconBuilding,
   IconBoxSeam,
   IconChevronDown,
+  IconClock,
 } from "@tabler/icons-react"
 import {
   Collapsible,
@@ -139,7 +140,10 @@ export function AppSidebar({ ...sidebarProps }: ComponentProps<typeof Sidebar>) 
       titleKey: "sidebar.billing",
       to: "/billing",
       icon: IconReceipt,
-      disabled: true,
+      children: [
+        { titleKey: "sidebar.billingDashboard", to: "/billing" },
+        { titleKey: "sidebar.billingShifts", to: "/billing/shifts" },
+      ],
     },
     {
       titleKey: "sidebar.optical",
