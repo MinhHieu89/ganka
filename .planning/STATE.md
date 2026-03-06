@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 06-11-PLAN.md
-last_updated: "2026-03-06T07:38:30.008Z"
+stopped_at: Completed 06-12-PLAN.md
+last_updated: "2026-03-06T07:47:44.139Z"
 last_activity: 2026-03-06 -- Completed 05.1-07 Full Verification (55/55 arch tests, 263 total tests pass)
 progress:
   total_phases: 14
   completed_phases: 9
   total_plans: 150
-  completed_plans: 107
+  completed_plans: 108
 ---
 
 ---
@@ -258,6 +258,7 @@ Progress: [██████░░░░] 63%
 | Phase 06 P09 | 5 | 2 tasks | 5 files |
 | Phase 06 P10 | 2 | 2 tasks | 3 files |
 | Phase 06 P11 | 2 | 1 tasks | 4 files |
+| Phase 06 P12 | 6 | 1 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -534,6 +535,8 @@ Recent decisions affecting current work:
 - [Phase 06]: FEFOAllocator as static class (not instance service) -- pure function with no state, no DI needed; reused by dispensing and OTC sale
 - [Phase 06-11]: CreateSupplierHandler requires ICurrentUser for BranchId on Supplier.Create following DrugCatalogItem pattern
 - [Phase 06-11]: Handlers placed in Pharmacy.Application.Features.Suppliers subfolder namespace matching research architecture
+- [Phase 06]: MiniExcel package name is 'MiniExcel' (not 'MiniExcelLibs') on NuGet.org; Query<T> hasHeader param is the correct API
+- [Phase 06-12]: ImportStockFromExcel returns ExcelImportPreview (ValidLines + Errors) for user confirmation before batch creation -- not fail-fast
 
 ### Roadmap Evolution
 
@@ -556,6 +559,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-06T07:38:30.003Z
-Stopped at: Completed 06-11-PLAN.md
+Last session: 2026-03-06T07:47:44.135Z
+Stopped at: Completed 06-12-PLAN.md
 Resume file: None
