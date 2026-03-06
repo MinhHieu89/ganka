@@ -328,7 +328,7 @@ Plans:
   3. Staff can create preset and custom combo pricing (frame + lens combinations) and manage warranty claims with supporting documents (replace/repair/discount)
   4. System stores lens prescription history per patient with year-over-year comparison and lens replacement history
   5. Staff can perform barcode-based stocktaking with physical count entry and a discrepancy report comparing physical vs. system inventory
-**Plans**: 38 plans in 15 waves
+**Plans**: 39 plans in 15 waves
 
 Plans:
 - [ ] 08-01-PLAN.md -- Domain enums: FrameMaterial, FrameType, FrameGender, GlassesOrderStatus, ProcessingType
@@ -369,6 +369,7 @@ Plans:
 - [ ] 08-36-PLAN.md -- End-to-end verification checkpoint
 - [ ] 08-37-PLAN.md -- Vietnamese user stories documentation (DOC-01)
 - [ ] 08-38-PLAN.md -- Add SupplierType flags enum to Pharmacy.Domain + extend Supplier entity + migration
+- [ ] 08-39-PLAN.md -- Clinical.Application handler for GetPatientOpticalPrescriptionsQuery cross-module query
 
 ### Phase 9: Treatment Protocols
 **Goal**: Doctors can create and manage IPL/LLLT/lid care treatment packages with session tracking, OSDI monitoring per session, and configurable business rules
@@ -409,5 +410,5 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 | 5.1 Fix Architecture Test Failures | 0/8 | Not started | - |
 | 6. Pharmacy & Consumables | 29/29 | Complete   | 2026-03-06 |
 | 7. Billing & Finance | 24/26 | In Progress|  |
-| 8. Optical Center | 0/38 | Not started | - |
+| 8. Optical Center | 0/39 | Not started | - |
 | 9. Treatment Protocols | 0/3 | Not started | - |
