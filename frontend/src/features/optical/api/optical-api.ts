@@ -74,29 +74,39 @@ export interface FrameDto {
 
 export interface LensCatalogItemDto {
   id: string
+  brand: string
   name: string
+  lensType: string
   material: number
-  coatings: number
-  basePrice: number
+  availableCoatings: number
+  sellingPrice: number
+  costPrice: number
   isActive: boolean
+  preferredSupplierId: string | null
+  supplierName: string | null
   stockEntries: LensStockEntryDto[]
+  createdAt: string
 }
 
 export interface LensStockEntryDto {
   id: string
+  lensCatalogItemId: string
   sph: number
   cyl: number
   add: number | null
   quantity: number
+  minStockLevel: number
 }
 
 export interface LowLensStockAlertDto {
   lensCatalogItemId: string
-  lensName: string
+  brand: string
+  name: string
   sph: number
   cyl: number
   add: number | null
-  currentQuantity: number
+  quantity: number
+  minStockLevel: number
 }
 
 export interface GlassesOrderDto {
@@ -273,17 +283,25 @@ export interface UpdateFrameInput {
 }
 
 export interface CreateLensCatalogItemInput {
+  brand: string
   name: string
+  lensType: string
   material: number
-  coatings: number
-  basePrice: number
+  availableCoatings: number
+  sellingPrice: number
+  costPrice: number
+  preferredSupplierId?: string | null
 }
 
 export interface UpdateLensCatalogItemInput {
+  brand: string
   name: string
+  lensType: string
   material: number
-  coatings: number
-  basePrice: number
+  availableCoatings: number
+  sellingPrice: number
+  costPrice: number
+  preferredSupplierId?: string | null
   isActive?: boolean
 }
 
@@ -323,7 +341,8 @@ export interface CreateComboPackageInput {
   description?: string | null
   frameId?: string | null
   lensCatalogItemId?: string | null
-  packagePrice: number
+  comboPrice: number
+  originalTotalPrice?: number | null
 }
 
 export interface UpdateComboPackageInput {
@@ -331,7 +350,8 @@ export interface UpdateComboPackageInput {
   description?: string | null
   frameId?: string | null
   lensCatalogItemId?: string | null
-  packagePrice: number
+  comboPrice: number
+  originalTotalPrice?: number | null
   isActive?: boolean
 }
 
