@@ -75,7 +75,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **TRT-02**: System tracks sessions completed and remaining per treatment course
 - [x] **TRT-03**: System records OSDI score at each treatment session
 - [ ] **TRT-04**: System auto-marks treatment course as "Completed" when all sessions are done
-- [ ] **TRT-05**: System enforces minimum interval between sessions (configurable per type: IPL 2-4wk, LLLT 1-2wk, lid care 1-2wk)
+- [x] **TRT-05**: System enforces minimum interval between sessions (configurable per type: IPL 2-4wk, LLLT 1-2wk, lid care 1-2wk)
 - [ ] **TRT-06**: Patient can have multiple active treatment courses simultaneously (e.g., IPL + LLLT)
 - [x] **TRT-07**: Doctor can modify treatment protocol mid-course (add/remove sessions, change parameters)
 - [ ] **TRT-08**: Doctor can switch patient from one treatment type to another mid-course (requires doctor approval)
@@ -272,7 +272,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TRT-02 | Phase 9 | Complete |
 | TRT-03 | Phase 9 | Complete |
 | TRT-04 | Phase 9 | Pending |
-| TRT-05 | Phase 9 | Pending |
+| TRT-05 | Phase 9 | Complete |
 | TRT-06 | Phase 9 | Pending |
 | TRT-07 | Phase 9 | Complete |
 | TRT-08 | Phase 9 | Pending |
