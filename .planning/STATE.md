@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 09-20-PLAN.md
-last_updated: "2026-03-08T07:41:38Z"
-last_activity: 2026-03-08 -- Completed 09-20 Protocol Template Management Page (ProtocolTemplateList DataTable, ProtocolTemplateForm dialog, /treatments/templates route)
+stopped_at: Completed 09-22-PLAN.md
+last_updated: "2026-03-08T07:41:52Z"
+last_activity: 2026-03-08 -- Completed 09-22 Treatment Package Detail Page (TreatmentPackageDetail, TreatmentSessionCard, OsdiTrendChart, route)
 progress:
   total_phases: 14
   completed_phases: 12
   total_plans: 222
-  completed_plans: 212
+  completed_plans: 213
 ---
 
 ---
