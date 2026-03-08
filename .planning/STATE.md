@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 08-11-PLAN.md
-last_updated: "2026-03-08T02:56:28.911Z"
+stopped_at: Completed 08-14-PLAN.md
+last_updated: "2026-03-08T02:57:00.031Z"
 last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
 progress:
   total_phases: 14
   completed_phases: 11
   total_plans: 193
-  completed_plans: 170
+  completed_plans: 171
   percent: 80
 ---
 
@@ -505,6 +505,10 @@ Progress: [█████████░] 96%
 | Phase 08-optical-center P26 | 15 | 2 tasks | 3 files |
 | Phase 08-optical-center P11 | 10 | 2 tasks | 4 files |
 | Phase 08-optical-center P10 | 15 | 2 tasks | 2 files |
+| Phase 08-optical-center P15 | 6 | 2 tasks | 7 files |
+| Phase 08-optical-center P35 | 305 | 2 tasks | 6 files |
+| Phase 08-optical-center P14 | 25 | 2 tasks | 6 files |
+| Phase 08 P37 | 7 | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -865,6 +869,12 @@ Recent decisions affecting current work:
 - [Phase 08-optical-center]: IFrameRepository includes GetNextSequenceNumberAsync for EAN-13 barcode auto-generation workflow
 - [Phase 08-optical-center]: GlassesOrderItem uses ItemDescription (not Description) property name matching actual domain entity
 - [Phase 08-optical-center]: WarrantyClaim.DocumentUrls stored as JSON nvarchar(max) using System.Text.Json HasConversion
+- [Phase 08-optical-center]: Ean13Generator placed in Optical.Domain (not Application) as pure domain service referenced by Frame entity
+- [Phase 08-optical-center]: EAN-13 clinic prefix set to 200 (GS1 internal-use range 200-299) to avoid conflicts with manufacturer barcodes
+- [Phase 08-optical-center]: StocktakingRepository.GetCurrentSessionAsync uses OrderByDescending(CreatedAt).FirstOrDefaultAsync for deterministic result
+- [Phase 08-optical-center]: WarrantyClaimConfiguration stores DocumentUrls as JSON nvarchar(max) using System.Text.Json value converter
+- [Phase 08-optical-center]: Optical sidebar uses common namespace for translation keys; optical namespace used for detailed page strings
+- [Phase 08]: 21 Vietnamese user stories covering all 9 OPT requirements using Phase 3.1 standard format with acceptance criteria and technical notes
 
 ### Roadmap Evolution
 
@@ -887,6 +897,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-08T02:56:01.288Z
-Stopped at: Completed 08-11-PLAN.md
+Last session: 2026-03-08T02:57:00.021Z
+Stopped at: Completed 08-14-PLAN.md
 Resume file: None
