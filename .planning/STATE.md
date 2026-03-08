@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 09-02-PLAN.md
-last_updated: "2026-03-08T06:45:22.671Z"
+stopped_at: Completed 09-06-PLAN.md
+last_updated: "2026-03-08T06:49:04.632Z"
 last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
 progress:
   total_phases: 14
   completed_phases: 12
   total_plans: 222
-  completed_plans: 194
+  completed_plans: 195
 ---
 
 ---
@@ -545,6 +545,7 @@ Progress: [█████████░] 96%
 | Phase 08-optical-center P19 | 707 | 2 tasks | 7 files |
 | Phase 09 P01 | 67s | 2 tasks | 4 files |
 | Phase 09 P02 | 2min | 2 tasks | 3 files |
+| Phase 09-treatment-protocols P06 | 2min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -943,6 +944,8 @@ Recent decisions affecting current work:
 - [Phase 08-optical-center]: ApproveWarrantyClaim validates Resolution==Replace before allowing approve/reject
 - [Phase 09]: Treatment domain enums follow Optical.Domain.Enums pattern for cross-module consistency
 - [Phase 09]: Used sealed record pattern for treatment parameter value objects (JSON-serializable, matching FieldChange convention)
+- [Phase 09-treatment-protocols]: Created all 4 DTOs in Task 1 commit since TreatmentPackageDto depends on TreatmentSessionDto and CancellationRequestDto
+- [Phase 09-treatment-protocols]: Used string representations for enum fields (TreatmentType, PricingMode, Status) following Billing module pattern
 
 ### Roadmap Evolution
 
@@ -965,6 +968,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-08T06:45:22.666Z
-Stopped at: Completed 09-02-PLAN.md
+Last session: 2026-03-08T06:49:04.627Z
+Stopped at: Completed 09-06-PLAN.md
 Resume file: None
