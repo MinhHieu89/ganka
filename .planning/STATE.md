@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 08-29-PLAN.md
-last_updated: "2026-03-08T03:02:34.055Z"
+stopped_at: Completed 08-34-PLAN.md
+last_updated: "2026-03-08T03:03:40.836Z"
 last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
 progress:
   total_phases: 14
   completed_phases: 11
   total_plans: 193
-  completed_plans: 178
+  completed_plans: 181
   percent: 80
 ---
 
@@ -514,6 +514,8 @@ Progress: [█████████░] 96%
 | Phase 08-optical-center P25 | 15 | 2 tasks | 4 files |
 | Phase 08-optical-center P22 | 20 | 2 tasks | 6 files |
 | Phase 08-optical-center P29 | 35 | 2 tasks | 6 files |
+| Phase 08-optical-center P28 | 11 | 2 tasks | 5 files |
+| Phase 08-optical-center P34 | 20 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -889,6 +891,8 @@ Recent decisions affecting current work:
 - [Phase 08-optical-center]: Used PharmacyDbContext directly for OpticalSupplierSeeder (fallback) instead of Pharmacy.Contracts IMessageBus - CreateSupplier command not exposed in Contracts
 - [Phase 08-optical-center]: OrderStatusBadge uses custom className colors instead of shadcn Badge variants to support 5 distinct status colors (blue, yellow, purple, green, gray)
 - [Phase 08-optical-center]: GlassesOrderTable uses controlled status filter (props from parent GlassesOrdersPage) for server-side API filtering
+- [Phase 08-optical-center]: Lens catalog UI uses TanStack Table getExpandedRowModel for per-power stock sub-rows; LensFormDialog uses mode prop for create/edit/stock flows; coatings encoded as bitfield flags
+- [Phase 08-optical-center]: StocktakingPage uses local state for mode (list/active/report) rather than URL params
 
 ### Roadmap Evolution
 
@@ -911,6 +915,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-08T03:02:34.050Z
-Stopped at: Completed 08-29-PLAN.md
+Last session: 2026-03-08T03:03:40.831Z
+Stopped at: Completed 08-34-PLAN.md
 Resume file: None
