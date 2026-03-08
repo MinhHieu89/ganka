@@ -4,7 +4,7 @@ milestone: v1.0
 milestone_name: milestone
 status: in-progress
 stopped_at: Completed 08-31-PLAN.md
-last_updated: "2026-03-08T03:00:57.253Z"
+last_updated: "2026-03-08T03:01:01.424Z"
 last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
 progress:
   total_phases: 14
@@ -883,6 +883,7 @@ Recent decisions affecting current work:
 - [Phase 08-optical-center]: Used number enum (0/1/2) for resolutionType and approvalStatus matching backend C# enums
 - [Phase 08-optical-center]: LensCatalogItemDto includes basePrice alongside sellingPrice for component compatibility
 - [Phase 08-optical-center]: getDeliveredGlassesOrders added to optical API to support WarrantyClaimForm
+- [Phase 08-31]: ComboPackageDto aligned to backend contract (comboPrice/originalTotalPrice/savings) — removed incorrect packagePrice field
 
 ### Roadmap Evolution
 
