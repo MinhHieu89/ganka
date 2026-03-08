@@ -20,6 +20,7 @@ import {
   createComboPackage,
   updateComboPackage,
   getWarrantyClaims,
+  getDeliveredGlassesOrders,
   createWarrantyClaim,
   approveWarrantyClaim,
   uploadWarrantyDocument,
@@ -313,6 +314,13 @@ export function useWarrantyClaims(params: GetWarrantyClaimsParams = {}) {
   return useQuery({
     queryKey: opticalKeys.warranty.list(params),
     queryFn: () => getWarrantyClaims(params),
+  })
+}
+
+export function useDeliveredOrders() {
+  return useQuery({
+    queryKey: [...opticalKeys.orders.all(), "delivered"],
+    queryFn: getDeliveredGlassesOrders,
   })
 }
 
