@@ -71,7 +71,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Treatment Protocols
 
-- [ ] **TRT-01**: Doctor can create IPL, LLLT, or lid care treatment packages with 1-6 sessions and flexible pricing (per-session or per-package)
+- [x] **TRT-01**: Doctor can create IPL, LLLT, or lid care treatment packages with 1-6 sessions and flexible pricing (per-session or per-package)
 - [ ] **TRT-02**: System tracks sessions completed and remaining per treatment course
 - [ ] **TRT-03**: System records OSDI score at each treatment session
 - [ ] **TRT-04**: System auto-marks treatment course as "Completed" when all sessions are done
@@ -268,7 +268,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SCH-04 | Phase 2 | Complete |
 | SCH-05 | Phase 2 | Complete |
 | SCH-06 | Phase 2 | Complete |
-| TRT-01 | Phase 9 | Pending |
+| TRT-01 | Phase 9 | Complete |
 | TRT-02 | Phase 9 | Pending |
 | TRT-03 | Phase 9 | Pending |
 | TRT-04 | Phase 9 | Pending |
