@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 08-07-PLAN.md
-last_updated: "2026-03-08T02:49:58.317Z"
+stopped_at: Completed 08-06-PLAN.md
+last_updated: "2026-03-08T02:52:52.281Z"
 last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
 progress:
   total_phases: 14
   completed_phases: 11
   total_plans: 193
-  completed_plans: 157
+  completed_plans: 162
   percent: 80
 ---
 
@@ -497,6 +497,9 @@ Progress: [█████████░] 96%
 | Phase 08-optical-center P01 | 7 | 2 tasks | 5 files |
 | Phase 08-optical-center P08 | 8 | 2 tasks | 3 files |
 | Phase 08-optical-center P07 | 82 | 2 tasks | 4 files |
+| Phase 08-optical-center P03 | 4 | 2 tasks | 5 files |
+| Phase 08-optical-center P06 | 5 | 2 tasks | 2 files |
+| Phase 08-optical-center P05 | 15 | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -840,6 +843,11 @@ Recent decisions affecting current work:
 - [Phase 08-optical-center]: GetOpticalChargesQuery.cs contains queries Optical sends TO other modules (Clinical, Pharmacy), not a query Optical responds to - Optical.Application handles Billing.Contracts.GetVisitChargesQuery
 - [Phase 08-optical-center]: Cross-module query pattern: Contracts layer defines what module needs from others; Application layer defines what others can query from this module
 - [Phase 08-optical-center]: Optical Contracts DTOs: sealed records with int-serialized enums; FrameSummaryDto added for list view performance parity with Billing pattern
+- [Phase 08-optical-center]: EAN-13 prefix: 7-digit DefaultPrefix '8930000' (Vietnam GS1 + placeholder), 5-digit sequence, 1-check = 13 total
+- [Phase 08-optical-center]: LowStockAlertEvent fires at <= MinStockLevel in Frame.AdjustStock with EntityType discriminator for frame vs lens routing
+- [Phase 08-optical-center]: WarrantyClaim.RequiresApproval only returns true for Replace resolution — Repair and Discount handled by staff directly
+- [Phase 08-optical-center]: StocktakingSession.RecordItem uses upsert by barcode to prevent duplicate scan counts (addresses Pitfall 5)
+- [Phase 08-optical-center]: GlassesOrder payment enforcement in application layer, not entity - TransitionTo does not check IsPaymentConfirmed (OPT-04 concern belongs in handler)
 
 ### Roadmap Evolution
 
@@ -862,6 +870,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-08T02:49:58.308Z
-Stopped at: Completed 08-07-PLAN.md
+Last session: 2026-03-08T02:52:49.286Z
+Stopped at: Completed 08-06-PLAN.md
 Resume file: None
