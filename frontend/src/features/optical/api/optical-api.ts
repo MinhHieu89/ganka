@@ -51,6 +51,40 @@ export const STOCKTAKING_STATUS_MAP: Record<number, string> = {
   2: "Cancelled",
 }
 
+export const LENS_MATERIAL_MAP: Record<number, string> = {
+  0: "CR-39",
+  1: "Polycarbonate",
+  2: "Hi-Index",
+  3: "Trivex",
+}
+
+export const LENS_COATING_MAP: Record<number, string> = {
+  1: "Anti-Reflective",
+  2: "Blue Cut",
+  4: "Photochromic",
+  8: "Scratch-Resistant",
+  16: "UV Protection",
+}
+
+export const LENS_COATING_BITS = [1, 2, 4, 8, 16] as const
+
+export const LENS_TYPE_OPTIONS = [
+  { value: "single_vision", label: "Single Vision" },
+  { value: "bifocal", label: "Bifocal" },
+  { value: "progressive", label: "Progressive" },
+  { value: "reading", label: "Reading" },
+]
+
+/** Decode flags bitfield into array of coating bit values */
+export function decodeCoatings(coatings: number): number[] {
+  return LENS_COATING_BITS.filter((bit) => (coatings & bit) !== 0)
+}
+
+/** Encode array of coating bit values back into bitfield */
+export function encodeCoatings(bits: number[]): number {
+  return bits.reduce((acc, bit) => acc | bit, 0)
+}
+
 // -- DTOs matching backend Optical.Contracts.Dtos --
 
 export interface FrameDto {
@@ -79,6 +113,7 @@ export interface LensCatalogItemDto {
   lensType: string
   material: number
   availableCoatings: number
+  basePrice: number
   sellingPrice: number
   costPrice: number
   isActive: boolean
@@ -168,9 +203,13 @@ export interface StocktakingSessionDto {
   id: string
   name: string
   status: number
+  startedById: string
+  startedByName: string | null
   startedAt: string
   completedAt: string | null
   itemCount: number
+  discrepancyCount: number
+  notes: string | null
 }
 
 export interface StocktakingItemDto {
@@ -189,8 +228,12 @@ export interface DiscrepancyReportDto {
   sessionId: string
   sessionName: string
   completedAt: string | null
+  totalScanned: number
+  totalDiscrepancies: number
+  overCount: number
+  underCount: number
+  missingFromSystem: number
   items: StocktakingItemDto[]
-  totalDiscrepancy: number
 }
 
 export interface OpticalPrescriptionHistoryDto {
@@ -225,6 +268,16 @@ export interface PagedResult<T> {
   totalCount: number
   page: number
   pageSize: number
+}
+
+// Summary DTO for delivered orders used by warranty claim form
+export interface DeliveredOrderSummaryDto {
+  id: string
+  patientName: string
+  deliveredAt: string | null
+  warrantyExpiresAt: string | null
+  isUnderWarranty: boolean
+  daysRemainingInWarranty: number | null
 }
 
 export interface GenerateBarcodeDto {
@@ -359,17 +412,6 @@ export interface GetWarrantyClaimsParams {
   approvalStatusFilter?: number
   page?: number
   pageSize?: number
-}
-
-export interface DeliveredOrderSummaryDto {
-  id: string
-  orderNumber: string
-  patientName: string
-  orderDate: string
-  deliveredAt: string
-  warrantyExpiresAt: string
-  isUnderWarranty: boolean
-  daysRemainingInWarranty: number | null
 }
 
 export interface CreateWarrantyClaimInput {
@@ -576,12 +618,6 @@ export async function updateComboPackage(id: string, data: UpdateComboPackageInp
 
 // -- Warranty endpoints --
 
-export async function getDeliveredGlassesOrders(): Promise<DeliveredOrderSummaryDto[]> {
-  const { data, error } = await api.GET("/api/optical/orders/delivered" as never)
-  if (error) throw new Error("Failed to fetch delivered orders")
-  return (data as DeliveredOrderSummaryDto[]) ?? []
-}
-
 export async function getWarrantyClaims(params: GetWarrantyClaimsParams = {}): Promise<PagedResult<WarrantyClaimDto>> {
   const { data, error } = await api.GET("/api/optical/warranty" as never, {
     params: { query: params },
@@ -634,6 +670,15 @@ export async function uploadWarrantyDocument(id: string, file: File): Promise<{ 
   }
   return res.json()
 }
+
+export async function getDeliveredOrders(): Promise<DeliveredOrderSummaryDto[]> {
+  const { data, error } = await api.GET("/api/optical/orders/delivered" as never)
+  if (error) throw new Error("Failed to fetch delivered orders")
+  return (data as DeliveredOrderSummaryDto[]) ?? []
+}
+
+// Alias for backward compatibility with optical-queries.ts
+export const getDeliveredGlassesOrders = getDeliveredOrders
 
 // -- Prescription endpoints --
 

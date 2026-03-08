@@ -8,12 +8,16 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+    <PackageReference Include="ZXing.Net" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Optical.Application\Optical.Application.csproj" />
     <ProjectReference Include="..\Optical.Domain\Optical.Domain.csproj" />
     <ProjectReference Include="..\..\..\Shared\Shared.Infrastructure\Shared.Infrastructure.csproj" />
+    <!-- Pharmacy.Infrastructure reference for OpticalSupplierSeeder cross-module access.
+         TODO: Migrate to Pharmacy.Contracts pattern when CreateSupplier command is exposed. -->
+    <ProjectReference Include="..\..\Pharmacy\Pharmacy.Infrastructure\Pharmacy.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

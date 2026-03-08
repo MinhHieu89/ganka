@@ -16,6 +16,10 @@
     <ProjectReference Include="..\Optical.Domain\Optical.Domain.csproj" />
     <ProjectReference Include="..\Optical.Contracts\Optical.Contracts.csproj" />
     <ProjectReference Include="..\..\..\Shared\Shared.Application\Shared.Application.csproj" />
+    <!-- Cross-module: payment gate check (OPT-04) via GetVisitInvoiceQuery -->
+    <ProjectReference Include="..\..\Billing\Billing.Contracts\Billing.Contracts.csproj" />
+    <!-- Cross-module: optical prescription history (OPT-08) -->
+    <ProjectReference Include="..\..\Clinical\Clinical.Contracts\Clinical.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

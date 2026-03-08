@@ -11,34 +11,26 @@
     <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.*-*" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.*-*" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.*-*" />
-
     <!-- Wolverine -->
     <PackageVersion Include="WolverineFx" Version="5.*" />
     <PackageVersion Include="WolverineFx.Http" Version="5.*" />
     <PackageVersion Include="WolverineFx.Http.FluentValidation" Version="5.*" />
     <PackageVersion Include="WolverineFx.EntityFrameworkCore" Version="5.*" />
     <PackageVersion Include="WolverineFx.SqlServer" Version="5.*" />
-
     <!-- Validation -->
     <PackageVersion Include="FluentValidation" Version="12.*" />
     <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.*" />
-
     <!-- Security -->
     <PackageVersion Include="Konscious.Security.Cryptography.Argon2" Version="1.3.1" />
-
     <!-- Azure -->
     <PackageVersion Include="Azure.Storage.Blobs" Version="12.*" />
-
     <!-- Document Generation -->
     <PackageVersion Include="QuestPDF" Version="2025.*" />
-
     <!-- Excel Import -->
     <PackageVersion Include="ClosedXML" Version="0.104.*" />
     <PackageVersion Include="MiniExcel" Version="1.*" />
-
     <!-- API Documentation -->
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="7.*" />
-
     <!-- Testing -->
     <PackageVersion Include="Bogus" Version="35.*" />
     <PackageVersion Include="coverlet.collector" Version="6.*" />
@@ -50,5 +42,6 @@
     <PackageVersion Include="Testcontainers.MsSql" Version="4.*" />
     <PackageVersion Include="xunit" Version="2.*" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.*" />
+    <PackageVersion Include="ZXing.Net" Version="0.16.11" />
   </ItemGroup>
 </Project>

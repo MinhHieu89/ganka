@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Optical.Domain.Entities;
 using System.Text.Json;
@@ -50,13 +51,22 @@ public class WarrantyClaimConfiguration : IEntityTypeConfiguration<WarrantyClaim
         builder.Property(x => x.ApprovedAt)
             .IsRequired(false);
 
-        // DocumentUrls: List<string> stored as JSON in nvarchar(max) column
-        // Uses System.Text.Json for serialization/deserialization
+        // DocumentUrls: IReadOnlyList<string> (backed by _documentUrls) stored as JSON
+        // Uses backing field access so EF Core uses the private _documentUrls List<string>.
+        // ValueComparer uses IReadOnlyList<string> to match the property's declared type.
+        var documentUrlsComparer = new ValueComparer<IReadOnlyList<string>>(
+            (a, b) => a != null && b != null && a.SequenceEqual(b),
+            urls => urls.Aggregate(0, (hash, url) => HashCode.Combine(hash, url.GetHashCode())),
+            urls => urls.ToList());
+
         builder.Property(x => x.DocumentUrls)
             .HasColumnType("nvarchar(max)")
             .HasConversion(
                 urls => JsonSerializer.Serialize(urls, (JsonSerializerOptions?)null),
-                json => JsonSerializer.Deserialize<List<string>>(json, (JsonSerializerOptions?)null) ?? new List<string>());
+                json => (IReadOnlyList<string>)(JsonSerializer.Deserialize<List<string>>(json, (JsonSerializerOptions?)null) ?? new List<string>()),
+                documentUrlsComparer)
+            .HasField("_documentUrls")
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
 
         // Ignore computed property (not stored in DB)
         builder.Ignore(x => x.RequiresApproval);
