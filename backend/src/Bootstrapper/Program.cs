@@ -35,6 +35,8 @@ using Scheduling.Application;
 using Scheduling.Presentation;
 using Pharmacy.Application;
 using Pharmacy.Presentation;
+using Optical.Application;
+using Optical.Presentation;
 using Billing.Application;
 using Billing.Presentation;
 using Shared.Infrastructure;
@@ -88,6 +90,12 @@ builder.Services.AddPharmacyPresentation();
 builder.Services.AddBillingApplication();
 builder.Services.AddBillingInfrastructure();
 builder.Services.AddBillingPresentation();
+
+// Optical module
+// OPT-05: Contact lenses prescribed via Clinical module, not Optical counter
+builder.Services.AddOpticalApplication();
+builder.Services.AddOpticalInfrastructure();
+builder.Services.AddOpticalPresentation();
 
 // ---------------------------------------------------------------------------
 // EF Core DbContexts -- module DbContexts with AuditInterceptor
@@ -312,6 +320,9 @@ app.MapPharmacyApiEndpoints();
 app.MapDispensingApiEndpoints();
 app.MapConsumablesApiEndpoints();
 app.MapBillingApiEndpoints();
+app.MapOpticalApiEndpoints();
+app.MapWarrantyApiEndpoints();
+app.MapStocktakingApiEndpoints();
 app.MapSettingsApiEndpoints();
 
 app.Run();
