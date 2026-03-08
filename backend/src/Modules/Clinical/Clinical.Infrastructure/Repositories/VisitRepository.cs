@@ -2,6 +2,7 @@ using Clinical.Application.Interfaces;
 using Clinical.Domain.Entities;
 using Clinical.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
+using Optical.Contracts.Queries;
 
 namespace Clinical.Infrastructure.Repositories;
 
@@ -146,5 +147,35 @@ public sealed class VisitRepository : IVisitRepository
             .ToListAsync(ct);
 
         return results.Select(x => (x.Prescription, x.Visit)).ToList();
+    }
+
+    public async Task<List<OpticalPrescriptionHistoryDto>> GetOpticalPrescriptionsByPatientIdAsync(
+        Guid patientId,
+        CancellationToken ct = default)
+    {
+        return await _dbContext.OpticalPrescriptions
+            .AsNoTracking()
+            .Join(
+                _dbContext.Visits.AsNoTracking(),
+                op => op.VisitId,
+                v => v.Id,
+                (op, v) => new { Prescription = op, Visit = v })
+            .Where(x => x.Visit.PatientId == patientId && !x.Visit.IsDeleted)
+            .OrderByDescending(x => x.Visit.VisitDate)
+            .Select(x => new OpticalPrescriptionHistoryDto(
+                x.Prescription.Id,
+                x.Prescription.VisitId,
+                x.Visit.VisitDate,
+                x.Prescription.OdSph,
+                x.Prescription.OdCyl,
+                x.Prescription.OdAxis.HasValue ? (decimal?)x.Prescription.OdAxis.Value : null,
+                x.Prescription.OdAdd,
+                x.Prescription.OsSph,
+                x.Prescription.OsCyl,
+                x.Prescription.OsAxis.HasValue ? (decimal?)x.Prescription.OsAxis.Value : null,
+                x.Prescription.OsAdd,
+                x.Prescription.FarPd,
+                x.Prescription.Notes))
+            .ToListAsync(ct);
     }
 }

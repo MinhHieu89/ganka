@@ -1,4 +1,5 @@
 using Clinical.Domain.Entities;
+using Optical.Contracts.Queries;
 
 namespace Clinical.Application.Interfaces;
 
@@ -98,5 +99,14 @@ public interface IVisitRepository
     /// </summary>
     Task<List<(DrugPrescription Prescription, Visit Visit)>> GetPrescriptionsWithVisitsAsync(
         Guid? patientId,
+        CancellationToken ct = default);
+
+    /// <summary>
+    /// Gets all optical prescriptions for a patient across visits, ordered by visit date descending.
+    /// Returns OpticalPrescriptionHistoryDto mapped from OpticalPrescription joined with Visit.
+    /// Used for cross-module query handler GetPatientOpticalPrescriptionsQuery.
+    /// </summary>
+    Task<List<OpticalPrescriptionHistoryDto>> GetOpticalPrescriptionsByPatientIdAsync(
+        Guid patientId,
         CancellationToken ct = default);
 }
