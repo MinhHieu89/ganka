@@ -110,6 +110,16 @@ Each task was committed atomically:
 - BarcodeDisplay ready for frame label previews and barcode printing workflows
 - CameraScanner ready for mobile stocktaking flows
 
+## Self-Check: PASSED
+
+- FOUND: frontend/src/features/optical/components/BarcodeScannerInput.tsx
+- FOUND: frontend/src/features/optical/components/BarcodeDisplay.tsx
+- FOUND: frontend/src/features/optical/components/CameraScanner.tsx
+- FOUND: .planning/phases/08-optical-center/08-26-SUMMARY.md
+- FOUND commit b88610c: feat(08-26): add BarcodeScannerInput and BarcodeDisplay components
+- FOUND commit f95fb8a: feat(08-26): add CameraScanner component with html5-qrcode
+- FOUND commit 2b665cf: docs(08-26): complete barcode components plan
+
 ---
 *Phase: 08-optical-center*
 *Completed: 2026-03-08*

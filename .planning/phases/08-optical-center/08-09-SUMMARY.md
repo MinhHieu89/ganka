@@ -122,3 +122,13 @@ None - no external service configuration required.
 ---
 *Phase: 08-optical-center*
 *Completed: 2026-03-08*
+
+## Self-Check: PASSED
+
+- FOUND: backend/src/Modules/Optical/Optical.Infrastructure/Configurations/FrameConfiguration.cs
+- FOUND: backend/src/Modules/Optical/Optical.Infrastructure/Configurations/LensCatalogItemConfiguration.cs
+- FOUND: backend/src/Modules/Optical/Optical.Infrastructure/Configurations/LensOrderConfiguration.cs
+- FOUND: .planning/phases/08-optical-center/08-09-SUMMARY.md
+- FOUND commit: d3e7165 (Task 1 - Frame configuration)
+- FOUND commit: 309e17d (Task 2 - LensCatalogItem + LensOrder configurations)
+- Build: Optical.Infrastructure.csproj succeeds with 0 errors
