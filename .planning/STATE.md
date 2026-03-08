@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 09-15-PLAN.md
-last_updated: "2026-03-08T07:13:50.256Z"
+stopped_at: Completed 09-14-PLAN.md
+last_updated: "2026-03-08T07:16:30.341Z"
 last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
 progress:
   total_phases: 14
   completed_phases: 12
   total_plans: 222
-  completed_plans: 204
+  completed_plans: 206
 ---
 
 ---
@@ -568,6 +568,7 @@ Progress: [█████████░] 96%
 | Phase 09-treatment-protocols P07 | 2min | 2 tasks | 6 files |
 | Phase 09 P09 | 3min | 2 tasks | 4 files |
 | Phase 09-10 P10 | 2min | 2 tasks | 5 files |
+| Phase 09-14 P14 | 9min | 3 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -982,6 +983,8 @@ Recent decisions affecting current work:
 - [Phase 09]: GetDueSoonAsync uses client-side filtering: loads active packages with sessions, filters where no sessions completed OR last CompletedAt + MinIntervalDays <= now
 - [Phase 09-10]: Followed Optical.Unit.Tests pattern for Treatment test project structure
 - [Phase 09-10]: Used Marker class for assembly scanning in IoC (consistent with Optical.Application)
+- [Phase 09-14]: SwitchTreatmentType validates modifiable status before loading template (fail-fast)
+- [Phase 09-14]: Reuse CreateTreatmentPackageHandler.MapToDto for consistent DTO mapping across all handlers
 
 ### Roadmap Evolution
 
@@ -1004,6 +1007,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-08T07:13:50.249Z
-Stopped at: Completed 09-15-PLAN.md
+Last session: 2026-03-08T07:16:30.336Z
+Stopped at: Completed 09-14-PLAN.md
 Resume file: None
