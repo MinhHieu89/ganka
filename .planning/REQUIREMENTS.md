@@ -105,7 +105,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **OPT-02**: Staff can order lenses by prescription from suppliers (Essilor, Hoya, Viet Phap)
 - [x] **OPT-03**: System tracks glasses order lifecycle: Ordered -> Processing -> Received -> Ready -> Delivered
 - [x] **OPT-04**: System blocks lens processing until full payment is received (no deposit model)
-- [ ] **OPT-05**: Contact lenses (Ortho-K, soft) are prescribed via HIS, not sold through optical counter
+- [x] **OPT-05**: Contact lenses (Ortho-K, soft) are prescribed via HIS, not sold through optical counter
 - [x] **OPT-06**: Staff can create combo pricing (preset combos + custom frame+lens combinations)
 - [x] **OPT-07**: System tracks warranty per sale (12 months frame + lens) with claim workflow (replace/repair/discount, case assessment with documents)
 - [x] **OPT-08**: System stores lens prescription history per patient with year-over-year comparison and lens replacement history
@@ -293,7 +293,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | OPT-02 | Phase 8 | Complete |
 | OPT-03 | Phase 8 | Complete |
 | OPT-04 | Phase 8 | Complete |
-| OPT-05 | Phase 8 | Pending |
+| OPT-05 | Phase 8 | Complete |
 | OPT-06 | Phase 8 | Complete |
 | OPT-07 | Phase 8 | Complete |
 | OPT-08 | Phase 8 | Complete |
