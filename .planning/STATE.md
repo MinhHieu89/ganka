@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 08-13-PLAN.md
-last_updated: "2026-03-08T02:59:14.970Z"
+stopped_at: Completed 08-33-PLAN.md
+last_updated: "2026-03-08T03:00:10.464Z"
 last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
 progress:
   total_phases: 14
   completed_phases: 11
   total_plans: 193
-  completed_plans: 172
+  completed_plans: 175
   percent: 80
 ---
 
@@ -510,6 +510,7 @@ Progress: [█████████░] 96%
 | Phase 08-optical-center P14 | 25 | 2 tasks | 6 files |
 | Phase 08 P37 | 7 | 1 tasks | 1 files |
 | Phase 08 P13 | 9 | 2 tasks | 3 files |
+| Phase 08-optical-center P32 | 35 | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -877,6 +878,8 @@ Recent decisions affecting current work:
 - [Phase 08-optical-center]: Optical sidebar uses common namespace for translation keys; optical namespace used for detailed page strings
 - [Phase 08]: 21 Vietnamese user stories covering all 9 OPT requirements using Phase 3.1 standard format with acceptance criteria and technical notes
 - [Phase 08]: GetNextSequenceNumberAsync uses CountAsync()+1 for EAN-13 sequence; IsBarcodeUniqueAsync accepts excludeId for update validation; LensCatalogRepository eagerly loads StockEntries
+- [Phase 08-optical-center]: AXIS/ADD fields use neutral change indicators in prescription comparison (not improved/worsened) since these are not clinically directional fields like SPH/CYL
+- [Phase 08-optical-center]: Used number enum (0/1/2) for resolutionType and approvalStatus matching backend C# enums
 
 ### Roadmap Evolution
 
@@ -899,6 +902,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-08T02:59:14.965Z
-Stopped at: Completed 08-13-PLAN.md
+Last session: 2026-03-08T02:59:49.406Z
+Stopped at: Completed 08-33-PLAN.md
 Resume file: None
