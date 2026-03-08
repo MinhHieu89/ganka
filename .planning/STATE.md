@@ -4,7 +4,7 @@ milestone: v1.0
 milestone_name: milestone
 status: in-progress
 stopped_at: Completed 08-11-PLAN.md
-last_updated: "2026-03-08T02:56:17.722Z"
+last_updated: "2026-03-08T02:56:28.911Z"
 last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
 progress:
   total_phases: 14
@@ -863,6 +863,8 @@ Recent decisions affecting current work:
 - [Phase 08-optical-center]: Supplier.Create() defaults SupplierType to Drug for full backward compatibility with all existing callers
 - [Phase 08-optical-center]: OpticalDbContext uses ApplyConfigurationsFromAssembly for auto-discovering IEntityTypeConfiguration implementations
 - [Phase 08-optical-center]: IFrameRepository includes GetNextSequenceNumberAsync for EAN-13 barcode auto-generation workflow
+- [Phase 08-optical-center]: GlassesOrderItem uses ItemDescription (not Description) property name matching actual domain entity
+- [Phase 08-optical-center]: WarrantyClaim.DocumentUrls stored as JSON nvarchar(max) using System.Text.Json HasConversion
 
 ### Roadmap Evolution
 
