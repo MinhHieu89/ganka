@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 08-39-PLAN.md
-last_updated: "2026-03-08T03:26:17.682Z"
+stopped_at: Completed 08-17-PLAN.md
+last_updated: "2026-03-08T03:26:24.045Z"
 last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
 progress:
   total_phases: 14
@@ -912,6 +912,7 @@ Recent decisions affecting current work:
 - [Phase 08-optical-center]: Optical.Presentation follows Pharmacy.Presentation pattern with separate endpoint files per feature area
 - [Phase 08-optical-center]: ZXing.Net added via central package management for future barcode label PDF generation
 - [Phase 08-optical-center]: 08-39: Used IVisitRepository.GetOpticalPrescriptionsByPatientIdAsync instead of direct ClinicalDbContext injection to avoid Application->Infrastructure layer violation
+- [Phase 08-optical-center]: AdjustLensStock rejects negative QuantityChange when no stock entry exists — cannot deduct from non-existent stock
 
 ### Roadmap Evolution
 
@@ -934,6 +935,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-08T03:25:54.825Z
-Stopped at: Completed 08-39-PLAN.md
+Last session: 2026-03-08T03:26:24.041Z
+Stopped at: Completed 08-17-PLAN.md
 Resume file: None
