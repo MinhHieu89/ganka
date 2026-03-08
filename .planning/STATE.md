@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 09-18-PLAN.md
-last_updated: "2026-03-08T07:25:09.516Z"
+stopped_at: Completed 09-19-PLAN.md
+last_updated: "2026-03-08T07:30:45.512Z"
 last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
 progress:
   total_phases: 14
   completed_phases: 12
   total_plans: 222
-  completed_plans: 209
+  completed_plans: 210
 ---
 
 ---
@@ -588,6 +588,7 @@ Progress: [█████████░] 96%
 | Phase 09-12 P12 | 11min | 2 tasks | 6 files |
 | Phase 09-treatment-protocols P16 | 2min | 2 tasks | 3 files |
 | Phase 09-treatment-protocols P18 | 3min | 2 tasks | 4 files |
+| Phase 09 P19 | 3min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -1010,6 +1011,7 @@ Recent decisions affecting current work:
 - [Phase 09-treatment-protocols]: Followed Billing.Presentation pattern exactly for Treatment.Presentation project structure and endpoint organization
 - [Phase 09-treatment-protocols]: Referenced Treatment.Domain for TreatmentSessionCompletedEvent (not Contracts)
 - [Phase 09-treatment-protocols]: Consumable deduction uses graceful degradation: deducts available stock when insufficient
+- [Phase 09]: Used string union types for treatment enums matching backend string serialization, number types for command enum fields matching int binding
 
 ### Roadmap Evolution
 
@@ -1032,6 +1034,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-08T07:25:09.511Z
-Stopped at: Completed 09-18-PLAN.md
+Last session: 2026-03-08T07:30:45.502Z
+Stopped at: Completed 09-19-PLAN.md
 Resume file: None
