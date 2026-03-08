@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 08-38-PLAN.md
-last_updated: "2026-03-08T02:55:37.466Z"
+stopped_at: Completed 08-11-PLAN.md
+last_updated: "2026-03-08T02:56:17.722Z"
 last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
 progress:
   total_phases: 14
   completed_phases: 11
   total_plans: 193
-  completed_plans: 166
+  completed_plans: 170
   percent: 80
 ---
 
@@ -503,6 +503,8 @@ Progress: [█████████░] 96%
 | Phase 08-optical-center P04 | 5 | 2 tasks | 3 files |
 | Phase 08-optical-center P09 | 15 | 2 tasks | 4 files |
 | Phase 08-optical-center P26 | 15 | 2 tasks | 3 files |
+| Phase 08-optical-center P11 | 10 | 2 tasks | 4 files |
+| Phase 08-optical-center P10 | 15 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -859,6 +861,8 @@ Recent decisions affecting current work:
 - [Phase 08-optical-center]: IStocktakingRepository.GetCurrentSessionAsync returns null when no active session (single InProgress session business rule)
 - [Phase 08-optical-center]: SupplierType is [Flags] enum enabling bitwise combination so one supplier can serve Drug | Optical simultaneously
 - [Phase 08-optical-center]: Supplier.Create() defaults SupplierType to Drug for full backward compatibility with all existing callers
+- [Phase 08-optical-center]: OpticalDbContext uses ApplyConfigurationsFromAssembly for auto-discovering IEntityTypeConfiguration implementations
+- [Phase 08-optical-center]: IFrameRepository includes GetNextSequenceNumberAsync for EAN-13 barcode auto-generation workflow
 
 ### Roadmap Evolution
 
@@ -881,6 +885,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-08T02:54:39.883Z
-Stopped at: Completed 08-38-PLAN.md
+Last session: 2026-03-08T02:56:01.288Z
+Stopped at: Completed 08-11-PLAN.md
 Resume file: None
