@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 08-30-PLAN.md
-last_updated: "2026-03-08T03:04:29.136Z"
+stopped_at: "Checkpoint: 08-36 human-verify — Backend+Frontend running, awaiting human verification of Optical Center"
+last_updated: "2026-03-08T03:04:39.823Z"
 last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
 progress:
   total_phases: 14
@@ -518,6 +518,7 @@ Progress: [█████████░] 96%
 | Phase 08-optical-center P34 | 20 | 2 tasks | 5 files |
 | Phase 08-optical-center P30 | 12 | 2 tasks | 3 files |
 | Phase 08-optical-center P36 | 20 | 1 tasks | 1 files |
+| Phase 08-optical-center P27 | 768 | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -897,6 +898,7 @@ Recent decisions affecting current work:
 - [Phase 08-optical-center]: StocktakingPage uses local state for mode (list/active/report) rather than URL params
 - [Phase 08-optical-center]: Used router.history.back() instead of typed Link to avoid TS errors for optical orders route
 - [Phase 08-optical-center]: Derived warrantyExpiryDate from deliveredAt + 12 months in frontend since GlassesOrderDto lacks the field
+- [Phase 08-optical-center]: Optical verification gap: Application layer handlers missing (plans 08-25 to 08-35 incomplete). API endpoints return 500 IndeterminateRoutesException from Wolverine. Coverage 16.9% vs required 80%.
 
 ### Roadmap Evolution
 
@@ -919,6 +921,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-08T03:04:24.509Z
-Stopped at: Completed 08-30-PLAN.md
+Last session: 2026-03-08T03:04:39.816Z
+Stopped at: Checkpoint: 08-36 human-verify — Backend+Frontend running, awaiting human verification of Optical Center
 Resume file: None
