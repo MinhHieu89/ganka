@@ -384,12 +384,38 @@ Plans:
   4. Doctor can modify a treatment protocol mid-course (add/remove sessions, change parameters) or switch a patient to a different treatment type, both requiring doctor approval
   5. Manager can process treatment cancellation with configurable refund deduction (10-20% fee), and consumables used per session are tracked and auto-deducted from the consumables warehouse
 
-**Plans**: TBD
+**Plans**: 29 plans in 11 waves
 
 Plans:
-- [ ] 09-01: TBD
-- [ ] 09-02: TBD
-- [ ] 09-03: TBD
+- [ ] 09-01-PLAN.md -- Domain enums: TreatmentType, PackageStatus, PricingMode, SessionStatus
+- [ ] 09-02-PLAN.md -- Value objects: IplParameters, LlltParameters, LidCareParameters
+- [ ] 09-03-PLAN.md -- TreatmentProtocol aggregate root + domain events
+- [ ] 09-04-PLAN.md -- TreatmentPackage aggregate root + TreatmentSession + SessionConsumable
+- [ ] 09-05-PLAN.md -- ProtocolVersion + CancellationRequest entities
+- [ ] 09-06-PLAN.md -- Contracts DTOs + cross-module query
+- [ ] 09-07-PLAN.md -- EF Core configurations: Protocol, Package, Session, Consumable
+- [ ] 09-08-PLAN.md -- TreatmentDbContext update + repository interfaces
+- [ ] 09-09-PLAN.md -- Repository implementations + Infrastructure IoC
+- [ ] 09-10-PLAN.md -- Treatment.Unit.Tests project + Application IoC
+- [ ] 09-11-PLAN.md -- [TDD] Protocol template CRUD handlers
+- [ ] 09-12-PLAN.md -- [TDD] Treatment package creation + query handlers
+- [ ] 09-13-PLAN.md -- [TDD] Session recording + due-soon query handlers
+- [ ] 09-14-PLAN.md -- [TDD] Modify package + switch treatment + pause handlers
+- [ ] 09-15-PLAN.md -- [TDD] Cancellation workflow handlers (request, approve, reject)
+- [ ] 09-16-PLAN.md -- Treatment.Presentation project + all API endpoints
+- [ ] 09-17-PLAN.md -- Bootstrapper wiring + EF Core migration
+- [ ] 09-18-PLAN.md -- [TDD] Cross-module consumable deduction handler in Pharmacy
+- [ ] 09-19-PLAN.md -- Frontend API layer: types, query keys, React Query hooks
+- [ ] 09-20-PLAN.md -- Frontend protocol template management page
+- [ ] 09-21-PLAN.md -- Frontend treatments page + Due Soon + package form
+- [ ] 09-22-PLAN.md -- Frontend package detail + session cards + OSDI chart
+- [ ] 09-23-PLAN.md -- Frontend session recording form + consumable selector + OSDI capture
+- [ ] 09-24-PLAN.md -- Frontend modify, version history, switch dialogs
+- [ ] 09-25-PLAN.md -- Frontend cancellation request + approval queue
+- [ ] 09-26-PLAN.md -- Frontend patient profile Treatments tab
+- [ ] 09-27-PLAN.md -- Sidebar navigation + i18n translations (EN/VI)
+- [ ] 09-28-PLAN.md -- End-to-end verification checkpoint
+- [ ] 09-29-PLAN.md -- Vietnamese user stories documentation (DOC-01)
 
 ## Progress
 
@@ -413,4 +439,4 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 | 6. Pharmacy & Consumables | 29/29 | Complete   | 2026-03-06 |
 | 7. Billing & Finance | 24/28 | In Progress|  |
 | 8. Optical Center | 39/39 | Complete   | 2026-03-08 |
-| 9. Treatment Protocols | 0/3 | Not started | - |
+| 9. Treatment Protocols | 0/29 | Not started | - |
