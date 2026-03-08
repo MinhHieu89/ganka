@@ -36,6 +36,7 @@
     <Project Path="src/Modules/Optical/Optical.Contracts/Optical.Contracts.csproj" />
     <Project Path="src/Modules/Optical/Optical.Domain/Optical.Domain.csproj" />
     <Project Path="src/Modules/Optical/Optical.Infrastructure/Optical.Infrastructure.csproj" />
+    <Project Path="src/Modules/Optical/Optical.Presentation/Optical.Presentation.csproj" />
   </Folder>
   <Folder Name="/src/Modules/Patient/">
     <Project Path="src/Modules/Patient/Patient.Application/Patient.Application.csproj" />
@@ -82,5 +83,6 @@
     <Project Path="tests/Clinical.Unit.Tests/Clinical.Unit.Tests.csproj" />
     <Project Path="tests/Pharmacy.Unit.Tests/Pharmacy.Unit.Tests.csproj" />
     <Project Path="tests/Billing.Unit.Tests/Billing.Unit.Tests.csproj" />
+    <Project Path="tests/Optical.Unit.Tests/Optical.Unit.Tests.csproj" />
   </Folder>
 </Solution>
