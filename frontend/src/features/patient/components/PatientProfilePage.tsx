@@ -13,6 +13,7 @@ import { PatientAllergyTab } from "@/features/patient/components/PatientAllergyT
 import { PatientAppointmentTab } from "@/features/patient/components/PatientAppointmentTab"
 import { PatientDryEyeTab } from "@/features/patient/components/PatientDryEyeTab"
 import { PatientPrescriptionsTab } from "@/features/pharmacy/components/PatientPrescriptionsTab"
+import { PrescriptionHistoryTab } from "@/features/optical/components/PrescriptionHistoryTab"
 
 interface PatientProfilePageProps {
   patientId: string
@@ -23,6 +24,7 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
   const { t: tCommon } = useTranslation("common")
   const { t: tClinical } = useTranslation("clinical")
   const { t: tPharmacy } = useTranslation("pharmacy")
+  const { t: tOptical } = useTranslation("optical")
   const addRecent = useRecentPatientsStore((s) => s.addRecent)
   const [isEditing, setIsEditing] = useState(false)
 
@@ -120,6 +122,7 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
           <TabsTrigger value="appointments">{t("appointments")}</TabsTrigger>
           <TabsTrigger value="prescriptions">{tPharmacy("queue.prescriptions.tab")}</TabsTrigger>
           <TabsTrigger value="dry-eye">{tClinical("dryEye.tab")}</TabsTrigger>
+          <TabsTrigger value="optical-history">{tOptical("prescriptionHistory.tab")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="mt-4">
@@ -144,6 +147,10 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
 
         <TabsContent value="dry-eye" className="mt-4">
           <PatientDryEyeTab patientId={patient.id} />
+        </TabsContent>
+
+        <TabsContent value="optical-history" className="mt-4">
+          <PrescriptionHistoryTab patientId={patient.id} />
         </TabsContent>
       </Tabs>
     </div>
