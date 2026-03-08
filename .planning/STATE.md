@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 08-09-PLAN.md
-last_updated: "2026-03-08T02:53:55.537Z"
+stopped_at: Completed 08-12-PLAN.md
+last_updated: "2026-03-08T02:54:35.846Z"
 last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
 progress:
   total_phases: 14
   completed_phases: 11
   total_plans: 193
-  completed_plans: 164
+  completed_plans: 165
   percent: 80
 ---
 
@@ -854,6 +854,9 @@ Recent decisions affecting current work:
 - [Phase 08-optical-center]: LensCatalogItem.AdjustStockEntry() raises LowStockAlertEvent domain event since LensStockEntry (Entity) cannot raise events directly
 - [Phase 08-optical-center]: Frame.Barcode unique filtered index on IS NOT NULL allows frames without barcodes while preventing duplicate EAN-13 codes
 - [Phase 08-optical-center]: LensStockEntry unique composite index on (LensCatalogItemId, Sph, Cyl, Add) prevents duplicate power combination entries
+- [Phase 08-optical-center]: CameraScanner supports both external isActive prop and internal toggle for flexible controlled/uncontrolled use
+- [Phase 08-optical-center]: IGlassesOrderRepository.GetAllAsync uses int? statusFilter to match Pharmacy pattern and avoid enum casts in handlers
+- [Phase 08-optical-center]: IStocktakingRepository.GetCurrentSessionAsync returns null when no active session (single InProgress session business rule)
 
 ### Roadmap Evolution
 
@@ -876,6 +879,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-08T02:53:14.699Z
-Stopped at: Completed 08-09-PLAN.md
+Last session: 2026-03-08T02:54:19.714Z
+Stopped at: Completed 08-12-PLAN.md
 Resume file: None
