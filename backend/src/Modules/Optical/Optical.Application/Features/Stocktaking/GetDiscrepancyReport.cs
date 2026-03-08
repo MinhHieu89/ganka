@@ -39,9 +39,12 @@ public static class GetDiscrepancyReportHandler
             Discrepancy: i.Discrepancy)).ToList();
 
         int totalDiscrepancies = items.Count(i => i.Discrepancy != 0);
-        int overCount = items.Count(i => i.Discrepancy > 0);
-        int underCount = items.Count(i => i.Discrepancy < 0 && i.FrameId is not null);
-        int missingFromSystem = items.Count(i => i.Discrepancy > 0 && i.FrameId is null);
+        // OverCount: known frames (FrameId not null) with more physical than system
+        int overCount = items.Count(i => i.Discrepancy > 0 && i.FrameId is not null);
+        // UnderCount: items with fewer physical than system count
+        int underCount = items.Count(i => i.Discrepancy < 0);
+        // MissingFromSystem: barcodes that were scanned but not found in frame catalog
+        int missingFromSystem = items.Count(i => i.FrameId is null);
 
         var report = new DiscrepancyReportDto(
             SessionId: session.Id,
