@@ -39,6 +39,8 @@ using Optical.Application;
 using Optical.Presentation;
 using Billing.Application;
 using Billing.Presentation;
+using Treatment.Application;
+using Treatment.Presentation;
 using Shared.Infrastructure;
 using Shared.Presentation;
 using System.Threading.RateLimiting;
@@ -96,6 +98,11 @@ builder.Services.AddBillingPresentation();
 builder.Services.AddOpticalApplication();
 builder.Services.AddOpticalInfrastructure();
 builder.Services.AddOpticalPresentation();
+
+// Treatment module
+builder.Services.AddTreatmentApplication();
+builder.Services.AddTreatmentInfrastructure();
+builder.Services.AddTreatmentPresentation();
 
 // ---------------------------------------------------------------------------
 // EF Core DbContexts -- module DbContexts with AuditInterceptor
@@ -321,6 +328,7 @@ app.MapDispensingApiEndpoints();
 app.MapConsumablesApiEndpoints();
 app.MapBillingApiEndpoints();
 app.MapOpticalApiEndpoints();
+app.MapTreatmentApiEndpoints();
 app.MapWarrantyApiEndpoints();
 app.MapStocktakingApiEndpoints();
 app.MapSettingsApiEndpoints();
