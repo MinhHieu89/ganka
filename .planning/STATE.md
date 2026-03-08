@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 09-01-PLAN.md
-last_updated: "2026-03-08T06:45:03.044Z"
+stopped_at: Completed 09-02-PLAN.md
+last_updated: "2026-03-08T06:45:22.671Z"
 last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
 progress:
   total_phases: 14
@@ -544,6 +544,7 @@ Progress: [█████████░] 96%
 | Phase 08-optical-center P16 | 9 | 2 tasks | 6 files |
 | Phase 08-optical-center P19 | 707 | 2 tasks | 7 files |
 | Phase 09 P01 | 67s | 2 tasks | 4 files |
+| Phase 09 P02 | 2min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -941,6 +942,7 @@ Recent decisions affecting current work:
 - [Phase 08-optical-center]: Replace resolution stays Pending; Repair/Discount auto-approve via claim.Approve() at creation
 - [Phase 08-optical-center]: ApproveWarrantyClaim validates Resolution==Replace before allowing approve/reject
 - [Phase 09]: Treatment domain enums follow Optical.Domain.Enums pattern for cross-module consistency
+- [Phase 09]: Used sealed record pattern for treatment parameter value objects (JSON-serializable, matching FieldChange convention)
 
 ### Roadmap Evolution
 
@@ -963,6 +965,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-08T06:45:03.040Z
-Stopped at: Completed 09-01-PLAN.md
+Last session: 2026-03-08T06:45:22.666Z
+Stopped at: Completed 09-02-PLAN.md
 Resume file: None
