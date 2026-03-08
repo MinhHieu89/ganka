@@ -3,14 +3,29 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 09-13-PLAN.md
-last_updated: "2026-03-08T07:17:35.911Z"
+stopped_at: Completed 09-12-PLAN.md
+last_updated: "2026-03-08T07:19:19.588Z"
 last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
 progress:
   total_phases: 14
   completed_phases: 12
   total_plans: 222
-  completed_plans: 206
+  completed_plans: 207
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: in-progress
+stopped_at: Completed 09-12-PLAN.md
+last_updated: "2026-03-08T07:17:30Z"
+last_activity: 2026-03-08 -- Completed 09-12 Treatment Package Creation and Queries (CreateTreatmentPackage, GetPatientTreatments, GetTreatmentPackageById, GetActiveTreatments, 12 tests pass)
+progress:
+  total_phases: 14
+  completed_phases: 12
+  total_plans: 222
+  completed_plans: 207
 ---
 
 ---
@@ -570,6 +585,7 @@ Progress: [█████████░] 96%
 | Phase 09-10 P10 | 2min | 2 tasks | 5 files |
 | Phase 09-14 P14 | 9min | 3 tasks | 4 files |
 | Phase 09 P13 | 604 | 2 tasks | 4 files |
+| Phase 09-12 P12 | 11min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -988,6 +1004,7 @@ Recent decisions affecting current work:
 - [Phase 09-14]: Reuse CreateTreatmentPackageHandler.MapToDto for consistent DTO mapping across all handlers
 - [Phase 09]: Interval warning is soft enforcement (TRT-05): returns warning but still records session
 - [Phase 09]: MapSessionToDto is shared internal utility on RecordTreatmentSessionHandler for handler reuse
+- [Phase 09-12]: Used int? for PricingMode in command record matching Billing module pattern
 
 ### Roadmap Evolution
 
@@ -1010,6 +1027,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-08T07:17:35.906Z
-Stopped at: Completed 09-13-PLAN.md
+Last session: 2026-03-08T07:19:14.837Z
+Stopped at: Completed 09-12-PLAN.md
 Resume file: None

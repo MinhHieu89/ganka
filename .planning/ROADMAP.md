@@ -439,4 +439,4 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 | 6. Pharmacy & Consumables | 29/29 | Complete   | 2026-03-06 |
 | 7. Billing & Finance | 24/28 | In Progress|  |
 | 8. Optical Center | 39/39 | Complete   | 2026-03-08 |
-| 9. Treatment Protocols | 12/29 | In Progress|  |
+| 9. Treatment Protocols | 15/29 | In Progress|  |
