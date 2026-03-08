@@ -87,10 +87,6 @@ public class TreatmentPackageConfiguration : IEntityTypeConfiguration<TreatmentP
         builder.Navigation(x => x.Versions)
             .UsePropertyAccessMode(PropertyAccessMode.Field);
 
-        // Backing field navigation for the private _cancellationRequest field
-        builder.Navigation(x => x.CancellationRequest)
-            .UsePropertyAccessMode(PropertyAccessMode.Field);
-
         // One-to-many: TreatmentPackage -> TreatmentSessions (cascade delete)
         builder.HasMany(x => x.Sessions)
             .WithOne()
@@ -104,10 +100,15 @@ public class TreatmentPackageConfiguration : IEntityTypeConfiguration<TreatmentP
             .OnDelete(DeleteBehavior.Cascade);
 
         // One-to-one: TreatmentPackage -> CancellationRequest (optional, cascade delete)
+        // HasOne must come before Navigation configuration so EF Core discovers the relationship first
         builder.HasOne(x => x.CancellationRequest)
             .WithOne()
             .HasForeignKey<CancellationRequest>(x => x.TreatmentPackageId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        // Backing field navigation for the private _cancellationRequest field
+        builder.Navigation(x => x.CancellationRequest)
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
 
         // Performance indexes
         builder.HasIndex(x => x.PatientId);
