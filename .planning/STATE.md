@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 09-21-PLAN.md
-last_updated: "2026-03-08T07:43:42.858Z"
+stopped_at: Completed 09-24-PLAN.md
+last_updated: "2026-03-08T07:49:40.878Z"
 last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
 progress:
   total_phases: 14
   completed_phases: 12
   total_plans: 222
-  completed_plans: 214
+  completed_plans: 217
   percent: 96
 ---
 
@@ -622,6 +622,7 @@ Progress: [█████████░] 96%
 | Phase 09 P19 | 3min | 2 tasks | 3 files |
 | Phase 09 P17 | 8min | 2 tasks | 6 files |
 | Phase 09 P21 | 6min | 2 tasks | 4 files |
+| Phase 09-treatment-protocols P24 | 4min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -1047,6 +1048,8 @@ Recent decisions affecting current work:
 - [Phase 09]: Used string union types for treatment enums matching backend string serialization, number types for command enum fields matching int binding
 - [Phase 09-17]: Reordered CancellationRequest navigation config: HasOne must precede Navigation() for EF Core backing-field navigations
 - [Phase 09]: Used inline div-based progress bar for treatment session progress instead of adding shadcn Progress component
+- [Phase 09-treatment-protocols]: VersionHistoryDialog receives version data as prop with PackageVersionEntry type defined locally
+- [Phase 09-treatment-protocols]: SwitchTreatmentDialog navigates to new package detail after successful switch
 
 ### Roadmap Evolution
 
@@ -1069,6 +1072,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-08T07:43:42.854Z
-Stopped at: Completed 09-21-PLAN.md
+Last session: 2026-03-08T07:49:40.874Z
+Stopped at: Completed 09-24-PLAN.md
 Resume file: None
