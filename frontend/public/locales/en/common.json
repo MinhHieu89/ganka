@@ -35,6 +35,9 @@
     "imaging": "Imaging",
     "prescriptions": "Prescriptions",
     "treatments": "Treatments",
+    "treatmentsList": "Treatments",
+    "treatmentTemplates": "Templates",
+    "treatmentApprovals": "Approvals",
     "clinicSettings": "Clinic Settings",
     "comingSoon": "Coming soon"
   },

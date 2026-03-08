@@ -18,6 +18,8 @@ import {
   IconBoxSeam,
   IconChevronDown,
   IconClock,
+  IconTemplate,
+  IconClipboardCheck,
 } from "@tabler/icons-react"
 import {
   Collapsible,
@@ -162,7 +164,11 @@ export function AppSidebar({ ...sidebarProps }: ComponentProps<typeof Sidebar>) 
       titleKey: "sidebar.treatments",
       to: "/treatments",
       icon: IconHeartbeat,
-      disabled: true,
+      children: [
+        { titleKey: "sidebar.treatmentsList", to: "/treatments" },
+        { titleKey: "sidebar.treatmentTemplates", to: "/treatments/templates" },
+        { titleKey: "sidebar.treatmentApprovals", to: "/treatments/approvals" },
+      ],
     },
   ]
 

@@ -35,6 +35,9 @@
     "imaging": "Chẩn đoán hình ảnh",
     "prescriptions": "Đơn thuốc",
     "treatments": "Điều trị",
+    "treatmentsList": "Liệu trình",
+    "treatmentTemplates": "Mẫu phác đồ",
+    "treatmentApprovals": "Phê duyệt hủy",
     "clinicSettings": "Cài đặt phòng khám",
     "comingSoon": "Sắp ra mắt"
   },
