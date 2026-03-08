@@ -1,0 +1,104 @@
+{
+  "title": "Treatments",
+  "protocolTemplates": "Protocol Templates",
+  "approvals": "Cancellation Approvals",
+  "createPackage": "Create Treatment Package",
+  "createTemplate": "Create Template",
+  "editTemplate": "Edit Template",
+  "recordSession": "Record Session",
+  "dueSoon": "Due Soon",
+  "noDueSoon": "No sessions due at this time",
+  "packageDetail": "Package Detail",
+  "sessionHistory": "Session History",
+  "modifyPackage": "Modify Package",
+  "switchTreatment": "Switch Treatment Type",
+  "requestCancellation": "Request Cancellation",
+  "versionHistory": "Version History",
+  "tab": "Treatments",
+  "noPackages": "No treatment packages",
+  "createFirst": "Create the first treatment package for this patient",
+  "treatmentType": {
+    "IPL": "IPL",
+    "LLLT": "LLLT",
+    "LidCare": "Lid Care"
+  },
+  "status": {
+    "Active": "Active",
+    "Paused": "Paused",
+    "PendingCancellation": "Pending Cancellation",
+    "Cancelled": "Cancelled",
+    "Switched": "Switched",
+    "Completed": "Completed"
+  },
+  "pricingMode": {
+    "PerSession": "Per Session",
+    "PerPackage": "Per Package"
+  },
+  "fields": {
+    "name": "Template Name",
+    "treatmentType": "Treatment Type",
+    "sessionCount": "Session Count",
+    "pricingMode": "Pricing Mode",
+    "packagePrice": "Package Price",
+    "sessionPrice": "Session Price",
+    "minInterval": "Min Interval (days)",
+    "maxInterval": "Max Interval (days)",
+    "deductionPercent": "Cancellation Deduction (%)",
+    "description": "Description",
+    "reason": "Reason",
+    "clinicalNotes": "Clinical Notes",
+    "osdiScore": "OSDI Score",
+    "consumables": "Consumables Used",
+    "parameters": "Device Parameters",
+    "progress": "Progress",
+    "sessionsCompleted": "Sessions Completed",
+    "sessionsRemaining": "Sessions Remaining",
+    "lastSession": "Last Session",
+    "nextDue": "Next Due",
+    "overdue": "Overdue",
+    "managerPin": "Manager PIN",
+    "refundAmount": "Refund Amount",
+    "rejectionReason": "Rejection Reason"
+  },
+  "ipl": {
+    "energy": "Energy (J/cm2)",
+    "pulseCount": "Pulse Count",
+    "spotSize": "Spot Size",
+    "treatmentZones": "Treatment Zones"
+  },
+  "lllt": {
+    "wavelength": "Wavelength (nm)",
+    "power": "Power (mW)",
+    "duration": "Duration (min)",
+    "treatmentArea": "Treatment Area"
+  },
+  "lidCare": {
+    "procedureSteps": "Procedure Steps",
+    "productsUsed": "Products Used",
+    "duration": "Duration (min)"
+  },
+  "osdi": {
+    "inline": "Enter Score",
+    "selfFill": "Patient Self-Fill",
+    "generateQr": "Generate QR Link",
+    "severity": "Severity"
+  },
+  "intervalWarning": "Warning: Only {{days}} days since last session (minimum {{minDays}} days recommended)",
+  "cancellation": {
+    "request": "Request Cancellation",
+    "approve": "Approve",
+    "reject": "Reject",
+    "pendingMessage": "Cancellation pending manager approval",
+    "estimatedRefund": "Estimated Refund",
+    "deduction": "Deduction"
+  },
+  "switch": {
+    "currentWillBeSwitched": "Current package will be marked as 'Switched'",
+    "newWillBeCreated": "New package will be created with {{remaining}} remaining sessions",
+    "selectNewTemplate": "Select New Template"
+  },
+  "modify": {
+    "changeReason": "Reason for Change",
+    "currentValues": "Current Values"
+  }
+}

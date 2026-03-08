@@ -1,0 +1,104 @@
+{
+  "title": "Liệu trình",
+  "protocolTemplates": "Mẫu phác đồ",
+  "approvals": "Phê duyệt hủy liệu trình",
+  "createPackage": "Tạo gói liệu trình",
+  "createTemplate": "Tạo mẫu phác đồ",
+  "editTemplate": "Chỉnh sửa mẫu phác đồ",
+  "recordSession": "Ghi nhận buổi điều trị",
+  "dueSoon": "Sắp đến hạn",
+  "noDueSoon": "Không có buổi điều trị nào sắp đến hạn",
+  "packageDetail": "Chi tiết gói liệu trình",
+  "sessionHistory": "Lịch sử buổi điều trị",
+  "modifyPackage": "Chỉnh sửa gói liệu trình",
+  "switchTreatment": "Đổi loại điều trị",
+  "requestCancellation": "Yêu cầu hủy liệu trình",
+  "versionHistory": "Lịch sử phiên bản",
+  "tab": "Liệu trình",
+  "noPackages": "Chưa có gói liệu trình",
+  "createFirst": "Tạo gói liệu trình đầu tiên cho bệnh nhân này",
+  "treatmentType": {
+    "IPL": "IPL",
+    "LLLT": "LLLT",
+    "LidCare": "Chăm sóc mi mắt"
+  },
+  "status": {
+    "Active": "Đang hoạt động",
+    "Paused": "Tạm dừng",
+    "PendingCancellation": "Chờ phê duyệt hủy",
+    "Cancelled": "Đã hủy",
+    "Switched": "Đã chuyển đổi",
+    "Completed": "Hoàn thành"
+  },
+  "pricingMode": {
+    "PerSession": "Theo buổi",
+    "PerPackage": "Theo gói"
+  },
+  "fields": {
+    "name": "Tên mẫu phác đồ",
+    "treatmentType": "Loại điều trị",
+    "sessionCount": "Số buổi",
+    "pricingMode": "Hình thức tính giá",
+    "packagePrice": "Giá gói",
+    "sessionPrice": "Giá mỗi buổi",
+    "minInterval": "Khoảng cách tối thiểu (ngày)",
+    "maxInterval": "Khoảng cách tối đa (ngày)",
+    "deductionPercent": "Tỷ lệ khấu trừ khi hủy (%)",
+    "description": "Mô tả",
+    "reason": "Lý do",
+    "clinicalNotes": "Ghi chú lâm sàng",
+    "osdiScore": "Điểm OSDI",
+    "consumables": "Vật tư tiêu hao đã dùng",
+    "parameters": "Thông số thiết bị",
+    "progress": "Tiến độ",
+    "sessionsCompleted": "Số buổi đã hoàn thành",
+    "sessionsRemaining": "Số buổi còn lại",
+    "lastSession": "Buổi điều trị gần nhất",
+    "nextDue": "Lần tiếp theo",
+    "overdue": "Quá hạn",
+    "managerPin": "Mã PIN quản lý",
+    "refundAmount": "Số tiền hoàn trả",
+    "rejectionReason": "Lý do từ chối"
+  },
+  "ipl": {
+    "energy": "Năng lượng (J/cm2)",
+    "pulseCount": "Số xung",
+    "spotSize": "Kích thước điểm chiếu",
+    "treatmentZones": "Vùng điều trị"
+  },
+  "lllt": {
+    "wavelength": "Bước sóng (nm)",
+    "power": "Công suất (mW)",
+    "duration": "Thời gian (phút)",
+    "treatmentArea": "Vùng điều trị"
+  },
+  "lidCare": {
+    "procedureSteps": "Các bước thực hiện",
+    "productsUsed": "Sản phẩm đã dùng",
+    "duration": "Thời gian (phút)"
+  },
+  "osdi": {
+    "inline": "Nhập điểm",
+    "selfFill": "Bệnh nhân tự điền",
+    "generateQr": "Tạo liên kết QR",
+    "severity": "Mức độ nghiêm trọng"
+  },
+  "intervalWarning": "Cảnh báo: Chỉ {{days}} ngày kể từ buổi trước (khuyến nghị tối thiểu {{minDays}} ngày)",
+  "cancellation": {
+    "request": "Yêu cầu hủy",
+    "approve": "Phê duyệt",
+    "reject": "Từ chối",
+    "pendingMessage": "Đang chờ quản lý phê duyệt hủy",
+    "estimatedRefund": "Số tiền hoàn trả ước tính",
+    "deduction": "Khấu trừ"
+  },
+  "switch": {
+    "currentWillBeSwitched": "Gói hiện tại sẽ được đánh dấu là 'Đã chuyển đổi'",
+    "newWillBeCreated": "Gói mới sẽ được tạo với {{remaining}} buổi còn lại",
+    "selectNewTemplate": "Chọn mẫu phác đồ mới"
+  },
+  "modify": {
+    "changeReason": "Lý do thay đổi",
+    "currentValues": "Giá trị hiện tại"
+  }
+}
