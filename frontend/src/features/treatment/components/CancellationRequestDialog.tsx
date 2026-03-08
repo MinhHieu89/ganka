@@ -1,0 +1,235 @@
+import { useMemo } from "react"
+import { useForm, Controller } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from "zod"
+import { toast } from "sonner"
+import { IconLoader2, IconAlertTriangle } from "@tabler/icons-react"
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/shared/components/Dialog"
+import { Button } from "@/shared/components/Button"
+import { Textarea } from "@/shared/components/Textarea"
+import { Badge } from "@/shared/components/Badge"
+import { Field, FieldLabel, FieldError } from "@/shared/components/Field"
+import { formatVND } from "@/shared/lib/format-vnd"
+import { handleServerValidationError } from "@/shared/lib/server-validation"
+import { useRequestCancellation } from "@/features/treatment/api/treatment-api"
+import type { TreatmentPackageDto } from "@/features/treatment/api/treatment-types"
+
+// -- Schema --
+
+const cancellationSchema = z.object({
+  reason: z.string().min(1, "Ly do la bat buoc"),
+})
+
+type CancellationFormValues = z.infer<typeof cancellationSchema>
+
+// -- Treatment type badge styles --
+
+const TREATMENT_TYPE_STYLES: Record<string, string> = {
+  IPL: "border-violet-500 text-violet-700 dark:text-violet-400",
+  LLLT: "border-blue-500 text-blue-700 dark:text-blue-400",
+  LidCare: "border-emerald-500 text-emerald-700 dark:text-emerald-400",
+}
+
+// -- Props --
+
+interface CancellationRequestDialogProps {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  package: TreatmentPackageDto | null
+}
+
+export function CancellationRequestDialog({
+  open,
+  onOpenChange,
+  package: pkg,
+}: CancellationRequestDialogProps) {
+  const requestMutation = useRequestCancellation()
+
+  const form = useForm<CancellationFormValues>({
+    resolver: zodResolver(cancellationSchema),
+    defaultValues: {
+      reason: "",
+    },
+  })
+
+  // Compute estimated refund based on remaining sessions and default deduction
+  const refundEstimate = useMemo(() => {
+    if (!pkg) return { deductionPercent: 0, remainingValue: 0, deduction: 0, refund: 0 }
+
+    // Default deduction comes from the protocol template
+    const deductionPercent = pkg.cancellationRequest?.deductionPercent ?? 15
+
+    const totalCost =
+      pkg.pricingMode === "PerPackage"
+        ? pkg.packagePrice
+        : pkg.sessionPrice * pkg.totalSessions
+
+    const remainingRatio =
+      pkg.totalSessions > 0 ? pkg.sessionsRemaining / pkg.totalSessions : 0
+    const remainingValue = totalCost * remainingRatio
+    const deduction = remainingValue * (deductionPercent / 100)
+    const refund = Math.round(remainingValue - deduction)
+
+    return { deductionPercent, remainingValue: Math.round(remainingValue), deduction: Math.round(deduction), refund }
+  }, [pkg])
+
+  const handleSubmit = async (data: CancellationFormValues) => {
+    if (!pkg) return
+
+    try {
+      await requestMutation.mutateAsync({
+        packageId: pkg.id,
+        reason: data.reason,
+      })
+      toast.success("Yeu cau huy da duoc gui")
+      onOpenChange(false)
+      form.reset()
+    } catch (error) {
+      const nonFieldErrors = handleServerValidationError(
+        error,
+        form.setError,
+      )
+      if (nonFieldErrors.length > 0) {
+        toast.error(nonFieldErrors[0])
+      }
+    }
+  }
+
+  const handleOpenChange = (isOpen: boolean) => {
+    if (isOpen) {
+      form.reset({ reason: "" })
+    }
+    onOpenChange(isOpen)
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Yeu cau huy phac do</DialogTitle>
+          <DialogDescription>
+            Gui yeu cau huy phac do dieu tri. Yeu cau can duoc quan ly phe duyet.
+          </DialogDescription>
+        </DialogHeader>
+
+        {pkg && (
+          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+            {/* Package summary */}
+            <div className="rounded-md border p-3 space-y-1.5 text-sm">
+              <div>
+                <span className="text-muted-foreground">Benh nhan:</span>{" "}
+                <span className="font-medium">{pkg.patientName}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-muted-foreground">Loai:</span>
+                <Badge
+                  variant="outline"
+                  className={`text-xs ${TREATMENT_TYPE_STYLES[pkg.treatmentType] ?? ""}`}
+                >
+                  {pkg.treatmentType}
+                </Badge>
+              </div>
+              <div>
+                <span className="text-muted-foreground">Phac do:</span>{" "}
+                {pkg.protocolTemplateName}
+              </div>
+              <div>
+                <span className="text-muted-foreground">Tien trinh:</span>{" "}
+                {pkg.sessionsCompleted}/{pkg.totalSessions} phien
+                {pkg.sessionsRemaining > 0 && (
+                  <span className="text-muted-foreground">
+                    {" "}
+                    (con lai {pkg.sessionsRemaining})
+                  </span>
+                )}
+              </div>
+              <div>
+                <span className="text-muted-foreground">Gia:</span>{" "}
+                {pkg.pricingMode === "PerPackage"
+                  ? formatVND(pkg.packagePrice)
+                  : `${formatVND(pkg.sessionPrice)} / phien`}
+              </div>
+            </div>
+
+            {/* Refund estimate */}
+            <div className="rounded-md bg-muted p-3 space-y-1 text-sm">
+              <div className="font-medium mb-1.5">Uoc tinh hoan tien</div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">
+                  Gia tri con lai ({pkg.sessionsRemaining} phien):
+                </span>
+                <span>{formatVND(refundEstimate.remainingValue)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">
+                  Khau tru mac dinh ({refundEstimate.deductionPercent}%):
+                </span>
+                <span className="text-red-600">-{formatVND(refundEstimate.deduction)}</span>
+              </div>
+              <div className="flex justify-between border-t pt-1 mt-1">
+                <span className="font-medium">So tien hoan du kien:</span>
+                <span className="font-semibold">{formatVND(refundEstimate.refund)}</span>
+              </div>
+            </div>
+
+            {/* Reason */}
+            <Controller
+              name="reason"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid || undefined}>
+                  <FieldLabel htmlFor={field.name}>Ly do huy</FieldLabel>
+                  <Textarea
+                    {...field}
+                    id={field.name}
+                    rows={3}
+                    aria-invalid={fieldState.invalid || undefined}
+                  />
+                  {fieldState.error && (
+                    <FieldError>{fieldState.error.message}</FieldError>
+                  )}
+                </Field>
+              )}
+            />
+
+            {/* Warning */}
+            <div className="flex items-start gap-2 rounded-md border border-yellow-300 bg-yellow-50 dark:border-yellow-700 dark:bg-yellow-950 p-3 text-sm">
+              <IconAlertTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-400 mt-0.5 flex-shrink-0" />
+              <span className="text-yellow-800 dark:text-yellow-200">
+                Yeu cau huy se duoc gui den quan ly de phe duyet. Phac do se chuyen sang trang thai cho huy.
+              </span>
+            </div>
+
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => onOpenChange(false)}
+                disabled={requestMutation.isPending}
+              >
+                Dong
+              </Button>
+              <Button
+                type="submit"
+                variant="destructive"
+                disabled={requestMutation.isPending}
+              >
+                {requestMutation.isPending && (
+                  <IconLoader2 className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                Gui yeu cau huy
+              </Button>
+            </DialogFooter>
+          </form>
+        )}
+      </DialogContent>
+    </Dialog>
+  )
+}
