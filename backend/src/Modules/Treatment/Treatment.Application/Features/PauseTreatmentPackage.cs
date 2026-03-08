@@ -36,6 +36,7 @@ public class PauseTreatmentPackageCommandValidator : AbstractValidator<PauseTrea
 
 /// <summary>
 /// Wolverine handler for <see cref="PauseTreatmentPackageCommand"/>.
+/// Pauses an active package or resumes a paused package.
 /// </summary>
 public static class PauseTreatmentPackageHandler
 {
@@ -46,7 +47,34 @@ public static class PauseTreatmentPackageHandler
         IValidator<PauseTreatmentPackageCommand> validator,
         CancellationToken cancellationToken)
     {
-        // Stub -- will be implemented in GREEN phase
-        throw new NotImplementedException();
+        var validationResult = await validator.ValidateAsync(command, cancellationToken);
+        if (!validationResult.IsValid)
+        {
+            var errors = validationResult.Errors
+                .GroupBy(e => e.PropertyName)
+                .ToDictionary(g => g.Key, g => g.Select(e => e.ErrorMessage).ToArray());
+            return Result<TreatmentPackageDto>.Failure(Error.ValidationWithDetails(errors));
+        }
+
+        var package = await packageRepository.GetByIdAsync(command.PackageId, cancellationToken);
+        if (package is null)
+            return Result<TreatmentPackageDto>.Failure(
+                Error.NotFound("TreatmentPackage", command.PackageId));
+
+        try
+        {
+            if (command.Action == PauseAction.Pause)
+                package.Pause();
+            else
+                package.Resume();
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Result<TreatmentPackageDto>.Failure(Error.Validation(ex.Message));
+        }
+
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        return CreateTreatmentPackageHandler.MapToDto(package, "");
     }
 }

@@ -1,3 +1,4 @@
+using System.Text.Json;
 using FluentValidation;
 using Shared.Application;
 using Shared.Domain;
@@ -36,6 +37,8 @@ public class ModifyTreatmentPackageCommandValidator : AbstractValidator<ModifyTr
 
 /// <summary>
 /// Wolverine handler for <see cref="ModifyTreatmentPackageCommand"/>.
+/// Modifies an active or paused treatment package, creating a ProtocolVersion snapshot
+/// of previous and current state for audit trail (TRT-07).
 /// </summary>
 public static class ModifyTreatmentPackageHandler
 {
@@ -47,7 +50,69 @@ public static class ModifyTreatmentPackageHandler
         ICurrentUser currentUser,
         CancellationToken cancellationToken)
     {
-        // Stub -- will be implemented in GREEN phase
-        throw new NotImplementedException();
+        var validationResult = await validator.ValidateAsync(command, cancellationToken);
+        if (!validationResult.IsValid)
+        {
+            var errors = validationResult.Errors
+                .GroupBy(e => e.PropertyName)
+                .ToDictionary(g => g.Key, g => g.Select(e => e.ErrorMessage).ToArray());
+            return Result<TreatmentPackageDto>.Failure(Error.ValidationWithDetails(errors));
+        }
+
+        var package = await packageRepository.GetByIdAsync(command.PackageId, cancellationToken);
+        if (package is null)
+            return Result<TreatmentPackageDto>.Failure(
+                Error.NotFound("TreatmentPackage", command.PackageId));
+
+        // Build change description by comparing old vs new values
+        var changeDescription = BuildChangeDescription(
+            package, command.TotalSessions, command.ParametersJson, command.MinIntervalDays);
+
+        try
+        {
+            package.Modify(
+                totalSessions: command.TotalSessions,
+                parametersJson: command.ParametersJson,
+                minIntervalDays: command.MinIntervalDays,
+                changeDescription: changeDescription,
+                changedById: currentUser.UserId,
+                reason: command.Reason);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Result<TreatmentPackageDto>.Failure(Error.Validation(ex.Message));
+        }
+        catch (ArgumentOutOfRangeException ex)
+        {
+            return Result<TreatmentPackageDto>.Failure(Error.Validation(ex.Message));
+        }
+
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        // Load protocol name for the DTO
+        return CreateTreatmentPackageHandler.MapToDto(package, "");
+    }
+
+    /// <summary>
+    /// Builds a human-readable description of changes by comparing old values with new values.
+    /// </summary>
+    private static string BuildChangeDescription(
+        TreatmentPackage package,
+        int? newTotalSessions,
+        string? newParametersJson,
+        int? newMinIntervalDays)
+    {
+        var changes = new List<string>();
+
+        if (newTotalSessions.HasValue && newTotalSessions.Value != package.TotalSessions)
+            changes.Add($"Session count changed from {package.TotalSessions} to {newTotalSessions.Value}");
+
+        if (newParametersJson is not null && newParametersJson != package.ParametersJson)
+            changes.Add("Treatment parameters updated");
+
+        if (newMinIntervalDays.HasValue && newMinIntervalDays.Value != package.MinIntervalDays)
+            changes.Add($"Minimum interval changed from {package.MinIntervalDays} to {newMinIntervalDays.Value} days");
+
+        return changes.Count > 0 ? string.Join("; ", changes) : "No field changes detected";
     }
 }
