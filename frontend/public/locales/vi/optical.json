@@ -171,6 +171,9 @@
     "pendingApproval": "Chờ phê duyệt",
     "requiresManagerApproval": "Thay thế cần phê duyệt của quản lý"
   },
+  "prescriptionHistory": {
+    "tab": "Lịch sử toa kính"
+  },
   "prescriptions": {
     "title": "Lịch sử toa kính",
     "subtitle": "Xem lịch sử toa kính của bệnh nhân và so sánh theo năm",

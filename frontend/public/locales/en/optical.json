@@ -171,6 +171,9 @@
     "pendingApproval": "Pending approval",
     "requiresManagerApproval": "Replacement requires manager approval"
   },
+  "prescriptionHistory": {
+    "tab": "Optical Rx History"
+  },
   "prescriptions": {
     "title": "Prescription History",
     "subtitle": "View patient lens prescription history with year-over-year comparison",
