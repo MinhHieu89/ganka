@@ -149,7 +149,14 @@ export function AppSidebar({ ...sidebarProps }: ComponentProps<typeof Sidebar>) 
       titleKey: "sidebar.optical",
       to: "/optical",
       icon: IconEyeglass,
-      disabled: true,
+      children: [
+        { titleKey: "sidebar.opticalFrames", to: "/optical/frames" },
+        { titleKey: "sidebar.opticalLenses", to: "/optical/lenses" },
+        { titleKey: "sidebar.opticalOrders", to: "/optical/orders" },
+        { titleKey: "sidebar.opticalCombos", to: "/optical/combos" },
+        { titleKey: "sidebar.opticalWarranty", to: "/optical/warranty" },
+        { titleKey: "sidebar.opticalStocktaking", to: "/optical/stocktaking" },
+      ],
     },
     {
       titleKey: "sidebar.treatments",
