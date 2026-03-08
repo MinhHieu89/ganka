@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 08-01-PLAN.md
-last_updated: "2026-03-08T02:48:35.566Z"
+stopped_at: Completed 08-08-PLAN.md
+last_updated: "2026-03-08T02:49:29.955Z"
 last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
 progress:
   total_phases: 14
   completed_phases: 11
   total_plans: 193
-  completed_plans: 155
+  completed_plans: 157
   percent: 80
 ---
 
@@ -495,6 +495,7 @@ Progress: [█████████░] 96%
 | Phase 07 P28 | 8min | 2 tasks | 7 files |
 | Phase 08-optical-center P02 | 5 | 2 tasks | 5 files |
 | Phase 08-optical-center P01 | 7 | 2 tasks | 5 files |
+| Phase 08-optical-center P08 | 8 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -835,6 +836,8 @@ Recent decisions affecting current work:
 - [Phase 08-optical-center]: LensCoating uses [Flags] for bitwise multi-coating combinations
 - [Phase 08-optical-center]: WarrantyResolution.Replace documented as requiring manager approval per business rules
 - [Phase 08-optical-center]: Followed Pharmacy.Domain.Enums pattern for Optical enums: file-scoped namespace, XML docs with Vietnamese translations
+- [Phase 08-optical-center]: GetOpticalChargesQuery.cs contains queries Optical sends TO other modules (Clinical, Pharmacy), not a query Optical responds to - Optical.Application handles Billing.Contracts.GetVisitChargesQuery
+- [Phase 08-optical-center]: Cross-module query pattern: Contracts layer defines what module needs from others; Application layer defines what others can query from this module
 
 ### Roadmap Evolution
 
@@ -857,6 +860,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-08T02:48:35.561Z
-Stopped at: Completed 08-01-PLAN.md
+Last session: 2026-03-08T02:49:12.750Z
+Stopped at: Completed 08-08-PLAN.md
 Resume file: None

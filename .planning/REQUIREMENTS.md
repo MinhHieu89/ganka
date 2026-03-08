@@ -108,7 +108,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **OPT-05**: Contact lenses (Ortho-K, soft) are prescribed via HIS, not sold through optical counter
 - [ ] **OPT-06**: Staff can create combo pricing (preset combos + custom frame+lens combinations)
 - [x] **OPT-07**: System tracks warranty per sale (12 months frame + lens) with claim workflow (replace/repair/discount, case assessment with documents)
-- [ ] **OPT-08**: System stores lens prescription history per patient with year-over-year comparison and lens replacement history
+- [x] **OPT-08**: System stores lens prescription history per patient with year-over-year comparison and lens replacement history
 - [x] **OPT-09**: Staff can perform barcode-based stocktaking (physical count vs. system, discrepancy report)
 
 ### Billing & Finance
@@ -296,7 +296,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | OPT-05 | Phase 8 | Pending |
 | OPT-06 | Phase 8 | Pending |
 | OPT-07 | Phase 8 | Complete |
-| OPT-08 | Phase 8 | Pending |
+| OPT-08 | Phase 8 | Complete |
 | OPT-09 | Phase 8 | Complete |
 | FIN-01 | Phase 7 | Complete |
 | FIN-02 | Phase 7 | Complete |

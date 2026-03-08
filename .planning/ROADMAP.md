@@ -412,5 +412,5 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 | 5.1 Fix Architecture Test Failures | 0/8 | Not started | - |
 | 6. Pharmacy & Consumables | 29/29 | Complete   | 2026-03-06 |
 | 7. Billing & Finance | 24/28 | In Progress|  |
-| 8. Optical Center | 2/39 | In Progress|  |
+| 8. Optical Center | 4/39 | In Progress|  |
 | 9. Treatment Protocols | 0/3 | Not started | - |
