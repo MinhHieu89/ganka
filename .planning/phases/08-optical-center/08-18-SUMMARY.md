@@ -121,6 +121,24 @@ None - no external service configuration required.
 - Handlers follow Wolverine static handler convention used throughout the project
 - Ready for plan 08-19 (API endpoints) or plan 08-20 (additional optical features)
 
+## Self-Check: PASSED
+
+All created files confirmed present:
+- CreateGlassesOrder.cs - FOUND
+- UpdateOrderStatus.cs - FOUND
+- GetGlassesOrders.cs - FOUND
+- GetGlassesOrderById.cs - FOUND
+- GetOverdueOrders.cs - FOUND
+- OrderHandlerTests.cs - FOUND
+- 08-18-SUMMARY.md - FOUND
+
+All commits confirmed:
+- 4b42255 (RED tests) - FOUND
+- d6e760d (GREEN Task 1) - FOUND
+- 5b45fab (GREEN Task 2) - FOUND
+
+Test result: 19/19 passed, 0 failed
+
 ---
 *Phase: 08-optical-center*
 *Completed: 2026-03-08*
