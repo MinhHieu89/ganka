@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 09-08-PLAN.md
-last_updated: "2026-03-08T06:57:25.359Z"
+stopped_at: Completed 09-07-PLAN.md
+last_updated: "2026-03-08T06:57:28.882Z"
 last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
 progress:
   total_phases: 14
@@ -960,6 +960,7 @@ Recent decisions affecting current work:
 - [Phase 09-treatment-protocols]: CancellationRequest is a nullable backing field on TreatmentPackage, not a collection, since only one active request per package
 - [Phase 09-08]: Used synchronous Add() on repositories matching Optical module pattern
 - [Phase 09-08]: ApplyConfigurationsFromAssembly for auto-discovering entity configurations
+- [Phase 09-treatment-protocols]: Created separate config files for ProtocolVersion and CancellationRequest for clarity; unique index on CancellationRequest.TreatmentPackageId enforces one-to-one at DB level
 
 ### Roadmap Evolution
 
@@ -982,6 +983,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-08T06:57:15.529Z
-Stopped at: Completed 09-08-PLAN.md
+Last session: 2026-03-08T06:57:28.877Z
+Stopped at: Completed 09-07-PLAN.md
 Resume file: None
