@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 08-20-PLAN.md
-last_updated: "2026-03-08T03:29:23.842Z"
+stopped_at: Completed 08-19-PLAN.md
+last_updated: "2026-03-08T03:29:38.904Z"
 last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
 progress:
   total_phases: 14
@@ -542,6 +542,7 @@ Progress: [█████████░] 96%
 | Phase 08-optical-center P18 | 7 | 2 tasks | 7 files |
 | Phase 08-optical-center P21 | 45 | 2 tasks | 11 files |
 | Phase 08-optical-center P16 | 9 | 2 tasks | 6 files |
+| Phase 08-optical-center P19 | 707 | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -936,6 +937,8 @@ Recent decisions affecting current work:
 - [Phase 08-optical-center]: UploadWarrantyDocument uses blob name pattern {claimId}/{timestamp}_{fileName} in warranty-documents container
 - [Phase 08-optical-center]: Frame handlers: Used Optical.Domain.Entities.Ean13Generator.Generate(long) for barcode generation; GetFramesHandler.ToSummaryDto shared with SearchFramesHandler; barcode uniqueness excludeId=null for create, frame.Id for update
 - [Phase 08-optical-center]: OverCount = known frames (FrameId not null) with physical > system; MissingFromSystem = FrameId is null (barcode not in catalog)
+- [Phase 08-optical-center]: Replace resolution stays Pending; Repair/Discount auto-approve via claim.Approve() at creation
+- [Phase 08-optical-center]: ApproveWarrantyClaim validates Resolution==Replace before allowing approve/reject
 
 ### Roadmap Evolution
 
@@ -958,6 +961,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-08T03:28:54.470Z
-Stopped at: Completed 08-20-PLAN.md
+Last session: 2026-03-08T03:29:38.899Z
+Stopped at: Completed 08-19-PLAN.md
 Resume file: None
