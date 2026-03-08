@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 08-12-PLAN.md
-last_updated: "2026-03-08T02:54:35.846Z"
+stopped_at: Completed 08-38-PLAN.md
+last_updated: "2026-03-08T02:54:52.389Z"
 last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
 progress:
   total_phases: 14
@@ -857,6 +857,8 @@ Recent decisions affecting current work:
 - [Phase 08-optical-center]: CameraScanner supports both external isActive prop and internal toggle for flexible controlled/uncontrolled use
 - [Phase 08-optical-center]: IGlassesOrderRepository.GetAllAsync uses int? statusFilter to match Pharmacy pattern and avoid enum casts in handlers
 - [Phase 08-optical-center]: IStocktakingRepository.GetCurrentSessionAsync returns null when no active session (single InProgress session business rule)
+- [Phase 08-optical-center]: SupplierType is [Flags] enum enabling bitwise combination so one supplier can serve Drug | Optical simultaneously
+- [Phase 08-optical-center]: Supplier.Create() defaults SupplierType to Drug for full backward compatibility with all existing callers
 
 ### Roadmap Evolution
 
@@ -879,6 +881,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-08T02:54:19.714Z
-Stopped at: Completed 08-12-PLAN.md
+Last session: 2026-03-08T02:54:39.883Z
+Stopped at: Completed 08-38-PLAN.md
 Resume file: None
