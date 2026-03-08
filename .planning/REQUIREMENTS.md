@@ -101,9 +101,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Optical Center
 
-- [ ] **OPT-01**: Staff can manage frame inventory with barcode scanning (brand, model, color, size, price, stock)
+- [x] **OPT-01**: Staff can manage frame inventory with barcode scanning (brand, model, color, size, price, stock)
 - [x] **OPT-02**: Staff can order lenses by prescription from suppliers (Essilor, Hoya, Viet Phap)
-- [ ] **OPT-03**: System tracks glasses order lifecycle: Ordered -> Processing -> Received -> Ready -> Delivered
+- [x] **OPT-03**: System tracks glasses order lifecycle: Ordered -> Processing -> Received -> Ready -> Delivered
 - [ ] **OPT-04**: System blocks lens processing until full payment is received (no deposit model)
 - [ ] **OPT-05**: Contact lenses (Ortho-K, soft) are prescribed via HIS, not sold through optical counter
 - [ ] **OPT-06**: Staff can create combo pricing (preset combos + custom frame+lens combinations)
@@ -289,9 +289,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CON-01 | Phase 6 | Complete |
 | CON-02 | Phase 6 | Complete |
 | CON-03 | Phase 6 | Complete |
-| OPT-01 | Phase 8 | Pending |
+| OPT-01 | Phase 8 | Complete |
 | OPT-02 | Phase 8 | Complete |
-| OPT-03 | Phase 8 | Pending |
+| OPT-03 | Phase 8 | Complete |
 | OPT-04 | Phase 8 | Pending |
 | OPT-05 | Phase 8 | Pending |
 | OPT-06 | Phase 8 | Pending |
