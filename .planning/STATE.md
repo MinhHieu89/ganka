@@ -3,11 +3,27 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
+stopped_at: Completed 09-26-PLAN.md
+last_updated: "2026-03-08T07:55:19.545Z"
+last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
+progress:
+  total_phases: 14
+  completed_phases: 12
+  total_plans: 222
+  completed_plans: 219
+  percent: 98
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: in-progress
 stopped_at: Completed 09-23-PLAN.md
 last_updated: "2026-03-08T07:49:03Z"
 last_activity: 2026-03-08 -- Completed 09-23 Session Recording Form (TreatmentSessionForm, ConsumableSelector, SessionOsdiCapture)
 progress:
-  total_phases: 14
+  [██████████] 98%
   completed_phases: 12
   total_plans: 222
   completed_plans: 218
@@ -624,6 +640,7 @@ Progress: [█████████░] 96%
 | Phase 09 P21 | 6min | 2 tasks | 4 files |
 | Phase 09-treatment-protocols P24 | 4min | 2 tasks | 3 files |
 | Phase 09 P25 | 4min | 2 tasks | 3 files |
+| Phase 09-treatment-protocols P26 | 3min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -1052,6 +1069,8 @@ Recent decisions affecting current work:
 - [Phase 09-treatment-protocols]: VersionHistoryDialog receives version data as prop with PackageVersionEntry type defined locally
 - [Phase 09-treatment-protocols]: SwitchTreatmentDialog navigates to new package detail after successful switch
 - [Phase 09]: Inline approve/reject dialogs within CancellationApprovalQueue following billing RefundDialog pattern
+- [Phase 09-treatment-protocols]: Used Collapsible for status-grouped sections with Cancelled/Switched collapsed by default
+- [Phase 09-treatment-protocols]: Hardcoded Vietnamese text matching TreatmentsPage pattern rather than i18n keys
 
 ### Roadmap Evolution
 
@@ -1074,6 +1093,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-08T07:50:02.593Z
-Stopped at: Completed 09-25-PLAN.md
+Last session: 2026-03-08T07:55:19.540Z
+Stopped at: Completed 09-26-PLAN.md
 Resume file: None
