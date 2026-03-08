@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 08-04-PLAN.md
-last_updated: "2026-03-08T02:53:09.312Z"
+stopped_at: Completed 08-09-PLAN.md
+last_updated: "2026-03-08T02:53:14.708Z"
 last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
 progress:
   total_phases: 14
@@ -851,6 +851,8 @@ Recent decisions affecting current work:
 - [Phase 08-optical-center]: StocktakingSession.RecordItem uses upsert by barcode to prevent duplicate scan counts (addresses Pitfall 5)
 - [Phase 08-optical-center]: GlassesOrder payment enforcement in application layer, not entity - TransitionTo does not check IsPaymentConfirmed (OPT-04 concern belongs in handler)
 - [Phase 08-optical-center]: LensCatalogItem.AdjustStockEntry() raises LowStockAlertEvent domain event since LensStockEntry (Entity) cannot raise events directly
+- [Phase 08-optical-center]: Frame.Barcode unique filtered index on IS NOT NULL allows frames without barcodes while preventing duplicate EAN-13 codes
+- [Phase 08-optical-center]: LensStockEntry unique composite index on (LensCatalogItemId, Sph, Cyl, Add) prevents duplicate power combination entries
 
 ### Roadmap Evolution
 
@@ -873,6 +875,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-08T02:53:09.303Z
-Stopped at: Completed 08-04-PLAN.md
+Last session: 2026-03-08T02:53:14.699Z
+Stopped at: Completed 08-09-PLAN.md
 Resume file: None
