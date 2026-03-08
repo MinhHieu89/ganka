@@ -19,7 +19,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 5: Prescriptions & Document Printing** - Drug and optical prescription writing with all printable documents
 - [x] **Phase 6: Pharmacy & Consumables** - Drug inventory, dispensing, and consumables warehouse (completed 2026-03-06)
 - [ ] **Phase 7: Billing & Finance** - Unified invoicing, payment processing, and shift management
-- [ ] **Phase 8: Optical Center** - Frame/lens inventory, glasses order tracking, warranty, and stocktaking
+- [x] **Phase 8: Optical Center** - Frame/lens inventory, glasses order tracking, warranty, and stocktaking (completed 2026-03-08)
 - [ ] **Phase 9: Treatment Protocols** - IPL/LLLT/lid care packages with session tracking and OSDI monitoring
 
 ## Phase Details
@@ -412,5 +412,5 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 | 5.1 Fix Architecture Test Failures | 0/8 | Not started | - |
 | 6. Pharmacy & Consumables | 29/29 | Complete   | 2026-03-06 |
 | 7. Billing & Finance | 24/28 | In Progress|  |
-| 8. Optical Center | 38/39 | In Progress|  |
+| 8. Optical Center | 39/39 | Complete   | 2026-03-08 |
 | 9. Treatment Protocols | 0/3 | Not started | - |

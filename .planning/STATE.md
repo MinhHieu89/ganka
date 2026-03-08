@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 08-16-PLAN.md
-last_updated: "2026-03-08T03:28:25.937Z"
+stopped_at: Completed 08-20-PLAN.md
+last_updated: "2026-03-08T03:29:23.842Z"
 last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
 progress:
   total_phases: 14
-  completed_phases: 11
+  completed_phases: 12
   total_plans: 193
-  completed_plans: 191
+  completed_plans: 192
 ---
 
 ---
@@ -935,6 +935,7 @@ Recent decisions affecting current work:
 - [Phase 08-optical-center]: PrescriptionComparisonDto uses List<FieldChange> with direction string for rich per-field comparison
 - [Phase 08-optical-center]: UploadWarrantyDocument uses blob name pattern {claimId}/{timestamp}_{fileName} in warranty-documents container
 - [Phase 08-optical-center]: Frame handlers: Used Optical.Domain.Entities.Ean13Generator.Generate(long) for barcode generation; GetFramesHandler.ToSummaryDto shared with SearchFramesHandler; barcode uniqueness excludeId=null for create, frame.Id for update
+- [Phase 08-optical-center]: OverCount = known frames (FrameId not null) with physical > system; MissingFromSystem = FrameId is null (barcode not in catalog)
 
 ### Roadmap Evolution
 
@@ -957,6 +958,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-08T03:28:25.932Z
-Stopped at: Completed 08-16-PLAN.md
+Last session: 2026-03-08T03:28:54.470Z
+Stopped at: Completed 08-20-PLAN.md
 Resume file: None
