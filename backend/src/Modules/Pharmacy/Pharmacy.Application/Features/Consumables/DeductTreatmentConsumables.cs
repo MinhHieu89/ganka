@@ -1,12 +1,12 @@
 using Pharmacy.Application.Interfaces;
 using Pharmacy.Domain.Enums;
-using Treatment.Domain.Events;
+using Treatment.Contracts.IntegrationEvents;
 
 namespace Pharmacy.Application.Features.Consumables;
 
 /// <summary>
 /// Wolverine handler for cross-module consumable stock deduction (TRT-11, CON-03).
-/// Responds to TreatmentSessionCompletedEvent raised by the Treatment module
+/// Responds to TreatmentSessionCompletedIntegrationEvent published by the Treatment module
 /// when a treatment session is completed.
 ///
 /// For each consumable used during the session:
@@ -19,7 +19,7 @@ namespace Pharmacy.Application.Features.Consumables;
 public static class DeductTreatmentConsumablesHandler
 {
     public static async Task Handle(
-        TreatmentSessionCompletedEvent message,
+        TreatmentSessionCompletedIntegrationEvent message,
         IConsumableRepository repository,
         IUnitOfWork unitOfWork,
         CancellationToken ct)

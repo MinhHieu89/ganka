@@ -1,6 +1,7 @@
 using Shared.Domain;
 using Treatment.Domain.Enums;
 using Treatment.Domain.Events;
+using Treatment.Domain.Models;
 
 namespace Treatment.Domain.Entities;
 
@@ -185,7 +186,7 @@ public class TreatmentPackage : AggregateRoot, IAuditable
 
         // Raise session completed event with consumable info for Pharmacy module (TRT-11)
         var consumableUsages = consumables
-            .Select(c => new TreatmentSessionCompletedEvent.ConsumableUsage(c.ConsumableItemId, c.Quantity))
+            .Select(c => new ConsumableUsageInfo(c.ConsumableItemId, c.Quantity))
             .ToList();
 
         AddDomainEvent(new TreatmentSessionCompletedEvent(

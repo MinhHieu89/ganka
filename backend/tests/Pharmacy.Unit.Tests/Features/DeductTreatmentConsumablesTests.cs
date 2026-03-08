@@ -5,14 +5,13 @@ using Pharmacy.Application.Interfaces;
 using Pharmacy.Domain.Entities;
 using Pharmacy.Domain.Enums;
 using Shared.Domain;
-using Treatment.Domain.Enums;
-using Treatment.Domain.Events;
+using Treatment.Contracts.IntegrationEvents;
 
 namespace Pharmacy.Unit.Tests.Features;
 
 /// <summary>
 /// TDD tests for DeductTreatmentConsumablesHandler.
-/// Cross-module event handler: Pharmacy module responds to TreatmentSessionCompletedEvent
+/// Cross-module event handler: Pharmacy module responds to TreatmentSessionCompletedIntegrationEvent
 /// and deducts consumable stock used during the treatment session (TRT-11).
 ///
 /// Behavior:
@@ -78,14 +77,14 @@ public class DeductTreatmentConsumablesTests
             quantity: quantity);
     }
 
-    private static TreatmentSessionCompletedEvent CreateEvent(
-        List<TreatmentSessionCompletedEvent.ConsumableUsage>? consumables = null)
+    private static TreatmentSessionCompletedIntegrationEvent CreateEvent(
+        List<TreatmentSessionCompletedIntegrationEvent.ConsumableUsageDto>? consumables = null)
     {
-        return new TreatmentSessionCompletedEvent(
+        return new TreatmentSessionCompletedIntegrationEvent(
             PackageId: DefaultPackageId,
             SessionId: DefaultSessionId,
             PatientId: DefaultPatientId,
-            TreatmentType: TreatmentType.IPL,
+            TreatmentType: 0, // IPL
             Consumables: consumables ?? []);
     }
 
@@ -101,7 +100,7 @@ public class DeductTreatmentConsumablesTests
         _repository.GetByIdAsync(itemId, Arg.Any<CancellationToken>()).Returns(item);
 
         var message = CreateEvent([
-            new TreatmentSessionCompletedEvent.ConsumableUsage(itemId, 5)
+            new TreatmentSessionCompletedIntegrationEvent.ConsumableUsageDto(itemId, 5)
         ]);
 
         // Act
@@ -129,7 +128,7 @@ public class DeductTreatmentConsumablesTests
             .Returns([earlierBatch, laterBatch]); // Already in FEFO order
 
         var message = CreateEvent([
-            new TreatmentSessionCompletedEvent.ConsumableUsage(itemId, 7)
+            new TreatmentSessionCompletedIntegrationEvent.ConsumableUsageDto(itemId, 7)
         ]);
 
         // Act
@@ -158,8 +157,8 @@ public class DeductTreatmentConsumablesTests
         _repository.GetByIdAsync(missingId, Arg.Any<CancellationToken>()).Returns((ConsumableItem?)null);
 
         var message = CreateEvent([
-            new TreatmentSessionCompletedEvent.ConsumableUsage(missingId, 3),
-            new TreatmentSessionCompletedEvent.ConsumableUsage(existingId, 2)
+            new TreatmentSessionCompletedIntegrationEvent.ConsumableUsageDto(missingId, 3),
+            new TreatmentSessionCompletedIntegrationEvent.ConsumableUsageDto(existingId, 2)
         ]);
 
         // Act — should NOT throw
@@ -208,8 +207,8 @@ public class DeductTreatmentConsumablesTests
         _repository.GetByIdAsync(item2Id, Arg.Any<CancellationToken>()).Returns(item2);
 
         var message = CreateEvent([
-            new TreatmentSessionCompletedEvent.ConsumableUsage(item1Id, 5),
-            new TreatmentSessionCompletedEvent.ConsumableUsage(item2Id, 10)
+            new TreatmentSessionCompletedIntegrationEvent.ConsumableUsageDto(item1Id, 5),
+            new TreatmentSessionCompletedIntegrationEvent.ConsumableUsageDto(item2Id, 10)
         ]);
 
         // Act
@@ -238,7 +237,7 @@ public class DeductTreatmentConsumablesTests
         _repository.GetByIdAsync(itemId, Arg.Any<CancellationToken>()).Returns(item);
 
         var message = CreateEvent([
-            new TreatmentSessionCompletedEvent.ConsumableUsage(itemId, 10)
+            new TreatmentSessionCompletedIntegrationEvent.ConsumableUsageDto(itemId, 10)
         ]);
 
         // Act — should NOT throw, deduct what's available
@@ -263,7 +262,7 @@ public class DeductTreatmentConsumablesTests
         _repository.GetBatchesAsync(itemId, Arg.Any<CancellationToken>()).Returns([batch]);
 
         var message = CreateEvent([
-            new TreatmentSessionCompletedEvent.ConsumableUsage(itemId, 10)
+            new TreatmentSessionCompletedIntegrationEvent.ConsumableUsageDto(itemId, 10)
         ]);
 
         // Act — should NOT throw, deduct what's available

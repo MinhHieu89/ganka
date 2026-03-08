@@ -16,7 +16,7 @@
     <ProjectReference Include="..\Pharmacy.Domain\Pharmacy.Domain.csproj" />
     <ProjectReference Include="..\Pharmacy.Contracts\Pharmacy.Contracts.csproj" />
     <ProjectReference Include="..\..\..\Shared\Shared.Application\Shared.Application.csproj" />
-    <ProjectReference Include="..\..\Treatment\Treatment.Domain\Treatment.Domain.csproj" />
+    <ProjectReference Include="..\..\Treatment\Treatment.Contracts\Treatment.Contracts.csproj" />
   </ItemGroup>
 
 </Project>
