@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 08-18-PLAN.md
-last_updated: "2026-03-08T03:26:46.489Z"
+stopped_at: Completed 08-21-PLAN.md
+last_updated: "2026-03-08T03:27:38.204Z"
 last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
 progress:
   total_phases: 14
   completed_phases: 11
   total_plans: 193
-  completed_plans: 188
+  completed_plans: 190
   percent: 80
 ---
 
@@ -525,6 +525,7 @@ Progress: [█████████░] 96%
 | Phase 08-optical-center P39 | 7.5m | 1 tasks | 6 files |
 | Phase 08-optical-center P17 | 506 | 2 tasks | 5 files |
 | Phase 08-optical-center P18 | 7 | 2 tasks | 7 files |
+| Phase 08-optical-center P21 | 45 | 2 tasks | 11 files |
 
 ## Accumulated Context
 
@@ -915,6 +916,8 @@ Recent decisions affecting current work:
 - [Phase 08-optical-center]: 08-39: Used IVisitRepository.GetOpticalPrescriptionsByPatientIdAsync instead of direct ClinicalDbContext injection to avoid Application->Infrastructure layer violation
 - [Phase 08-optical-center]: AdjustLensStock rejects negative QuantityChange when no stock entry exists — cannot deduct from non-existent stock
 - [Phase 08-optical-center]: OPT-04 payment gate enforced server-side via IMessageBus.InvokeAsync<InvoiceDto?>(GetVisitInvoiceQuery) in UpdateOrderStatusHandler
+- [Phase 08-optical-center]: PrescriptionComparisonDto uses List<FieldChange> with direction string for rich per-field comparison
+- [Phase 08-optical-center]: UploadWarrantyDocument uses blob name pattern {claimId}/{timestamp}_{fileName} in warranty-documents container
 
 ### Roadmap Evolution
 
@@ -937,6 +940,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-08T03:26:46.485Z
-Stopped at: Completed 08-18-PLAN.md
+Last session: 2026-03-08T03:27:38.200Z
+Stopped at: Completed 08-21-PLAN.md
 Resume file: None
