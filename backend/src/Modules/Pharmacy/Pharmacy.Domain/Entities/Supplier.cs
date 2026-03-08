@@ -1,3 +1,4 @@
+using Pharmacy.Domain.Enums;
 using Shared.Domain;
 
 namespace Pharmacy.Domain.Entities;
@@ -24,6 +25,9 @@ public class Supplier : AggregateRoot, IAuditable
     /// <summary>Whether the supplier is currently active. Inactive suppliers are hidden from selection.</summary>
     public bool IsActive { get; private set; } = true;
 
+    /// <summary>Flags indicating what types of products this supplier provides (Drug, Optical, or both).</summary>
+    public SupplierType SupplierTypes { get; private set; } = SupplierType.Drug;
+
     /// <summary>Private constructor for EF Core materialization.</summary>
     private Supplier() { }
 
@@ -35,12 +39,14 @@ public class Supplier : AggregateRoot, IAuditable
     /// <param name="phone">Optional phone number.</param>
     /// <param name="email">Optional email address.</param>
     /// <param name="branchId">The branch this supplier is registered under.</param>
+    /// <param name="supplierTypes">Flags indicating supplier type(s). Defaults to Drug for backward compatibility.</param>
     public static Supplier Create(
         string name,
         string? contactInfo,
         string? phone,
         string? email,
-        BranchId branchId)
+        BranchId branchId,
+        SupplierType supplierTypes = SupplierType.Drug)
     {
         var supplier = new Supplier
         {
@@ -48,7 +54,8 @@ public class Supplier : AggregateRoot, IAuditable
             ContactInfo = contactInfo,
             Phone = phone,
             Email = email,
-            IsActive = true
+            IsActive = true,
+            SupplierTypes = supplierTypes
         };
 
         supplier.SetBranchId(branchId);
@@ -65,6 +72,13 @@ public class Supplier : AggregateRoot, IAuditable
         Phone = phone;
         Email = email;
 
+        SetUpdatedAt();
+    }
+
+    /// <summary>Sets the supplier type flags. Use bitwise OR for multiple types (e.g., Drug | Optical).</summary>
+    public void SetSupplierTypes(SupplierType types)
+    {
+        SupplierTypes = types;
         SetUpdatedAt();
     }
 

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Pharmacy.Domain.Entities;
+using Pharmacy.Domain.Enums;
 
 namespace Pharmacy.Infrastructure.Configurations;
 
@@ -34,6 +35,11 @@ public class SupplierConfiguration : IEntityTypeConfiguration<Supplier>
         builder.Property(s => s.IsActive)
             .IsRequired()
             .HasDefaultValue(true);
+
+        builder.Property(s => s.SupplierTypes)
+            .IsRequired()
+            .HasDefaultValue(SupplierType.Drug)
+            .HasConversion<int>();
 
         builder.Property(s => s.BranchId)
             .HasConversion(
