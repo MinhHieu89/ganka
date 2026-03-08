@@ -481,7 +481,7 @@ export async function updateFrame(id: string, data: UpdateFrameInput): Promise<v
 }
 
 export async function generateBarcode(frameId: string): Promise<GenerateBarcodeDto> {
-  const { data, error, response } = await api.POST(`/api/optical/frames/${frameId}/barcode` as never, {} as never)
+  const { data, error, response } = await api.POST(`/api/optical/frames/${frameId}/generate-barcode` as never, {} as never)
   if (error || !response.ok) {
     throw new Error("Failed to generate barcode")
   }
