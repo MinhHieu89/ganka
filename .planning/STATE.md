@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 09-07-PLAN.md
-last_updated: "2026-03-08T06:57:28.882Z"
+stopped_at: Completed 09-09-PLAN.md
+last_updated: "2026-03-08T06:59:36.771Z"
 last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
 progress:
   total_phases: 14
   completed_phases: 12
   total_plans: 222
-  completed_plans: 200
+  completed_plans: 201
 ---
 
 ---
@@ -551,6 +551,7 @@ Progress: [█████████░] 96%
 | Phase 09-treatment-protocols P04 | 4min | 2 tasks | 4 files |
 | Phase 09-08 P08 | 2min | 2 tasks | 4 files |
 | Phase 09-treatment-protocols P07 | 2min | 2 tasks | 6 files |
+| Phase 09 P09 | 3min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -961,6 +962,8 @@ Recent decisions affecting current work:
 - [Phase 09-08]: Used synchronous Add() on repositories matching Optical module pattern
 - [Phase 09-08]: ApplyConfigurationsFromAssembly for auto-discovering entity configurations
 - [Phase 09-treatment-protocols]: Created separate config files for ProtocolVersion and CancellationRequest for clarity; unique index on CancellationRequest.TreatmentPackageId enforces one-to-one at DB level
+- [Phase 09]: Used AsSplitQuery on TreatmentPackageRepository.GetByIdAsync to prevent cartesian explosion with 3 Include paths
+- [Phase 09]: GetDueSoonAsync uses client-side filtering: loads active packages with sessions, filters where no sessions completed OR last CompletedAt + MinIntervalDays <= now
 
 ### Roadmap Evolution
 
@@ -983,6 +986,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-08T06:57:28.877Z
-Stopped at: Completed 09-07-PLAN.md
+Last session: 2026-03-08T06:59:36.766Z
+Stopped at: Completed 09-09-PLAN.md
 Resume file: None
