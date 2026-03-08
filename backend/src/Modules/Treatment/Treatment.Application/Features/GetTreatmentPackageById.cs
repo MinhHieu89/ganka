@@ -5,14 +5,15 @@ using Treatment.Contracts.Dtos;
 namespace Treatment.Application.Features;
 
 /// <summary>
-/// Query to get a treatment package by its ID.
-/// Stub created for compilation -- full implementation in plan 09-11.
+/// Query to retrieve a treatment package by its ID with all child entities.
+/// Returns full package with sessions, protocol versions, and cancellation request.
 /// </summary>
 public sealed record GetTreatmentPackageByIdQuery(Guid PackageId);
 
 /// <summary>
-/// Wolverine handler for <see cref="GetTreatmentPackageByIdQuery"/>.
-/// Stub -- full implementation in plan 09-11.
+/// Wolverine static handler for retrieving a full treatment package by ID.
+/// Loads package with all child entities (Sessions, Versions, CancellationRequest)
+/// and maps to TreatmentPackageDto with complete details.
 /// </summary>
 public static class GetTreatmentPackageByIdHandler
 {
@@ -20,8 +21,16 @@ public static class GetTreatmentPackageByIdHandler
         GetTreatmentPackageByIdQuery query,
         ITreatmentPackageRepository packageRepository,
         ITreatmentProtocolRepository protocolRepository,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
     {
-        throw new NotImplementedException("Stub -- full implementation in plan 09-11.");
+        var package = await packageRepository.GetByIdAsync(query.PackageId, ct);
+        if (package is null)
+            return Result.Failure<TreatmentPackageDto>(
+                Error.NotFound("TreatmentPackage", query.PackageId));
+
+        var protocol = await protocolRepository.GetByIdAsync(package.ProtocolTemplateId, ct);
+        var protocolName = protocol?.Name ?? "Unknown Protocol";
+
+        return CreateTreatmentPackageHandler.MapToDto(package, protocolName);
     }
 }

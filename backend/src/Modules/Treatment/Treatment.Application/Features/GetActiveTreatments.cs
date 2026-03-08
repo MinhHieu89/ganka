@@ -5,14 +5,14 @@ using Treatment.Contracts.Dtos;
 namespace Treatment.Application.Features;
 
 /// <summary>
-/// Query to get all active treatment packages across all patients.
-/// Stub created for compilation -- full implementation in plan 09-11.
+/// Query to retrieve all active treatment packages across all patients.
+/// Used for the treatments overview page.
 /// </summary>
 public sealed record GetActiveTreatmentsQuery();
 
 /// <summary>
-/// Wolverine handler for <see cref="GetActiveTreatmentsQuery"/>.
-/// Stub -- full implementation in plan 09-11.
+/// Wolverine static handler for retrieving all active treatment packages.
+/// Returns packages with Active status across all patients.
 /// </summary>
 public static class GetActiveTreatmentsHandler
 {
@@ -20,8 +20,18 @@ public static class GetActiveTreatmentsHandler
         GetActiveTreatmentsQuery query,
         ITreatmentPackageRepository packageRepository,
         ITreatmentProtocolRepository protocolRepository,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
     {
-        throw new NotImplementedException("Stub -- full implementation in plan 09-11.");
+        var packages = await packageRepository.GetActivePackagesAsync(ct);
+
+        var dtos = new List<TreatmentPackageDto>();
+        foreach (var package in packages)
+        {
+            var protocol = await protocolRepository.GetByIdAsync(package.ProtocolTemplateId, ct);
+            var protocolName = protocol?.Name ?? "Unknown Protocol";
+            dtos.Add(CreateTreatmentPackageHandler.MapToDto(package, protocolName));
+        }
+
+        return dtos;
     }
 }
