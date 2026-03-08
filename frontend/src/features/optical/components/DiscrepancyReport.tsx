@@ -109,12 +109,12 @@ export function DiscrepancyReport({ sessionId }: DiscrepancyReportProps) {
 
   const items = report.items ?? []
 
-  // Calculate summary stats
-  const matches = items.filter((i) => getCategory(i) === "match").length
-  const overCount = items.filter((i) => getCategory(i) === "over").length
-  const underCount = items.filter((i) => getCategory(i) === "under").length
-  const missingCount = items.filter((i) => getCategory(i) === "missing").length
-  const totalScanned = items.length
+  // Prefer backend-calculated summary counts, fall back to client calculation
+  const totalScanned = report.totalScanned ?? items.length
+  const overCount = report.overCount ?? items.filter((i) => getCategory(i) === "over").length
+  const underCount = report.underCount ?? items.filter((i) => getCategory(i) === "under").length
+  const missingCount = report.missingFromSystem ?? items.filter((i) => getCategory(i) === "missing").length
+  const matches = totalScanned - overCount - underCount - missingCount
 
   // Sort items
   const sorted = [...items].sort((a, b) => {

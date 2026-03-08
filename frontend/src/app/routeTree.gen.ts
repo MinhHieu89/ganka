@@ -28,6 +28,10 @@ import { Route as AuthenticatedPharmacyStockImportRouteImport } from './routes/_
 import { Route as AuthenticatedPharmacyQueueRouteImport } from './routes/_authenticated/pharmacy/queue'
 import { Route as AuthenticatedPharmacyOtcSalesRouteImport } from './routes/_authenticated/pharmacy/otc-sales'
 import { Route as AuthenticatedPatientsPatientIdRouteImport } from './routes/_authenticated/patients/$patientId'
+import { Route as AuthenticatedOpticalWarrantyRouteImport } from './routes/_authenticated/optical/warranty'
+import { Route as AuthenticatedOpticalStocktakingRouteImport } from './routes/_authenticated/optical/stocktaking'
+import { Route as AuthenticatedOpticalOrdersRouteImport } from './routes/_authenticated/optical/orders'
+import { Route as AuthenticatedOpticalLensesRouteImport } from './routes/_authenticated/optical/lenses'
 import { Route as AuthenticatedBillingShiftsRouteImport } from './routes/_authenticated/billing/shifts'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin/users'
 import { Route as AuthenticatedAdminRolesRouteImport } from './routes/_authenticated/admin/roles'
@@ -141,6 +145,30 @@ const AuthenticatedPatientsPatientIdRoute =
     path: '/patients/$patientId',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedOpticalWarrantyRoute =
+  AuthenticatedOpticalWarrantyRouteImport.update({
+    id: '/optical/warranty',
+    path: '/optical/warranty',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedOpticalStocktakingRoute =
+  AuthenticatedOpticalStocktakingRouteImport.update({
+    id: '/optical/stocktaking',
+    path: '/optical/stocktaking',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedOpticalOrdersRoute =
+  AuthenticatedOpticalOrdersRouteImport.update({
+    id: '/optical/orders',
+    path: '/optical/orders',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedOpticalLensesRoute =
+  AuthenticatedOpticalLensesRouteImport.update({
+    id: '/optical/lenses',
+    path: '/optical/lenses',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedBillingShiftsRoute =
   AuthenticatedBillingShiftsRouteImport.update({
     id: '/billing/shifts',
@@ -188,6 +216,10 @@ export interface FileRoutesByFullPath {
   '/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/billing/shifts': typeof AuthenticatedBillingShiftsRoute
+  '/optical/lenses': typeof AuthenticatedOpticalLensesRoute
+  '/optical/orders': typeof AuthenticatedOpticalOrdersRoute
+  '/optical/stocktaking': typeof AuthenticatedOpticalStocktakingRoute
+  '/optical/warranty': typeof AuthenticatedOpticalWarrantyRoute
   '/patients/$patientId': typeof AuthenticatedPatientsPatientIdRoute
   '/pharmacy/otc-sales': typeof AuthenticatedPharmacyOtcSalesRoute
   '/pharmacy/queue': typeof AuthenticatedPharmacyQueueRoute
@@ -214,6 +246,10 @@ export interface FileRoutesByTo {
   '/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/billing/shifts': typeof AuthenticatedBillingShiftsRoute
+  '/optical/lenses': typeof AuthenticatedOpticalLensesRoute
+  '/optical/orders': typeof AuthenticatedOpticalOrdersRoute
+  '/optical/stocktaking': typeof AuthenticatedOpticalStocktakingRoute
+  '/optical/warranty': typeof AuthenticatedOpticalWarrantyRoute
   '/patients/$patientId': typeof AuthenticatedPatientsPatientIdRoute
   '/pharmacy/otc-sales': typeof AuthenticatedPharmacyOtcSalesRoute
   '/pharmacy/queue': typeof AuthenticatedPharmacyQueueRoute
@@ -242,6 +278,10 @@ export interface FileRoutesById {
   '/_authenticated/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/billing/shifts': typeof AuthenticatedBillingShiftsRoute
+  '/_authenticated/optical/lenses': typeof AuthenticatedOpticalLensesRoute
+  '/_authenticated/optical/orders': typeof AuthenticatedOpticalOrdersRoute
+  '/_authenticated/optical/stocktaking': typeof AuthenticatedOpticalStocktakingRoute
+  '/_authenticated/optical/warranty': typeof AuthenticatedOpticalWarrantyRoute
   '/_authenticated/patients/$patientId': typeof AuthenticatedPatientsPatientIdRoute
   '/_authenticated/pharmacy/otc-sales': typeof AuthenticatedPharmacyOtcSalesRoute
   '/_authenticated/pharmacy/queue': typeof AuthenticatedPharmacyQueueRoute
@@ -270,6 +310,10 @@ export interface FileRouteTypes {
     | '/admin/roles'
     | '/admin/users'
     | '/billing/shifts'
+    | '/optical/lenses'
+    | '/optical/orders'
+    | '/optical/stocktaking'
+    | '/optical/warranty'
     | '/patients/$patientId'
     | '/pharmacy/otc-sales'
     | '/pharmacy/queue'
@@ -296,6 +340,10 @@ export interface FileRouteTypes {
     | '/admin/roles'
     | '/admin/users'
     | '/billing/shifts'
+    | '/optical/lenses'
+    | '/optical/orders'
+    | '/optical/stocktaking'
+    | '/optical/warranty'
     | '/patients/$patientId'
     | '/pharmacy/otc-sales'
     | '/pharmacy/queue'
@@ -323,6 +371,10 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/roles'
     | '/_authenticated/admin/users'
     | '/_authenticated/billing/shifts'
+    | '/_authenticated/optical/lenses'
+    | '/_authenticated/optical/orders'
+    | '/_authenticated/optical/stocktaking'
+    | '/_authenticated/optical/warranty'
     | '/_authenticated/patients/$patientId'
     | '/_authenticated/pharmacy/otc-sales'
     | '/_authenticated/pharmacy/queue'
@@ -482,6 +534,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPatientsPatientIdRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/optical/warranty': {
+      id: '/_authenticated/optical/warranty'
+      path: '/optical/warranty'
+      fullPath: '/optical/warranty'
+      preLoaderRoute: typeof AuthenticatedOpticalWarrantyRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/optical/stocktaking': {
+      id: '/_authenticated/optical/stocktaking'
+      path: '/optical/stocktaking'
+      fullPath: '/optical/stocktaking'
+      preLoaderRoute: typeof AuthenticatedOpticalStocktakingRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/optical/orders': {
+      id: '/_authenticated/optical/orders'
+      path: '/optical/orders'
+      fullPath: '/optical/orders'
+      preLoaderRoute: typeof AuthenticatedOpticalOrdersRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/optical/lenses': {
+      id: '/_authenticated/optical/lenses'
+      path: '/optical/lenses'
+      fullPath: '/optical/lenses'
+      preLoaderRoute: typeof AuthenticatedOpticalLensesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/billing/shifts': {
       id: '/_authenticated/billing/shifts'
       path: '/billing/shifts'
@@ -534,6 +614,10 @@ interface AuthenticatedRouteChildren {
   AuthenticatedAdminRolesRoute: typeof AuthenticatedAdminRolesRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedBillingShiftsRoute: typeof AuthenticatedBillingShiftsRoute
+  AuthenticatedOpticalLensesRoute: typeof AuthenticatedOpticalLensesRoute
+  AuthenticatedOpticalOrdersRoute: typeof AuthenticatedOpticalOrdersRoute
+  AuthenticatedOpticalStocktakingRoute: typeof AuthenticatedOpticalStocktakingRoute
+  AuthenticatedOpticalWarrantyRoute: typeof AuthenticatedOpticalWarrantyRoute
   AuthenticatedPatientsPatientIdRoute: typeof AuthenticatedPatientsPatientIdRoute
   AuthenticatedPharmacyOtcSalesRoute: typeof AuthenticatedPharmacyOtcSalesRoute
   AuthenticatedPharmacyQueueRoute: typeof AuthenticatedPharmacyQueueRoute
@@ -556,6 +640,10 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAdminRolesRoute: AuthenticatedAdminRolesRoute,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
   AuthenticatedBillingShiftsRoute: AuthenticatedBillingShiftsRoute,
+  AuthenticatedOpticalLensesRoute: AuthenticatedOpticalLensesRoute,
+  AuthenticatedOpticalOrdersRoute: AuthenticatedOpticalOrdersRoute,
+  AuthenticatedOpticalStocktakingRoute: AuthenticatedOpticalStocktakingRoute,
+  AuthenticatedOpticalWarrantyRoute: AuthenticatedOpticalWarrantyRoute,
   AuthenticatedPatientsPatientIdRoute: AuthenticatedPatientsPatientIdRoute,
   AuthenticatedPharmacyOtcSalesRoute: AuthenticatedPharmacyOtcSalesRoute,
   AuthenticatedPharmacyQueueRoute: AuthenticatedPharmacyQueueRoute,
