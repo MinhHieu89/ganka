@@ -22,6 +22,7 @@
     <ProjectReference Include="..\..\src\Modules\Clinical\Clinical.Application\Clinical.Application.csproj" />
     <ProjectReference Include="..\..\src\Modules\Clinical\Clinical.Domain\Clinical.Domain.csproj" />
     <ProjectReference Include="..\..\src\Modules\Clinical\Clinical.Infrastructure\Clinical.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Optical\Optical.Contracts\Optical.Contracts.csproj" />
     <ProjectReference Include="..\..\src\Modules\Patient\Patient.Contracts\Patient.Contracts.csproj" />
     <ProjectReference Include="..\..\src\Shared\Shared.Domain\Shared.Domain.csproj" />
     <ProjectReference Include="..\..\src\Shared\Shared.Infrastructure\Shared.Infrastructure.csproj" />
