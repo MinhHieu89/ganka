@@ -21,6 +21,7 @@
     <ProjectReference Include="..\..\src\Modules\Pharmacy\Pharmacy.Application\Pharmacy.Application.csproj" />
     <ProjectReference Include="..\..\src\Modules\Pharmacy\Pharmacy.Domain\Pharmacy.Domain.csproj" />
     <ProjectReference Include="..\..\src\Modules\Pharmacy\Pharmacy.Contracts\Pharmacy.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Treatment\Treatment.Domain\Treatment.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
