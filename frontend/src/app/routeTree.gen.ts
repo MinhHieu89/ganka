@@ -32,11 +32,14 @@ import { Route as AuthenticatedOpticalWarrantyRouteImport } from './routes/_auth
 import { Route as AuthenticatedOpticalStocktakingRouteImport } from './routes/_authenticated/optical/stocktaking'
 import { Route as AuthenticatedOpticalOrdersRouteImport } from './routes/_authenticated/optical/orders'
 import { Route as AuthenticatedOpticalLensesRouteImport } from './routes/_authenticated/optical/lenses'
+import { Route as AuthenticatedOpticalFramesRouteImport } from './routes/_authenticated/optical/frames'
+import { Route as AuthenticatedOpticalCombosRouteImport } from './routes/_authenticated/optical/combos'
 import { Route as AuthenticatedBillingShiftsRouteImport } from './routes/_authenticated/billing/shifts'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin/users'
 import { Route as AuthenticatedAdminRolesRouteImport } from './routes/_authenticated/admin/roles'
 import { Route as AuthenticatedAdminClinicSettingsRouteImport } from './routes/_authenticated/admin/clinic-settings'
 import { Route as AuthenticatedAdminAuditLogsRouteImport } from './routes/_authenticated/admin/audit-logs'
+import { Route as AuthenticatedOpticalOrdersOrderIdRouteImport } from './routes/_authenticated/optical/orders.$orderId'
 import { Route as AuthenticatedBillingInvoicesInvoiceIdRouteImport } from './routes/_authenticated/billing/invoices.$invoiceId'
 
 const LoginRoute = LoginRouteImport.update({
@@ -169,6 +172,18 @@ const AuthenticatedOpticalLensesRoute =
     path: '/optical/lenses',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedOpticalFramesRoute =
+  AuthenticatedOpticalFramesRouteImport.update({
+    id: '/optical/frames',
+    path: '/optical/frames',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedOpticalCombosRoute =
+  AuthenticatedOpticalCombosRouteImport.update({
+    id: '/optical/combos',
+    path: '/optical/combos',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedBillingShiftsRoute =
   AuthenticatedBillingShiftsRouteImport.update({
     id: '/billing/shifts',
@@ -197,6 +212,12 @@ const AuthenticatedAdminAuditLogsRoute =
     path: '/admin/audit-logs',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedOpticalOrdersOrderIdRoute =
+  AuthenticatedOpticalOrdersOrderIdRouteImport.update({
+    id: '/$orderId',
+    path: '/$orderId',
+    getParentRoute: () => AuthenticatedOpticalOrdersRoute,
+  } as any)
 const AuthenticatedBillingInvoicesInvoiceIdRoute =
   AuthenticatedBillingInvoicesInvoiceIdRouteImport.update({
     id: '/billing/invoices/$invoiceId',
@@ -216,8 +237,10 @@ export interface FileRoutesByFullPath {
   '/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/billing/shifts': typeof AuthenticatedBillingShiftsRoute
+  '/optical/combos': typeof AuthenticatedOpticalCombosRoute
+  '/optical/frames': typeof AuthenticatedOpticalFramesRoute
   '/optical/lenses': typeof AuthenticatedOpticalLensesRoute
-  '/optical/orders': typeof AuthenticatedOpticalOrdersRoute
+  '/optical/orders': typeof AuthenticatedOpticalOrdersRouteWithChildren
   '/optical/stocktaking': typeof AuthenticatedOpticalStocktakingRoute
   '/optical/warranty': typeof AuthenticatedOpticalWarrantyRoute
   '/patients/$patientId': typeof AuthenticatedPatientsPatientIdRoute
@@ -233,6 +256,7 @@ export interface FileRoutesByFullPath {
   '/patients/': typeof AuthenticatedPatientsIndexRoute
   '/pharmacy/': typeof AuthenticatedPharmacyIndexRoute
   '/billing/invoices/$invoiceId': typeof AuthenticatedBillingInvoicesInvoiceIdRoute
+  '/optical/orders/$orderId': typeof AuthenticatedOpticalOrdersOrderIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -246,8 +270,10 @@ export interface FileRoutesByTo {
   '/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/billing/shifts': typeof AuthenticatedBillingShiftsRoute
+  '/optical/combos': typeof AuthenticatedOpticalCombosRoute
+  '/optical/frames': typeof AuthenticatedOpticalFramesRoute
   '/optical/lenses': typeof AuthenticatedOpticalLensesRoute
-  '/optical/orders': typeof AuthenticatedOpticalOrdersRoute
+  '/optical/orders': typeof AuthenticatedOpticalOrdersRouteWithChildren
   '/optical/stocktaking': typeof AuthenticatedOpticalStocktakingRoute
   '/optical/warranty': typeof AuthenticatedOpticalWarrantyRoute
   '/patients/$patientId': typeof AuthenticatedPatientsPatientIdRoute
@@ -263,6 +289,7 @@ export interface FileRoutesByTo {
   '/patients': typeof AuthenticatedPatientsIndexRoute
   '/pharmacy': typeof AuthenticatedPharmacyIndexRoute
   '/billing/invoices/$invoiceId': typeof AuthenticatedBillingInvoicesInvoiceIdRoute
+  '/optical/orders/$orderId': typeof AuthenticatedOpticalOrdersOrderIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -278,8 +305,10 @@ export interface FileRoutesById {
   '/_authenticated/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/billing/shifts': typeof AuthenticatedBillingShiftsRoute
+  '/_authenticated/optical/combos': typeof AuthenticatedOpticalCombosRoute
+  '/_authenticated/optical/frames': typeof AuthenticatedOpticalFramesRoute
   '/_authenticated/optical/lenses': typeof AuthenticatedOpticalLensesRoute
-  '/_authenticated/optical/orders': typeof AuthenticatedOpticalOrdersRoute
+  '/_authenticated/optical/orders': typeof AuthenticatedOpticalOrdersRouteWithChildren
   '/_authenticated/optical/stocktaking': typeof AuthenticatedOpticalStocktakingRoute
   '/_authenticated/optical/warranty': typeof AuthenticatedOpticalWarrantyRoute
   '/_authenticated/patients/$patientId': typeof AuthenticatedPatientsPatientIdRoute
@@ -295,6 +324,7 @@ export interface FileRoutesById {
   '/_authenticated/patients/': typeof AuthenticatedPatientsIndexRoute
   '/_authenticated/pharmacy/': typeof AuthenticatedPharmacyIndexRoute
   '/_authenticated/billing/invoices/$invoiceId': typeof AuthenticatedBillingInvoicesInvoiceIdRoute
+  '/_authenticated/optical/orders/$orderId': typeof AuthenticatedOpticalOrdersOrderIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -310,6 +340,8 @@ export interface FileRouteTypes {
     | '/admin/roles'
     | '/admin/users'
     | '/billing/shifts'
+    | '/optical/combos'
+    | '/optical/frames'
     | '/optical/lenses'
     | '/optical/orders'
     | '/optical/stocktaking'
@@ -327,6 +359,7 @@ export interface FileRouteTypes {
     | '/patients/'
     | '/pharmacy/'
     | '/billing/invoices/$invoiceId'
+    | '/optical/orders/$orderId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -340,6 +373,8 @@ export interface FileRouteTypes {
     | '/admin/roles'
     | '/admin/users'
     | '/billing/shifts'
+    | '/optical/combos'
+    | '/optical/frames'
     | '/optical/lenses'
     | '/optical/orders'
     | '/optical/stocktaking'
@@ -357,6 +392,7 @@ export interface FileRouteTypes {
     | '/patients'
     | '/pharmacy'
     | '/billing/invoices/$invoiceId'
+    | '/optical/orders/$orderId'
   id:
     | '__root__'
     | '/'
@@ -371,6 +407,8 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/roles'
     | '/_authenticated/admin/users'
     | '/_authenticated/billing/shifts'
+    | '/_authenticated/optical/combos'
+    | '/_authenticated/optical/frames'
     | '/_authenticated/optical/lenses'
     | '/_authenticated/optical/orders'
     | '/_authenticated/optical/stocktaking'
@@ -388,6 +426,7 @@ export interface FileRouteTypes {
     | '/_authenticated/patients/'
     | '/_authenticated/pharmacy/'
     | '/_authenticated/billing/invoices/$invoiceId'
+    | '/_authenticated/optical/orders/$orderId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -562,6 +601,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedOpticalLensesRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/optical/frames': {
+      id: '/_authenticated/optical/frames'
+      path: '/optical/frames'
+      fullPath: '/optical/frames'
+      preLoaderRoute: typeof AuthenticatedOpticalFramesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/optical/combos': {
+      id: '/_authenticated/optical/combos'
+      path: '/optical/combos'
+      fullPath: '/optical/combos'
+      preLoaderRoute: typeof AuthenticatedOpticalCombosRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/billing/shifts': {
       id: '/_authenticated/billing/shifts'
       path: '/billing/shifts'
@@ -597,6 +650,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminAuditLogsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/optical/orders/$orderId': {
+      id: '/_authenticated/optical/orders/$orderId'
+      path: '/$orderId'
+      fullPath: '/optical/orders/$orderId'
+      preLoaderRoute: typeof AuthenticatedOpticalOrdersOrderIdRouteImport
+      parentRoute: typeof AuthenticatedOpticalOrdersRoute
+    }
     '/_authenticated/billing/invoices/$invoiceId': {
       id: '/_authenticated/billing/invoices/$invoiceId'
       path: '/billing/invoices/$invoiceId'
@@ -607,6 +667,21 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedOpticalOrdersRouteChildren {
+  AuthenticatedOpticalOrdersOrderIdRoute: typeof AuthenticatedOpticalOrdersOrderIdRoute
+}
+
+const AuthenticatedOpticalOrdersRouteChildren: AuthenticatedOpticalOrdersRouteChildren =
+  {
+    AuthenticatedOpticalOrdersOrderIdRoute:
+      AuthenticatedOpticalOrdersOrderIdRoute,
+  }
+
+const AuthenticatedOpticalOrdersRouteWithChildren =
+  AuthenticatedOpticalOrdersRoute._addFileChildren(
+    AuthenticatedOpticalOrdersRouteChildren,
+  )
+
 interface AuthenticatedRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedAdminAuditLogsRoute: typeof AuthenticatedAdminAuditLogsRoute
@@ -614,8 +689,10 @@ interface AuthenticatedRouteChildren {
   AuthenticatedAdminRolesRoute: typeof AuthenticatedAdminRolesRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedBillingShiftsRoute: typeof AuthenticatedBillingShiftsRoute
+  AuthenticatedOpticalCombosRoute: typeof AuthenticatedOpticalCombosRoute
+  AuthenticatedOpticalFramesRoute: typeof AuthenticatedOpticalFramesRoute
   AuthenticatedOpticalLensesRoute: typeof AuthenticatedOpticalLensesRoute
-  AuthenticatedOpticalOrdersRoute: typeof AuthenticatedOpticalOrdersRoute
+  AuthenticatedOpticalOrdersRoute: typeof AuthenticatedOpticalOrdersRouteWithChildren
   AuthenticatedOpticalStocktakingRoute: typeof AuthenticatedOpticalStocktakingRoute
   AuthenticatedOpticalWarrantyRoute: typeof AuthenticatedOpticalWarrantyRoute
   AuthenticatedPatientsPatientIdRoute: typeof AuthenticatedPatientsPatientIdRoute
@@ -640,8 +717,10 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAdminRolesRoute: AuthenticatedAdminRolesRoute,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
   AuthenticatedBillingShiftsRoute: AuthenticatedBillingShiftsRoute,
+  AuthenticatedOpticalCombosRoute: AuthenticatedOpticalCombosRoute,
+  AuthenticatedOpticalFramesRoute: AuthenticatedOpticalFramesRoute,
   AuthenticatedOpticalLensesRoute: AuthenticatedOpticalLensesRoute,
-  AuthenticatedOpticalOrdersRoute: AuthenticatedOpticalOrdersRoute,
+  AuthenticatedOpticalOrdersRoute: AuthenticatedOpticalOrdersRouteWithChildren,
   AuthenticatedOpticalStocktakingRoute: AuthenticatedOpticalStocktakingRoute,
   AuthenticatedOpticalWarrantyRoute: AuthenticatedOpticalWarrantyRoute,
   AuthenticatedPatientsPatientIdRoute: AuthenticatedPatientsPatientIdRoute,
