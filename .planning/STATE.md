@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 09-06-PLAN.md
-last_updated: "2026-03-08T06:49:04.632Z"
+stopped_at: Completed 09-03-PLAN.md
+last_updated: "2026-03-08T06:49:52.351Z"
 last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
 progress:
   total_phases: 14
   completed_phases: 12
   total_plans: 222
-  completed_plans: 195
+  completed_plans: 197
 ---
 
 ---
@@ -546,6 +546,8 @@ Progress: [█████████░] 96%
 | Phase 09 P01 | 67s | 2 tasks | 4 files |
 | Phase 09 P02 | 2min | 2 tasks | 3 files |
 | Phase 09-treatment-protocols P06 | 2min | 2 tasks | 5 files |
+| Phase 09-treatment-protocols P05 | 2min | 1 tasks | 3 files |
+| Phase 09-treatment-protocols P03 | 2min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -946,6 +948,11 @@ Recent decisions affecting current work:
 - [Phase 09]: Used sealed record pattern for treatment parameter value objects (JSON-serializable, matching FieldChange convention)
 - [Phase 09-treatment-protocols]: Created all 4 DTOs in Task 1 commit since TreatmentPackageDto depends on TreatmentSessionDto and CancellationRequestDto
 - [Phase 09-treatment-protocols]: Used string representations for enum fields (TreatmentType, PricingMode, Status) following Billing module pattern
+- [Phase 09-treatment-protocols]: CancellationStatus enum in separate file for consistency with existing Treatment domain enums
+- [Phase 09-treatment-protocols]: ProtocolVersion uses full JSON snapshots (PreviousJson + CurrentJson) rather than field-level diffs
+- [Phase 09-treatment-protocols]: CancellationRequest follows Billing Refund approval workflow pattern for cross-module consistency
+- [Phase 09-treatment-protocols]: Followed Frame.cs aggregate root pattern for TreatmentProtocol consistency
+- [Phase 09-treatment-protocols]: IAuditable is marker-only; Entity base provides CreatedAt/UpdatedAt
 
 ### Roadmap Evolution
 
@@ -968,6 +975,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-08T06:49:04.627Z
-Stopped at: Completed 09-06-PLAN.md
+Last session: 2026-03-08T06:49:52.346Z
+Stopped at: Completed 09-03-PLAN.md
 Resume file: None

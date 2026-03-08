@@ -77,7 +77,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **TRT-04**: System auto-marks treatment course as "Completed" when all sessions are done
 - [ ] **TRT-05**: System enforces minimum interval between sessions (configurable per type: IPL 2-4wk, LLLT 1-2wk, lid care 1-2wk)
 - [ ] **TRT-06**: Patient can have multiple active treatment courses simultaneously (e.g., IPL + LLLT)
-- [ ] **TRT-07**: Doctor can modify treatment protocol mid-course (add/remove sessions, change parameters)
+- [x] **TRT-07**: Doctor can modify treatment protocol mid-course (add/remove sessions, change parameters)
 - [ ] **TRT-08**: Doctor can switch patient from one treatment type to another mid-course (requires doctor approval)
 - [x] **TRT-09**: Manager can process treatment cancellation with configurable refund deduction (10-20% fee)
 - [ ] **TRT-10**: Only users with Doctor role can create or modify treatment protocols
@@ -274,7 +274,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TRT-04 | Phase 9 | Pending |
 | TRT-05 | Phase 9 | Pending |
 | TRT-06 | Phase 9 | Pending |
-| TRT-07 | Phase 9 | Pending |
+| TRT-07 | Phase 9 | Complete |
 | TRT-08 | Phase 9 | Pending |
 | TRT-09 | Phase 9 | Complete |
 | TRT-10 | Phase 9 | Pending |
