@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 08-31-PLAN.md
-last_updated: "2026-03-08T03:01:01.424Z"
+stopped_at: Completed 08-29-PLAN.md
+last_updated: "2026-03-08T03:02:34.055Z"
 last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
 progress:
   total_phases: 14
   completed_phases: 11
   total_plans: 193
-  completed_plans: 176
+  completed_plans: 178
   percent: 80
 ---
 
@@ -512,6 +512,8 @@ Progress: [█████████░] 96%
 | Phase 08 P13 | 9 | 2 tasks | 3 files |
 | Phase 08-optical-center P32 | 35 | 2 tasks | 6 files |
 | Phase 08-optical-center P25 | 15 | 2 tasks | 4 files |
+| Phase 08-optical-center P22 | 20 | 2 tasks | 6 files |
+| Phase 08-optical-center P29 | 35 | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -884,6 +886,9 @@ Recent decisions affecting current work:
 - [Phase 08-optical-center]: LensCatalogItemDto includes basePrice alongside sellingPrice for component compatibility
 - [Phase 08-optical-center]: getDeliveredGlassesOrders added to optical API to support WarrantyClaimForm
 - [Phase 08-31]: ComboPackageDto aligned to backend contract (comboPrice/originalTotalPrice/savings) — removed incorrect packagePrice field
+- [Phase 08-optical-center]: Used PharmacyDbContext directly for OpticalSupplierSeeder (fallback) instead of Pharmacy.Contracts IMessageBus - CreateSupplier command not exposed in Contracts
+- [Phase 08-optical-center]: OrderStatusBadge uses custom className colors instead of shadcn Badge variants to support 5 distinct status colors (blue, yellow, purple, green, gray)
+- [Phase 08-optical-center]: GlassesOrderTable uses controlled status filter (props from parent GlassesOrdersPage) for server-side API filtering
 
 ### Roadmap Evolution
 
@@ -906,6 +911,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-08T03:00:57.248Z
-Stopped at: Completed 08-31-PLAN.md
+Last session: 2026-03-08T03:02:34.050Z
+Stopped at: Completed 08-29-PLAN.md
 Resume file: None
