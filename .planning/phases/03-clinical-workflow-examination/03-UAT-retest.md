@@ -1,5 +1,5 @@
 ---
-status: complete
+status: diagnosed
 phase: 03-clinical-workflow-examination
 source: 03-11-SUMMARY.md, 03-12-SUMMARY.md, 03-13-SUMMARY.md
 started: 2026-03-09T08:30:00Z
@@ -53,27 +53,42 @@ skipped: 0
   reason: "User reported: error message shows but not localized. input value does not display decimal, cannot enter 5.0, only 5 is accepted"
   severity: major
   test: 3
-  root_cause: ""
-  artifacts: []
-  missing: []
-  debug_session: ""
+  root_cause: "Two bugs: (1) FluentValidation uses hardcoded English WithMessage() strings, no localization infrastructure exists; (2) renderNumberInput onChange uses Number(val) on every keystroke, destroying in-progress decimals like '1.' → 1"
+  artifacts:
+    - path: "frontend/src/features/clinical/components/RefractionForm.tsx"
+      issue: "onChange coerces Number(val) immediately, destroying decimal point mid-typing"
+    - path: "backend/src/Modules/Clinical/Clinical.Application/Features/UpdateVisitRefraction.cs"
+      issue: "18 hardcoded English WithMessage() calls with no i18n"
+  missing:
+    - "Defer Number() coercion to onBlur instead of onChange for decimal support"
+    - "Add Vietnamese validation messages (either backend localization or frontend mapping)"
+  debug_session: ".planning/debug/refraction-input-and-localization.md"
 
 - truth: "Amendment history shows accurate old/new values and localized field names"
   status: failed
   reason: "User reported: it show (none) and (added) for old value and new value. Should show exact value. field name is not localized"
   severity: major
   test: 5
-  root_cause: ""
-  artifacts: []
-  missing: []
-  debug_session: ""
+  root_cause: "Two bugs: (1) computeFieldChanges hardcodes '(none)'/'(added)' for new refraction types instead of serializing actual values; (2) VisitAmendmentHistory renders change.field raw key with no label lookup"
+  artifacts:
+    - path: "frontend/src/features/clinical/components/SignOffSection.tsx"
+      issue: "Lines 91-99 emit hardcoded (none)/(added) for new refraction types"
+    - path: "frontend/src/features/clinical/components/VisitAmendmentHistory.tsx"
+      issue: "Line 87 renders change.field as raw dot-notation key, no localization"
+  missing:
+    - "Emit per-field rows with actual values for new refractions"
+    - "Add field label mapping for amendment history display"
+  debug_session: ".planning/debug/amendment-diff-values.md"
 
 - truth: "ICD-10 search matches unaccented input to accented Vietnamese descriptions"
   status: failed
   reason: "User reported: search for 'viem' does not return 'viêm'"
   severity: major
   test: 4
-  root_cause: ""
-  artifacts: []
-  missing: []
-  debug_session: ""
+  root_cause: "Database collation SQL_Latin1_General_CP1_CI_AS is accent-sensitive. EF Core Contains() generates LIKE without collation override, so 'viem' never matches 'viêm'"
+  artifacts:
+    - path: "backend/src/Shared/Shared.Infrastructure/Repositories/ReferenceDataRepository.cs"
+      issue: "SearchAsync uses Contains() without COLLATE override"
+  missing:
+    - "Add COLLATE Latin1_General_CI_AI to DescriptionVi search query"
+  debug_session: ".planning/debug/icd10-accent-insensitive-search.md"
