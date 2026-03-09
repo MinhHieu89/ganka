@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useRef } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
@@ -109,6 +109,83 @@ const refractionFieldMap: Record<string, keyof RefractionFormValues> = {
   "osAxis.Value": "osAxis",
   "osAdd.Value": "osAdd",
   "osPd.Value": "osPd",
+}
+
+/** Standalone component for decimal-safe number input with onBlur coercion */
+function NumberInput({
+  name,
+  field,
+  disabled,
+  form,
+  onBlur: handleBlur,
+}: {
+  name: string
+  field: { min?: number; max?: number; step?: number; unit?: string }
+  disabled: boolean
+  form: ReturnType<typeof useForm<RefractionFormValues>>
+  onBlur?: () => void
+}) {
+  const formValue = form.watch(name as keyof RefractionFormValues) as number | null | undefined
+  const fieldError = form.formState.errors[name as keyof RefractionFormValues]
+
+  const [localValue, setLocalValue] = useState<string>(toFormValue(formValue))
+
+  // Sync local state when form value changes externally (e.g., after save/reload/reset)
+  useEffect(() => {
+    const formStr = toFormValue(formValue)
+    // Only update local state if the form value differs from what local state would produce
+    // This avoids overwriting in-progress typing (e.g., "1." would become "1")
+    const localAsNumber = localValue === "" ? null : Number(localValue)
+    const formAsNumber = formValue ?? null
+    if (localValue === "" && formStr === "") return // both empty, no change
+    if (localAsNumber !== null && !isNaN(localAsNumber) && localAsNumber === formAsNumber) return
+    if (localValue === "" && formAsNumber === null) return
+    setLocalValue(formStr)
+  }, [formValue]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  return (
+    <div>
+      <div className="flex items-center gap-1">
+        <Input
+          type="text"
+          inputMode="decimal"
+          className={cn("h-8 text-sm tabular-nums", fieldError && "border-destructive")}
+          min={field.min}
+          max={field.max}
+          step={field.step}
+          value={localValue}
+          disabled={disabled}
+          onChange={(e) => {
+            const val = e.target.value
+            // Allow only valid numeric input patterns (digits, decimal point, minus sign)
+            if (val !== "" && !/^-?\d*\.?\d*$/.test(val)) return
+            setLocalValue(val)
+            // Clear server error when user starts typing
+            if (fieldError) form.clearErrors(name as keyof RefractionFormValues)
+          }}
+          onBlur={() => {
+            // Coerce local string to number and commit to form
+            const numVal = localValue === "" ? null : Number(localValue)
+            if (localValue !== "" && isNaN(numVal as number)) {
+              // Invalid input — revert to form value
+              setLocalValue(toFormValue(formValue))
+            } else {
+              form.setValue(name as keyof RefractionFormValues, numVal as any)
+            }
+            handleBlur?.()
+          }}
+        />
+        {field.unit && (
+          <span className="text-xs text-muted-foreground whitespace-nowrap">
+            {field.unit}
+          </span>
+        )}
+      </div>
+      {fieldError && (
+        <p className="text-xs text-destructive mt-0.5">{fieldError.message}</p>
+      )}
+    </div>
+  )
 }
 
 interface RefractionFormProps {
@@ -236,40 +313,16 @@ export function RefractionForm({
   const renderNumberInput = (
     name: keyof RefractionFormValues,
     field: { min?: number; max?: number; step?: number; unit?: string },
-  ) => {
-    const value = form.watch(name)
-    const fieldError = form.formState.errors[name]
-    return (
-      <div>
-        <div className="flex items-center gap-1">
-          <Input
-            type="number"
-            className={cn("h-8 text-sm tabular-nums", fieldError && "border-destructive")}
-            min={field.min}
-            max={field.max}
-            step={field.step}
-            value={toFormValue(value as number | null | undefined)}
-            disabled={disabled}
-            onChange={(e) => {
-              const val = e.target.value
-              form.setValue(name, val === "" ? null : Number(val))
-              // Clear server error when user starts typing
-              if (fieldError) form.clearErrors(name)
-            }}
-            onBlur={handleBlur}
-          />
-          {field.unit && (
-            <span className="text-xs text-muted-foreground whitespace-nowrap">
-              {field.unit}
-            </span>
-          )}
-        </div>
-        {fieldError && (
-          <p className="text-xs text-destructive mt-0.5">{fieldError.message}</p>
-        )}
-      </div>
-    )
-  }
+  ) => (
+    <NumberInput
+      key={name}
+      name={name}
+      field={field}
+      disabled={disabled}
+      form={form}
+      onBlur={handleBlur}
+    />
+  )
 
   return (
     <div className="space-y-4">
