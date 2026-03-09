@@ -115,12 +115,12 @@ function computeFieldChanges(visit: VisitDetailDto): string {
 
     for (const key of baselineDx) {
       if (!currentDx.has(key)) {
-        changes.push({ field: "diagnosis", oldValue: key, newValue: "(removed)" })
+        changes.push({ field: `diagnosis.removed.${key}`, oldValue: key, newValue: "-" })
       }
     }
     for (const key of currentDx) {
       if (!baselineDx.has(key)) {
-        changes.push({ field: "diagnosis", oldValue: "(none)", newValue: key })
+        changes.push({ field: `diagnosis.added.${key}`, oldValue: "-", newValue: key })
       }
     }
   }
