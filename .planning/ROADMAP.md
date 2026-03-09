@@ -132,7 +132,7 @@ Plans:
   3. Dashboard shows all active patients and their current workflow stage (reception, refraction/VA, doctor exam, diagnostics, doctor reads, Rx, cashier, pharmacy/optical) in real-time
   4. Technician or doctor can record refraction data (SPH, CYL, AXIS, ADD, PD, VA, IOP, Axial Length per eye) with support for manifest, autorefraction, and cycloplegic types
   5. Doctor can search ICD-10 codes in Vietnamese and English, pin favorites, and the system enforces laterality selection (OD/OS/OU) for ophthalmology codes
-**Plans**: 15 plans (5 original + 5 gap closure + 3 UAT gap closure + 2 UAT retest gap closure)
+**Plans**: 16 plans (5 original + 5 gap closure + 3 UAT gap closure + 2 UAT retest gap closure + 1 verification gap closure)
 
 Plans:
 - [x] 03-01-PLAN.md -- Clinical domain entities, contracts DTOs, EF Core infrastructure, test project scaffold
@@ -150,6 +150,7 @@ Plans:
 - [ ] 03-13-PLAN.md -- [UAT GAP] Fix amendment field-level diff: compute actual changes at re-sign time
 - [ ] 03-14-PLAN.md -- [UAT GAP] Fix refraction decimal input and validation message localization
 - [ ] 03-15-PLAN.md -- [UAT GAP] ICD-10 accent-insensitive search and amendment diff actual values with field labels
+- [ ] 03-16-PLAN.md -- [GAP] Fix diagnosis field label in amendment history + human verification of all 5 pending items
 
 ### Phase 03.1: Create Vietnamese user stories documentation for all implemented features (INSERTED)
 
