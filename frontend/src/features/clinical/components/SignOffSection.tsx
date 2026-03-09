@@ -87,14 +87,19 @@ function computeFieldChanges(visit: VisitDetailDto): string {
       }
     }
 
-    // Check for new refractions added during amendment
+    // Check for new refractions added during amendment — emit per-field rows with actual values
     for (const curRef of visit.refractions) {
       if (!baseline.refractions.find((r) => r.type === curRef.type)) {
-        changes.push({
-          field: `refraction.${refractionTypeLabel(curRef.type)}`,
-          oldValue: "(none)",
-          newValue: "(added)",
-        })
+        for (const f of refFields) {
+          const newVal = curRef[f as keyof typeof curRef] as number | null
+          if (newVal != null) {
+            changes.push({
+              field: `refraction.${refractionTypeLabel(curRef.type)}.${f}`,
+              oldValue: "-",
+              newValue: String(newVal),
+            })
+          }
+        }
       }
     }
   }
