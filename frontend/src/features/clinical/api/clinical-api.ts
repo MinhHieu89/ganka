@@ -318,10 +318,12 @@ async function createVisit(command: CreateVisitCommand): Promise<string> {
   return (data as { id: string }).id
 }
 
-async function signOffVisit(visitId: string): Promise<void> {
+async function signOffVisit(visitId: string, fieldChangesJson?: string): Promise<void> {
   const { error, response } = await api.PUT(
     `/api/clinical/${visitId}/sign-off` as never,
-    {} as never,
+    {
+      body: fieldChangesJson ? { visitId, fieldChangesJson } : { visitId },
+    } as never,
   )
   if (error || !response.ok) {
     const err = error as Record<string, unknown> | undefined
@@ -560,10 +562,11 @@ export function useAdvanceStage() {
 export function useSignOffVisit() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: signOffVisit,
-    onSuccess: (_data, visitId) => {
+    mutationFn: ({ visitId, fieldChangesJson }: { visitId: string; fieldChangesJson?: string }) =>
+      signOffVisit(visitId, fieldChangesJson),
+    onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({
-        queryKey: clinicalKeys.visit(visitId),
+        queryKey: clinicalKeys.visit(variables.visitId),
       })
       queryClient.invalidateQueries({ queryKey: clinicalKeys.activeVisits() })
     },

@@ -17,70 +17,51 @@ import { Field, FieldLabel, FieldError } from "@/shared/components/Field"
 import { useAmendVisit, type VisitDetailDto } from "../api/clinical-api"
 
 /**
- * Builds a snapshot of the visit's current signed state at the moment amendment
- * is initiated. This captures what existed before the amendment for audit purposes.
- *
- * NOTE: Full before/after diff would require a "finalize amendment" endpoint that
- * compares the snapshot baseline to the final state after edits. The current approach
- * captures the signed state at amendment initiation time. (Future enhancement)
+ * Baseline snapshot of the visit's signed state at amendment initiation.
+ * Stored as the initial fieldChangesJson value and later compared against
+ * the current state at re-sign time to compute the actual before/after diff.
  */
-function buildFieldChangesSnapshot(visit: VisitDetailDto): string {
-  const changes: Array<{ fieldName: string; oldValue: string; newValue: string }> = []
+export interface VisitBaseline {
+  examinationNotes: string | null
+  refractions: Array<{
+    type: number
+    odSph: number | null; odCyl: number | null; odAxis: number | null
+    osSph: number | null; osCyl: number | null; osAxis: number | null
+    odAdd: number | null; odPd: number | null
+    osAdd: number | null; osPd: number | null
+    ucvaOd: number | null; ucvaOs: number | null
+    bcvaOd: number | null; bcvaOs: number | null
+    iopOd: number | null; iopOs: number | null
+    axialLengthOd: number | null; axialLengthOs: number | null
+  }>
+  diagnoses: Array<{ icd10Code: string; laterality: number }>
+}
 
-  if (visit.examinationNotes) {
-    changes.push({
-      fieldName: "examinationNotes",
-      oldValue: visit.examinationNotes,
-      newValue: "pending_amendment",
-    })
+/**
+ * Builds a baseline snapshot of the visit's current signed state.
+ * This captures the "before" values at amendment initiation time.
+ * The actual diff is computed later at re-sign time in SignOffSection.
+ */
+export function buildBaselineSnapshot(visit: VisitDetailDto): string {
+  const baseline: VisitBaseline = {
+    examinationNotes: visit.examinationNotes ?? null,
+    refractions: visit.refractions.map((r) => ({
+      type: r.type,
+      odSph: r.odSph, odCyl: r.odCyl, odAxis: r.odAxis,
+      osSph: r.osSph, osCyl: r.osCyl, osAxis: r.osAxis,
+      odAdd: r.odAdd, odPd: r.odPd,
+      osAdd: r.osAdd, osPd: r.osPd,
+      ucvaOd: r.ucvaOd, ucvaOs: r.ucvaOs,
+      bcvaOd: r.bcvaOd, bcvaOs: r.bcvaOs,
+      iopOd: r.iopOd, iopOs: r.iopOs,
+      axialLengthOd: r.axialLengthOd, axialLengthOs: r.axialLengthOs,
+    })),
+    diagnoses: visit.diagnoses.map((d) => ({
+      icd10Code: d.icd10Code,
+      laterality: d.laterality,
+    })),
   }
-
-  if (visit.refractions.length > 0) {
-    for (const r of visit.refractions) {
-      const typeLabel =
-        r.type === 0
-          ? "manifest"
-          : r.type === 1
-            ? "autorefraction"
-            : "cycloplegic"
-      changes.push({
-        fieldName: `refraction.${typeLabel}`,
-        oldValue: JSON.stringify({
-          odSph: r.odSph,
-          odCyl: r.odCyl,
-          odAxis: r.odAxis,
-          osSph: r.osSph,
-          osCyl: r.osCyl,
-          osAxis: r.osAxis,
-        }),
-        newValue: "pending_amendment",
-      })
-    }
-  }
-
-  if (visit.diagnoses.length > 0) {
-    changes.push({
-      fieldName: "diagnoses",
-      oldValue: JSON.stringify(
-        visit.diagnoses.map((d) => ({
-          code: d.icd10Code,
-          laterality: d.laterality,
-        })),
-      ),
-      newValue: "pending_amendment",
-    })
-  }
-
-  // If no specific data to snapshot, provide a generic baseline
-  if (changes.length === 0) {
-    changes.push({
-      fieldName: "visit",
-      oldValue: "signed_state",
-      newValue: "amendment_initiated",
-    })
-  }
-
-  return JSON.stringify(changes)
+  return JSON.stringify(baseline)
 }
 
 interface AmendmentDialogProps {
@@ -108,7 +89,7 @@ export function AmendmentDialog({ visitId, visit, open, onClose }: AmendmentDial
 
   const handleSubmit = async (data: FormValues) => {
     try {
-      const fieldChangesJson = buildFieldChangesSnapshot(visit)
+      const fieldChangesJson = buildBaselineSnapshot(visit)
       await amendMutation.mutateAsync({
         visitId,
         reason: data.reason,
