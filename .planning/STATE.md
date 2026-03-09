@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 02-15-PLAN.md
-last_updated: "2026-03-09T05:28:58.583Z"
+stopped_at: Completed 03-11-PLAN.md
+last_updated: "2026-03-09T08:15:34.285Z"
 last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
 progress:
   total_phases: 14
-  completed_phases: 12
-  total_plans: 224
-  completed_plans: 222
+  completed_phases: 11
+  total_plans: 227
+  completed_plans: 224
 ---
 
 ---
@@ -674,6 +674,7 @@ Progress: [█████████░] 96%
 | Phase 09-treatment-protocols P27 | 3min | 2 tasks | 6 files |
 | Phase 09 P29 | 3min | 1 tasks | 1 files |
 | Phase 02 P15 | 2min | 2 tasks | 3 files |
+| Phase 03 P11 | 3min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -1109,6 +1110,8 @@ Recent decisions affecting current work:
 - [Phase 02]: Used @fullcalendar/moment-timezone plugin for timezone-aware calendar rendering instead of manual UTC conversion
 - [Phase 02]: Route DOUBLE_BOOKING/VALIDATION_ERROR to in-form ServerValidationAlert via setNonFieldError, keep toast only for success
 - [Phase 02]: AppointmentDto extended with AppointmentTypeNameVi field (data-driven i18n, not translation keys)
+- [Phase 03]: Removed empty state message entirely for Kanban; 5 empty columns already communicate no patients
+- [Phase 03]: Used component-local refractionFieldMap to strip .Value suffix instead of modifying shared server-validation utility
 
 ### Roadmap Evolution
 
@@ -1131,6 +1134,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-09T05:13:23.182Z
-Stopped at: Completed 02-15-PLAN.md
+Last session: 2026-03-09T08:15:34.280Z
+Stopped at: Completed 03-11-PLAN.md
 Resume file: None
