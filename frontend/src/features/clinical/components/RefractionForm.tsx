@@ -188,6 +188,19 @@ function NumberInput({
   )
 }
 
+// Map server English validation messages to i18n keys for localization
+const SERVER_MSG_TO_I18N: Record<string, string> = {
+  "SPH must be between -30 and +30.": "refraction.validation.sphRange",
+  "CYL must be between -10 and +10.": "refraction.validation.cylRange",
+  "AXIS must be between 1 and 180.": "refraction.validation.axisRange",
+  "ADD must be between 0.25 and 4.0.": "refraction.validation.addRange",
+  "PD must be between 20 and 80.": "refraction.validation.pdRange",
+  "VA must be between 0.01 and 2.0.": "refraction.validation.vaRange",
+  "IOP must be between 1 and 60.": "refraction.validation.iopRange",
+  "Axial length must be between 15 and 40.": "refraction.validation.axialLengthRange",
+  "Visit ID is required.": "refraction.validation.visitIdRequired",
+}
+
 interface RefractionFormProps {
   visitId: string
   refractionType: number
@@ -281,6 +294,19 @@ export function RefractionForm({
               form.setError,
               refractionFieldMap,
             )
+            // Re-map server English messages to localized messages
+            const currentErrors = form.formState.errors
+            for (const [fieldName, fieldError] of Object.entries(currentErrors)) {
+              if (fieldError?.type === "server" && fieldError.message) {
+                const i18nKey = SERVER_MSG_TO_I18N[fieldError.message as string]
+                if (i18nKey) {
+                  form.setError(fieldName as keyof RefractionFormValues, {
+                    type: "server",
+                    message: t(i18nKey),
+                  })
+                }
+              }
+            }
             if (nonFieldErrors.length > 0) {
               toast.error(nonFieldErrors[0])
             }
@@ -288,7 +314,7 @@ export function RefractionForm({
         },
       )
     },
-    [visitId, refractionType, updateMutation, t],
+    [visitId, refractionType, updateMutation, t, form],
   )
 
   const handleBlur = useCallback(() => {

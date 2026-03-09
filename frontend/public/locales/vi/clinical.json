@@ -87,6 +87,17 @@
       "icare": "iCare",
       "tonopen": "Tonopen",
       "other": "Khác"
+    },
+    "validation": {
+      "sphRange": "SPH phải nằm trong khoảng -30 đến +30",
+      "cylRange": "CYL phải nằm trong khoảng -10 đến +10",
+      "axisRange": "TRỤC phải nằm trong khoảng 1 đến 180",
+      "addRange": "ADD phải nằm trong khoảng 0.25 đến 4.0",
+      "pdRange": "PD phải nằm trong khoảng 20 đến 80",
+      "vaRange": "Thị lực phải nằm trong khoảng 0.01 đến 2.0",
+      "iopRange": "Nhãn áp phải nằm trong khoảng 1 đến 60",
+      "axialLengthRange": "Trục nhãn cầu phải nằm trong khoảng 15 đến 40",
+      "visitIdRequired": "Mã lượt khám là bắt buộc"
     }
   },
   "diagnosis": {

@@ -87,6 +87,17 @@
       "icare": "iCare",
       "tonopen": "Tonopen",
       "other": "Other"
+    },
+    "validation": {
+      "sphRange": "SPH must be between -30 and +30",
+      "cylRange": "CYL must be between -10 and +10",
+      "axisRange": "AXIS must be between 1 and 180",
+      "addRange": "ADD must be between 0.25 and 4.0",
+      "pdRange": "PD must be between 20 and 80",
+      "vaRange": "VA must be between 0.01 and 2.0",
+      "iopRange": "IOP must be between 1 and 60",
+      "axialLengthRange": "Axial length must be between 15 and 40",
+      "visitIdRequired": "Visit ID is required"
     }
   },
   "diagnosis": {
