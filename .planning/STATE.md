@@ -3,15 +3,30 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 02-15-PLAN.md
-last_updated: "2026-03-09T05:13:23.186Z"
-last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
+stopped_at: Completed 02-16-PLAN.md
+last_updated: "2026-03-09T05:22:51.988Z"
+last_activity: 2026-03-09 -- Completed 02-16 Appointment Type i18n and Placeholder Cleanup
+progress:
+  total_phases: 14
+  completed_phases: 12
+  total_plans: 224
+  completed_plans: 222
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: in-progress
+stopped_at: Completed 02-16-PLAN.md
+last_updated: "2026-03-09T05:21:31Z"
+last_activity: 2026-03-09 -- Completed 02-16 Appointment Type i18n and Placeholder Cleanup
 progress:
   total_phases: 14
   completed_phases: 11
   total_plans: 224
-  completed_plans: 221
-  percent: 98
+  completed_plans: 222
+  percent: 99
 ---
 
 ---
@@ -1078,6 +1093,7 @@ Recent decisions affecting current work:
 - [Phase 09]: Followed Phase 8 user stories format for Vietnamese treatment protocol documentation
 - [Phase 02]: Used @fullcalendar/moment-timezone plugin for timezone-aware calendar rendering instead of manual UTC conversion
 - [Phase 02]: Route DOUBLE_BOOKING/VALIDATION_ERROR to in-form ServerValidationAlert via setNonFieldError, keep toast only for success
+- [Phase 02]: AppointmentDto extended with AppointmentTypeNameVi field (data-driven i18n, not translation keys)
 
 ### Roadmap Evolution
 
