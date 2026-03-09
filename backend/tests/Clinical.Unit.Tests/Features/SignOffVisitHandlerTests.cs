@@ -31,13 +31,26 @@ public class SignOffVisitHandlerTests
             DefaultBranchId, false);
     }
 
+    private static Visit CreateAmendedVisit(out VisitAmendment amendment)
+    {
+        var visit = CreateDraftVisit();
+        visit.SignOff(Guid.NewGuid());
+
+        var baselineJson = "{\"examinationNotes\":\"old notes\"}";
+        amendment = VisitAmendment.Create(
+            visit.Id, Guid.NewGuid(), "Dr. A", "Correcting notes", baselineJson);
+        visit.StartAmendment(amendment);
+
+        return visit;
+    }
+
     [Fact]
     public async Task Handle_DraftVisit_StatusBecomesSigned()
     {
         // Arrange
         var visit = CreateDraftVisit();
         var command = new SignOffVisitCommand(visit.Id);
-        _visitRepository.GetByIdAsync(visit.Id, Arg.Any<CancellationToken>()).Returns(visit);
+        _visitRepository.GetByIdWithDetailsAsync(visit.Id, Arg.Any<CancellationToken>()).Returns(visit);
 
         // Act
         var result = await SignOffVisitHandler.Handle(
@@ -57,7 +70,7 @@ public class SignOffVisitHandlerTests
         var visit = CreateDraftVisit();
         visit.SignOff(Guid.NewGuid()); // Already signed
         var command = new SignOffVisitCommand(visit.Id);
-        _visitRepository.GetByIdAsync(visit.Id, Arg.Any<CancellationToken>()).Returns(visit);
+        _visitRepository.GetByIdWithDetailsAsync(visit.Id, Arg.Any<CancellationToken>()).Returns(visit);
 
         // Act
         var result = await SignOffVisitHandler.Handle(
@@ -73,7 +86,7 @@ public class SignOffVisitHandlerTests
     {
         // Arrange
         var command = new SignOffVisitCommand(Guid.NewGuid());
-        _visitRepository.GetByIdAsync(command.VisitId, Arg.Any<CancellationToken>()).Returns((Visit?)null);
+        _visitRepository.GetByIdWithDetailsAsync(command.VisitId, Arg.Any<CancellationToken>()).Returns((Visit?)null);
 
         // Act
         var result = await SignOffVisitHandler.Handle(
@@ -90,7 +103,7 @@ public class SignOffVisitHandlerTests
         // Arrange
         var visit = CreateDraftVisit();
         var command = new SignOffVisitCommand(visit.Id);
-        _visitRepository.GetByIdAsync(visit.Id, Arg.Any<CancellationToken>()).Returns(visit);
+        _visitRepository.GetByIdWithDetailsAsync(visit.Id, Arg.Any<CancellationToken>()).Returns(visit);
 
         // Act
         await SignOffVisitHandler.Handle(
@@ -106,7 +119,7 @@ public class SignOffVisitHandlerTests
         // Arrange
         var visit = CreateDraftVisit();
         var command = new SignOffVisitCommand(visit.Id);
-        _visitRepository.GetByIdAsync(visit.Id, Arg.Any<CancellationToken>()).Returns(visit);
+        _visitRepository.GetByIdWithDetailsAsync(visit.Id, Arg.Any<CancellationToken>()).Returns(visit);
         var before = DateTime.UtcNow;
 
         // Act
@@ -116,5 +129,62 @@ public class SignOffVisitHandlerTests
         // Assert
         visit.SignedAt.Should().BeOnOrAfter(before);
         visit.SignedAt.Should().BeOnOrBefore(DateTime.UtcNow);
+    }
+
+    [Fact]
+    public async Task Handle_AmendedVisitWithFieldChanges_UpdatesLatestAmendment()
+    {
+        // Arrange
+        var visit = CreateAmendedVisit(out var amendment);
+        var actualDiff = "[{\"field\":\"examinationNotes\",\"oldValue\":\"old notes\",\"newValue\":\"new notes\"}]";
+        var command = new SignOffVisitCommand(visit.Id, actualDiff);
+        _visitRepository.GetByIdWithDetailsAsync(visit.Id, Arg.Any<CancellationToken>()).Returns(visit);
+
+        // Act
+        var result = await SignOffVisitHandler.Handle(
+            command, _visitRepository, _unitOfWork, _currentUser, CancellationToken.None);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        visit.Status.Should().Be(VisitStatus.Signed);
+        amendment.FieldChangesJson.Should().Be(actualDiff);
+    }
+
+    [Fact]
+    public async Task Handle_AmendedVisitWithoutFieldChanges_DoesNotUpdateAmendment()
+    {
+        // Arrange
+        var visit = CreateAmendedVisit(out var amendment);
+        var originalFieldChanges = amendment.FieldChangesJson;
+        var command = new SignOffVisitCommand(visit.Id); // No FieldChangesJson
+        _visitRepository.GetByIdWithDetailsAsync(visit.Id, Arg.Any<CancellationToken>()).Returns(visit);
+
+        // Act
+        var result = await SignOffVisitHandler.Handle(
+            command, _visitRepository, _unitOfWork, _currentUser, CancellationToken.None);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        visit.Status.Should().Be(VisitStatus.Signed);
+        amendment.FieldChangesJson.Should().Be(originalFieldChanges);
+    }
+
+    [Fact]
+    public async Task Handle_DraftVisitWithFieldChanges_IgnoresFieldChanges()
+    {
+        // Arrange - Draft visit (not amended), but FieldChangesJson provided
+        var visit = CreateDraftVisit();
+        var command = new SignOffVisitCommand(visit.Id, "[{\"field\":\"test\"}]");
+        _visitRepository.GetByIdWithDetailsAsync(visit.Id, Arg.Any<CancellationToken>()).Returns(visit);
+
+        // Act
+        var result = await SignOffVisitHandler.Handle(
+            command, _visitRepository, _unitOfWork, _currentUser, CancellationToken.None);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        visit.Status.Should().Be(VisitStatus.Signed);
+        // No amendments to update, should just succeed
+        visit.Amendments.Should().BeEmpty();
     }
 }

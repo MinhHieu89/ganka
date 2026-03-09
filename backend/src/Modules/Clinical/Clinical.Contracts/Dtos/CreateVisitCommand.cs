@@ -44,8 +44,10 @@ public record RemoveVisitDiagnosisCommand(
 
 /// <summary>
 /// Command to sign off a visit, making it immutable.
+/// Optionally accepts FieldChangesJson for re-sign after amendment,
+/// containing the actual before/after diff computed at re-sign time.
 /// </summary>
-public record SignOffVisitCommand(Guid VisitId);
+public record SignOffVisitCommand(Guid VisitId, string? FieldChangesJson = null);
 
 /// <summary>
 /// Command to amend a signed visit with mandatory reason and field-level diff.

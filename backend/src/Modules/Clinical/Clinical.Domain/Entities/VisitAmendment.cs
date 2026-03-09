@@ -18,6 +18,15 @@ public class VisitAmendment : Entity, IAuditable
     private VisitAmendment() { }
 
     /// <summary>
+    /// Updates the field-level changes JSON with the actual diff computed after edits.
+    /// Called during re-sign to replace the initial baseline snapshot with accurate changes.
+    /// </summary>
+    public void UpdateFieldChanges(string fieldChangesJson)
+    {
+        FieldChangesJson = fieldChangesJson;
+    }
+
+    /// <summary>
     /// Factory method for creating a new amendment record.
     /// </summary>
     public static VisitAmendment Create(
