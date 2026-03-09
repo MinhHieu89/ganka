@@ -27,8 +27,8 @@ public class ReferenceDataRepositoryTests : IDisposable
         _connection = new SqliteConnection("DataSource=:memory:");
         _connection.Open();
 
-        // Register Latin1_General_CI_AI collation as case-insensitive + accent-insensitive comparison
-        _connection.CreateCollation("Latin1_General_CI_AI", (x, y) =>
+        // Register Vietnamese_CI_AI collation as case-insensitive + accent-insensitive comparison
+        _connection.CreateCollation("Vietnamese_CI_AI", (x, y) =>
         {
             var xNormalized = RemoveDiacritics(x ?? "");
             var yNormalized = RemoveDiacritics(y ?? "");
