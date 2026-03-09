@@ -2,1057 +2,1057 @@
   {
     "code": "H00.11",
     "descriptionEn": "Chalazion right upper eyelid",
-    "descriptionVi": "Chalazion mi mat tren phai",
+    "descriptionVi": "Chalazion mi mắt trên phải",
     "category": "Eyelid Disorders",
     "requiresLaterality": true
   },
   {
     "code": "H00.12",
     "descriptionEn": "Chalazion right lower eyelid",
-    "descriptionVi": "Chalazion mi mat duoi phai",
+    "descriptionVi": "Chalazion mi mắt dưới phải",
     "category": "Eyelid Disorders",
     "requiresLaterality": true
   },
   {
     "code": "H00.14",
     "descriptionEn": "Chalazion left upper eyelid",
-    "descriptionVi": "Chalazion mi mat tren trai",
+    "descriptionVi": "Chalazion mi mắt trên trái",
     "category": "Eyelid Disorders",
     "requiresLaterality": true
   },
   {
     "code": "H00.15",
     "descriptionEn": "Chalazion left lower eyelid",
-    "descriptionVi": "Chalazion mi mat duoi trai",
+    "descriptionVi": "Chalazion mi mắt dưới trái",
     "category": "Eyelid Disorders",
     "requiresLaterality": true
   },
   {
     "code": "H00.19",
     "descriptionEn": "Chalazion unspecified eyelid",
-    "descriptionVi": "Chalazion mi mat khong xac dinh",
+    "descriptionVi": "Chalazion mi mắt không xác định",
     "category": "Eyelid Disorders",
     "requiresLaterality": true
   },
   {
     "code": "H01.001",
     "descriptionEn": "Unspecified blepharitis right eye, unspecified eyelid",
-    "descriptionVi": "Viem bo mi mat phai, mi mat khong xac dinh",
+    "descriptionVi": "Viêm bờ mi mắt phải, mi mắt không xác định",
     "category": "Blepharitis",
     "requiresLaterality": true
   },
   {
     "code": "H01.002",
     "descriptionEn": "Unspecified blepharitis left eye, unspecified eyelid",
-    "descriptionVi": "Viem bo mi mat trai, mi mat khong xac dinh",
+    "descriptionVi": "Viêm bờ mi mắt trái, mi mắt không xác định",
     "category": "Blepharitis",
     "requiresLaterality": true
   },
   {
     "code": "H01.003",
     "descriptionEn": "Unspecified blepharitis bilateral, unspecified eyelid",
-    "descriptionVi": "Viem bo mi hai mat, mi mat khong xac dinh",
+    "descriptionVi": "Viêm bờ mi hai mắt, mi mắt không xác định",
     "category": "Blepharitis",
     "requiresLaterality": true
   },
   {
     "code": "H01.011",
     "descriptionEn": "Ulcerative blepharitis right eye, unspecified eyelid",
-    "descriptionVi": "Viem bo mi loet mat phai",
+    "descriptionVi": "Viêm bờ mi loét mắt phải",
     "category": "Blepharitis",
     "requiresLaterality": true
   },
   {
     "code": "H01.012",
     "descriptionEn": "Ulcerative blepharitis left eye, unspecified eyelid",
-    "descriptionVi": "Viem bo mi loet mat trai",
+    "descriptionVi": "Viêm bờ mi loét mắt trái",
     "category": "Blepharitis",
     "requiresLaterality": true
   },
   {
     "code": "H01.013",
     "descriptionEn": "Ulcerative blepharitis bilateral, unspecified eyelid",
-    "descriptionVi": "Viem bo mi loet hai mat",
+    "descriptionVi": "Viêm bờ mi loét hai mắt",
     "category": "Blepharitis",
     "requiresLaterality": true
   },
   {
     "code": "H01.021",
     "descriptionEn": "Squamous blepharitis right eye, unspecified eyelid",
-    "descriptionVi": "Viem bo mi vay mat phai",
+    "descriptionVi": "Viêm bờ mi vảy mắt phải",
     "category": "Blepharitis",
     "requiresLaterality": true
   },
   {
     "code": "H01.022",
     "descriptionEn": "Squamous blepharitis left eye, unspecified eyelid",
-    "descriptionVi": "Viem bo mi vay mat trai",
+    "descriptionVi": "Viêm bờ mi vảy mắt trái",
     "category": "Blepharitis",
     "requiresLaterality": true
   },
   {
     "code": "H01.023",
     "descriptionEn": "Squamous blepharitis bilateral, unspecified eyelid",
-    "descriptionVi": "Viem bo mi vay hai mat",
+    "descriptionVi": "Viêm bờ mi vảy hai mắt",
     "category": "Blepharitis",
     "requiresLaterality": true
   },
   {
     "code": "H02.401",
     "descriptionEn": "Unspecified ptosis of right eyelid",
-    "descriptionVi": "Sup mi mat phai khong xac dinh",
+    "descriptionVi": "Sụp mi mắt phải không xác định",
     "category": "Eyelid Disorders",
     "requiresLaterality": true
   },
   {
     "code": "H02.402",
     "descriptionEn": "Unspecified ptosis of left eyelid",
-    "descriptionVi": "Sup mi mat trai khong xac dinh",
+    "descriptionVi": "Sụp mi mắt trái không xác định",
     "category": "Eyelid Disorders",
     "requiresLaterality": true
   },
   {
     "code": "H02.403",
     "descriptionEn": "Unspecified ptosis of bilateral eyelids",
-    "descriptionVi": "Sup mi hai mat khong xac dinh",
+    "descriptionVi": "Sụp mi hai mắt không xác định",
     "category": "Eyelid Disorders",
     "requiresLaterality": true
   },
   {
     "code": "H04.121",
     "descriptionEn": "Dry eye syndrome of right lacrimal gland",
-    "descriptionVi": "Hoi chung kho mat tuyen le phai",
+    "descriptionVi": "Hội chứng khô mắt tuyến lệ phải",
     "category": "Dry Eye",
     "requiresLaterality": true
   },
   {
     "code": "H04.122",
     "descriptionEn": "Dry eye syndrome of left lacrimal gland",
-    "descriptionVi": "Hoi chung kho mat tuyen le trai",
+    "descriptionVi": "Hội chứng khô mắt tuyến lệ trái",
     "category": "Dry Eye",
     "requiresLaterality": true
   },
   {
     "code": "H04.123",
     "descriptionEn": "Dry eye syndrome of bilateral lacrimal glands",
-    "descriptionVi": "Hoi chung kho mat tuyen le hai ben",
+    "descriptionVi": "Hội chứng khô mắt tuyến lệ hai bên",
     "category": "Dry Eye",
     "requiresLaterality": true
   },
   {
     "code": "H04.129",
     "descriptionEn": "Dry eye syndrome of unspecified lacrimal gland",
-    "descriptionVi": "Hoi chung kho mat tuyen le khong xac dinh",
+    "descriptionVi": "Hội chứng khô mắt tuyến lệ không xác định",
     "category": "Dry Eye",
     "requiresLaterality": true
   },
   {
     "code": "H04.131",
     "descriptionEn": "Lacrimal gland inflammation, right lacrimal gland",
-    "descriptionVi": "Viem tuyen le phai",
+    "descriptionVi": "Viêm tuyến lệ phải",
     "category": "Lacrimal Disorders",
     "requiresLaterality": true
   },
   {
     "code": "H04.132",
     "descriptionEn": "Lacrimal gland inflammation, left lacrimal gland",
-    "descriptionVi": "Viem tuyen le trai",
+    "descriptionVi": "Viêm tuyến lệ trái",
     "category": "Lacrimal Disorders",
     "requiresLaterality": true
   },
   {
     "code": "H04.133",
     "descriptionEn": "Lacrimal gland inflammation, bilateral lacrimal glands",
-    "descriptionVi": "Viem tuyen le hai ben",
+    "descriptionVi": "Viêm tuyến lệ hai bên",
     "category": "Lacrimal Disorders",
     "requiresLaterality": true
   },
   {
     "code": "H10.011",
     "descriptionEn": "Acute atopic conjunctivitis, right eye",
-    "descriptionVi": "Viem ket mac di ung cap tinh, mat phai",
+    "descriptionVi": "Viêm kết mạc dị ứng cấp tính, mắt phải",
     "category": "Conjunctivitis",
     "requiresLaterality": true
   },
   {
     "code": "H10.012",
     "descriptionEn": "Acute atopic conjunctivitis, left eye",
-    "descriptionVi": "Viem ket mac di ung cap tinh, mat trai",
+    "descriptionVi": "Viêm kết mạc dị ứng cấp tính, mắt trái",
     "category": "Conjunctivitis",
     "requiresLaterality": true
   },
   {
     "code": "H10.013",
     "descriptionEn": "Acute atopic conjunctivitis, bilateral",
-    "descriptionVi": "Viem ket mac di ung cap tinh, hai mat",
+    "descriptionVi": "Viêm kết mạc dị ứng cấp tính, hai mắt",
     "category": "Conjunctivitis",
     "requiresLaterality": true
   },
   {
     "code": "H10.019",
     "descriptionEn": "Acute atopic conjunctivitis, unspecified eye",
-    "descriptionVi": "Viem ket mac di ung cap tinh, mat khong xac dinh",
+    "descriptionVi": "Viêm kết mạc dị ứng cấp tính, mắt không xác định",
     "category": "Conjunctivitis",
     "requiresLaterality": true
   },
   {
     "code": "H10.021",
     "descriptionEn": "Other mucopurulent conjunctivitis, right eye",
-    "descriptionVi": "Viem ket mac nhua mu khac, mat phai",
+    "descriptionVi": "Viêm kết mạc nhầy mủ khác, mắt phải",
     "category": "Conjunctivitis",
     "requiresLaterality": true
   },
   {
     "code": "H10.022",
     "descriptionEn": "Other mucopurulent conjunctivitis, left eye",
-    "descriptionVi": "Viem ket mac nhua mu khac, mat trai",
+    "descriptionVi": "Viêm kết mạc nhầy mủ khác, mắt trái",
     "category": "Conjunctivitis",
     "requiresLaterality": true
   },
   {
     "code": "H10.023",
     "descriptionEn": "Other mucopurulent conjunctivitis, bilateral",
-    "descriptionVi": "Viem ket mac nhua mu khac, hai mat",
+    "descriptionVi": "Viêm kết mạc nhầy mủ khác, hai mắt",
     "category": "Conjunctivitis",
     "requiresLaterality": true
   },
   {
     "code": "H10.10",
     "descriptionEn": "Acute atopic conjunctivitis, unspecified",
-    "descriptionVi": "Viem ket mac di ung cap tinh, khong xac dinh",
+    "descriptionVi": "Viêm kết mạc dị ứng cấp tính, không xác định",
     "category": "Conjunctivitis",
     "requiresLaterality": false
   },
   {
     "code": "H10.401",
     "descriptionEn": "Unspecified chronic conjunctivitis, right eye",
-    "descriptionVi": "Viem ket mac man tinh khong xac dinh, mat phai",
+    "descriptionVi": "Viêm kết mạc mạn tính không xác định, mắt phải",
     "category": "Conjunctivitis",
     "requiresLaterality": true
   },
   {
     "code": "H10.402",
     "descriptionEn": "Unspecified chronic conjunctivitis, left eye",
-    "descriptionVi": "Viem ket mac man tinh khong xac dinh, mat trai",
+    "descriptionVi": "Viêm kết mạc mạn tính không xác định, mắt trái",
     "category": "Conjunctivitis",
     "requiresLaterality": true
   },
   {
     "code": "H10.403",
     "descriptionEn": "Unspecified chronic conjunctivitis, bilateral",
-    "descriptionVi": "Viem ket mac man tinh khong xac dinh, hai mat",
+    "descriptionVi": "Viêm kết mạc mạn tính không xác định, hai mắt",
     "category": "Conjunctivitis",
     "requiresLaterality": true
   },
   {
     "code": "H10.411",
     "descriptionEn": "Chronic giant papillary conjunctivitis, right eye",
-    "descriptionVi": "Viem ket mac nhu gai khong lo man tinh, mat phai",
+    "descriptionVi": "Viêm kết mạc nhú gai khổng lồ mạn tính, mắt phải",
     "category": "Conjunctivitis",
     "requiresLaterality": true
   },
   {
     "code": "H10.412",
     "descriptionEn": "Chronic giant papillary conjunctivitis, left eye",
-    "descriptionVi": "Viem ket mac nhu gai khong lo man tinh, mat trai",
+    "descriptionVi": "Viêm kết mạc nhú gai khổng lồ mạn tính, mắt trái",
     "category": "Conjunctivitis",
     "requiresLaterality": true
   },
   {
     "code": "H10.413",
     "descriptionEn": "Chronic giant papillary conjunctivitis, bilateral",
-    "descriptionVi": "Viem ket mac nhu gai khong lo man tinh, hai mat",
+    "descriptionVi": "Viêm kết mạc nhú gai khổng lồ mạn tính, hai mắt",
     "category": "Conjunctivitis",
     "requiresLaterality": true
   },
   {
     "code": "H10.45",
     "descriptionEn": "Other chronic allergic conjunctivitis",
-    "descriptionVi": "Viem ket mac di ung man tinh khac",
+    "descriptionVi": "Viêm kết mạc dị ứng mạn tính khác",
     "category": "Conjunctivitis",
     "requiresLaterality": false
   },
   {
     "code": "H11.001",
     "descriptionEn": "Unspecified pterygium of right eye",
-    "descriptionVi": "Mong mat phai khong xac dinh",
+    "descriptionVi": "Mộng mắt phải không xác định",
     "category": "Pterygium",
     "requiresLaterality": true
   },
   {
     "code": "H11.002",
     "descriptionEn": "Unspecified pterygium of left eye",
-    "descriptionVi": "Mong mat trai khong xac dinh",
+    "descriptionVi": "Mộng mắt trái không xác định",
     "category": "Pterygium",
     "requiresLaterality": true
   },
   {
     "code": "H11.003",
     "descriptionEn": "Unspecified pterygium of bilateral eyes",
-    "descriptionVi": "Mong hai mat khong xac dinh",
+    "descriptionVi": "Mộng hai mắt không xác định",
     "category": "Pterygium",
     "requiresLaterality": true
   },
   {
     "code": "H11.051",
     "descriptionEn": "Pterygium, progressive, right eye",
-    "descriptionVi": "Mong mat tien trien, mat phai",
+    "descriptionVi": "Mộng mắt tiến triển, mắt phải",
     "category": "Pterygium",
     "requiresLaterality": true
   },
   {
     "code": "H11.052",
     "descriptionEn": "Pterygium, progressive, left eye",
-    "descriptionVi": "Mong mat tien trien, mat trai",
+    "descriptionVi": "Mộng mắt tiến triển, mắt trái",
     "category": "Pterygium",
     "requiresLaterality": true
   },
   {
     "code": "H11.053",
     "descriptionEn": "Pterygium, progressive, bilateral",
-    "descriptionVi": "Mong mat tien trien, hai mat",
+    "descriptionVi": "Mộng mắt tiến triển, hai mắt",
     "category": "Pterygium",
     "requiresLaterality": true
   },
   {
     "code": "H16.001",
     "descriptionEn": "Unspecified corneal ulcer, right eye",
-    "descriptionVi": "Loet giac mac khong xac dinh, mat phai",
+    "descriptionVi": "Loét giác mạc không xác định, mắt phải",
     "category": "Corneal Disorders",
     "requiresLaterality": true
   },
   {
     "code": "H16.002",
     "descriptionEn": "Unspecified corneal ulcer, left eye",
-    "descriptionVi": "Loet giac mac khong xac dinh, mat trai",
+    "descriptionVi": "Loét giác mạc không xác định, mắt trái",
     "category": "Corneal Disorders",
     "requiresLaterality": true
   },
   {
     "code": "H16.003",
     "descriptionEn": "Unspecified corneal ulcer, bilateral",
-    "descriptionVi": "Loet giac mac khong xac dinh, hai mat",
+    "descriptionVi": "Loét giác mạc không xác định, hai mắt",
     "category": "Corneal Disorders",
     "requiresLaterality": true
   },
   {
     "code": "H16.101",
     "descriptionEn": "Unspecified superficial keratitis, right eye",
-    "descriptionVi": "Viem giac mac nong khong xac dinh, mat phai",
+    "descriptionVi": "Viêm giác mạc nông không xác định, mắt phải",
     "category": "Corneal Disorders",
     "requiresLaterality": true
   },
   {
     "code": "H16.102",
     "descriptionEn": "Unspecified superficial keratitis, left eye",
-    "descriptionVi": "Viem giac mac nong khong xac dinh, mat trai",
+    "descriptionVi": "Viêm giác mạc nông không xác định, mắt trái",
     "category": "Corneal Disorders",
     "requiresLaterality": true
   },
   {
     "code": "H16.103",
     "descriptionEn": "Unspecified superficial keratitis, bilateral",
-    "descriptionVi": "Viem giac mac nong khong xac dinh, hai mat",
+    "descriptionVi": "Viêm giác mạc nông không xác định, hai mắt",
     "category": "Corneal Disorders",
     "requiresLaterality": true
   },
   {
     "code": "H16.201",
     "descriptionEn": "Unspecified keratoconjunctivitis, right eye",
-    "descriptionVi": "Viem giac ket mac khong xac dinh, mat phai",
+    "descriptionVi": "Viêm giác kết mạc không xác định, mắt phải",
     "category": "Corneal Disorders",
     "requiresLaterality": true
   },
   {
     "code": "H16.202",
     "descriptionEn": "Unspecified keratoconjunctivitis, left eye",
-    "descriptionVi": "Viem giac ket mac khong xac dinh, mat trai",
+    "descriptionVi": "Viêm giác kết mạc không xác định, mắt trái",
     "category": "Corneal Disorders",
     "requiresLaterality": true
   },
   {
     "code": "H16.203",
     "descriptionEn": "Unspecified keratoconjunctivitis, bilateral",
-    "descriptionVi": "Viem giac ket mac khong xac dinh, hai mat",
+    "descriptionVi": "Viêm giác kết mạc không xác định, hai mắt",
     "category": "Corneal Disorders",
     "requiresLaterality": true
   },
   {
     "code": "H18.601",
     "descriptionEn": "Keratoconus, unspecified, right eye",
-    "descriptionVi": "Giac mac hinh non, khong xac dinh, mat phai",
+    "descriptionVi": "Giác mạc hình nón, không xác định, mắt phải",
     "category": "Keratoconus",
     "requiresLaterality": true
   },
   {
     "code": "H18.602",
     "descriptionEn": "Keratoconus, unspecified, left eye",
-    "descriptionVi": "Giac mac hinh non, khong xac dinh, mat trai",
+    "descriptionVi": "Giác mạc hình nón, không xác định, mắt trái",
     "category": "Keratoconus",
     "requiresLaterality": true
   },
   {
     "code": "H18.603",
     "descriptionEn": "Keratoconus, unspecified, bilateral",
-    "descriptionVi": "Giac mac hinh non, khong xac dinh, hai mat",
+    "descriptionVi": "Giác mạc hình nón, không xác định, hai mắt",
     "category": "Keratoconus",
     "requiresLaterality": true
   },
   {
     "code": "H18.611",
     "descriptionEn": "Keratoconus, stable, right eye",
-    "descriptionVi": "Giac mac hinh non, on dinh, mat phai",
+    "descriptionVi": "Giác mạc hình nón, ổn định, mắt phải",
     "category": "Keratoconus",
     "requiresLaterality": true
   },
   {
     "code": "H18.612",
     "descriptionEn": "Keratoconus, stable, left eye",
-    "descriptionVi": "Giac mac hinh non, on dinh, mat trai",
+    "descriptionVi": "Giác mạc hình nón, ổn định, mắt trái",
     "category": "Keratoconus",
     "requiresLaterality": true
   },
   {
     "code": "H18.613",
     "descriptionEn": "Keratoconus, stable, bilateral",
-    "descriptionVi": "Giac mac hinh non, on dinh, hai mat",
+    "descriptionVi": "Giác mạc hình nón, ổn định, hai mắt",
     "category": "Keratoconus",
     "requiresLaterality": true
   },
   {
     "code": "H18.621",
     "descriptionEn": "Keratoconus, unstable, right eye",
-    "descriptionVi": "Giac mac hinh non, khong on dinh, mat phai",
+    "descriptionVi": "Giác mạc hình nón, không ổn định, mắt phải",
     "category": "Keratoconus",
     "requiresLaterality": true
   },
   {
     "code": "H18.622",
     "descriptionEn": "Keratoconus, unstable, left eye",
-    "descriptionVi": "Giac mac hinh non, khong on dinh, mat trai",
+    "descriptionVi": "Giác mạc hình nón, không ổn định, mắt trái",
     "category": "Keratoconus",
     "requiresLaterality": true
   },
   {
     "code": "H18.623",
     "descriptionEn": "Keratoconus, unstable, bilateral",
-    "descriptionVi": "Giac mac hinh non, khong on dinh, hai mat",
+    "descriptionVi": "Giác mạc hình nón, không ổn định, hai mắt",
     "category": "Keratoconus",
     "requiresLaterality": true
   },
   {
     "code": "H20.011",
     "descriptionEn": "Primary acute anterior uveitis, right eye",
-    "descriptionVi": "Viem mong mat truoc cap nguyen phat, mat phai",
+    "descriptionVi": "Viêm màng bồ đào trước cấp nguyên phát, mắt phải",
     "category": "Uveitis",
     "requiresLaterality": true
   },
   {
     "code": "H20.012",
     "descriptionEn": "Primary acute anterior uveitis, left eye",
-    "descriptionVi": "Viem mong mat truoc cap nguyen phat, mat trai",
+    "descriptionVi": "Viêm màng bồ đào trước cấp nguyên phát, mắt trái",
     "category": "Uveitis",
     "requiresLaterality": true
   },
   {
     "code": "H20.013",
     "descriptionEn": "Primary acute anterior uveitis, bilateral",
-    "descriptionVi": "Viem mong mat truoc cap nguyen phat, hai mat",
+    "descriptionVi": "Viêm màng bồ đào trước cấp nguyên phát, hai mắt",
     "category": "Uveitis",
     "requiresLaterality": true
   },
   {
     "code": "H20.10",
     "descriptionEn": "Chronic iridocyclitis, unspecified eye",
-    "descriptionVi": "Viem mong mat the mi man tinh, mat khong xac dinh",
+    "descriptionVi": "Viêm mống mắt thể mi mạn tính, mắt không xác định",
     "category": "Uveitis",
     "requiresLaterality": false
   },
   {
     "code": "H25.011",
     "descriptionEn": "Cortical age-related cataract, right eye",
-    "descriptionVi": "Duc thuy tinh the vo do tuoi, mat phai",
+    "descriptionVi": "Đục thủy tinh thể vỏ do tuổi, mắt phải",
     "category": "Cataract",
     "requiresLaterality": true
   },
   {
     "code": "H25.012",
     "descriptionEn": "Cortical age-related cataract, left eye",
-    "descriptionVi": "Duc thuy tinh the vo do tuoi, mat trai",
+    "descriptionVi": "Đục thủy tinh thể vỏ do tuổi, mắt trái",
     "category": "Cataract",
     "requiresLaterality": true
   },
   {
     "code": "H25.013",
     "descriptionEn": "Cortical age-related cataract, bilateral",
-    "descriptionVi": "Duc thuy tinh the vo do tuoi, hai mat",
+    "descriptionVi": "Đục thủy tinh thể vỏ do tuổi, hai mắt",
     "category": "Cataract",
     "requiresLaterality": true
   },
   {
     "code": "H25.10",
     "descriptionEn": "Age-related nuclear cataract, unspecified eye",
-    "descriptionVi": "Duc thuy tinh the nhan do tuoi, mat khong xac dinh",
+    "descriptionVi": "Đục thủy tinh thể nhân do tuổi, mắt không xác định",
     "category": "Cataract",
     "requiresLaterality": false
   },
   {
     "code": "H25.11",
     "descriptionEn": "Age-related nuclear cataract, right eye",
-    "descriptionVi": "Duc thuy tinh the nhan do tuoi, mat phai",
+    "descriptionVi": "Đục thủy tinh thể nhân do tuổi, mắt phải",
     "category": "Cataract",
     "requiresLaterality": true
   },
   {
     "code": "H25.12",
     "descriptionEn": "Age-related nuclear cataract, left eye",
-    "descriptionVi": "Duc thuy tinh the nhan do tuoi, mat trai",
+    "descriptionVi": "Đục thủy tinh thể nhân do tuổi, mắt trái",
     "category": "Cataract",
     "requiresLaterality": true
   },
   {
     "code": "H25.13",
     "descriptionEn": "Age-related nuclear cataract, bilateral",
-    "descriptionVi": "Duc thuy tinh the nhan do tuoi, hai mat",
+    "descriptionVi": "Đục thủy tinh thể nhân do tuổi, hai mắt",
     "category": "Cataract",
     "requiresLaterality": true
   },
   {
     "code": "H25.811",
     "descriptionEn": "Combined forms of age-related cataract, right eye",
-    "descriptionVi": "Duc thuy tinh the do tuoi phoi hop, mat phai",
+    "descriptionVi": "Đục thủy tinh thể do tuổi phối hợp, mắt phải",
     "category": "Cataract",
     "requiresLaterality": true
   },
   {
     "code": "H25.812",
     "descriptionEn": "Combined forms of age-related cataract, left eye",
-    "descriptionVi": "Duc thuy tinh the do tuoi phoi hop, mat trai",
+    "descriptionVi": "Đục thủy tinh thể do tuổi phối hợp, mắt trái",
     "category": "Cataract",
     "requiresLaterality": true
   },
   {
     "code": "H25.813",
     "descriptionEn": "Combined forms of age-related cataract, bilateral",
-    "descriptionVi": "Duc thuy tinh the do tuoi phoi hop, hai mat",
+    "descriptionVi": "Đục thủy tinh thể do tuổi phối hợp, hai mắt",
     "category": "Cataract",
     "requiresLaterality": true
   },
   {
     "code": "H26.001",
     "descriptionEn": "Unspecified infantile and juvenile cataract, right eye",
-    "descriptionVi": "Duc thuy tinh the tre em va thieu nien khong xac dinh, mat phai",
+    "descriptionVi": "Đục thủy tinh thể trẻ em và thiếu niên không xác định, mắt phải",
     "category": "Cataract",
     "requiresLaterality": true
   },
   {
     "code": "H26.002",
     "descriptionEn": "Unspecified infantile and juvenile cataract, left eye",
-    "descriptionVi": "Duc thuy tinh the tre em va thieu nien khong xac dinh, mat trai",
+    "descriptionVi": "Đục thủy tinh thể trẻ em và thiếu niên không xác định, mắt trái",
     "category": "Cataract",
     "requiresLaterality": true
   },
   {
     "code": "H26.003",
     "descriptionEn": "Unspecified infantile and juvenile cataract, bilateral",
-    "descriptionVi": "Duc thuy tinh the tre em va thieu nien khong xac dinh, hai mat",
+    "descriptionVi": "Đục thủy tinh thể trẻ em và thiếu niên không xác định, hai mắt",
     "category": "Cataract",
     "requiresLaterality": true
   },
   {
     "code": "H33.001",
     "descriptionEn": "Unspecified retinal detachment with retinal break, right eye",
-    "descriptionVi": "Bong vong mac khong xac dinh co vet rach vong mac, mat phai",
+    "descriptionVi": "Bong võng mạc không xác định có vết rách võng mạc, mắt phải",
     "category": "Retinal Disorders",
     "requiresLaterality": true
   },
   {
     "code": "H33.002",
     "descriptionEn": "Unspecified retinal detachment with retinal break, left eye",
-    "descriptionVi": "Bong vong mac khong xac dinh co vet rach vong mac, mat trai",
+    "descriptionVi": "Bong võng mạc không xác định có vết rách võng mạc, mắt trái",
     "category": "Retinal Disorders",
     "requiresLaterality": true
   },
   {
     "code": "H33.003",
     "descriptionEn": "Unspecified retinal detachment with retinal break, bilateral",
-    "descriptionVi": "Bong vong mac khong xac dinh co vet rach vong mac, hai mat",
+    "descriptionVi": "Bong võng mạc không xác định có vết rách võng mạc, hai mắt",
     "category": "Retinal Disorders",
     "requiresLaterality": true
   },
   {
     "code": "H35.30",
     "descriptionEn": "Unspecified macular degeneration",
-    "descriptionVi": "Thoai hoa hoang diem khong xac dinh",
+    "descriptionVi": "Thoái hóa hoàng điểm không xác định",
     "category": "Macular Degeneration",
     "requiresLaterality": false
   },
   {
     "code": "H35.3110",
     "descriptionEn": "Nonexudative age-related macular degeneration, right eye, stage unspecified",
-    "descriptionVi": "Thoai hoa hoang diem do tuoi the kho, mat phai, giai doan khong xac dinh",
+    "descriptionVi": "Thoái hóa hoàng điểm do tuổi thể khô, mắt phải, giai đoạn không xác định",
     "category": "Macular Degeneration",
     "requiresLaterality": true
   },
   {
     "code": "H35.3120",
     "descriptionEn": "Nonexudative age-related macular degeneration, left eye, stage unspecified",
-    "descriptionVi": "Thoai hoa hoang diem do tuoi the kho, mat trai, giai doan khong xac dinh",
+    "descriptionVi": "Thoái hóa hoàng điểm do tuổi thể khô, mắt trái, giai đoạn không xác định",
     "category": "Macular Degeneration",
     "requiresLaterality": true
   },
   {
     "code": "H35.3130",
     "descriptionEn": "Nonexudative age-related macular degeneration, bilateral, stage unspecified",
-    "descriptionVi": "Thoai hoa hoang diem do tuoi the kho, hai mat, giai doan khong xac dinh",
+    "descriptionVi": "Thoái hóa hoàng điểm do tuổi thể khô, hai mắt, giai đoạn không xác định",
     "category": "Macular Degeneration",
     "requiresLaterality": true
   },
   {
     "code": "H35.3210",
     "descriptionEn": "Exudative age-related macular degeneration, right eye, stage unspecified",
-    "descriptionVi": "Thoai hoa hoang diem do tuoi the uot, mat phai, giai doan khong xac dinh",
+    "descriptionVi": "Thoái hóa hoàng điểm do tuổi thể ướt, mắt phải, giai đoạn không xác định",
     "category": "Macular Degeneration",
     "requiresLaterality": true
   },
   {
     "code": "H35.3220",
     "descriptionEn": "Exudative age-related macular degeneration, left eye, stage unspecified",
-    "descriptionVi": "Thoai hoa hoang diem do tuoi the uot, mat trai, giai doan khong xac dinh",
+    "descriptionVi": "Thoái hóa hoàng điểm do tuổi thể ướt, mắt trái, giai đoạn không xác định",
     "category": "Macular Degeneration",
     "requiresLaterality": true
   },
   {
     "code": "H35.3230",
     "descriptionEn": "Exudative age-related macular degeneration, bilateral, stage unspecified",
-    "descriptionVi": "Thoai hoa hoang diem do tuoi the uot, hai mat, giai doan khong xac dinh",
+    "descriptionVi": "Thoái hóa hoàng điểm do tuổi thể ướt, hai mắt, giai đoạn không xác định",
     "category": "Macular Degeneration",
     "requiresLaterality": true
   },
   {
     "code": "H35.351",
     "descriptionEn": "Cystoid macular degeneration, right eye",
-    "descriptionVi": "Thoai hoa hoang diem dang nang, mat phai",
+    "descriptionVi": "Thoái hóa hoàng điểm dạng nang, mắt phải",
     "category": "Macular Degeneration",
     "requiresLaterality": true
   },
   {
     "code": "H35.352",
     "descriptionEn": "Cystoid macular degeneration, left eye",
-    "descriptionVi": "Thoai hoa hoang diem dang nang, mat trai",
+    "descriptionVi": "Thoái hóa hoàng điểm dạng nang, mắt trái",
     "category": "Macular Degeneration",
     "requiresLaterality": true
   },
   {
     "code": "H35.353",
     "descriptionEn": "Cystoid macular degeneration, bilateral",
-    "descriptionVi": "Thoai hoa hoang diem dang nang, hai mat",
+    "descriptionVi": "Thoái hóa hoàng điểm dạng nang, hai mắt",
     "category": "Macular Degeneration",
     "requiresLaterality": true
   },
   {
     "code": "H35.81",
     "descriptionEn": "Retinal edema",
-    "descriptionVi": "Phu vong mac",
+    "descriptionVi": "Phù võng mạc",
     "category": "Retinal Disorders",
     "requiresLaterality": false
   },
   {
     "code": "H40.001",
     "descriptionEn": "Preglaucoma, unspecified, right eye",
-    "descriptionVi": "Tien glaucoma, khong xac dinh, mat phai",
+    "descriptionVi": "Tiền glaucoma, không xác định, mắt phải",
     "category": "Glaucoma",
     "requiresLaterality": true
   },
   {
     "code": "H40.002",
     "descriptionEn": "Preglaucoma, unspecified, left eye",
-    "descriptionVi": "Tien glaucoma, khong xac dinh, mat trai",
+    "descriptionVi": "Tiền glaucoma, không xác định, mắt trái",
     "category": "Glaucoma",
     "requiresLaterality": true
   },
   {
     "code": "H40.003",
     "descriptionEn": "Preglaucoma, unspecified, bilateral",
-    "descriptionVi": "Tien glaucoma, khong xac dinh, hai mat",
+    "descriptionVi": "Tiền glaucoma, không xác định, hai mắt",
     "category": "Glaucoma",
     "requiresLaterality": true
   },
   {
     "code": "H40.10X0",
     "descriptionEn": "Unspecified open-angle glaucoma, stage unspecified",
-    "descriptionVi": "Glaucoma goc mo khong xac dinh, giai doan khong xac dinh",
+    "descriptionVi": "Glaucoma góc mở không xác định, giai đoạn không xác định",
     "category": "Glaucoma",
     "requiresLaterality": false
   },
   {
     "code": "H40.1110",
     "descriptionEn": "Primary open-angle glaucoma, right eye, stage unspecified",
-    "descriptionVi": "Glaucoma goc mo nguyen phat, mat phai, giai doan khong xac dinh",
+    "descriptionVi": "Glaucoma góc mở nguyên phát, mắt phải, giai đoạn không xác định",
     "category": "Glaucoma",
     "requiresLaterality": true
   },
   {
     "code": "H40.1120",
     "descriptionEn": "Primary open-angle glaucoma, left eye, stage unspecified",
-    "descriptionVi": "Glaucoma goc mo nguyen phat, mat trai, giai doan khong xac dinh",
+    "descriptionVi": "Glaucoma góc mở nguyên phát, mắt trái, giai đoạn không xác định",
     "category": "Glaucoma",
     "requiresLaterality": true
   },
   {
     "code": "H40.1130",
     "descriptionEn": "Primary open-angle glaucoma, bilateral, stage unspecified",
-    "descriptionVi": "Glaucoma goc mo nguyen phat, hai mat, giai doan khong xac dinh",
+    "descriptionVi": "Glaucoma góc mở nguyên phát, hai mắt, giai đoạn không xác định",
     "category": "Glaucoma",
     "requiresLaterality": true
   },
   {
     "code": "H40.1111",
     "descriptionEn": "Primary open-angle glaucoma, right eye, mild stage",
-    "descriptionVi": "Glaucoma goc mo nguyen phat, mat phai, giai doan nhe",
+    "descriptionVi": "Glaucoma góc mở nguyên phát, mắt phải, giai đoạn nhẹ",
     "category": "Glaucoma",
     "requiresLaterality": true
   },
   {
     "code": "H40.1112",
     "descriptionEn": "Primary open-angle glaucoma, right eye, moderate stage",
-    "descriptionVi": "Glaucoma goc mo nguyen phat, mat phai, giai doan trung binh",
+    "descriptionVi": "Glaucoma góc mở nguyên phát, mắt phải, giai đoạn trung bình",
     "category": "Glaucoma",
     "requiresLaterality": true
   },
   {
     "code": "H40.1113",
     "descriptionEn": "Primary open-angle glaucoma, right eye, severe stage",
-    "descriptionVi": "Glaucoma goc mo nguyen phat, mat phai, giai doan nang",
+    "descriptionVi": "Glaucoma góc mở nguyên phát, mắt phải, giai đoạn nặng",
     "category": "Glaucoma",
     "requiresLaterality": true
   },
   {
     "code": "H40.20X0",
     "descriptionEn": "Unspecified primary angle-closure glaucoma, stage unspecified",
-    "descriptionVi": "Glaucoma goc dong nguyen phat khong xac dinh, giai doan khong xac dinh",
+    "descriptionVi": "Glaucoma góc đóng nguyên phát không xác định, giai đoạn không xác định",
     "category": "Glaucoma",
     "requiresLaterality": false
   },
   {
     "code": "H40.211",
     "descriptionEn": "Acute angle-closure glaucoma, right eye",
-    "descriptionVi": "Glaucoma goc dong cap tinh, mat phai",
+    "descriptionVi": "Glaucoma góc đóng cấp tính, mắt phải",
     "category": "Glaucoma",
     "requiresLaterality": true
   },
   {
     "code": "H40.212",
     "descriptionEn": "Acute angle-closure glaucoma, left eye",
-    "descriptionVi": "Glaucoma goc dong cap tinh, mat trai",
+    "descriptionVi": "Glaucoma góc đóng cấp tính, mắt trái",
     "category": "Glaucoma",
     "requiresLaterality": true
   },
   {
     "code": "H40.213",
     "descriptionEn": "Acute angle-closure glaucoma, bilateral",
-    "descriptionVi": "Glaucoma goc dong cap tinh, hai mat",
+    "descriptionVi": "Glaucoma góc đóng cấp tính, hai mắt",
     "category": "Glaucoma",
     "requiresLaterality": true
   },
   {
     "code": "H40.2210",
     "descriptionEn": "Chronic angle-closure glaucoma, right eye, stage unspecified",
-    "descriptionVi": "Glaucoma goc dong man tinh, mat phai, giai doan khong xac dinh",
+    "descriptionVi": "Glaucoma góc đóng mạn tính, mắt phải, giai đoạn không xác định",
     "category": "Glaucoma",
     "requiresLaterality": true
   },
   {
     "code": "H40.2220",
     "descriptionEn": "Chronic angle-closure glaucoma, left eye, stage unspecified",
-    "descriptionVi": "Glaucoma goc dong man tinh, mat trai, giai doan khong xac dinh",
+    "descriptionVi": "Glaucoma góc đóng mạn tính, mắt trái, giai đoạn không xác định",
     "category": "Glaucoma",
     "requiresLaterality": true
   },
   {
     "code": "H40.2230",
     "descriptionEn": "Chronic angle-closure glaucoma, bilateral, stage unspecified",
-    "descriptionVi": "Glaucoma goc dong man tinh, hai mat, giai doan khong xac dinh",
+    "descriptionVi": "Glaucoma góc đóng mạn tính, hai mắt, giai đoạn không xác định",
     "category": "Glaucoma",
     "requiresLaterality": true
   },
   {
     "code": "H40.9",
     "descriptionEn": "Unspecified glaucoma",
-    "descriptionVi": "Glaucoma khong xac dinh",
+    "descriptionVi": "Glaucoma không xác định",
     "category": "Glaucoma",
     "requiresLaterality": false
   },
   {
     "code": "H43.10",
     "descriptionEn": "Vitreous hemorrhage, unspecified eye",
-    "descriptionVi": "Xuat huyet dich kinh, mat khong xac dinh",
+    "descriptionVi": "Xuất huyết dịch kính, mắt không xác định",
     "category": "Vitreous Disorders",
     "requiresLaterality": false
   },
   {
     "code": "H43.11",
     "descriptionEn": "Vitreous hemorrhage, right eye",
-    "descriptionVi": "Xuat huyet dich kinh, mat phai",
+    "descriptionVi": "Xuất huyết dịch kính, mắt phải",
     "category": "Vitreous Disorders",
     "requiresLaterality": true
   },
   {
     "code": "H43.12",
     "descriptionEn": "Vitreous hemorrhage, left eye",
-    "descriptionVi": "Xuat huyet dich kinh, mat trai",
+    "descriptionVi": "Xuất huyết dịch kính, mắt trái",
     "category": "Vitreous Disorders",
     "requiresLaterality": true
   },
   {
     "code": "H43.13",
     "descriptionEn": "Vitreous hemorrhage, bilateral",
-    "descriptionVi": "Xuat huyet dich kinh, hai mat",
+    "descriptionVi": "Xuất huyết dịch kính, hai mắt",
     "category": "Vitreous Disorders",
     "requiresLaterality": true
   },
   {
     "code": "H52.10",
     "descriptionEn": "Myopia, unspecified eye",
-    "descriptionVi": "Can thi, mat khong xac dinh",
+    "descriptionVi": "Cận thị, mắt không xác định",
     "category": "Myopia",
     "requiresLaterality": false
   },
   {
     "code": "H52.11",
     "descriptionEn": "Myopia, right eye",
-    "descriptionVi": "Can thi, mat phai",
+    "descriptionVi": "Cận thị, mắt phải",
     "category": "Myopia",
     "requiresLaterality": true
   },
   {
     "code": "H52.12",
     "descriptionEn": "Myopia, left eye",
-    "descriptionVi": "Can thi, mat trai",
+    "descriptionVi": "Cận thị, mắt trái",
     "category": "Myopia",
     "requiresLaterality": true
   },
   {
     "code": "H52.13",
     "descriptionEn": "Myopia, bilateral",
-    "descriptionVi": "Can thi, hai mat",
+    "descriptionVi": "Cận thị, hai mắt",
     "category": "Myopia",
     "requiresLaterality": true
   },
   {
     "code": "H52.01",
     "descriptionEn": "Hypermetropia, right eye",
-    "descriptionVi": "Vien thi, mat phai",
+    "descriptionVi": "Viễn thị, mắt phải",
     "category": "Refractive Errors",
     "requiresLaterality": true
   },
   {
     "code": "H52.02",
     "descriptionEn": "Hypermetropia, left eye",
-    "descriptionVi": "Vien thi, mat trai",
+    "descriptionVi": "Viễn thị, mắt trái",
     "category": "Refractive Errors",
     "requiresLaterality": true
   },
   {
     "code": "H52.03",
     "descriptionEn": "Hypermetropia, bilateral",
-    "descriptionVi": "Vien thi, hai mat",
+    "descriptionVi": "Viễn thị, hai mắt",
     "category": "Refractive Errors",
     "requiresLaterality": true
   },
   {
     "code": "H52.201",
     "descriptionEn": "Unspecified astigmatism, right eye",
-    "descriptionVi": "Loan thi khong xac dinh, mat phai",
+    "descriptionVi": "Loạn thị không xác định, mắt phải",
     "category": "Refractive Errors",
     "requiresLaterality": true
   },
   {
     "code": "H52.202",
     "descriptionEn": "Unspecified astigmatism, left eye",
-    "descriptionVi": "Loan thi khong xac dinh, mat trai",
+    "descriptionVi": "Loạn thị không xác định, mắt trái",
     "category": "Refractive Errors",
     "requiresLaterality": true
   },
   {
     "code": "H52.203",
     "descriptionEn": "Unspecified astigmatism, bilateral",
-    "descriptionVi": "Loan thi khong xac dinh, hai mat",
+    "descriptionVi": "Loạn thị không xác định, hai mắt",
     "category": "Refractive Errors",
     "requiresLaterality": true
   },
   {
     "code": "H52.4",
     "descriptionEn": "Presbyopia",
-    "descriptionVi": "Lao thi",
+    "descriptionVi": "Lão thị",
     "category": "Refractive Errors",
     "requiresLaterality": false
   },
   {
     "code": "H53.001",
     "descriptionEn": "Unspecified amblyopia, right eye",
-    "descriptionVi": "Nhuoc thi khong xac dinh, mat phai",
+    "descriptionVi": "Nhược thị không xác định, mắt phải",
     "category": "Visual Disturbances",
     "requiresLaterality": true
   },
   {
     "code": "H53.002",
     "descriptionEn": "Unspecified amblyopia, left eye",
-    "descriptionVi": "Nhuoc thi khong xac dinh, mat trai",
+    "descriptionVi": "Nhược thị không xác định, mắt trái",
     "category": "Visual Disturbances",
     "requiresLaterality": true
   },
   {
     "code": "H53.003",
     "descriptionEn": "Unspecified amblyopia, bilateral",
-    "descriptionVi": "Nhuoc thi khong xac dinh, hai mat",
+    "descriptionVi": "Nhược thị không xác định, hai mắt",
     "category": "Visual Disturbances",
     "requiresLaterality": true
   },
   {
     "code": "H50.00",
     "descriptionEn": "Unspecified esotropia",
-    "descriptionVi": "Lec mat trong khong xac dinh",
+    "descriptionVi": "Lác mắt trong không xác định",
     "category": "Strabismus",
     "requiresLaterality": false
   },
   {
     "code": "H50.10",
     "descriptionEn": "Unspecified exotropia",
-    "descriptionVi": "Lec mat ngoai khong xac dinh",
+    "descriptionVi": "Lác mắt ngoài không xác định",
     "category": "Strabismus",
     "requiresLaterality": false
   },
   {
     "code": "H50.9",
     "descriptionEn": "Unspecified strabismus",
-    "descriptionVi": "Lec mat khong xac dinh",
+    "descriptionVi": "Lác mắt không xác định",
     "category": "Strabismus",
     "requiresLaterality": false
   },
   {
     "code": "H57.10",
     "descriptionEn": "Ocular pain, unspecified eye",
-    "descriptionVi": "Dau mat, mat khong xac dinh",
+    "descriptionVi": "Đau mắt, mắt không xác định",
     "category": "Other Eye Disorders",
     "requiresLaterality": false
   },
   {
     "code": "H57.11",
     "descriptionEn": "Ocular pain, right eye",
-    "descriptionVi": "Dau mat, mat phai",
+    "descriptionVi": "Đau mắt, mắt phải",
     "category": "Other Eye Disorders",
     "requiresLaterality": true
   },
   {
     "code": "H57.12",
     "descriptionEn": "Ocular pain, left eye",
-    "descriptionVi": "Dau mat, mat trai",
+    "descriptionVi": "Đau mắt, mắt trái",
     "category": "Other Eye Disorders",
     "requiresLaterality": true
   },
   {
     "code": "H57.13",
     "descriptionEn": "Ocular pain, bilateral",
-    "descriptionVi": "Dau mat, hai mat",
+    "descriptionVi": "Đau mắt, hai mắt",
     "category": "Other Eye Disorders",
     "requiresLaterality": true
   },
   {
     "code": "E11.311",
     "descriptionEn": "Type 2 diabetes mellitus with unspecified diabetic retinopathy with macular edema",
-    "descriptionVi": "Dai thao duong type 2 voi benh vong mac dai thao duong khong xac dinh co phu hoang diem",
+    "descriptionVi": "Đái tháo đường type 2 với bệnh võng mạc đái tháo đường không xác định có phù hoàng điểm",
     "category": "Diabetic Retinopathy",
     "requiresLaterality": false
   },
   {
     "code": "E11.319",
     "descriptionEn": "Type 2 diabetes mellitus with unspecified diabetic retinopathy without macular edema",
-    "descriptionVi": "Dai thao duong type 2 voi benh vong mac dai thao duong khong xac dinh khong co phu hoang diem",
+    "descriptionVi": "Đái tháo đường type 2 với bệnh võng mạc đái tháo đường không xác định không có phù hoàng điểm",
     "category": "Diabetic Retinopathy",
     "requiresLaterality": false
   },
   {
     "code": "E11.3211",
     "descriptionEn": "Type 2 diabetes mellitus with mild nonproliferative diabetic retinopathy with macular edema, right eye",
-    "descriptionVi": "Dai thao duong type 2 voi benh vong mac DTD khong tang sinh nhe co phu hoang diem, mat phai",
+    "descriptionVi": "Đái tháo đường type 2 với bệnh võng mạc ĐTĐ không tăng sinh nhẹ có phù hoàng điểm, mắt phải",
     "category": "Diabetic Retinopathy",
     "requiresLaterality": true
   },
   {
     "code": "E11.3212",
     "descriptionEn": "Type 2 diabetes mellitus with mild nonproliferative diabetic retinopathy with macular edema, left eye",
-    "descriptionVi": "Dai thao duong type 2 voi benh vong mac DTD khong tang sinh nhe co phu hoang diem, mat trai",
+    "descriptionVi": "Đái tháo đường type 2 với bệnh võng mạc ĐTĐ không tăng sinh nhẹ có phù hoàng điểm, mắt trái",
     "category": "Diabetic Retinopathy",
     "requiresLaterality": true
   },
   {
     "code": "E11.3213",
     "descriptionEn": "Type 2 diabetes mellitus with mild nonproliferative diabetic retinopathy with macular edema, bilateral",
-    "descriptionVi": "Dai thao duong type 2 voi benh vong mac DTD khong tang sinh nhe co phu hoang diem, hai mat",
+    "descriptionVi": "Đái tháo đường type 2 với bệnh võng mạc ĐTĐ không tăng sinh nhẹ có phù hoàng điểm, hai mắt",
     "category": "Diabetic Retinopathy",
     "requiresLaterality": true
   },
   {
     "code": "E11.3511",
     "descriptionEn": "Type 2 diabetes mellitus with proliferative diabetic retinopathy with macular edema, right eye",
-    "descriptionVi": "Dai thao duong type 2 voi benh vong mac DTD tang sinh co phu hoang diem, mat phai",
+    "descriptionVi": "Đái tháo đường type 2 với bệnh võng mạc ĐTĐ tăng sinh có phù hoàng điểm, mắt phải",
     "category": "Diabetic Retinopathy",
     "requiresLaterality": true
   },
   {
     "code": "E11.3512",
     "descriptionEn": "Type 2 diabetes mellitus with proliferative diabetic retinopathy with macular edema, left eye",
-    "descriptionVi": "Dai thao duong type 2 voi benh vong mac DTD tang sinh co phu hoang diem, mat trai",
+    "descriptionVi": "Đái tháo đường type 2 với bệnh võng mạc ĐTĐ tăng sinh có phù hoàng điểm, mắt trái",
     "category": "Diabetic Retinopathy",
     "requiresLaterality": true
   },
   {
     "code": "E11.3513",
     "descriptionEn": "Type 2 diabetes mellitus with proliferative diabetic retinopathy with macular edema, bilateral",
-    "descriptionVi": "Dai thao duong type 2 voi benh vong mac DTD tang sinh co phu hoang diem, hai mat",
+    "descriptionVi": "Đái tháo đường type 2 với bệnh võng mạc ĐTĐ tăng sinh có phù hoàng điểm, hai mắt",
     "category": "Diabetic Retinopathy",
     "requiresLaterality": true
   },
   {
     "code": "H02.001",
     "descriptionEn": "Unspecified entropion of right eyelid",
-    "descriptionVi": "Quam mi mat phai khong xac dinh",
+    "descriptionVi": "Quặm mi mắt phải không xác định",
     "category": "Eyelid Disorders",
     "requiresLaterality": true
   },
   {
     "code": "H02.002",
     "descriptionEn": "Unspecified entropion of left eyelid",
-    "descriptionVi": "Quam mi mat trai khong xac dinh",
+    "descriptionVi": "Quặm mi mắt trái không xác định",
     "category": "Eyelid Disorders",
     "requiresLaterality": true
   },
   {
     "code": "H02.003",
     "descriptionEn": "Unspecified entropion of bilateral eyelids",
-    "descriptionVi": "Quam mi hai mat khong xac dinh",
+    "descriptionVi": "Quặm mi hai mắt không xác định",
     "category": "Eyelid Disorders",
     "requiresLaterality": true
   },
   {
     "code": "H02.101",
     "descriptionEn": "Unspecified ectropion of right eyelid",
-    "descriptionVi": "Lo mi mat phai khong xac dinh",
+    "descriptionVi": "Lộ mi mắt phải không xác định",
     "category": "Eyelid Disorders",
     "requiresLaterality": true
   },
   {
     "code": "H02.102",
     "descriptionEn": "Unspecified ectropion of left eyelid",
-    "descriptionVi": "Lo mi mat trai khong xac dinh",
+    "descriptionVi": "Lộ mi mắt trái không xác định",
     "category": "Eyelid Disorders",
     "requiresLaterality": true
   },
   {
     "code": "H02.103",
     "descriptionEn": "Unspecified ectropion of bilateral eyelids",
-    "descriptionVi": "Lo mi hai mat khong xac dinh",
+    "descriptionVi": "Lộ mi hai mắt không xác định",
     "category": "Eyelid Disorders",
     "requiresLaterality": true
   }
