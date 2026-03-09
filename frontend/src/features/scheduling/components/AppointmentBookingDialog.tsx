@@ -107,7 +107,7 @@ export function AppointmentBookingDialog({
       appointmentTypeId: "",
       startDate: defaultStartTime ?? undefined,
       startTime: defaultStartTime
-        ? `${String(defaultStartTime.getHours()).padStart(2, "0")}:${String(defaultStartTime.getMinutes()).padStart(2, "0")}`
+        ? `${String(defaultStartTime.getUTCHours()).padStart(2, "0")}:${String(defaultStartTime.getUTCMinutes()).padStart(2, "0")}`
         : "",
       notes: "",
     },
@@ -126,7 +126,7 @@ export function AppointmentBookingDialog({
         appointmentTypeId: "",
         startDate: defaultStartTime ?? undefined,
         startTime: defaultStartTime
-          ? `${String(defaultStartTime.getHours()).padStart(2, "0")}:${String(defaultStartTime.getMinutes()).padStart(2, "0")}`
+          ? `${String(defaultStartTime.getUTCHours()).padStart(2, "0")}:${String(defaultStartTime.getUTCMinutes()).padStart(2, "0")}`
           : "",
         notes: "",
       })
@@ -166,9 +166,9 @@ export function AppointmentBookingDialog({
         },
         onError: (error) => {
           if (error.message === "DOUBLE_BOOKING") {
-            toast.error(t("slotAlreadyBooked"))
+            setNonFieldError(t("slotAlreadyBooked"))
           } else if (error.message === "VALIDATION_ERROR") {
-            toast.error(t("outsideClinicHours"))
+            setNonFieldError(t("outsideClinicHours"))
           } else {
             const nonFieldErrors = handleServerValidationError(error, form.setError)
             if (nonFieldErrors.length > 0) {
