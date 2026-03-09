@@ -3,6 +3,7 @@ import FullCalendar from "@fullcalendar/react"
 import timeGridPlugin from "@fullcalendar/timegrid"
 import dayGridPlugin from "@fullcalendar/daygrid"
 import interactionPlugin from "@fullcalendar/interaction"
+import momentTimezonePlugin from "@fullcalendar/moment-timezone"
 import type { EventClickArg, DateSelectArg, EventDropArg } from "@fullcalendar/core"
 import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
@@ -74,7 +75,7 @@ export function AppointmentCalendar({
     <div className="appointment-calendar">
       <FullCalendar
         ref={calendarRef}
-        plugins={[timeGridPlugin, dayGridPlugin, interactionPlugin]}
+        plugins={[timeGridPlugin, dayGridPlugin, interactionPlugin, momentTimezonePlugin]}
         initialView="timeGridWeek"
         headerToolbar={{
           left: "prev,next today",
