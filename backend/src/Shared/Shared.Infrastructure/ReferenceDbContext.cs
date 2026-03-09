@@ -62,6 +62,8 @@ public class ReferenceDbContext : DbContext
                 .HasDatabaseName("IX_Icd10Codes_DescriptionEn");
         });
 
+        modelBuilder.ApplySharedConventions();
+
         base.OnModelCreating(modelBuilder);
     }
 }

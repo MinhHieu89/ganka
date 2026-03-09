@@ -1,5 +1,6 @@
 using Billing.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Shared.Infrastructure;
 
 namespace Billing.Infrastructure;
 
@@ -27,17 +28,7 @@ public class BillingDbContext : DbContext
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(BillingDbContext).Assembly);
 
-        // All domain entities generate their own Guid IDs in the constructor (client-side).
-        // Override EF Core's default ValueGeneratedOnAdd to prevent it from treating
-        // new entities with set IDs as existing (Modified) instead of new (Added).
-        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-        {
-            var idProperty = entityType.FindProperty("Id");
-            if (idProperty is not null && idProperty.ClrType == typeof(Guid))
-            {
-                idProperty.ValueGenerated = Microsoft.EntityFrameworkCore.Metadata.ValueGenerated.Never;
-            }
-        }
+        modelBuilder.ApplySharedConventions();
 
         base.OnModelCreating(modelBuilder);
     }

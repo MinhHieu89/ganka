@@ -1,5 +1,6 @@
 using Auth.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Shared.Infrastructure;
 
 namespace Auth.Infrastructure;
 
@@ -28,17 +29,7 @@ public class AuthDbContext : DbContext
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AuthDbContext).Assembly);
 
-        // All domain entities generate their own Guid IDs in the constructor (client-side).
-        // Override EF Core's default ValueGeneratedOnAdd to prevent it from treating
-        // new entities with set IDs as existing (Modified) instead of new (Added).
-        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-        {
-            var idProperty = entityType.FindProperty("Id");
-            if (idProperty is not null && idProperty.ClrType == typeof(Guid))
-            {
-                idProperty.ValueGenerated = Microsoft.EntityFrameworkCore.Metadata.ValueGenerated.Never;
-            }
-        }
+        modelBuilder.ApplySharedConventions();
 
         // Global query filter: soft delete on User
         modelBuilder.Entity<User>().HasQueryFilter(u => !u.IsDeleted);

@@ -15,15 +15,15 @@ public class GetAppointmentsByPatientHandlerTests
 {
     private readonly IAppointmentRepository _appointmentRepository = Substitute.For<IAppointmentRepository>();
 
-    private static Appointment CreateAppointment(Guid appointmentTypeId)
+    private static Appointment CreateAppointment(Guid appointmentTypeId, DateTimeKind kind = DateTimeKind.Utc)
     {
         return Appointment.Create(
             patientId: Guid.NewGuid(),
             patientName: "Test Patient",
             doctorId: Guid.NewGuid(),
             doctorName: "Dr. Test",
-            startTime: new DateTime(2026, 3, 10, 9, 0, 0, DateTimeKind.Utc),
-            endTime: new DateTime(2026, 3, 10, 9, 30, 0, DateTimeKind.Utc),
+            startTime: new DateTime(2026, 3, 10, 9, 0, 0, kind),
+            endTime: new DateTime(2026, 3, 10, 9, 30, 0, kind),
             appointmentTypeId: appointmentTypeId,
             branchId: new Shared.Domain.BranchId(Guid.NewGuid()),
             notes: "Test note");
@@ -76,5 +76,30 @@ public class GetAppointmentsByPatientHandlerTests
         result.Should().HaveCount(1);
         result[0].AppointmentTypeName.Should().Be("Unknown");
         result[0].AppointmentTypeNameVi.Should().Be("Unknown");
+    }
+
+    [Fact]
+    public async Task Handle_ReturnsUtcDateTimeKind_ForStartTimeAndEndTime()
+    {
+        // Arrange - simulate EF Core returning DateTimeKind.Unspecified (its default behavior)
+        var patientId = Guid.NewGuid();
+        var query = new GetAppointmentsByPatientQuery(patientId);
+
+        var appointmentType = new AppointmentType(Guid.NewGuid(), "New Patient", "Benh nhan moi", 45, "#3b82f6");
+        var appointment = CreateAppointment(appointmentType.Id, DateTimeKind.Unspecified);
+
+        _appointmentRepository.GetByPatientAsync(patientId, Arg.Any<CancellationToken>())
+            .Returns(new List<Appointment> { appointment });
+
+        _appointmentRepository.GetAllAppointmentTypesAsync(Arg.Any<CancellationToken>())
+            .Returns(new List<AppointmentType> { appointmentType });
+
+        // Act
+        var result = await GetAppointmentsByPatientHandler.Handle(query, _appointmentRepository, CancellationToken.None);
+
+        // Assert - DTO must have DateTimeKind.Utc so JSON serializer adds 'Z' suffix
+        result.Should().HaveCount(1);
+        result[0].StartTime.Kind.Should().Be(DateTimeKind.Utc);
+        result[0].EndTime.Kind.Should().Be(DateTimeKind.Utc);
     }
 }
