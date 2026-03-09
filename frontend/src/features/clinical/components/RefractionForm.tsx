@@ -84,8 +84,13 @@ const IOP_METHODS = [
   { value: "4", label: "other" },
 ]
 
-function toFormValue(v: number | null | undefined): string {
+const VA_FIELDS = new Set(["ucvaOd", "ucvaOs", "bcvaOd", "bcvaOs"])
+
+function toFormValue(v: number | null | undefined, fieldKey?: string): string {
   if (v === null || v === undefined) return ""
+  if (fieldKey && VA_FIELDS.has(fieldKey)) {
+    return v.toFixed(2)
+  }
   return String(v)
 }
 
@@ -128,11 +133,11 @@ function NumberInput({
   const formValue = form.watch(name as keyof RefractionFormValues) as number | null | undefined
   const fieldError = form.formState.errors[name as keyof RefractionFormValues]
 
-  const [localValue, setLocalValue] = useState<string>(toFormValue(formValue))
+  const [localValue, setLocalValue] = useState<string>(toFormValue(formValue, name))
 
   // Sync local state when form value changes externally (e.g., after save/reload/reset)
   useEffect(() => {
-    const formStr = toFormValue(formValue)
+    const formStr = toFormValue(formValue, name)
     // Only update local state if the form value differs from what local state would produce
     // This avoids overwriting in-progress typing (e.g., "1." would become "1")
     const localAsNumber = localValue === "" ? null : Number(localValue)
@@ -168,7 +173,7 @@ function NumberInput({
             const numVal = localValue === "" ? null : Number(localValue)
             if (localValue !== "" && isNaN(numVal as number)) {
               // Invalid input — revert to form value
-              setLocalValue(toFormValue(formValue))
+              setLocalValue(toFormValue(formValue, name))
             } else {
               form.setValue(name as keyof RefractionFormValues, numVal as any)
             }

@@ -7,6 +7,7 @@ import { Button } from "@/shared/components/Button"
 import {
   useAddDiagnosis,
   useRemoveDiagnosis,
+  useSetPrimaryDiagnosis,
   type VisitDiagnosisDto,
   type Icd10SearchResultDto,
 } from "../api/clinical-api"
@@ -37,6 +38,7 @@ export function DiagnosisSection({
   const { t, i18n } = useTranslation("clinical")
   const addDiagnosisMutation = useAddDiagnosis()
   const removeDiagnosisMutation = useRemoveDiagnosis()
+  const setPrimaryMutation = useSetPrimaryDiagnosis()
 
   const sortedDiagnoses = [...diagnoses].sort((a, b) => a.sortOrder - b.sortOrder)
 
@@ -87,15 +89,19 @@ export function DiagnosisSection({
 
   const handleSetPrimary = useCallback(
     (diagnosisId: string) => {
-      // Remove and re-add with role=0 (Primary) and sortOrder=0
-      // For simplicity, we mark this diagnosis as primary by removing all and re-adding
-      // Actually, let's just use the remove + add approach to change role
-      // Since the backend doesn't have a "set primary" endpoint, we'll just note this visually
-      // The backend determines primary by role field -- for now this is informational
-      // In a real implementation, we'd need an update-diagnosis-role endpoint
-      void diagnosisId
+      setPrimaryMutation.mutate(
+        { visitId, diagnosisId },
+        {
+          onSuccess: () => {
+            toast.success(t("visit.setPrimarySuccess"))
+          },
+          onError: () => {
+            toast.error(t("visit.setPrimaryFailed"))
+          },
+        },
+      )
     },
-    [],
+    [visitId, setPrimaryMutation, t],
   )
 
   const getDescription = (d: VisitDiagnosisDto) =>

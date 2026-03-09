@@ -461,6 +461,21 @@ async function removeVisitDiagnosis(
   }
 }
 
+async function setPrimaryDiagnosis(
+  visitId: string,
+  diagnosisId: string,
+): Promise<void> {
+  const { error, response } = await api.PUT(
+    `/api/clinical/${visitId}/diagnoses/${diagnosisId}/set-primary` as never,
+    {} as never,
+  )
+  if (error || !response.ok) {
+    const err = error as Record<string, unknown> | undefined
+    if (err?.errors) throw new Error(JSON.stringify(err))
+    throw new Error("Failed to set primary diagnosis")
+  }
+}
+
 async function searchIcd10Codes(
   term: string,
 ): Promise<Icd10SearchResultDto[]> {
@@ -681,6 +696,24 @@ export function useRemoveDiagnosis() {
       visitId: string
       diagnosisId: string
     }) => removeVisitDiagnosis(visitId, diagnosisId),
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: clinicalKeys.visit(variables.visitId),
+      })
+    },
+  })
+}
+
+export function useSetPrimaryDiagnosis() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({
+      visitId,
+      diagnosisId,
+    }: {
+      visitId: string
+      diagnosisId: string
+    }) => setPrimaryDiagnosis(visitId, diagnosisId),
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({
         queryKey: clinicalKeys.visit(variables.visitId),

@@ -62,7 +62,9 @@
     "amendmentField": "Trường",
     "amendmentOld": "Giá trị cũ",
     "amendmentNew": "Giá trị mới",
-    "setPrimary": "Đặt làm chính"
+    "setPrimary": "Đặt làm chính",
+    "setPrimarySuccess": "Đã đặt chẩn đoán chính",
+    "setPrimaryFailed": "Không thể đặt chẩn đoán chính"
   },
   "refraction": {
     "manifest": "Thường quy",

@@ -62,7 +62,9 @@
     "amendmentField": "Field",
     "amendmentOld": "Old Value",
     "amendmentNew": "New Value",
-    "setPrimary": "Set as Primary"
+    "setPrimary": "Set as Primary",
+    "setPrimarySuccess": "Diagnosis set as primary",
+    "setPrimaryFailed": "Failed to set primary diagnosis"
   },
   "refraction": {
     "manifest": "Manifest",
