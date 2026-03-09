@@ -22,6 +22,7 @@ interface AppointmentInfo {
   patientName: string
   doctorName: string
   appointmentTypeName: string
+  appointmentTypeNameVi: string
   status: number
   notes?: string | null
   start: Date
@@ -52,6 +53,7 @@ function AppointmentsPage() {
       patientName: ext.patientName as string,
       doctorName: ext.doctorName as string,
       appointmentTypeName: ext.appointmentTypeName as string,
+      appointmentTypeNameVi: ext.appointmentTypeNameVi as string,
       status: ext.status as number,
       notes: ext.notes as string | null,
       start: info.event.start!,

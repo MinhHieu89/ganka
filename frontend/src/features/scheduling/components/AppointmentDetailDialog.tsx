@@ -32,6 +32,7 @@ interface AppointmentInfo {
   patientName: string
   doctorName: string
   appointmentTypeName: string
+  appointmentTypeNameVi: string
   status: number
   notes?: string | null
   start: Date
@@ -156,7 +157,7 @@ export function AppointmentDetailDialog({
             <span className="font-medium">{appointment.doctorName}</span>
 
             <span className="text-muted-foreground">{t("appointmentType")}:</span>
-            <span>{appointment.appointmentTypeName}</span>
+            <span>{i18n.language === "vi" ? appointment.appointmentTypeNameVi : appointment.appointmentTypeName}</span>
 
             <span className="text-muted-foreground">{t("date")}:</span>
             <span>{format(appointment.start, "EEEE, dd/MM/yyyy", { locale })}</span>

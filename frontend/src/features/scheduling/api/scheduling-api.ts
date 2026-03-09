@@ -13,6 +13,7 @@ export interface AppointmentDto {
   endTime: string
   appointmentTypeId: string
   appointmentTypeName: string
+  appointmentTypeNameVi: string
   status: number
   color: string
   notes?: string | null

@@ -175,7 +175,7 @@ export function BookingForm({ onSubmit, isSubmitting, error }: BookingFormProps)
           render={({ field }) => (
             <Select value={field.value} onValueChange={field.onChange}>
               <SelectTrigger>
-                <SelectValue placeholder={t("appointmentType")} />
+                <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 {(appointmentTypes ?? []).map((type: PublicAppointmentTypeDto) => (
@@ -209,6 +209,7 @@ export function BookingForm({ onSubmit, isSubmitting, error }: BookingFormProps)
             <DatePicker
               value={field.value}
               onChange={field.onChange}
+              placeholder=""
               className="w-full"
             />
           )}
@@ -227,7 +228,7 @@ export function BookingForm({ onSubmit, isSubmitting, error }: BookingFormProps)
           render={({ field }) => (
             <Select value={field.value} onValueChange={field.onChange}>
               <SelectTrigger>
-                <SelectValue placeholder={t("selfBooking.preferredTime")} />
+                <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="morning">

@@ -68,6 +68,7 @@ function appointmentToEvent(apt: AppointmentDto): EventInput {
       doctorName: apt.doctorName,
       appointmentTypeId: apt.appointmentTypeId,
       appointmentTypeName: apt.appointmentTypeName,
+      appointmentTypeNameVi: apt.appointmentTypeNameVi,
       status: apt.status,
       notes: apt.notes,
       color: apt.color,

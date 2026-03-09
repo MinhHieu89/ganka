@@ -72,7 +72,7 @@ export function AppointmentBookingDialog({
   defaultDoctorId,
   defaultStartTime,
 }: AppointmentBookingDialogProps) {
-  const { t } = useTranslation("scheduling")
+  const { t, i18n } = useTranslation("scheduling")
   const { t: tCommon } = useTranslation("common")
 
   const bookAppointment = useBookAppointment()
@@ -306,7 +306,7 @@ export function AppointmentBookingDialog({
                             className="inline-block h-2.5 w-2.5 shrink-0"
                             style={{ backgroundColor: type.color }}
                           />
-                          {type.nameVi} ({type.defaultDurationMinutes} {t("minutes")})
+                          {i18n.language === "vi" ? type.nameVi : type.name} ({type.defaultDurationMinutes} {t("minutes")})
                         </span>
                       </SelectItem>
                     ))}
