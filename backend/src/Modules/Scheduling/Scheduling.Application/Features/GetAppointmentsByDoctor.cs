@@ -38,6 +38,7 @@ public static class GetAppointmentsByDoctorHandler
                 a.EndTime,
                 a.AppointmentTypeId,
                 appointmentType?.Name ?? "Unknown",
+                appointmentType?.NameVi ?? "Unknown",
                 (int)a.Status,
                 appointmentType?.Color ?? "#6b7280",
                 a.Notes);

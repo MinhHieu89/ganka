@@ -13,6 +13,7 @@ public record AppointmentDto(
     DateTime EndTime,
     Guid AppointmentTypeId,
     string AppointmentTypeName,
+    string AppointmentTypeNameVi,
     int Status,
     string Color,
     string? Notes);
