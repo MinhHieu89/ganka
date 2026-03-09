@@ -3,14 +3,29 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 03-13-PLAN.md
-last_updated: "2026-03-09T08:24:18.910Z"
+stopped_at: Completed 03-14-PLAN.md
+last_updated: "2026-03-09T09:03:56.610Z"
 last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
+progress:
+  total_phases: 14
+  completed_phases: 11
+  total_plans: 229
+  completed_plans: 226
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: in-progress
+stopped_at: Completed 03-14-PLAN.md
+last_updated: "2026-03-09T09:02:21Z"
+last_activity: 2026-03-09 -- Completed 03-14 Refraction Form Decimal Input Fix and Validation Localization
 progress:
   total_phases: 14
   completed_phases: 12
   total_plans: 227
-  completed_plans: 225
+  completed_plans: 226
 ---
 
 ---
@@ -677,6 +692,7 @@ Progress: [█████████░] 96%
 | Phase 03 P11 | 3min | 2 tasks | 3 files |
 | Phase 03 P12 | 4min | 2 tasks | 2 files |
 | Phase 03 P13 | 6min | 2 tasks | 8 files |
+| Phase 03 P14 | 5min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -1116,6 +1132,8 @@ Recent decisions affecting current work:
 - [Phase 03]: Used component-local refractionFieldMap to strip .Value suffix instead of modifying shared server-validation utility
 - [Phase 03]: Used EF Core Entry().Property().CurrentValue for updating private-setter entities in ICD-10 seeder upsert
 - [Phase 03]: Compute amendment diff at re-sign time by comparing stored baseline to current state
+- [Phase 03]: Extracted NumberInput as standalone React component for decimal-safe input with local string state
+- [Phase 03]: Used type=text with inputMode=decimal and SERVER_MSG_TO_I18N mapping for validation localization
 
 ### Roadmap Evolution
 
@@ -1138,6 +1156,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-09T08:18:51.787Z
-Stopped at: Completed 03-13-PLAN.md
+Last session: 2026-03-09T09:03:50.760Z
+Stopped at: Completed 03-14-PLAN.md
 Resume file: None
