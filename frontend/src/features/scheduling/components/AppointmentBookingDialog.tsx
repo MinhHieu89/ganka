@@ -107,7 +107,7 @@ export function AppointmentBookingDialog({
       appointmentTypeId: "",
       startDate: defaultStartTime ?? undefined,
       startTime: defaultStartTime
-        ? `${String(defaultStartTime.getUTCHours()).padStart(2, "0")}:${String(defaultStartTime.getUTCMinutes()).padStart(2, "0")}`
+        ? `${String(defaultStartTime.getHours()).padStart(2, "0")}:${String(defaultStartTime.getMinutes()).padStart(2, "0")}`
         : "",
       notes: "",
     },
@@ -126,7 +126,7 @@ export function AppointmentBookingDialog({
         appointmentTypeId: "",
         startDate: defaultStartTime ?? undefined,
         startTime: defaultStartTime
-          ? `${String(defaultStartTime.getUTCHours()).padStart(2, "0")}:${String(defaultStartTime.getUTCMinutes()).padStart(2, "0")}`
+          ? `${String(defaultStartTime.getHours()).padStart(2, "0")}:${String(defaultStartTime.getMinutes()).padStart(2, "0")}`
           : "",
         notes: "",
       })
