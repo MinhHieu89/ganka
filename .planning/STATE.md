@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 03-11-PLAN.md
-last_updated: "2026-03-09T08:15:34.285Z"
+stopped_at: Completed 03-12-PLAN.md
+last_updated: "2026-03-09T08:15:55.975Z"
 last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
 progress:
   total_phases: 14
@@ -675,6 +675,7 @@ Progress: [█████████░] 96%
 | Phase 09 P29 | 3min | 1 tasks | 1 files |
 | Phase 02 P15 | 2min | 2 tasks | 3 files |
 | Phase 03 P11 | 3min | 2 tasks | 3 files |
+| Phase 03 P12 | 4min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -1112,6 +1113,7 @@ Recent decisions affecting current work:
 - [Phase 02]: AppointmentDto extended with AppointmentTypeNameVi field (data-driven i18n, not translation keys)
 - [Phase 03]: Removed empty state message entirely for Kanban; 5 empty columns already communicate no patients
 - [Phase 03]: Used component-local refractionFieldMap to strip .Value suffix instead of modifying shared server-validation utility
+- [Phase 03]: Used EF Core Entry().Property().CurrentValue for updating private-setter entities in ICD-10 seeder upsert
 
 ### Roadmap Evolution
 
@@ -1134,6 +1136,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-09T08:15:34.280Z
-Stopped at: Completed 03-11-PLAN.md
+Last session: 2026-03-09T08:15:55.970Z
+Stopped at: Completed 03-12-PLAN.md
 Resume file: None
