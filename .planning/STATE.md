@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 03-14-PLAN.md
-last_updated: "2026-03-09T09:03:56.610Z"
+stopped_at: Completed 03-15-PLAN.md
+last_updated: "2026-03-09T09:11:21.948Z"
 last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
 progress:
   total_phases: 14
-  completed_phases: 11
+  completed_phases: 12
   total_plans: 229
-  completed_plans: 226
+  completed_plans: 227
 ---
 
 ---
@@ -693,6 +693,7 @@ Progress: [█████████░] 96%
 | Phase 03 P12 | 4min | 2 tasks | 2 files |
 | Phase 03 P13 | 6min | 2 tasks | 8 files |
 | Phase 03 P14 | 5min | 2 tasks | 3 files |
+| Phase 03 P15 | 13min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -1134,6 +1135,8 @@ Recent decisions affecting current work:
 - [Phase 03]: Compute amendment diff at re-sign time by comparing stored baseline to current state
 - [Phase 03]: Extracted NumberInput as standalone React component for decimal-safe input with local string state
 - [Phase 03]: Used type=text with inputMode=decimal and SERVER_MSG_TO_I18N mapping for validation localization
+- [Phase 03]: Used EF.Functions.Collate with Latin1_General_CI_AI for accent-insensitive ICD-10 Vietnamese search
+- [Phase 03]: Refraction field labels use universal medical abbreviations (OD SPH, CYL) as constants, not i18n
 
 ### Roadmap Evolution
 
@@ -1156,6 +1159,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-09T09:03:50.760Z
-Stopped at: Completed 03-14-PLAN.md
+Last session: 2026-03-09T09:11:21.943Z
+Stopped at: Completed 03-15-PLAN.md
 Resume file: None
