@@ -27,8 +27,9 @@ public class ReferenceDataRepositoryTests : IDisposable
         _connection = new SqliteConnection("DataSource=:memory:");
         _connection.Open();
 
-        // Register Vietnamese_CI_AI collation as case-insensitive + accent-insensitive comparison
-        _connection.CreateCollation("Vietnamese_CI_AI", (x, y) =>
+        // Register Latin1_General_CI_AI collation as case-insensitive + accent-insensitive comparison
+        // Latin1 treats all diacritics (including Vietnamese ê, ô, ă, ơ, ư) as base letters
+        _connection.CreateCollation("Latin1_General_CI_AI", (x, y) =>
         {
             var xNormalized = RemoveDiacritics(x ?? "");
             var yNormalized = RemoveDiacritics(y ?? "");

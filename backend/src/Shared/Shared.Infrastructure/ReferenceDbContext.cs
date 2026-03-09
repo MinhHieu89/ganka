@@ -41,7 +41,7 @@ public class ReferenceDbContext : DbContext
             builder.Property(c => c.DescriptionVi)
                 .HasMaxLength(500)
                 .IsRequired()
-                .UseCollation("Vietnamese_CI_AI");
+                .UseCollation("Latin1_General_CI_AI");
 
             builder.Property(c => c.Category)
                 .HasMaxLength(100)
