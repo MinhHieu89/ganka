@@ -23,7 +23,7 @@ public class ReferenceDataRepository : IReferenceDataRepository
             .Where(c =>
                 c.Code.Contains(term) ||
                 c.DescriptionEn.Contains(term) ||
-                c.DescriptionVi.Contains(term))
+                EF.Functions.Collate(c.DescriptionVi, "Latin1_General_CI_AI").Contains(term))
             .OrderBy(c => c.Code)
             .Take(limit)
             .ToListAsync(ct);
