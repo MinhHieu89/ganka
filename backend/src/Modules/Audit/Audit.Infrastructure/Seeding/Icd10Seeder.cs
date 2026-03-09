@@ -12,7 +12,7 @@ namespace Audit.Infrastructure.Seeding;
 /// <summary>
 /// Hosted service that seeds ICD-10 ophthalmology codes on startup.
 /// Loads codes from the embedded icd10-ophthalmology.json resource file.
-/// Idempotent: only inserts codes that don't already exist.
+/// Idempotent: inserts new codes and updates existing ones with changed descriptions.
 /// </summary>
 public sealed class Icd10Seeder : IHostedService
 {
@@ -35,35 +35,73 @@ public sealed class Icd10Seeder : IHostedService
             // Ensure the reference schema and table exist
             await dbContext.Database.EnsureCreatedAsync(cancellationToken);
 
-            var existingCodes = await dbContext.Icd10Codes
-                .Select(c => c.Code)
-                .ToHashSetAsync(cancellationToken);
+            var existingEntities = await dbContext.Icd10Codes
+                .ToDictionaryAsync(c => c.Code, cancellationToken);
 
             var seedData = await LoadSeedDataAsync(cancellationToken);
-            var newCodes = seedData
-                .Where(s => !existingCodes.Contains(s.Code))
-                .Select(s => Icd10Code.Create(
-                    s.Code,
-                    s.DescriptionEn,
-                    s.DescriptionVi,
-                    s.Category,
-                    s.RequiresLaterality))
-                .ToList();
 
-            if (newCodes.Count > 0)
+            var newCount = 0;
+            var updatedCount = 0;
+
+            foreach (var seed in seedData)
             {
-                dbContext.Icd10Codes.AddRange(newCodes);
+                if (existingEntities.TryGetValue(seed.Code, out var existing))
+                {
+                    // Update existing entity if descriptions have changed
+                    if (existing.DescriptionEn != seed.DescriptionEn ||
+                        existing.DescriptionVi != seed.DescriptionVi)
+                    {
+                        dbContext.Entry(existing).Property(e => e.DescriptionEn).CurrentValue = seed.DescriptionEn;
+                        dbContext.Entry(existing).Property(e => e.DescriptionVi).CurrentValue = seed.DescriptionVi;
+                        updatedCount++;
+                    }
+                }
+                else
+                {
+                    // Insert new code
+                    var newCode = Icd10Code.Create(
+                        seed.Code,
+                        seed.DescriptionEn,
+                        seed.DescriptionVi,
+                        seed.Category,
+                        seed.RequiresLaterality);
+                    dbContext.Icd10Codes.Add(newCode);
+                    newCount++;
+                }
+            }
+
+            if (newCount > 0 || updatedCount > 0)
+            {
                 await dbContext.SaveChangesAsync(cancellationToken);
-                _logger.LogInformation(
-                    "Seeded {Count} ICD-10 ophthalmology codes ({Total} total in database)",
-                    newCodes.Count,
-                    existingCodes.Count + newCodes.Count);
+
+                if (newCount > 0 && updatedCount > 0)
+                {
+                    _logger.LogInformation(
+                        "Seeded {NewCount} new and updated {UpdatedCount} existing ICD-10 codes ({Total} total)",
+                        newCount,
+                        updatedCount,
+                        existingEntities.Count + newCount);
+                }
+                else if (newCount > 0)
+                {
+                    _logger.LogInformation(
+                        "Seeded {NewCount} ICD-10 ophthalmology codes ({Total} total in database)",
+                        newCount,
+                        existingEntities.Count + newCount);
+                }
+                else
+                {
+                    _logger.LogInformation(
+                        "Updated {UpdatedCount} ICD-10 codes ({Total} total in database)",
+                        updatedCount,
+                        existingEntities.Count);
+                }
             }
             else
             {
                 _logger.LogInformation(
                     "ICD-10 codes already seeded ({Count} codes in database)",
-                    existingCodes.Count);
+                    existingEntities.Count);
             }
         }
         catch (Exception ex)
