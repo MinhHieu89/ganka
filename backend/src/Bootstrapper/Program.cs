@@ -199,6 +199,9 @@ builder.Services.AddRateLimiter(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
+    // Use full type name to avoid schema-id collisions (e.g. Domain vs Contracts enums)
+    options.CustomSchemaIds(type => type.FullName);
+
     options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
     {
         Title = "Ganka28 API",

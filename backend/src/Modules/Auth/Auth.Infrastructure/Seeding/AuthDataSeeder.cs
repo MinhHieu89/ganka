@@ -1,6 +1,6 @@
+using Auth.Application.Interfaces;
 using Auth.Domain.Entities;
 using Auth.Domain.Enums;
-using Auth.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -186,7 +186,7 @@ public sealed class AuthDataSeeder : IHostedService
             return;
         }
 
-        var passwordHasher = sp.GetRequiredService<PasswordHasher>();
+        var passwordHasher = sp.GetRequiredService<IPasswordHasher>();
         var branchId = new BranchId(Guid.Parse("00000000-0000-0000-0000-000000000001"));
 
         var passwordHash = passwordHasher.HashPassword(adminPassword);
