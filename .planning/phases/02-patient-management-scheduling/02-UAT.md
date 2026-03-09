@@ -1,9 +1,9 @@
 ---
-status: complete
+status: resolved
 phase: 02-patient-management-scheduling
 source: 02-01-SUMMARY.md, 02-02-SUMMARY.md, 02-03-SUMMARY.md, 02-04-SUMMARY.md, 02-05-SUMMARY.md, 02-06-SUMMARY.md, 02-07-SUMMARY.md, 02-08-SUMMARY.md, 02-09-SUMMARY.md, 02-10-SUMMARY.md, 02-11-SUMMARY.md, 02-12-SUMMARY.md, 02-13-SUMMARY.md, 02-14-SUMMARY.md
 started: 2026-03-09T10:00:00Z
-updated: 2026-03-09T10:35:00Z
+updated: 2026-03-09T12:00:00Z
 ---
 
 ## Current Test
@@ -97,29 +97,62 @@ skipped: 0
 ## Gaps
 
 - truth: "Clicking a time slot pre-populates the form time, validation errors show in-form not toast, and saved appointments display correctly on the calendar at local timezone"
-  status: failed
+  status: resolved
   reason: "User reported: when click on 13:00 slot, the time in the form should show 13:00 by default. when select the time outside of working hour and click submit, it showing error in toast. I want to show error in the top of the form. When I submit an appointment at 13:00, it saved successfully but does not show in the calendar. I suspect when displaying it using UTC+0 timezone, but not local timezone, so it hide under non-working hour."
   severity: blocker
   test: 10
-  root_cause: ""
-  artifacts: []
-  missing: []
-  debug_session: ""
+  root_cause: "1) FullCalendar uses UTC-coercion (timeZone='Asia/Ho_Chi_Minh' without timezone plugin). Slot click Date has UTC values representing wall-clock time, but AppointmentBookingDialog extracts via getHours()/getMinutes() (local-time) instead of getUTCHours()/getUTCMinutes(). 2) onError handler routes DOUBLE_BOOKING and VALIDATION_ERROR to toast.error() instead of setNonFieldError(). 3) Appointments fetched as UTC ISO strings — FullCalendar strips Z offset under UTC-coercion, placing 13:00 Vietnam time at 06:00 (before slotMinTime), hiding it."
+  artifacts:
+    - path: "frontend/src/features/scheduling/components/AppointmentBookingDialog.tsx"
+      issue: "Lines 109-111, 128-130: uses getHours()/getMinutes() instead of getUTCHours()/getUTCMinutes()"
+    - path: "frontend/src/features/scheduling/components/AppointmentBookingDialog.tsx"
+      issue: "Lines 168-172: DOUBLE_BOOKING and VALIDATION_ERROR routed to toast.error() instead of setNonFieldError()"
+    - path: "frontend/src/features/scheduling/hooks/useAppointments.ts"
+      issue: "Lines 57-58: passes raw UTC ISO strings to FullCalendar which strips Z offset under UTC-coercion"
+    - path: "frontend/src/features/scheduling/components/AppointmentCalendar.tsx"
+      issue: "Line 99: timeZone='Asia/Ho_Chi_Minh' without @fullcalendar/moment-timezone plugin"
+  missing:
+    - "Install @fullcalendar/moment-timezone and moment-timezone, register plugin in AppointmentCalendar"
+    - "Or: use getUTCHours()/getUTCMinutes() in AppointmentBookingDialog and convert UTC ISO to wall-clock strings in useAppointments"
+    - "Replace toast.error() with setNonFieldError() for DOUBLE_BOOKING and VALIDATION_ERROR"
+  debug_session: ".planning/debug/uat10-calendar-booking-issues.md"
 - truth: "Appointment detail dialog shows appointment type in user's selected language, and double-booking error shows in-form not toast"
-  status: failed
+  status: resolved
   reason: "User reported: detail dialog show info, but appointment type is showing in English, but not Vietnamese although user is using Vietnamese. Attempting to book overlapping appointment for same doctor showing error in toast, but I want to show in the top of the form. This should be a pattern accrossing the app."
   severity: major
   test: 11
-  root_cause: ""
-  artifacts: []
-  missing: []
-  debug_session: ""
+  root_cause: "1) Backend GetAppointmentsByDoctor/ByPatient handlers only map appointmentType?.Name (English), ignoring NameVi. AppointmentDto lacks AppointmentTypeNameVi field. Frontend renders raw string without locale check. 2) Same toast.error() vs setNonFieldError() issue as test 10."
+  artifacts:
+    - path: "backend/src/Modules/Scheduling/Scheduling.Contracts/Dtos/AppointmentDto.cs"
+      issue: "Line 15: only has AppointmentTypeName, no AppointmentTypeNameVi"
+    - path: "backend/src/Modules/Scheduling/Scheduling.Application/Features/GetAppointmentsByDoctor.cs"
+      issue: "Line 40: maps only appointmentType?.Name (English)"
+    - path: "backend/src/Modules/Scheduling/Scheduling.Application/Features/GetAppointmentsByPatient.cs"
+      issue: "Line 38: same English-only mapping"
+    - path: "frontend/src/features/scheduling/components/AppointmentDetailDialog.tsx"
+      issue: "Line 159: renders appointmentTypeName raw without locale selection"
+    - path: "frontend/src/features/scheduling/components/AppointmentBookingDialog.tsx"
+      issue: "Line 309: hardcodes type.nameVi in dropdown — always Vietnamese even in English locale"
+  missing:
+    - "Add AppointmentTypeNameVi to AppointmentDto"
+    - "Map NameVi in GetAppointmentsByDoctor and GetAppointmentsByPatient handlers"
+    - "Frontend: select Name vs NameVi based on i18n.language"
+    - "Fix AppointmentBookingDialog dropdown to use locale-aware type name"
+  debug_session: ".planning/debug/uat11-appt-type-and-double-booking.md"
 - truth: "Form fields with labels do NOT have redundant placeholders"
-  status: failed
+  status: resolved
   reason: "User reported: There are still redundant placeholders in Loại lịch hẹn, Ngày mong muốn, Giờ mong muốn"
   severity: minor
   test: 12
-  root_cause: ""
-  artifacts: []
-  missing: []
-  debug_session: ""
+  root_cause: "BookingForm.tsx line 178: SelectValue has placeholder={t('appointmentType')} duplicating FieldLabel. Line 230: SelectValue has placeholder={t('selfBooking.preferredTime')} duplicating FieldLabel. DatePicker defaults to t('buttons.search') = 'Tìm kiếm' as placeholder when none provided."
+  artifacts:
+    - path: "frontend/src/features/booking/components/BookingForm.tsx"
+      issue: "Line 178: redundant placeholder on appointment type SelectValue"
+    - path: "frontend/src/features/booking/components/BookingForm.tsx"
+      issue: "Line 230: redundant placeholder on preferred time SelectValue"
+    - path: "frontend/src/shared/components/DatePicker.tsx"
+      issue: "Line 40: default fallback placeholder 'Tìm kiếm' shown on booking date picker"
+  missing:
+    - "Remove placeholder prop from SelectValue on lines 178 and 230"
+    - "Pass placeholder='' from BookingForm to DatePicker, or change DatePicker default"
+  debug_session: ".planning/debug/uat12-redundant-placeholders-booking.md"
