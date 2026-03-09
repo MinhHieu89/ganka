@@ -4,6 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
+import { handleServerValidationError } from "@/shared/lib/server-validation"
+import { cn } from "@/shared/lib/utils"
 import { Input } from "@/shared/components/Input"
 import { Label } from "@/shared/components/Label"
 import {
@@ -85,6 +87,28 @@ const IOP_METHODS = [
 function toFormValue(v: number | null | undefined): string {
   if (v === null || v === undefined) return ""
   return String(v)
+}
+
+// Map backend FluentValidation ".Value" suffix keys to plain form field names
+const refractionFieldMap: Record<string, keyof RefractionFormValues> = {
+  "ucvaOd.Value": "ucvaOd",
+  "ucvaOs.Value": "ucvaOs",
+  "bcvaOd.Value": "bcvaOd",
+  "bcvaOs.Value": "bcvaOs",
+  "iopOd.Value": "iopOd",
+  "iopOs.Value": "iopOs",
+  "axialLengthOd.Value": "axialLengthOd",
+  "axialLengthOs.Value": "axialLengthOs",
+  "odSph.Value": "odSph",
+  "odCyl.Value": "odCyl",
+  "odAxis.Value": "odAxis",
+  "odAdd.Value": "odAdd",
+  "odPd.Value": "odPd",
+  "osSph.Value": "osSph",
+  "osCyl.Value": "osCyl",
+  "osAxis.Value": "osAxis",
+  "osAdd.Value": "osAdd",
+  "osPd.Value": "osPd",
 }
 
 interface RefractionFormProps {
@@ -174,8 +198,15 @@ export function RefractionForm({
           onSuccess: () => {
             toast.success(t("visit.refractionSaved"))
           },
-          onError: () => {
-            toast.error(t("refraction.saveFailed"))
+          onError: (error) => {
+            const nonFieldErrors = handleServerValidationError(
+              error,
+              form.setError,
+              refractionFieldMap,
+            )
+            if (nonFieldErrors.length > 0) {
+              toast.error(nonFieldErrors[0])
+            }
           },
         },
       )
@@ -207,26 +238,34 @@ export function RefractionForm({
     field: { min?: number; max?: number; step?: number; unit?: string },
   ) => {
     const value = form.watch(name)
+    const fieldError = form.formState.errors[name]
     return (
-      <div className="flex items-center gap-1">
-        <Input
-          type="number"
-          className="h-8 text-sm tabular-nums"
-          min={field.min}
-          max={field.max}
-          step={field.step}
-          value={toFormValue(value as number | null | undefined)}
-          disabled={disabled}
-          onChange={(e) => {
-            const val = e.target.value
-            form.setValue(name, val === "" ? null : Number(val))
-          }}
-          onBlur={handleBlur}
-        />
-        {field.unit && (
-          <span className="text-xs text-muted-foreground whitespace-nowrap">
-            {field.unit}
-          </span>
+      <div>
+        <div className="flex items-center gap-1">
+          <Input
+            type="number"
+            className={cn("h-8 text-sm tabular-nums", fieldError && "border-destructive")}
+            min={field.min}
+            max={field.max}
+            step={field.step}
+            value={toFormValue(value as number | null | undefined)}
+            disabled={disabled}
+            onChange={(e) => {
+              const val = e.target.value
+              form.setValue(name, val === "" ? null : Number(val))
+              // Clear server error when user starts typing
+              if (fieldError) form.clearErrors(name)
+            }}
+            onBlur={handleBlur}
+          />
+          {field.unit && (
+            <span className="text-xs text-muted-foreground whitespace-nowrap">
+              {field.unit}
+            </span>
+          )}
+        </div>
+        {fieldError && (
+          <p className="text-xs text-destructive mt-0.5">{fieldError.message}</p>
         )}
       </div>
     )
