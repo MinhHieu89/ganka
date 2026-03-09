@@ -128,9 +128,7 @@ export function VisitDetailPage({ visitId }: VisitDetailPageProps) {
 
       <MedicalImagesSection visitId={visitId} patientId={visit.patientId} />
 
-      {visit.amendments.length > 0 && (
-        <VisitAmendmentHistory amendments={visit.amendments} />
-      )}
+      <VisitAmendmentHistory amendments={visit.amendments} />
 
       <SignOffSection visitId={visitId} visit={visit} />
     </div>

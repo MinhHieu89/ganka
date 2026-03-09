@@ -214,40 +214,31 @@ export function WorkflowDashboard() {
         </Button>
       </div>
 
-      {/* Empty state */}
-      {totalPatients === 0 && (
-        <div className="flex items-center justify-center py-16 text-muted-foreground">
-          {t("workflow.noActivePatients")}
+      {/* Kanban board -- always render columns regardless of patient count */}
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCorners}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+      >
+        <div className="flex gap-4 overflow-x-auto p-1">
+          {KANBAN_COLUMNS.map((col) => (
+            <KanbanColumn
+              key={col.id}
+              id={col.id}
+              title={t(col.titleKey)}
+              visits={columnVisits[col.id] ?? []}
+              colorAccent={col.colorAccent}
+              onAdvance={handleAdvance}
+            />
+          ))}
         </div>
-      )}
-
-      {/* Kanban board */}
-      {totalPatients > 0 && (
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCorners}
-          onDragStart={handleDragStart}
-          onDragEnd={handleDragEnd}
-        >
-          <div className="flex gap-4 overflow-x-auto p-1">
-            {KANBAN_COLUMNS.map((col) => (
-              <KanbanColumn
-                key={col.id}
-                id={col.id}
-                title={t(col.titleKey)}
-                visits={columnVisits[col.id] ?? []}
-                colorAccent={col.colorAccent}
-                onAdvance={handleAdvance}
-              />
-            ))}
-          </div>
-          <DragOverlay>
-            {activeCard ? (
-              <PatientCard visit={activeCard} isDragOverlay />
-            ) : null}
-          </DragOverlay>
-        </DndContext>
-      )}
+        <DragOverlay>
+          {activeCard ? (
+            <PatientCard visit={activeCard} isDragOverlay />
+          ) : null}
+        </DragOverlay>
+      </DndContext>
 
       {/* New Visit dialog */}
       <NewVisitDialog
