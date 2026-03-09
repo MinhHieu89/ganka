@@ -13,7 +13,7 @@ This roadmap delivers a complete ophthalmology clinic management system across 9
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [ ] **Phase 1: Foundation & Infrastructure** - Modular monolith skeleton with auth, audit, i18n, and multi-tenant scaffolding
-- [x] **Phase 2: Patient Management & Scheduling** - Patient registration and appointment booking with calendar (completed 2026-03-02)
+- [ ] **Phase 2: Patient Management & Scheduling** - Patient registration and appointment booking with calendar
 - [x] **Phase 3: Clinical Workflow & Examination** - Visit lifecycle, refraction recording, and ICD-10 diagnosis (completed 2026-03-05)
 - [ ] **Phase 4: Dry Eye Template & Medical Imaging** - Structured dry eye assessment and medical image management with comparison
 - [ ] **Phase 5: Prescriptions & Document Printing** - Drug and optical prescription writing with all printable documents
@@ -89,7 +89,7 @@ Plans:
   3. Staff can record allergies on a patient profile, and those allergies are visible as alerts during downstream workflows
   4. Staff can book appointments on a per-doctor calendar with configurable durations, and the system prevents double-booking with a database-level constraint
   5. Patients can self-book via a public-facing page, with staff confirmation required before the appointment is finalized
-**Plans**: 14 plans (6 original + 4 gap closure + 4 UAT gap closure)
+**Plans**: 16 plans (6 original + 4 gap closure + 6 UAT gap closure)
 
 Plans:
 - [x] 02-01-PLAN.md -- Patient module backend: domain entities, EF Core infrastructure, application features, Minimal API endpoints
@@ -106,6 +106,8 @@ Plans:
 - [x] 02-12-PLAN.md -- [UAT GAP] Frontend infra: replace calendar.tsx, fix dialog spacing, 401 interceptor, registration redirect, allergy severity
 - [x] 02-13-PLAN.md -- [UAT GAP] Fix staff booking form (DoctorSelector, pre-populate, slot alignment) and replace allergy autocomplete
 - [x] 02-14-PLAN.md -- [UAT GAP] Reusable server validation UI, patient profile header redesign, full UAT verification
+- [ ] 02-15-PLAN.md -- [UAT GAP] Fix calendar timezone (moment-timezone plugin), slot time pre-populate, validation errors in-form
+- [ ] 02-16-PLAN.md -- [UAT GAP] Backend AppointmentDto i18n (NameVi), locale-aware type display, booking form placeholder cleanup
 
 ### Phase 02.1: I notice some bugs in frontend that I want to resolve (INSERTED)
 
@@ -429,7 +431,7 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 | 1. Foundation & Infrastructure | 6/7 | In Progress | - |
 | 1.1 Backend Restructuring | 5/9 | In Progress | - |
 | 1.2 Frontend shadcn/ui Refactoring | 6/8 | In Progress | - |
-| 2. Patient Management & Scheduling | 14/14 | Complete    | 2026-03-02 |
+| 2. Patient Management & Scheduling | 14/16 | In Progress | - |
 | 2.1 Frontend Bug Fixes + Auth Security | 4/4 | Complete | 2026-03-02 |
 | 3. Clinical Workflow & Examination | 9/10 | In Progress | - |
 | 3.1 Vietnamese User Stories Documentation | 0/3 | Not started | - |
