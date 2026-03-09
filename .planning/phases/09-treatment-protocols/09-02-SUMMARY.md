@@ -65,7 +65,7 @@ Each task was committed atomically:
 1. **Task 1: Create IPL and LLLT parameter value objects** - `5e0ce41` (feat)
 2. **Task 2: Create Lid Care parameter value object** - `b676b57` (feat)
 
-**Plan metadata:** (pending) (docs: complete plan)
+**Plan metadata:** `94677b4` (docs: complete plan)
 
 ## Files Created/Modified
 - `backend/src/Modules/Treatment/Treatment.Domain/ValueObjects/IplParameters.cs` - IPL parameters: energy J/cm2, pulse count, spot size, treatment zones

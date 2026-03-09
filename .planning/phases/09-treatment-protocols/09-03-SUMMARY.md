@@ -69,7 +69,7 @@ Each task was committed atomically:
 1. **Task 1: Create TreatmentProtocol aggregate root** - `c91b92f` (feat)
 2. **Task 2: Create domain events** - `c51246d` (feat)
 
-**Plan metadata:** (pending) (docs: complete plan)
+**Plan metadata:** `e646ba3` (docs: complete plan)
 
 ## Files Created/Modified
 - `backend/src/Modules/Treatment/Treatment.Domain/Entities/TreatmentProtocol.cs` - Aggregate root for treatment protocol templates with factory method, update, activate/deactivate
