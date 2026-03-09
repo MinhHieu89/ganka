@@ -145,6 +145,35 @@ public class Visit : AggregateRoot, IAuditable
     }
 
     /// <summary>
+    /// Sets the specified diagnosis as primary, demoting the current primary to secondary.
+    /// Idempotent: if the target is already primary, no changes are made.
+    /// Requires the visit to be editable.
+    /// </summary>
+    public void SetPrimaryDiagnosis(Guid diagnosisId)
+    {
+        EnsureEditable();
+        var target = _diagnoses.FirstOrDefault(d => d.Id == diagnosisId)
+            ?? throw new InvalidOperationException($"Diagnosis with ID {diagnosisId} not found.");
+        if (target.Role == DiagnosisRole.Primary) return; // already primary
+
+        // Demote current primary to secondary
+        var currentPrimary = _diagnoses.FirstOrDefault(d => d.Role == DiagnosisRole.Primary);
+        currentPrimary?.SetRole(DiagnosisRole.Secondary);
+
+        // Promote target to primary
+        target.SetRole(DiagnosisRole.Primary);
+        target.SetSortOrder(0);
+
+        // Re-sort remaining secondaries
+        var sortOrder = 1;
+        foreach (var d in _diagnoses.Where(d => d.Id != diagnosisId).OrderBy(d => d.SortOrder))
+        {
+            d.SetSortOrder(sortOrder++);
+        }
+        SetUpdatedAt();
+    }
+
+    /// <summary>
     /// Removes a diagnosis from the visit by ID. Requires the visit to be editable.
     /// </summary>
     public void RemoveDiagnosis(Guid diagnosisId)

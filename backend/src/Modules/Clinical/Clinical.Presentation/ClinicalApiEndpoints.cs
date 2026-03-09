@@ -111,6 +111,14 @@ public static class ClinicalApiEndpoints
             var result = await bus.InvokeAsync<Result>(new RemoveVisitDiagnosisCommand(visitId, diagnosisId), ct);
             return result.ToHttpResult();
         });
+
+        group.MapPut("/{visitId:guid}/diagnoses/{diagnosisId:guid}/set-primary",
+            async (Guid visitId, Guid diagnosisId, IMessageBus bus, CancellationToken ct) =>
+        {
+            var result = await bus.InvokeAsync<Result>(
+                new SetPrimaryDiagnosisCommand(visitId, diagnosisId), ct);
+            return result.ToHttpResult();
+        });
     }
 
     private static void MapIcd10Endpoints(RouteGroupBuilder group)

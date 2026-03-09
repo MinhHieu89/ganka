@@ -43,6 +43,13 @@ public record RemoveVisitDiagnosisCommand(
     Guid DiagnosisId);
 
 /// <summary>
+/// Command to set a diagnosis as the primary diagnosis on a visit.
+/// </summary>
+public record SetPrimaryDiagnosisCommand(
+    Guid VisitId,
+    Guid DiagnosisId);
+
+/// <summary>
 /// Command to sign off a visit, making it immutable.
 /// Optionally accepts FieldChangesJson for re-sign after amendment,
 /// containing the actual before/after diff computed at re-sign time.

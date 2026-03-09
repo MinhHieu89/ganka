@@ -20,6 +20,18 @@ public class VisitDiagnosis : Entity
     private VisitDiagnosis() { }
 
     /// <summary>
+    /// Sets the diagnosis role (Primary/Secondary).
+    /// Used by Visit.SetPrimaryDiagnosis to swap roles.
+    /// </summary>
+    public void SetRole(DiagnosisRole role) { Role = role; }
+
+    /// <summary>
+    /// Sets the sort order for display ordering.
+    /// Used by Visit.SetPrimaryDiagnosis to re-sort after role swap.
+    /// </summary>
+    public void SetSortOrder(int sortOrder) { SortOrder = sortOrder; }
+
+    /// <summary>
     /// Factory method for creating a visit diagnosis.
     /// </summary>
     public static VisitDiagnosis Create(
