@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [ ] **Phase 1: Foundation & Infrastructure** - Modular monolith skeleton with auth, audit, i18n, and multi-tenant scaffolding
 - [ ] **Phase 2: Patient Management & Scheduling** - Patient registration and appointment booking with calendar
-- [x] **Phase 3: Clinical Workflow & Examination** - Visit lifecycle, refraction recording, and ICD-10 diagnosis (completed 2026-03-05)
+- [ ] **Phase 3: Clinical Workflow & Examination** - Visit lifecycle, refraction recording, and ICD-10 diagnosis
 - [ ] **Phase 4: Dry Eye Template & Medical Imaging** - Structured dry eye assessment and medical image management with comparison
 - [ ] **Phase 5: Prescriptions & Document Printing** - Drug and optical prescription writing with all printable documents
 - [x] **Phase 6: Pharmacy & Consumables** - Drug inventory, dispensing, and consumables warehouse (completed 2026-03-06)
@@ -132,7 +132,7 @@ Plans:
   3. Dashboard shows all active patients and their current workflow stage (reception, refraction/VA, doctor exam, diagnostics, doctor reads, Rx, cashier, pharmacy/optical) in real-time
   4. Technician or doctor can record refraction data (SPH, CYL, AXIS, ADD, PD, VA, IOP, Axial Length per eye) with support for manifest, autorefraction, and cycloplegic types
   5. Doctor can search ICD-10 codes in Vietnamese and English, pin favorites, and the system enforces laterality selection (OD/OS/OU) for ophthalmology codes
-**Plans**: 10 plans (5 original + 5 gap closure)
+**Plans**: 13 plans (5 original + 5 gap closure + 3 UAT gap closure)
 
 Plans:
 - [x] 03-01-PLAN.md -- Clinical domain entities, contracts DTOs, EF Core infrastructure, test project scaffold
@@ -145,6 +145,9 @@ Plans:
 - [x] 03-08-PLAN.md -- [GAP] Fix DbUpdateConcurrencyException: explicit child-entity registration with EF Core change tracker
 - [x] 03-09-PLAN.md -- [GAP] Frontend error toasts + IOP Select warning fix + human verification of complete workflow
 - [ ] 03-10-PLAN.md -- [UAT GAP] Fix refraction data reload (type vs refractionType mismatch) and IOP Select warning
+- [ ] 03-11-PLAN.md -- [UAT GAP] Fix Kanban empty state, Amendment History visibility, and refraction validation errors
+- [ ] 03-12-PLAN.md -- [UAT GAP] Rewrite ICD-10 Vietnamese descriptions with proper diacritics and upsert seeder
+- [ ] 03-13-PLAN.md -- [UAT GAP] Fix amendment field-level diff: compute actual changes at re-sign time
 
 ### Phase 03.1: Create Vietnamese user stories documentation for all implemented features (INSERTED)
 
