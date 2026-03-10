@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router"
 import { useTranslation } from "react-i18next"
-import { IconBuildingWarehouse, IconTruck } from "@tabler/icons-react"
+import { IconBuildingWarehouse, IconMedicineSyrup, IconTruck } from "@tabler/icons-react"
 import { Button } from "@/shared/components/Button"
 import { Skeleton } from "@/shared/components/Skeleton"
 import { ExpiryAlertBanner } from "@/features/pharmacy/components/ExpiryAlertBanner"
@@ -27,6 +27,12 @@ function PharmacyInventoryPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
+          <Button variant="outline" asChild>
+            <Link to={"/pharmacy/drug-catalog" as string}>
+              <IconMedicineSyrup className="h-4 w-4 mr-2" />
+              {t("catalog.title")}
+            </Link>
+          </Button>
           <Button variant="outline" asChild>
             <Link to={"/pharmacy/suppliers" as string}>
               <IconTruck className="h-4 w-4 mr-2" />

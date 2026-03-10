@@ -12,6 +12,7 @@
     "clinical": "Clinical",
     "pharmacy": "Pharmacy",
     "pharmacyInventory": "Inventory",
+    "pharmacyDrugCatalog": "Drug Catalog",
     "pharmacyQueue": "Dispensing Queue",
     "pharmacySuppliers": "Suppliers",
     "pharmacyStockImport": "Stock Import",

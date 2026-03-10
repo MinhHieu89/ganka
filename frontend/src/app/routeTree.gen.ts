@@ -31,6 +31,7 @@ import { Route as AuthenticatedPharmacySuppliersRouteImport } from './routes/_au
 import { Route as AuthenticatedPharmacyStockImportRouteImport } from './routes/_authenticated/pharmacy/stock-import'
 import { Route as AuthenticatedPharmacyQueueRouteImport } from './routes/_authenticated/pharmacy/queue'
 import { Route as AuthenticatedPharmacyOtcSalesRouteImport } from './routes/_authenticated/pharmacy/otc-sales'
+import { Route as AuthenticatedPharmacyDrugCatalogRouteImport } from './routes/_authenticated/pharmacy/drug-catalog'
 import { Route as AuthenticatedPatientsPatientIdRouteImport } from './routes/_authenticated/patients/$patientId'
 import { Route as AuthenticatedOpticalWarrantyRouteImport } from './routes/_authenticated/optical/warranty'
 import { Route as AuthenticatedOpticalStocktakingRouteImport } from './routes/_authenticated/optical/stocktaking'
@@ -170,6 +171,12 @@ const AuthenticatedPharmacyOtcSalesRoute =
     path: '/pharmacy/otc-sales',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedPharmacyDrugCatalogRoute =
+  AuthenticatedPharmacyDrugCatalogRouteImport.update({
+    id: '/pharmacy/drug-catalog',
+    path: '/pharmacy/drug-catalog',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedPatientsPatientIdRoute =
   AuthenticatedPatientsPatientIdRouteImport.update({
     id: '/patients/$patientId',
@@ -272,6 +279,7 @@ export interface FileRoutesByFullPath {
   '/optical/stocktaking': typeof AuthenticatedOpticalStocktakingRoute
   '/optical/warranty': typeof AuthenticatedOpticalWarrantyRoute
   '/patients/$patientId': typeof AuthenticatedPatientsPatientIdRoute
+  '/pharmacy/drug-catalog': typeof AuthenticatedPharmacyDrugCatalogRoute
   '/pharmacy/otc-sales': typeof AuthenticatedPharmacyOtcSalesRoute
   '/pharmacy/queue': typeof AuthenticatedPharmacyQueueRoute
   '/pharmacy/stock-import': typeof AuthenticatedPharmacyStockImportRoute
@@ -309,6 +317,7 @@ export interface FileRoutesByTo {
   '/optical/stocktaking': typeof AuthenticatedOpticalStocktakingRoute
   '/optical/warranty': typeof AuthenticatedOpticalWarrantyRoute
   '/patients/$patientId': typeof AuthenticatedPatientsPatientIdRoute
+  '/pharmacy/drug-catalog': typeof AuthenticatedPharmacyDrugCatalogRoute
   '/pharmacy/otc-sales': typeof AuthenticatedPharmacyOtcSalesRoute
   '/pharmacy/queue': typeof AuthenticatedPharmacyQueueRoute
   '/pharmacy/stock-import': typeof AuthenticatedPharmacyStockImportRoute
@@ -348,6 +357,7 @@ export interface FileRoutesById {
   '/_authenticated/optical/stocktaking': typeof AuthenticatedOpticalStocktakingRoute
   '/_authenticated/optical/warranty': typeof AuthenticatedOpticalWarrantyRoute
   '/_authenticated/patients/$patientId': typeof AuthenticatedPatientsPatientIdRoute
+  '/_authenticated/pharmacy/drug-catalog': typeof AuthenticatedPharmacyDrugCatalogRoute
   '/_authenticated/pharmacy/otc-sales': typeof AuthenticatedPharmacyOtcSalesRoute
   '/_authenticated/pharmacy/queue': typeof AuthenticatedPharmacyQueueRoute
   '/_authenticated/pharmacy/stock-import': typeof AuthenticatedPharmacyStockImportRoute
@@ -387,6 +397,7 @@ export interface FileRouteTypes {
     | '/optical/stocktaking'
     | '/optical/warranty'
     | '/patients/$patientId'
+    | '/pharmacy/drug-catalog'
     | '/pharmacy/otc-sales'
     | '/pharmacy/queue'
     | '/pharmacy/stock-import'
@@ -424,6 +435,7 @@ export interface FileRouteTypes {
     | '/optical/stocktaking'
     | '/optical/warranty'
     | '/patients/$patientId'
+    | '/pharmacy/drug-catalog'
     | '/pharmacy/otc-sales'
     | '/pharmacy/queue'
     | '/pharmacy/stock-import'
@@ -462,6 +474,7 @@ export interface FileRouteTypes {
     | '/_authenticated/optical/stocktaking'
     | '/_authenticated/optical/warranty'
     | '/_authenticated/patients/$patientId'
+    | '/_authenticated/pharmacy/drug-catalog'
     | '/_authenticated/pharmacy/otc-sales'
     | '/_authenticated/pharmacy/queue'
     | '/_authenticated/pharmacy/stock-import'
@@ -646,6 +659,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPharmacyOtcSalesRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/pharmacy/drug-catalog': {
+      id: '/_authenticated/pharmacy/drug-catalog'
+      path: '/pharmacy/drug-catalog'
+      fullPath: '/pharmacy/drug-catalog'
+      preLoaderRoute: typeof AuthenticatedPharmacyDrugCatalogRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/patients/$patientId': {
       id: '/_authenticated/patients/$patientId'
       path: '/patients/$patientId'
@@ -776,6 +796,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedOpticalStocktakingRoute: typeof AuthenticatedOpticalStocktakingRoute
   AuthenticatedOpticalWarrantyRoute: typeof AuthenticatedOpticalWarrantyRoute
   AuthenticatedPatientsPatientIdRoute: typeof AuthenticatedPatientsPatientIdRoute
+  AuthenticatedPharmacyDrugCatalogRoute: typeof AuthenticatedPharmacyDrugCatalogRoute
   AuthenticatedPharmacyOtcSalesRoute: typeof AuthenticatedPharmacyOtcSalesRoute
   AuthenticatedPharmacyQueueRoute: typeof AuthenticatedPharmacyQueueRoute
   AuthenticatedPharmacyStockImportRoute: typeof AuthenticatedPharmacyStockImportRoute
@@ -808,6 +829,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedOpticalStocktakingRoute: AuthenticatedOpticalStocktakingRoute,
   AuthenticatedOpticalWarrantyRoute: AuthenticatedOpticalWarrantyRoute,
   AuthenticatedPatientsPatientIdRoute: AuthenticatedPatientsPatientIdRoute,
+  AuthenticatedPharmacyDrugCatalogRoute: AuthenticatedPharmacyDrugCatalogRoute,
   AuthenticatedPharmacyOtcSalesRoute: AuthenticatedPharmacyOtcSalesRoute,
   AuthenticatedPharmacyQueueRoute: AuthenticatedPharmacyQueueRoute,
   AuthenticatedPharmacyStockImportRoute: AuthenticatedPharmacyStockImportRoute,

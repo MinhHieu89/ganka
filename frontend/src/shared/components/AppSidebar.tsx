@@ -127,6 +127,7 @@ export function AppSidebar({ ...sidebarProps }: ComponentProps<typeof Sidebar>) 
       icon: IconMedicineSyrup,
       children: [
         { titleKey: "sidebar.pharmacyInventory", to: "/pharmacy" },
+        { titleKey: "sidebar.pharmacyDrugCatalog", to: "/pharmacy/drug-catalog" },
         { titleKey: "sidebar.pharmacyQueue", to: "/pharmacy/queue" },
         { titleKey: "sidebar.pharmacySuppliers", to: "/pharmacy/suppliers" },
         { titleKey: "sidebar.pharmacyStockImport", to: "/pharmacy/stock-import" },
