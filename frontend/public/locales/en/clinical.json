@@ -261,6 +261,8 @@
     "noPrescriptions": "No prescriptions yet",
     "offCatalog": "Off-catalog",
     "allergyWarning": "Allergy Warning",
+    "deleteConfirmTitle": "Delete Prescription",
+    "deleteConfirmMessage": "Are you sure you want to delete this prescription? This action cannot be undone.",
     "allergyConfirmTitle": "Allergy Warning - Confirm Prescription",
     "allergyConfirmMessage": "This prescription contains drugs the patient may be allergic to. Are you sure you want to proceed?",
     "confirmPrescribe": "Confirm Prescription",
@@ -275,6 +277,7 @@
     "unit": "Unit",
     "frequency": "Frequency",
     "duration": "Duration (days)",
+    "durationUnit": "days",
     "doctorAdvice": "Doctor's Advice",
     "writeOpticalRx": "Write Optical Rx",
     "autoFillRefraction": "Auto-fill from Refraction",
@@ -302,6 +305,9 @@
     "opticalRxSaved": "Optical prescription saved",
     "opticalRxSaveFailed": "Failed to save optical prescription",
     "noOpticalRx": "No optical prescription yet"
+  },
+  "documents": {
+    "title": "Documents"
   },
   "drugForm": {
     "eyeDrops": "Eye Drops",

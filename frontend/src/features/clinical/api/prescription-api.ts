@@ -25,6 +25,7 @@ export interface PrescriptionItemInput {
   strength: string | null
   form: number
   route: number
+  doseAmount: string | null
   dosage: string | null
   dosageOverride: string | null
   quantity: number

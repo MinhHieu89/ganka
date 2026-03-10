@@ -65,6 +65,7 @@ public sealed class DocumentService : IDocumentService
 
         var data = new DrugPrescriptionData(
             visit.PatientName,
+            patientInfo?.PatientCode,
             patientInfo?.DateOfBirth,
             FormatGender(patientInfo?.Gender),
             patientInfo?.Address,
@@ -106,6 +107,7 @@ public sealed class DocumentService : IDocumentService
 
         var data = new OpticalPrescriptionData(
             visit.PatientName,
+            patientInfo?.PatientCode,
             patientInfo?.DateOfBirth,
             FormatGender(patientInfo?.Gender),
             opticalRx.OdSph, opticalRx.OdCyl, opticalRx.OdAxis, opticalRx.OdAdd,
@@ -141,6 +143,7 @@ public sealed class DocumentService : IDocumentService
 
         var data = new ReferralLetterData(
             visit.PatientName,
+            patientInfo?.PatientCode,
             patientInfo?.DateOfBirth,
             FormatGender(patientInfo?.Gender),
             patientInfo?.Address,
@@ -174,6 +177,7 @@ public sealed class DocumentService : IDocumentService
 
         var data = new ConsentFormData(
             visit.PatientName,
+            patientInfo?.PatientCode,
             patientInfo?.DateOfBirth,
             FormatGender(patientInfo?.Gender),
             patientInfo?.Address,
@@ -229,7 +233,7 @@ public sealed class DocumentService : IDocumentService
     {
         var results = await _clinicalDb.Database
             .SqlQuery<PatientBasicInfo>(
-                $"SELECT [DateOfBirth], [Gender], [Address], [Cccd] AS [IdentityNumber] FROM [patient].[Patients] WHERE [Id] = {patientId}")
+                $"SELECT [DateOfBirth], [Gender], [Address], [Cccd] AS [IdentityNumber], [PatientCode] FROM [patient].[Patients] WHERE [Id] = {patientId}")
             .ToListAsync(ct);
 
         return results.FirstOrDefault();
@@ -286,5 +290,6 @@ public sealed class DocumentService : IDocumentService
         DateTime? DateOfBirth,
         int? Gender,
         string? Address,
-        string? IdentityNumber);
+        string? IdentityNumber,
+        string? PatientCode);
 }

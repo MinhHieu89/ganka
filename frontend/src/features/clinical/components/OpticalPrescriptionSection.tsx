@@ -56,6 +56,7 @@ export function OpticalPrescriptionSection({
   const { t } = useTranslation("clinical")
   const [showForm, setShowForm] = useState(false)
   const [editMode, setEditMode] = useState(false)
+  const [sectionOpen, setSectionOpen] = useState(false)
 
   const addMutation = useAddOpticalPrescription()
   const updateMutation = useUpdateOpticalPrescription()
@@ -105,13 +106,14 @@ export function OpticalPrescriptionSection({
     <VisitSection
       title={t("prescription.opticalRx")}
       defaultOpen={false}
+      {...(sectionOpen ? { open: true, onOpenChange: setSectionOpen } : {})}
       headerExtra={
         <div className="flex items-center gap-2">
           {!disabled && !hasPrescriptions && !showForm && (
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setShowForm(true)}
+              onClick={() => { setShowForm(true); setSectionOpen(true) }}
             >
               <IconGlass className="h-4 w-4 mr-1" />
               {t("prescription.writeOpticalRx")}

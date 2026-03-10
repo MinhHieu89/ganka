@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react"
+import { useState, useCallback, useMemo, useRef } from "react"
 import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
 import {
@@ -85,9 +85,13 @@ export function DrugPrescriptionSection({
   // Local state for new prescription items (add-then-edit pattern)
   const [localItems, setLocalItems] = useState<PrescriptionItemInput[]>([])
   const [notes, setNotes] = useState("")
+  const notesRef = useRef(notes)
+  notesRef.current = notes
   const [formOpen, setFormOpen] = useState(false)
   const [editingIndex, setEditingIndex] = useState<number | null>(null)
   const [allergyDialogOpen, setAllergyDialogOpen] = useState(false)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [deletingPrescriptionId, setDeletingPrescriptionId] = useState<string | null>(null)
 
   // Mutations
   const addPrescriptionMutation = useAddDrugPrescription()
@@ -139,24 +143,11 @@ export function DrugPrescriptionSection({
     [localItems],
   )
 
-  // Submit prescription (save all local items)
-  const handleSavePrescription = useCallback(() => {
-    if (localItems.length === 0) return
-
-    if (hasAllergyConflicts) {
-      // Show blocking AlertDialog
-      setAllergyDialogOpen(true)
-      return
-    }
-
-    doSavePrescription()
-  }, [localItems, hasAllergyConflicts])
-
   const doSavePrescription = useCallback(() => {
     addPrescriptionMutation.mutate(
       {
         visitId,
-        notes: notes.trim() || null,
+        notes: notesRef.current.trim() || null,
         items: localItems,
       },
       {
@@ -170,7 +161,20 @@ export function DrugPrescriptionSection({
         },
       },
     )
-  }, [visitId, notes, localItems, addPrescriptionMutation, t])
+  }, [visitId, localItems, addPrescriptionMutation, t])
+
+  // Submit prescription (save all local items)
+  const handleSavePrescription = useCallback(() => {
+    if (localItems.length === 0) return
+
+    if (hasAllergyConflicts) {
+      // Show blocking AlertDialog
+      setAllergyDialogOpen(true)
+      return
+    }
+
+    doSavePrescription()
+  }, [localItems, hasAllergyConflicts, doSavePrescription])
 
   // Confirm allergy and save
   const handleAllergyConfirm = useCallback(() => {
@@ -179,22 +183,31 @@ export function DrugPrescriptionSection({
   }, [doSavePrescription])
 
   // Remove an existing server-side prescription
-  const handleRemovePrescription = useCallback(
+  const handleRemovePrescriptionClick = useCallback(
     (prescriptionId: string) => {
-      removePrescriptionMutation.mutate(
-        { visitId, prescriptionId },
-        {
-          onSuccess: () => {
-            toast.success(t("prescription.removeDrug"))
-          },
-          onError: () => {
-            toast.error(t("prescription.printFailed"))
-          },
-        },
-      )
+      setDeletingPrescriptionId(prescriptionId)
+      setDeleteDialogOpen(true)
     },
-    [visitId, removePrescriptionMutation, t],
+    [],
   )
+
+  const handleDeleteConfirm = useCallback(() => {
+    if (!deletingPrescriptionId) return
+    setDeleteDialogOpen(false)
+    removePrescriptionMutation.mutate(
+      { visitId, prescriptionId: deletingPrescriptionId },
+      {
+        onSuccess: () => {
+          toast.success(t("prescription.removeDrug"))
+          setDeletingPrescriptionId(null)
+        },
+        onError: () => {
+          toast.error(t("prescription.printFailed"))
+          setDeletingPrescriptionId(null)
+        },
+      },
+    )
+  }, [visitId, deletingPrescriptionId, removePrescriptionMutation, t])
 
   // Update notes on an existing prescription
   const handleUpdateNotes = useCallback(
@@ -312,7 +325,7 @@ export function DrugPrescriptionSection({
                       variant="ghost"
                       size="sm"
                       className="text-destructive"
-                      onClick={() => handleRemovePrescription(rx.id)}
+                      onClick={() => handleRemovePrescriptionClick(rx.id)}
                     >
                       <IconX className="h-3 w-3 mr-1" />
                       {t("prescription.removeDrug")}
@@ -424,6 +437,29 @@ export function DrugPrescriptionSection({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Delete confirmation AlertDialog */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {t("prescription.deleteConfirmTitle")}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {t("prescription.deleteConfirmMessage")}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t("images.cancel")}</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              onClick={handleDeleteConfirm}
+            >
+              {t("prescription.removeDrug")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </VisitSection>
   )
 }
@@ -473,21 +509,6 @@ function PrescriptionItemRow({
             <>
               <span>-</span>
               <span>{item.dosageOverride || item.dosage}</span>
-            </>
-          )}
-          {item.frequency && (
-            <>
-              <span>-</span>
-              <span>{item.frequency}</span>
-            </>
-          )}
-          {item.durationDays != null && (
-            <>
-              <span>-</span>
-              <span>
-                {item.durationDays}{" "}
-                {t("prescription.duration").replace(/\s*\(.*\)/, "").toLowerCase()}
-              </span>
             </>
           )}
         </div>
@@ -555,21 +576,6 @@ function LocalItemRow({
             <>
               <span>-</span>
               <span>{item.dosageOverride || item.dosage}</span>
-            </>
-          )}
-          {item.frequency && (
-            <>
-              <span>-</span>
-              <span>{item.frequency}</span>
-            </>
-          )}
-          {item.durationDays != null && (
-            <>
-              <span>-</span>
-              <span>
-                {item.durationDays}{" "}
-                {t("prescription.duration").replace(/\s*\(.*\)/, "").toLowerCase()}
-              </span>
             </>
           )}
         </div>

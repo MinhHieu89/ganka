@@ -15,6 +15,7 @@ import { DryEyeSection } from "./DryEyeSection"
 import { MedicalImagesSection } from "./MedicalImagesSection"
 import { DrugPrescriptionSection } from "./DrugPrescriptionSection"
 import { OpticalPrescriptionSection } from "./OpticalPrescriptionSection"
+import { DocumentActionsSection } from "./DocumentActionsSection"
 
 // Visit status enum: 0=Draft, 1=Signed, 2=Amended
 const STATUS_MAP: Record<number, { key: string; variant: "default" | "secondary" | "outline" }> = {
@@ -125,6 +126,8 @@ export function VisitDetailPage({ visitId }: VisitDetailPageProps) {
         refractions={visit.refractions}
         disabled={isReadOnly}
       />
+
+      <DocumentActionsSection visitId={visitId} />
 
       <MedicalImagesSection visitId={visitId} patientId={visit.patientId} />
 

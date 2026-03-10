@@ -16,6 +16,8 @@ import { cn } from "@/shared/lib/utils"
 interface VisitSectionProps {
   title: string
   defaultOpen?: boolean
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
   children: ReactNode
   className?: string
   headerExtra?: ReactNode
@@ -24,12 +26,14 @@ interface VisitSectionProps {
 export function VisitSection({
   title,
   defaultOpen = true,
+  open,
+  onOpenChange,
   children,
   className,
   headerExtra,
 }: VisitSectionProps) {
   return (
-    <Collapsible defaultOpen={defaultOpen}>
+    <Collapsible defaultOpen={defaultOpen} open={open} onOpenChange={onOpenChange}>
       <Card className={cn(className)}>
         <CardHeader className="flex flex-row items-center justify-between py-3">
           <CollapsibleTrigger asChild>

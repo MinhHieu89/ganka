@@ -19,6 +19,7 @@ public sealed record ClinicHeaderData(
 /// </summary>
 public sealed record DrugPrescriptionData(
     string PatientName,
+    string? PatientCode,
     DateTime? DateOfBirth,
     string? Gender,
     string? Address,
@@ -48,6 +49,7 @@ public sealed record DrugPrescriptionItemData(
 /// </summary>
 public sealed record OpticalPrescriptionData(
     string PatientName,
+    string? PatientCode,
     DateTime? DateOfBirth,
     string? Gender,
     // Distance Rx (OD)
@@ -69,6 +71,7 @@ public sealed record OpticalPrescriptionData(
 /// </summary>
 public sealed record ReferralLetterData(
     string PatientName,
+    string? PatientCode,
     DateTime? DateOfBirth,
     string? Gender,
     string? Address,
@@ -85,6 +88,7 @@ public sealed record ReferralLetterData(
 /// </summary>
 public sealed record ConsentFormData(
     string PatientName,
+    string? PatientCode,
     DateTime? DateOfBirth,
     string? Gender,
     string? Address,

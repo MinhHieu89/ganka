@@ -254,7 +254,12 @@ export function OpticalPrescriptionForm({
       </div>
 
       {/* Near Rx (collapsible) */}
-      <Collapsible>
+      <Collapsible defaultOpen={
+        defaultValues?.nearOdSph != null ||
+        defaultValues?.nearOdCyl != null ||
+        defaultValues?.nearOsSph != null ||
+        defaultValues?.nearOsCyl != null
+      }>
         <CollapsibleTrigger asChild>
           <div className="flex items-center gap-2 cursor-pointer">
             <h4 className="text-sm font-medium">{t("prescription.nearRx")}</h4>
@@ -383,11 +388,11 @@ export function OpticalPrescriptionForm({
         <div className="flex gap-2 justify-end">
           {onCancel && (
             <Button type="button" variant="outline" size="sm" onClick={onCancel}>
-              {tCommon("actions.cancel")}
+              {tCommon("buttons.cancel")}
             </Button>
           )}
           <Button type="submit" size="sm" disabled={isSubmitting}>
-            {tCommon("actions.save")}
+            {tCommon("buttons.save")}
           </Button>
         </div>
       )}

@@ -39,15 +39,23 @@ public sealed class OpticalPrescriptionDocument : IDocument
                 col.Item().Height(10);
 
                 // Patient info
-                col.Item().Text(text =>
+                col.Item().Row(row =>
                 {
-                    text.Span("H\u1ecd t\u00ean: ").Bold();
-                    text.Span(_data.PatientName);
+                    row.RelativeItem(2).Text(text =>
+                    {
+                        text.Span("H\u1ecd t\u00ean: ").Bold();
+                        text.Span(_data.PatientName);
+                    });
+                    row.RelativeItem().Text(text =>
+                    {
+                        text.Span("M\u00e3 BN: ").Bold();
+                        text.Span(_data.PatientCode ?? "");
+                    });
                 });
 
                 col.Item().Row(row =>
                 {
-                    row.RelativeItem().Text(text =>
+                    row.RelativeItem(2).Text(text =>
                     {
                         text.Span("Ng\u00e0y sinh: ").Bold();
                         text.Span(_data.DateOfBirth?.ToString("dd/MM/yyyy") ?? "");

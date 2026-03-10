@@ -156,7 +156,7 @@ export function DrugPrescriptionForm({
     }
     if (watchDurationDays && !isNaN(watchDurationDays)) {
       parts.push(
-        `${watchDurationDays} ${t("prescription.duration").replace(/\s*\(.*\)/, "").toLowerCase()}`,
+        `${watchDurationDays} ${t("prescription.durationUnit")}`,
       )
     }
     return parts.join(", ")
@@ -172,7 +172,7 @@ export function DrugPrescriptionForm({
         strength: editingItem.strength,
         form: editingItem.form,
         route: editingItem.route,
-        doseAmount: "",
+        doseAmount: editingItem.doseAmount ?? "",
         frequency: editingItem.frequency ?? "",
         durationDays: editingItem.durationDays,
         dosageOverride: editingItem.dosageOverride,
@@ -245,6 +245,7 @@ export function DrugPrescriptionForm({
         strength: values.strength,
         form: values.form,
         route: values.route,
+        doseAmount: values.doseAmount || null,
         dosage: values.dosageOverride?.trim() ? null : autoDosage || null,
         dosageOverride: values.dosageOverride?.trim() || null,
         quantity: values.quantity,

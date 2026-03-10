@@ -261,6 +261,8 @@
     "noPrescriptions": "Chưa có đơn thuốc",
     "offCatalog": "Ngoài danh mục",
     "allergyWarning": "Cảnh báo dị ứng",
+    "deleteConfirmTitle": "Xóa đơn thuốc",
+    "deleteConfirmMessage": "Bạn có chắc chắn muốn xóa đơn thuốc này? Hành động này không thể hoàn tác.",
     "allergyConfirmTitle": "Cảnh báo dị ứng - Xác nhận đơn thuốc",
     "allergyConfirmMessage": "Đơn thuốc này chứa thuốc bệnh nhân có thể bị dị ứng. Bạn có chắc chắn muốn tiếp tục?",
     "confirmPrescribe": "Xác nhận kê đơn",
@@ -275,6 +277,7 @@
     "unit": "Đơn vị",
     "frequency": "Tần suất",
     "duration": "Thời gian (ngày)",
+    "durationUnit": "ngày",
     "doctorAdvice": "Lời dặn bác sĩ",
     "writeOpticalRx": "Viết đơn kính",
     "autoFillRefraction": "Tự điền từ khúc xạ",
@@ -302,6 +305,9 @@
     "opticalRxSaved": "Đã lưu đơn kính",
     "opticalRxSaveFailed": "Lưu đơn kính thất bại",
     "noOpticalRx": "Chưa có đơn kính"
+  },
+  "documents": {
+    "title": "Tài liệu"
   },
   "drugForm": {
     "eyeDrops": "Thuốc nhỏ mắt",
