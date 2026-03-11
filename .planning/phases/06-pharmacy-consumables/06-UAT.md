@@ -1,5 +1,5 @@
 ---
-status: testing
+status: complete
 phase: 06-pharmacy-consumables
 source: 06-01 through 06-29 SUMMARY.md
 started: 2026-03-10T10:00:00Z
@@ -8,11 +8,7 @@ updated: 2026-03-11T09:48:31Z
 
 ## Current Test
 
-number: 7
-name: Low Stock Alert Banner (Drugs)
-expected: |
-  On /pharmacy page, collapsible banner shows drugs below minimum stock level. Alert count badge visible. Shows drug name, current total stock, minimum level threshold.
-awaiting: user response (re-verification after badge color fix)
+[testing complete]
 
 ## Tests
 
@@ -97,38 +93,42 @@ note: Fixed ConsumableTrackingMode enum values swapped in 3 frontend files (Expi
 
 ### 18. Add Consumable Stock (ExpiryTracked)
 expected: For ExpiryTracked consumable, add stock with batch number and expiry date. New batch created, stock increments.
-result: [pending]
+result: pass
 
 ### 19. Adjust Consumable Stock
 expected: Adjust consumable batch quantity, select reason (Correction/WriteOff/Damage/Expired/Other), see before/after preview, saves with audit trail.
-result: [pending]
+result: pass
+note: Fixed field name mismatch (quantityChange/consumableBatchId). Added batch selector for ExpiryTracked items. Added GET /api/consumables/{id}/batches endpoint.
 
 ### 20. Consumable Low Stock Alerts
 expected: On /consumables, collapsible banner shows items below minimum stock level (both tracking modes). Item count badge visible. Shows item name, current vs minimum levels.
-result: [pending]
+result: pass
+note: Fixed alert banner to show Vietnamese names via nameVi.
 
 ### 21. Prescriptions in Patient Profile
-expected: Open patient profile, see Prescriptions tab with pending prescriptions and collapsible dispensing history. 'View full queue' link navigates to pharmacy queue page.
-result: [pending]
+expected: Open patient profile, see Prescriptions tab with pending prescriptions and collapsible dispensing history expanded by default. Clickable rows show drug details with unit. 'View full queue' link navigates to pharmacy queue page. Vietnamese label shows "cấp phát" terminology.
+result: pass
 
 ### 22. Pending Prescription Count Badge
 expected: Pharmacy sidebar shows badge with count of pending (non-expired) prescriptions. Updates periodically via auto-refresh polling.
-result: [pending]
+result: pass
+note: Fixed black dot on hover (moved badge inline instead of SidebarMenuBadge). Fixed badge not updating (added sign-off invalidation). Fixed backend to only show prescriptions from Signed/Amended visits (not Draft).
 
 ### 23. Bilingual UI (English/Vietnamese)
 expected: All pharmacy and consumables pages display correctly in both English and Vietnamese with proper diacritics. Sidebar nav shows localized labels. Language toggle switches all visible text.
-result: [pending]
+result: pass
+note: Added breadcrumb i18n mappings for all route segments (pharmacy, consumables, optical, billing, treatments, clinical). Removed duplicate user button from page header (already in sidebar).
 
 ### 24. Sidebar Navigation Structure
 expected: Sidebar shows Pharmacy section with sub-items: Drug Inventory, Dispensing Queue, Suppliers, Stock Import, OTC Sales. Consumables section visible as standalone link. All links navigate correctly.
-result: [pending]
+result: pass
 
 ## Summary
 
 total: 24
-passed: 15
+passed: 22
 issues: 2
-pending: 7
+pending: 0
 skipped: 0
 
 ## Gaps
