@@ -19,8 +19,8 @@ import { AddStockDialog } from "./AddStockDialog"
 import { ConsumableAdjustDialog } from "./ConsumableAdjustDialog"
 
 // Tracking mode enum values (matches backend ConsumableTrackingMode)
-const TRACKING_MODE_SIMPLE = 0
-const TRACKING_MODE_EXPIRY = 1
+const TRACKING_MODE_EXPIRY = 0
+const TRACKING_MODE_SIMPLE = 1
 
 const columnHelper = createColumnHelper<ConsumableItemDto>()
 

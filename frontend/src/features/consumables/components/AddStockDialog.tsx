@@ -21,8 +21,8 @@ import { type ConsumableItemDto } from "@/features/consumables/api/consumables-a
 import { useAddConsumableStock } from "@/features/consumables/api/consumables-queries"
 
 // Tracking mode enum matching backend ConsumableTrackingMode
-const TRACKING_MODE_SIMPLE = 0
-const TRACKING_MODE_EXPIRY = 1
+const TRACKING_MODE_EXPIRY = 0
+const TRACKING_MODE_SIMPLE = 1
 
 // ---- Schemas ----
 

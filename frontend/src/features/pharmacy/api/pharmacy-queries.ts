@@ -270,6 +270,10 @@ export function useDispenseDrugs() {
       queryClient.invalidateQueries({
         queryKey: [...pharmacyKeys.all, "dispensing", "history"],
       })
+      // Dispensing deducts stock — refresh inventory, batches, and alerts
+      queryClient.invalidateQueries({ queryKey: pharmacyKeys.inventory.all() })
+      queryClient.invalidateQueries({ queryKey: [...pharmacyKeys.all, "inventory", "batches"] })
+      queryClient.invalidateQueries({ queryKey: pharmacyKeys.alerts.lowStock() })
     },
     onError: (error: Error) => {
       toast.error(error.message)

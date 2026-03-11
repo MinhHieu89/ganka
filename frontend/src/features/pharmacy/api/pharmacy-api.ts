@@ -58,6 +58,7 @@ export interface DrugInventoryDto {
   sellingPrice: number
   minStockLevel: number
   totalStock: number
+  batchCount: number
   isLowStock: boolean
   hasExpiryAlert: boolean
 }
@@ -94,7 +95,7 @@ export interface ExpiryAlertDto {
 export interface LowStockAlertDto {
   drugCatalogItemId: string
   drugName: string
-  currentStock: number
+  totalStock: number
   minStockLevel: number
 }
 
@@ -109,7 +110,7 @@ export interface PendingPrescriptionItemDto {
 }
 
 export interface PendingPrescriptionDto {
-  id: string
+  prescriptionId: string
   visitId: string
   patientId: string
   patientName: string
@@ -134,9 +135,22 @@ export interface OtcSaleDto {
   id: string
   patientId: string | null
   customerName: string | null
-  saleDate: string
-  totalAmount: number
-  lineCount: number
+  soldAt: string
+  notes: string | null
+  lines: OtcSaleLineDto[]
+}
+
+export interface OtcSaleLineDto {
+  id: string
+  drugCatalogItemId: string
+  drugName: string
+  quantity: number
+  unitPrice: number
+}
+
+export interface OtcSalesPagedResult {
+  items: OtcSaleDto[]
+  totalCount: number
 }
 
 export interface PendingCountDto {
@@ -162,8 +176,8 @@ export interface UpdateDrugPricingInput {
 }
 
 export interface AdjustStockInput {
-  drugCatalogItemId: string
-  quantity: number
+  drugBatchId: string
+  quantityChange: number
   reason: number
   notes?: string | null
 }
@@ -213,9 +227,15 @@ export interface OtcSaleLineInput {
   unitPrice: number
 }
 
+export interface ExcelImportErrorDto {
+  rowNumber: number
+  columnName: string
+  message: string
+}
+
 export interface ExcelImportPreviewDto {
   validLines: StockImportLineDto[]
-  errors: string[]
+  errors: ExcelImportErrorDto[]
 }
 
 // -- Enum maps for frontend display --
@@ -504,7 +524,9 @@ export async function getOtcSales(
     params: { query: { page, pageSize } },
   } as never)
   if (error) throw new Error("Failed to fetch OTC sales")
-  return (data as OtcSaleDto[]) ?? []
+  const result = data as OtcSalesPagedResult | OtcSaleDto[] | undefined
+  if (result && "items" in result) return result.items
+  return (result as OtcSaleDto[]) ?? []
 }
 
 // Re-export drug catalog functions for backward compatibility

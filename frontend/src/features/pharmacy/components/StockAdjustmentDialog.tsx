@@ -39,7 +39,7 @@ export type AdjustmentReason = (typeof ADJUSTMENT_REASON)[keyof typeof ADJUSTMEN
 // ---- Props ----
 
 export interface BatchInfo {
-  drugCatalogItemId: string
+  batchId: string
   drugName: string
   currentQuantity: number
 }
@@ -109,8 +109,8 @@ export function StockAdjustmentDialog({
 
     try {
       await adjustStock.mutateAsync({
-        drugCatalogItemId: batch.drugCatalogItemId,
-        quantity: data.quantityChange,
+        drugBatchId: batch.batchId,
+        quantityChange: data.quantityChange,
         reason: data.reason,
         notes: data.notes || null,
       })

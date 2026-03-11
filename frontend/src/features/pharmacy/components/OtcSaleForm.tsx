@@ -85,6 +85,7 @@ function DrugCombobox({ value, onSelect, disabled }: DrugComboboxProps) {
       <PopoverTrigger asChild>
         <div>
           <Button
+            type="button"
             variant="outline"
             role="combobox"
             aria-expanded={open}
@@ -309,11 +310,9 @@ export function OtcSaleForm({ onSuccess }: OtcSaleFormProps) {
 
   const handleDrugSelect = useCallback(
     (drug: DrugCatalogItemDto, index: number) => {
-      form.setValue(`lines.${index}.drugCatalogItemId`, drug.id)
+      form.setValue(`lines.${index}.drugCatalogItemId`, drug.id, { shouldValidate: true })
       form.setValue(`lines.${index}.drugName`, drug.nameVi || drug.name)
-      if (drug.sellingPrice != null && drug.sellingPrice > 0) {
-        form.setValue(`lines.${index}.unitPrice`, drug.sellingPrice)
-      }
+      form.setValue(`lines.${index}.unitPrice`, drug.sellingPrice ?? 0)
     },
     [form],
   )

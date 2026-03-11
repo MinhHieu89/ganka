@@ -1,177 +1,154 @@
 ---
-status: resolved
+status: testing
 phase: 06-pharmacy-consumables
-source: 06-01 through 06-28 SUMMARY.md
-started: 2026-03-06T12:10:00Z
-updated: 2026-03-06T14:00:00Z
+source: 06-01 through 06-29 SUMMARY.md
+started: 2026-03-10T10:00:00Z
+updated: 2026-03-11T09:48:31Z
 ---
 
 ## Current Test
 
-[testing complete]
+number: 7
+name: Low Stock Alert Banner (Drugs)
+expected: |
+  On /pharmacy page, collapsible banner shows drugs below minimum stock level. Alert count badge visible. Shows drug name, current total stock, minimum level threshold.
+awaiting: user response (re-verification after badge color fix)
 
 ## Tests
 
-### 1. Cold Start Smoke Test (API)
-expected: Server boots, all pharmacy/consumables endpoints respond 200, seed data loads
+### 1. Cold Start Smoke Test
+expected: Kill any running server/service. Start backend from scratch. Server boots without errors, migrations run, ConsumableCatalogSeeder populates 12 consumable items, and primary endpoints respond: GET /api/inventory, GET /api/consumables, GET /api/dispensing/pending, GET /api/suppliers, GET /api/stock-imports, GET /api/otc-sales all return 200.
 result: pass
-note: Auto-tested. Auth login 200, suppliers 200, inventory 200 (77 drugs), dispensing/pending 200, stock-imports 200, otc-sales 200, consumables 200 (12 items seeded).
 
-### 2. Supplier CRUD (API)
-expected: Create supplier 201, update supplier 200, data persists correctly
-result: pass
-note: Auto-tested. Created "UAT Test Supplier" (201), updated name/phone/email (200), verified fields persisted.
-
-### 3. Stock Import via Invoice (API)
-expected: Create stock import with drug lines, 201 returned, batch records created, stock increases
-result: pass
-note: Auto-tested. Created import for Acetazolamide (100 qty, batch BATCH-UAT-001, expiry 2027-06-15). Stock went 0->100, batchCount 0->1.
-
-### 4. Drug Batch Details (API)
-expected: GET /inventory/{drugId}/batches returns batch list with FEFO data (batchNumber, expiryDate, currentQuantity, isExpired, isNearExpiry)
-result: pass
-note: Auto-tested. Returns batch with correct FEFO fields. Batch shows initialQuantity=100, currentQuantity=95 after OTC sale.
-
-### 5. OTC Walk-in Sale (API)
-expected: Create anonymous OTC sale 201, stock deducted via FEFO, sale appears in history
-result: pass
-note: Auto-tested. Created walk-in sale (5 qty Acetazolamide). Stock 100->95. OTC history shows sale with null patientId/customerName.
-
-### 6. Stock Adjustment +/- (API)
-expected: Positive adjustment increases batch stock, negative decreases, both create audit records (201)
-result: pass
-note: Auto-tested. +10 adjustment -> stock 95->105 (201). -5 adjustment -> stock 105->100 (201). Reason enum and notes accepted.
-
-### 7. Drug Selling Price Update (API)
-expected: PUT /inventory/{drugId}/pricing updates sellingPrice and minStockLevel
-result: pass
-note: Auto-tested. Updated price to 120000 and minStock to 10. Verified in inventory list.
-
-### 8. Consumable SimpleStock Add (API)
-expected: POST /{id}/stock with quantity only increases CurrentStock for SimpleStock items
-result: pass
-note: Auto-tested. Added 200 to Disposable Gloves (SimpleStock). Stock 0->200. LowStock flipped false.
-
-### 9. Consumable ExpiryTracked Add (API)
-expected: POST /{id}/stock with batchNumber+expiryDate creates ConsumableBatch for ExpiryTracked items
-result: pass
-note: Auto-tested. Added batch AED-BATCH-001 (30 qty, exp 2027-06-30) to Anesthetic Eye Drops. Stock 0->30. Returns batch ID.
-
-### 10. Consumable ExpiryTracked Validation (API)
-expected: Adding stock to ExpiryTracked item without batchNumber returns 400 validation error
-result: pass
-note: Auto-tested. Got 400 "Batch number is required for expiry-tracked consumables." - correct validation.
-
-### 11. Consumable Alerts (API)
-expected: GET /consumables/alerts returns items that are low stock or near expiry
-result: pass
-note: Auto-tested. Returns all 12 seeded items (all initially zero stock = low stock).
-
-### 12. Consumable Seeder (API)
-expected: 12 consumable items auto-seeded on startup with correct tracking modes
-result: pass
-note: Auto-tested. Found 12 items: 3 ExpiryTracked (mode 0), 9 SimpleStock (mode 1). Names include Anesthetic Eye Drops, Cotton Applicators, IPL Gel, etc.
-
-### 13. Frontend Routes Load (Auto)
-expected: All 6 pharmacy/consumables routes return HTTP 200
-result: pass
-note: Auto-tested. /pharmacy 200, /pharmacy/queue 200, /pharmacy/suppliers 200, /pharmacy/stock-import 200, /pharmacy/otc-sales 200, /consumables 200.
-
-### 14. Dispensing Queue API (API)
-expected: GET /dispensing/pending returns list (empty if no prescriptions exist)
-result: pass
-note: Auto-tested. Returns empty array []. No pending prescriptions in test data. Endpoint structure is correct.
-
-### 15. Stock Import History (API)
-expected: GET /stock-imports returns paginated list with supplier, invoice, date, item count
-result: pass
-note: Auto-tested. Returns paginated response with totalCount, page, pageSize, totalPages fields.
-
-### 16. Drug Inventory Page UI
-expected: Navigate to /pharmacy. Page displays all active drugs in DataTable with name, total stock, batch count, selling price, min stock level columns. Acetazolamide shows stock=100, price=120000, minStock=10. Low stock and expiry alert banners are visible.
-result: pass
-note: Playwright-tested. DataTable shows all columns correctly. Acetazolamide displays stock=100, price=120,000d, minStock=10, status "Binh thuong". Expiry alert banner with 30/60/90 day toggles. Low stock alert banner visible.
-
-### 17. Drug Batch Expand UI
-expected: Click expand button on Acetazolamide row. Nested table shows batch BATCH-UAT-001 with qty=100, expiry=2027-06-15, no expired/near-expiry flags. Batches ordered by expiry date (FEFO).
+### 2. Create and Manage Suppliers
+expected: Navigate to /pharmacy/suppliers. Create supplier with name/contact info. View list of active suppliers. Edit supplier details. Toggle supplier active/inactive status.
 result: issue
-reported: "Expand panel shows 'Khong co lo thuoc' (No batches) despite API returning batch data. Network log confirms no /inventory/{drugId}/batches API call is made when expanding. Frontend DrugInventoryDto has 'id' field but backend returns 'drugCatalogItemId' - field name mismatch causes drugId to be undefined, so useDrugBatches query never fires."
+reported: "Toggle inactive shows success toast but doesn't actually persist. Not yet investigated/fixed."
 severity: major
 
-### 18. Suppliers Page UI
-expected: Navigate to /pharmacy/suppliers. DataTable shows suppliers with name, contact, phone, email columns. "UAT Test Supplier Updated" appears with updated details.
+### 3. Import Stock via Supplier Invoice
+expected: Navigate to /pharmacy/stock-import. Create stock import with invoice number, add line items (drug, batch number, expiry date, quantity, purchase price). Import saves and appears in history.
 result: pass
-note: Playwright-tested. Shows both suppliers with name, contact info, active status badges (green "Hoat dong"), edit and toggle action buttons.
+note: Multiple bugs found and fixed inline (CSV template, BOM stripping, preview button, drug combobox, template header)
 
-### 19. Stock Import Page UI
-expected: Navigate to /pharmacy/stock-import. Shows import history with our UAT-TEST-001 import. "Create Import" button opens form with supplier dropdown, invoice field, and drug line items.
+### 4. Import Stock via Excel Bulk Upload
+expected: On stock import page, upload Excel file with drug data. See preview of valid/invalid rows with specific error messages. Confirm import to apply valid rows as stock batches.
 result: pass
-note: Playwright-tested. Dual tabs (Invoice import / History). Form has supplier dropdown, invoice number, date, notes, drug line items with search/batch/expiry/qty/price. Excel import button present. Add line button works.
 
-### 20. OTC Sales Page UI
-expected: Navigate to /pharmacy/otc-sales. Shows sales history with our UAT walk-in sale. "New Sale" button opens form with customer toggle, drug combobox with prices, reactive total calculation.
+### 5. View Drug Inventory with Batch Details
+expected: Navigate to /pharmacy. Drug catalog shows total stock, batch count, selling price, min stock level columns. Expand a drug row to see FEFO-sorted batch list (batch number, expiry date, quantity).
 result: pass
-note: Playwright-tested. Split layout: left=new sale form with customer toggle (Walk-in/Named), drug combobox, qty, price, reactive total (Tong cong), notes, confirm button. Right=history table with customer/date/drugs/total columns.
+note: Bugs found and fixed inline (batchCount column added, supplier name in batch detail fixed)
 
-### 21. Dispensing Queue Page UI
-expected: Navigate to /pharmacy/queue. Shows pending prescriptions list (may be empty). If prescriptions exist: patient name, prescription code, prescribed date, item count visible.
+### 6. Expiry Alert Banner
+expected: On /pharmacy page, collapsible banner shows drugs expiring within configurable threshold (30/60/90 day toggles). Alert count badge visible. Shows drug name, earliest expiry date, days remaining.
 result: pass
-note: Playwright-tested. Correct columns: Patient, Prescription Code, Date, Drugs, Expiry, Status. 30s auto-refresh indicator visible. Search bar present. Empty state "Khong co don thuoc nao dang cho".
 
-### 22. Consumables Warehouse Page UI
-expected: Navigate to /consumables. DataTable shows 12 consumable items with tracking mode badge, stock, min stock. Low stock alert banner visible for items with stock < minStockLevel.
+### 7. Low Stock Alert Banner (Drugs)
+expected: On /pharmacy page, collapsible banner shows drugs below minimum stock level. Alert count badge visible. Shows drug name, current total stock, minimum level threshold.
 result: pass
-note: Playwright-tested. 12 items with VI/EN names, unit, tracking mode badges (Don gian/Theo lo), stock, min stock, status (OK/Sap het). Low stock alert banner "9 items". Action buttons (+add, adjust, edit). Stock values reflect UAT test data correctly.
 
-### 23. Sidebar Navigation
-expected: Sidebar shows Pharmacy section with sub-items: Drug Inventory, Dispensing Queue, Suppliers, Stock Import, OTC Sales. Consumables section visible. All links navigate correctly.
+### 8. Dispense Drugs via Prescription Queue
+expected: Navigate to /pharmacy/queue. Pending prescriptions listed sorted oldest first with patient name/code/item count. Click to open dispensing dialog with FEFO batch suggestions. Confirm dispense deducts stock from earliest-expiry batches.
 result: pass
-note: Playwright-tested. Sidebar VI: Nha thuoc > Kho thuoc, Hang doi pha che, Nha cung cap, Nhap kho, Ban le khong don. Vat tu tieu hao as standalone link. EN: Pharmacy > Inventory, Dispensing Queue, Suppliers, Stock Import, OTC Sales. Consumables link works.
+note: Fixed prescriptionId field name mismatch (frontend DTO had "id" but backend returns "prescriptionId"). Fixed stale batch data after dispensing (added inventory/batch/alert query invalidation to useDispenseDrugs).
 
-### 24. i18n EN/VI Toggle
-expected: Language toggle switches all labels. Vietnamese shows correct diacritics. English shows translated labels.
+### 9. Override Expired Prescription
+expected: When dispensing an expired prescription (>7 days old), destructive red alert appears requiring override reason. Enter reason text, dispense succeeds with reason recorded.
+result: pass
+
+### 10. Skip Prescription Line Items
+expected: In dispensing dialog, user can skip individual drug lines (out of stock, patient refusal). Off-catalog items auto-skipped. No stock deduction for skipped lines.
+result: pass
+
+### 11. Process Walk-in OTC Sales
+expected: Navigate to /pharmacy/otc-sales. Create OTC sale for anonymous walk-in or named customer. Select drugs with auto-filled prices, adjust quantities. Reactive total calculation updates live. Confirm sale deducts stock via FEFO.
+result: pass
+note: Fixed DrugCombobox button missing type="button" (caused form auto-submit). Fixed "Required" error persisting after drug selection (added shouldValidate to setValue).
+
+### 12. Adjust Drug Stock Manually
+expected: On drug inventory, open stock adjustment for a drug batch. Select add/subtract, choose reason (Correction/WriteOff/Damage/Expired/Other), see before/after preview. Confirm saves with audit trail.
+result: pass
+note: Wired StockAdjustmentDialog into DrugBatchTable with adjust button per batch row. Fixed API field names (drugBatchId/quantityChange to match backend).
+
+### 13. View Dispensing History
+expected: Dispensing history shows paginated list of past records (date, dispensed by, item count). Can filter by patient. Expand to see drug names and quantities dispensed.
 result: issue
-reported: "Vietnamese is fully translated and correct. English toggle works for sidebar, table headers, alert banners, search placeholders. But some elements stay Vietnamese in English mode: page subtitle 'Quan ly kho thuoc va theo doi ton kho', action buttons 'Quan ly nha cung cap' and 'Nhap kho'. Partial English translation."
-severity: minor
+reported: "No global dispensing history view — only available per-patient in profile's Prescriptions tab"
+severity: major
+
+### 14. View OTC Sales History
+expected: On /pharmacy/otc-sales, sales history shows paginated list (customer name with anonymous badge for walk-ins, date, item count, total amount) in reverse chronological order.
+result: pass
+note: Fixed OtcSaleDto field mapping (soldAt not saleDate, compute totals from lines). Fixed paged result unwrapping. Added expandable row detail view.
+
+### 15. Update Drug Selling Price
+expected: On drug inventory, edit selling price for a drug. Price update applies immediately to future OTC sales.
+result: pass
+
+### 16. Create and Manage Consumable Items
+expected: Navigate to /consumables. View all active items with tracking mode badges (SimpleStock/ExpiryTracked). Can create new item with name, unit, tracking mode, min stock level. Can edit existing items.
+result: pass
+
+### 17. Add Consumable Stock (SimpleStock)
+expected: For SimpleStock consumable, add stock by entering quantity only. Stock increments, IsLowStock flag updates.
+result: pass
+note: Fixed ConsumableTrackingMode enum values swapped in 3 frontend files (ExpiryTracked=0, SimpleStock=1 to match backend).
+
+### 18. Add Consumable Stock (ExpiryTracked)
+expected: For ExpiryTracked consumable, add stock with batch number and expiry date. New batch created, stock increments.
+result: [pending]
+
+### 19. Adjust Consumable Stock
+expected: Adjust consumable batch quantity, select reason (Correction/WriteOff/Damage/Expired/Other), see before/after preview, saves with audit trail.
+result: [pending]
+
+### 20. Consumable Low Stock Alerts
+expected: On /consumables, collapsible banner shows items below minimum stock level (both tracking modes). Item count badge visible. Shows item name, current vs minimum levels.
+result: [pending]
+
+### 21. Prescriptions in Patient Profile
+expected: Open patient profile, see Prescriptions tab with pending prescriptions and collapsible dispensing history. 'View full queue' link navigates to pharmacy queue page.
+result: [pending]
+
+### 22. Pending Prescription Count Badge
+expected: Pharmacy sidebar shows badge with count of pending (non-expired) prescriptions. Updates periodically via auto-refresh polling.
+result: [pending]
+
+### 23. Bilingual UI (English/Vietnamese)
+expected: All pharmacy and consumables pages display correctly in both English and Vietnamese with proper diacritics. Sidebar nav shows localized labels. Language toggle switches all visible text.
+result: [pending]
+
+### 24. Sidebar Navigation Structure
+expected: Sidebar shows Pharmacy section with sub-items: Drug Inventory, Dispensing Queue, Suppliers, Stock Import, OTC Sales. Consumables section visible as standalone link. All links navigate correctly.
+result: [pending]
 
 ## Summary
 
 total: 24
-passed: 22
+passed: 15
 issues: 2
-pending: 0
+pending: 7
 skipped: 0
 
 ## Gaps
 
-- truth: "Clicking expand on drug row shows batch details in nested table"
-  status: resolved
-  reason: "User reported: Expand panel shows 'Khong co lo thuoc' (No batches) despite API returning batch data. Network log confirms no /inventory/{drugId}/batches API call is made when expanding. Frontend DrugInventoryDto has 'id' field but backend returns 'drugCatalogItemId' - field name mismatch causes drugId to be undefined, so useDrugBatches query never fires."
+- truth: "Toggle supplier active/inactive status persists"
+  status: failed
+  reason: "User reported: Toggle inactive shows success toast but doesn't actually persist. Not yet investigated/fixed."
   severity: major
-  test: 17
-  root_cause: "Frontend DrugInventoryDto.id does not match backend DrugInventoryDto.DrugCatalogItemId. The frontend uses drug.id to pass to DrugBatchTable which calls useDrugBatches(drugId). Since 'id' is undefined (backend sends 'drugCatalogItemId'), the query is disabled and no API call is made."
-  artifacts:
-    - path: "frontend/src/features/pharmacy/api/pharmacy-api.ts"
-      issue: "DrugInventoryDto has 'id: string' but backend sends 'drugCatalogItemId'"
-    - path: "frontend/src/features/pharmacy/components/DrugInventoryTable.tsx"
-      issue: "Line 336 passes drug.id which is undefined"
-    - path: "backend/src/Modules/Pharmacy/Pharmacy.Contracts/Dtos/DrugBatchDto.cs"
-      issue: "DrugInventoryDto record has DrugCatalogItemId field (line 28)"
-  missing:
-    - "Rename DrugInventoryDto.id to drugCatalogItemId in frontend, or alias it in the API response"
+  test: 2
+  root_cause: ""
+  artifacts: []
+  missing: []
   debug_session: ""
 
-- truth: "English mode shows all labels in English"
-  status: resolved
-  reason: "User reported: Vietnamese is fully translated and correct. English toggle works for sidebar, table headers, alert banners, search placeholders. But some elements stay Vietnamese in English mode: page subtitle, action buttons 'Quan ly nha cung cap' and 'Nhap kho'. Partial English translation."
-  severity: minor
-  test: 24
-  root_cause: "Missing translation keys in English locale file for pharmacy page subtitle and action buttons"
-  artifacts:
-    - path: "frontend/src/app/routes/_authenticated/pharmacy/index.tsx"
-      issue: "Some strings may be hardcoded in Vietnamese or missing EN translation keys"
-    - path: "frontend/public/locales/en/pharmacy.json"
-      issue: "Missing translation keys for page subtitle and action buttons"
-  missing:
-    - "Add missing English translation keys for pharmacy page subtitle and action buttons"
+- truth: "Global dispensing history view accessible from pharmacy pages"
+  status: failed
+  reason: "User reported: No global dispensing history view — only available per-patient in profile's Prescriptions tab"
+  severity: major
+  test: 13
+  root_cause: ""
+  artifacts: []
+  missing: []
   debug_session: ""

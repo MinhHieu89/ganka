@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react"
+import { useMemo, useState, useCallback } from "react"
 import { useTranslation } from "react-i18next"
 import {
   createColumnHelper,
@@ -7,11 +7,14 @@ import {
   useReactTable,
   type SortingState,
 } from "@tanstack/react-table"
+import { IconAdjustments } from "@tabler/icons-react"
 import { Badge } from "@/shared/components/Badge"
+import { Button } from "@/shared/components/Button"
 import { Skeleton } from "@/shared/components/Skeleton"
 import { DataTable } from "@/shared/components/DataTable"
 import { type DrugBatchDto } from "@/features/pharmacy/api/pharmacy-api"
 import { useDrugBatches } from "@/features/pharmacy/api/pharmacy-queries"
+import { StockAdjustmentDialog, type BatchInfo } from "./StockAdjustmentDialog"
 
 interface DrugBatchTableProps {
   drugId: string
@@ -39,6 +42,20 @@ export function DrugBatchTable({ drugId, drugName }: DrugBatchTableProps) {
   const { t } = useTranslation("pharmacy")
   const { data: batches, isLoading } = useDrugBatches(drugId)
   const [sorting, setSorting] = useState<SortingState>([{ id: "expiryDate", desc: false }])
+  const [adjustDialogOpen, setAdjustDialogOpen] = useState(false)
+  const [adjustBatch, setAdjustBatch] = useState<BatchInfo | null>(null)
+
+  const openAdjustDialog = useCallback(
+    (batch: DrugBatchDto) => {
+      setAdjustBatch({
+        batchId: batch.id,
+        drugName: `${drugName} — ${batch.batchNumber}`,
+        currentQuantity: batch.currentQuantity,
+      })
+      setAdjustDialogOpen(true)
+    },
+    [drugName],
+  )
 
   const columns = useMemo(
     () => [
@@ -116,8 +133,24 @@ export function DrugBatchTable({ drugId, drugName }: DrugBatchTableProps) {
           return <Badge variant="outline" className="text-xs">{t("batch.statusActive")}</Badge>
         },
       }),
+      columnHelper.display({
+        id: "actions",
+        header: () => "",
+        cell: ({ row }) => (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="h-7 px-2"
+            onClick={() => openAdjustDialog(row.original)}
+            title={t("stockAdjust.title")}
+          >
+            <IconAdjustments className="h-4 w-4" />
+          </Button>
+        ),
+      }),
     ],
-    [t],
+    [t, openAdjustDialog],
   )
 
   const table = useReactTable({
@@ -153,6 +186,11 @@ export function DrugBatchTable({ drugId, drugName }: DrugBatchTableProps) {
           if (batch.isNearExpiry) return "bg-yellow-50 dark:bg-yellow-950/20"
           return ""
         }}
+      />
+      <StockAdjustmentDialog
+        batch={adjustBatch}
+        open={adjustDialogOpen}
+        onOpenChange={setAdjustDialogOpen}
       />
     </div>
   )

@@ -237,7 +237,7 @@ export function DispensingDialog({
     if (!prescription) return
 
     const input = {
-      prescriptionId: prescription.id,
+      prescriptionId: prescription.prescriptionId,
       visitId: prescription.visitId,
       patientId: prescription.patientId,
       patientName: prescription.patientName,
