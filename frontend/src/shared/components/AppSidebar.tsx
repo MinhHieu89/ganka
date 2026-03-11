@@ -35,7 +35,6 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
@@ -129,6 +128,7 @@ export function AppSidebar({ ...sidebarProps }: ComponentProps<typeof Sidebar>) 
         { titleKey: "sidebar.pharmacyInventory", to: "/pharmacy" },
         { titleKey: "sidebar.pharmacyDrugCatalog", to: "/pharmacy/drug-catalog" },
         { titleKey: "sidebar.pharmacyQueue", to: "/pharmacy/queue" },
+        { titleKey: "sidebar.pharmacyDispensingHistory", to: "/pharmacy/dispensing-history" },
         { titleKey: "sidebar.pharmacySuppliers", to: "/pharmacy/suppliers" },
         { titleKey: "sidebar.pharmacyStockImport", to: "/pharmacy/stock-import" },
         { titleKey: "sidebar.pharmacyOtcSales", to: "/pharmacy/otc-sales" },
@@ -237,14 +237,14 @@ export function AppSidebar({ ...sidebarProps }: ComponentProps<typeof Sidebar>) 
                 >
                   <item.icon className="h-4 w-4" />
                   <span>{t(item.titleKey)}</span>
-                  <IconChevronDown className="ml-auto h-4 w-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-180" />
+                  {hasBadge && (
+                    <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-xs font-medium text-primary-foreground">
+                      {pendingCount}
+                    </span>
+                  )}
+                  <IconChevronDown className={`${hasBadge ? "" : "ml-auto "}h-4 w-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-180`} />
                 </SidebarMenuButton>
               </CollapsibleTrigger>
-              {hasBadge && (
-                <SidebarMenuBadge className="bg-primary text-primary-foreground text-xs font-medium px-1.5 py-0.5 rounded-full">
-                  {pendingCount}
-                </SidebarMenuBadge>
-              )}
               <CollapsibleContent>
                 <SidebarMenuSub>
                   {item.children.map((child) => {

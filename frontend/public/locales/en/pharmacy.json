@@ -24,6 +24,7 @@
     "drugName": "Drug Name",
     "sellingPrice": "Selling Price",
     "totalStock": "Total Stock",
+    "batchCount": "Batches",
     "minStockLevel": "Min Stock",
     "status": "Status",
     "statusOk": "OK",
@@ -148,6 +149,7 @@
     "historyDispensedBy": "Dispensed By",
     "historyLines": "Lines",
     "historyEmpty": "No dispensing history",
+    "dispensingHistorySubtitle": "All dispensing records across all patients",
     "prescriptions": {
       "tab": "Prescriptions"
     }
