@@ -20,6 +20,11 @@ public interface ISupplierRepository
     Task<List<Supplier>> GetAllActiveAsync(CancellationToken ct);
 
     /// <summary>
+    /// Gets all suppliers (both active and inactive).
+    /// </summary>
+    Task<List<Supplier>> GetAllAsync(CancellationToken ct);
+
+    /// <summary>
     /// Gets all drug prices for a specific supplier.
     /// </summary>
     Task<List<SupplierDrugPriceDto>> GetSupplierDrugPricesAsync(Guid supplierId, CancellationToken ct);

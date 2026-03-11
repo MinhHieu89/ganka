@@ -93,6 +93,13 @@ public static class PharmacyApiEndpoints
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
         });
+
+        // PATCH /api/pharmacy/suppliers/{id}/toggle-active -- toggle supplier active/inactive status
+        group.MapPatch("/suppliers/{id:guid}/toggle-active", async (Guid id, IMessageBus bus, CancellationToken ct) =>
+        {
+            var result = await bus.InvokeAsync<Result>(new ToggleSupplierActiveCommand(id), ct);
+            return result.ToHttpResult();
+        });
     }
 
     private static void MapInventoryEndpoints(RouteGroupBuilder group)
@@ -162,7 +169,7 @@ public static class PharmacyApiEndpoints
 
             using var stream = file.OpenReadStream();
             var result = await bus.InvokeAsync<Result<ExcelImportPreview>>(
-                new ImportStockFromExcelCommand(stream, supplierId), ct);
+                new ImportStockFromExcelCommand(stream, supplierId, file.FileName), ct);
             return result.ToHttpResult();
         }).DisableAntiforgery();
     }

@@ -238,16 +238,16 @@ public class SupplierHandlerTests
     #region GetSuppliers Tests
 
     [Fact]
-    public async Task GetSuppliers_ReturnsActiveSuppliers()
+    public async Task GetSuppliers_ReturnsAllSuppliers()
     {
         // Arrange
-        var suppliers = new List<Supplier>
-        {
-            Supplier.Create("Supplier A", "Address A", "0901111111", "a@test.vn", new BranchId(DefaultBranchId)),
-            Supplier.Create("Supplier B", "Address B", "0902222222", "b@test.vn", new BranchId(DefaultBranchId))
-        };
+        var activeSupplier = Supplier.Create("Supplier A", "Address A", "0901111111", "a@test.vn", new BranchId(DefaultBranchId));
+        var inactiveSupplier = Supplier.Create("Supplier B", "Address B", "0902222222", "b@test.vn", new BranchId(DefaultBranchId));
+        inactiveSupplier.Deactivate();
 
-        _repository.GetAllActiveAsync(Arg.Any<CancellationToken>())
+        var suppliers = new List<Supplier> { activeSupplier, inactiveSupplier };
+
+        _repository.GetAllAsync(Arg.Any<CancellationToken>())
             .Returns(suppliers);
 
         var query = new GetSuppliersQuery();
@@ -257,9 +257,10 @@ public class SupplierHandlerTests
 
         // Assert
         result.Should().HaveCount(2);
-        result.Should().AllSatisfy(dto => dto.IsActive.Should().BeTrue());
         result[0].Name.Should().Be("Supplier A");
+        result[0].IsActive.Should().BeTrue();
         result[1].Name.Should().Be("Supplier B");
+        result[1].IsActive.Should().BeFalse();
     }
 
     #endregion

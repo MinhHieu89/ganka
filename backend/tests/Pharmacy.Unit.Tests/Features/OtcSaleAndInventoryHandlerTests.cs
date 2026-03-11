@@ -28,6 +28,7 @@ public class OtcSaleAndInventoryHandlerTests
     private readonly ICurrentUser _currentUser = Substitute.For<ICurrentUser>();
     private readonly IValidator<CreateOtcSaleCommand> _createOtcSaleValidator = Substitute.For<IValidator<CreateOtcSaleCommand>>();
     private readonly IValidator<AdjustStockCommand> _adjustStockValidator = Substitute.For<IValidator<AdjustStockCommand>>();
+    private readonly ISupplierRepository _supplierRepository = Substitute.For<ISupplierRepository>();
 
     private static readonly Guid DefaultBranchId = Guid.Parse("00000000-0000-0000-0000-000000000001");
     private static readonly Guid DefaultPatientId = Guid.NewGuid();
@@ -344,7 +345,7 @@ public class OtcSaleAndInventoryHandlerTests
 
         // Act
         var result = await GetDrugBatchesHandler.Handle(
-            query, _drugBatchRepository, CancellationToken.None);
+            query, _drugBatchRepository, _supplierRepository, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -366,7 +367,7 @@ public class OtcSaleAndInventoryHandlerTests
 
         // Act
         var result = await GetDrugBatchesHandler.Handle(
-            query, _drugBatchRepository, CancellationToken.None);
+            query, _drugBatchRepository, _supplierRepository, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();

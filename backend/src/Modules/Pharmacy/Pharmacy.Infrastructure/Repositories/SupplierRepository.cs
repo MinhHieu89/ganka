@@ -26,6 +26,14 @@ public sealed class SupplierRepository(PharmacyDbContext context) : ISupplierRep
             .ToListAsync(ct);
     }
 
+    public async Task<List<Supplier>> GetAllAsync(CancellationToken ct)
+    {
+        return await context.Suppliers
+            .AsNoTracking()
+            .OrderBy(s => s.Name)
+            .ToListAsync(ct);
+    }
+
     public async Task<List<SupplierDrugPriceDto>> GetSupplierDrugPricesAsync(Guid supplierId, CancellationToken ct)
     {
         return await context.SupplierDrugPrices
