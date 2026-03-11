@@ -21,6 +21,7 @@ import type { SupplierDto } from "@/features/pharmacy/api/pharmacy-api"
 import {
   useSuppliers,
   useUpdateSupplier,
+  useToggleSupplierActive,
 } from "@/features/pharmacy/api/pharmacy-queries"
 
 export const Route = createFileRoute("/_authenticated/pharmacy/suppliers")({
@@ -33,6 +34,7 @@ function SuppliersPage() {
   const { t } = useTranslation("pharmacy")
   const { data: suppliers, isLoading } = useSuppliers()
   const updateSupplier = useUpdateSupplier()
+  const toggleActive = useToggleSupplierActive()
 
   const [sorting, setSorting] = useState<SortingState>([])
   const [globalFilter, setGlobalFilter] = useState("")
@@ -52,12 +54,7 @@ function SuppliersPage() {
   const handleToggleActive = useCallback(
     async (supplier: SupplierDto) => {
       try {
-        await updateSupplier.mutateAsync({
-          id: supplier.id,
-          name: supplier.name,
-          contactInfo: supplier.contactInfo,
-          isActive: !supplier.isActive,
-        })
+        await toggleActive.mutateAsync(supplier.id)
         toast.success(
           supplier.isActive ? t("supplier.deactivated") : t("supplier.activated"),
         )
@@ -65,7 +62,7 @@ function SuppliersPage() {
         // onError in mutation handles toast
       }
     },
-    [updateSupplier, t],
+    [toggleActive, t],
   )
 
   const columns = useMemo(

@@ -122,13 +122,23 @@ export interface PendingPrescriptionDto {
   items: PendingPrescriptionItemDto[]
 }
 
+export interface DispensingLineDto {
+  id: string
+  drugCatalogItemId: string
+  drugName: string
+  unit: string
+  quantity: number
+  status: number
+}
+
 export interface DispensingRecordDto {
   id: string
   prescriptionId: string
+  patientId: string
   patientName: string
   dispensedAt: string
-  dispensedByName: string
-  lineCount: number
+  overrideReason: string | null
+  lines: DispensingLineDto[]
 }
 
 export interface OtcSaleDto {
@@ -167,7 +177,6 @@ export interface CreateSupplierInput {
 export interface UpdateSupplierInput {
   name: string
   contactInfo?: string | null
-  isActive?: boolean
 }
 
 export interface UpdateDrugPricingInput {
@@ -340,6 +349,11 @@ export async function updateSupplier(id: string, input: UpdateSupplierInput): Pr
     if (err?.errors) throw new Error(JSON.stringify(err))
     throw new Error("Failed to update supplier")
   }
+}
+
+export async function toggleSupplierActive(id: string): Promise<void> {
+  const { error, response } = await api.PATCH(`/api/pharmacy/suppliers/${id}/toggle-active` as never)
+  if (error || !response.ok) throw new Error("Failed to toggle supplier status")
 }
 
 // Inventory

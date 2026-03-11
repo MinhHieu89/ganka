@@ -4,6 +4,7 @@ import {
   getSuppliers,
   createSupplier,
   updateSupplier,
+  toggleSupplierActive,
   getDrugInventory,
   getDrugBatches,
   updateDrugPricing,
@@ -209,6 +210,19 @@ export function useUpdateSupplier() {
   return useMutation({
     mutationFn: ({ id, ...input }: { id: string } & UpdateSupplierInput) =>
       updateSupplier(id, input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: pharmacyKeys.suppliers.all() })
+    },
+    onError: (error: Error) => {
+      toast.error(error.message)
+    },
+  })
+}
+
+export function useToggleSupplierActive() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (id: string) => toggleSupplierActive(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: pharmacyKeys.suppliers.all() })
     },
