@@ -153,6 +153,88 @@ public class SupplierHandlerTests
 
     #endregion
 
+    #region ToggleSupplierActive Tests
+
+    [Fact]
+    public async Task ToggleSupplierActive_ActiveSupplier_Deactivates()
+    {
+        // Arrange
+        var supplierId = Guid.NewGuid();
+        var supplier = Supplier.Create(
+            "Active Supplier",
+            "Address",
+            "0901234567",
+            "test@test.vn",
+            new BranchId(DefaultBranchId));
+
+        supplier.IsActive.Should().BeTrue(); // precondition
+
+        _repository.GetByIdAsync(supplierId, Arg.Any<CancellationToken>())
+            .Returns(supplier);
+
+        var command = new ToggleSupplierActiveCommand(supplierId);
+
+        // Act
+        var result = await ToggleSupplierActiveHandler.Handle(
+            command, _repository, _unitOfWork, CancellationToken.None);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        supplier.IsActive.Should().BeFalse();
+        await _unitOfWork.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task ToggleSupplierActive_InactiveSupplier_Activates()
+    {
+        // Arrange
+        var supplierId = Guid.NewGuid();
+        var supplier = Supplier.Create(
+            "Inactive Supplier",
+            "Address",
+            "0901234567",
+            "test@test.vn",
+            new BranchId(DefaultBranchId));
+        supplier.Deactivate(); // make inactive first
+        supplier.IsActive.Should().BeFalse(); // precondition
+
+        _repository.GetByIdAsync(supplierId, Arg.Any<CancellationToken>())
+            .Returns(supplier);
+
+        var command = new ToggleSupplierActiveCommand(supplierId);
+
+        // Act
+        var result = await ToggleSupplierActiveHandler.Handle(
+            command, _repository, _unitOfWork, CancellationToken.None);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        supplier.IsActive.Should().BeTrue();
+        await _unitOfWork.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task ToggleSupplierActive_NotFound_ReturnsError()
+    {
+        // Arrange
+        var nonExistentId = Guid.NewGuid();
+        _repository.GetByIdAsync(nonExistentId, Arg.Any<CancellationToken>())
+            .Returns((Supplier?)null);
+
+        var command = new ToggleSupplierActiveCommand(nonExistentId);
+
+        // Act
+        var result = await ToggleSupplierActiveHandler.Handle(
+            command, _repository, _unitOfWork, CancellationToken.None);
+
+        // Assert
+        result.IsFailure.Should().BeTrue();
+        result.Error.Code.Should().Be("Error.NotFound");
+        await _unitOfWork.DidNotReceive().SaveChangesAsync(Arg.Any<CancellationToken>());
+    }
+
+    #endregion
+
     #region GetSuppliers Tests
 
     [Fact]
