@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 06-31-PLAN.md
-last_updated: "2026-03-11T11:02:32.665Z"
+stopped_at: Completed 06-30-PLAN.md
+last_updated: "2026-03-11T11:04:26.526Z"
 last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
 progress:
   total_phases: 14
-  completed_phases: 11
+  completed_phases: 12
   total_plans: 233
-  completed_plans: 230
+  completed_plans: 231
 ---
 
 ---
@@ -696,6 +696,7 @@ Progress: [█████████░] 96%
 | Phase 03 P15 | 13min | 2 tasks | 6 files |
 | Phase 03 P16 | 35min | 2 tasks | 1 files |
 | Phase 06 P31 | 3min | 1 tasks | 7 files |
+| Phase 06 P30 | 4min | 2 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -1142,6 +1143,8 @@ Recent decisions affecting current work:
 - [Phase 03]: Diagnosis field key format: diagnosis.added.<icd10Code>:<laterality> to match formatFieldLabel patterns
 - [Phase 03]: 4 UAT issues deferred to subsequent gap closure plans: accent search, VA decimal display, laterality diacritics, set-as-primary
 - [Phase 06]: Reused existing useDispensingHistory hook without patientId for global dispensing query
+- [Phase 06]: Dedicated PATCH toggle endpoint for supplier active status instead of overloading PUT update
+- [Phase 06]: GetSuppliers returns all suppliers (active+inactive) so toggle UI is visible for both states
 
 ### Roadmap Evolution
 
@@ -1164,6 +1167,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-11T11:02:32.660Z
-Stopped at: Completed 06-31-PLAN.md
+Last session: 2026-03-11T11:04:26.520Z
+Stopped at: Completed 06-30-PLAN.md
 Resume file: None
