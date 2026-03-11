@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 03-16-PLAN.md
-last_updated: "2026-03-09T14:50:21.997Z"
+stopped_at: Completed 06-31-PLAN.md
+last_updated: "2026-03-11T11:02:32.665Z"
 last_activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
 progress:
   total_phases: 14
-  completed_phases: 12
-  total_plans: 231
-  completed_plans: 229
+  completed_phases: 11
+  total_plans: 233
+  completed_plans: 230
 ---
 
 ---
@@ -695,6 +695,7 @@ Progress: [█████████░] 96%
 | Phase 03 P14 | 5min | 2 tasks | 3 files |
 | Phase 03 P15 | 13min | 2 tasks | 6 files |
 | Phase 03 P16 | 35min | 2 tasks | 1 files |
+| Phase 06 P31 | 3min | 1 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -1140,6 +1141,7 @@ Recent decisions affecting current work:
 - [Phase 03]: Refraction field labels use universal medical abbreviations (OD SPH, CYL) as constants, not i18n
 - [Phase 03]: Diagnosis field key format: diagnosis.added.<icd10Code>:<laterality> to match formatFieldLabel patterns
 - [Phase 03]: 4 UAT issues deferred to subsequent gap closure plans: accent search, VA decimal display, laterality diacritics, set-as-primary
+- [Phase 06]: Reused existing useDispensingHistory hook without patientId for global dispensing query
 
 ### Roadmap Evolution
 
@@ -1162,6 +1164,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-09T09:45:11.052Z
-Stopped at: Completed 03-16-PLAN.md
+Last session: 2026-03-11T11:02:32.660Z
+Stopped at: Completed 06-31-PLAN.md
 Resume file: None
