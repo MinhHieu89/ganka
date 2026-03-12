@@ -1,9 +1,9 @@
 ---
 status: complete
 phase: 06-pharmacy-consumables
-source: 06-01 through 06-29 SUMMARY.md
+source: 06-01 through 06-31 SUMMARY.md
 started: 2026-03-10T10:00:00Z
-updated: 2026-03-11T09:48:31Z
+updated: 2026-03-12T04:00:00Z
 ---
 
 ## Current Test
@@ -18,9 +18,8 @@ result: pass
 
 ### 2. Create and Manage Suppliers
 expected: Navigate to /pharmacy/suppliers. Create supplier with name/contact info. View list of active suppliers. Edit supplier details. Toggle supplier active/inactive status.
-result: issue
-reported: "Toggle inactive shows success toast but doesn't actually persist. Not yet investigated/fixed."
-severity: major
+result: pass
+note: Re-tested 2026-03-12 after fix (06-30). Toggle now persists via dedicated PATCH /toggle-active endpoint.
 
 ### 3. Import Stock via Supplier Invoice
 expected: Navigate to /pharmacy/stock-import. Create stock import with invoice number, add line items (drug, batch number, expiry date, quantity, purchase price). Import saves and appears in history.
@@ -69,9 +68,8 @@ note: Wired StockAdjustmentDialog into DrugBatchTable with adjust button per bat
 
 ### 13. View Dispensing History
 expected: Dispensing history shows paginated list of past records (date, dispensed by, item count). Can filter by patient. Expand to see drug names and quantities dispensed.
-result: issue
-reported: "No global dispensing history view — only available per-patient in profile's Prescriptions tab"
-severity: major
+result: pass
+note: Re-tested 2026-03-12 after fix (06-31). Global dispensing history page at /pharmacy/dispensing-history with sidebar link.
 
 ### 14. View OTC Sales History
 expected: On /pharmacy/otc-sales, sales history shows paginated list (customer name with anonymous badge for walk-ins, date, item count, total amount) in reverse chronological order.
@@ -126,29 +124,11 @@ result: pass
 ## Summary
 
 total: 24
-passed: 22
-issues: 2
+passed: 24
+issues: 0
 pending: 0
 skipped: 0
 
 ## Gaps
 
-- truth: "Toggle supplier active/inactive status persists"
-  status: failed
-  reason: "User reported: Toggle inactive shows success toast but doesn't actually persist. Not yet investigated/fixed."
-  severity: major
-  test: 2
-  root_cause: ""
-  artifacts: []
-  missing: []
-  debug_session: ""
-
-- truth: "Global dispensing history view accessible from pharmacy pages"
-  status: failed
-  reason: "User reported: No global dispensing history view — only available per-patient in profile's Prescriptions tab"
-  severity: major
-  test: 13
-  root_cause: ""
-  artifacts: []
-  missing: []
-  debug_session: ""
+[none — all gaps closed on re-test 2026-03-12]
