@@ -16,6 +16,7 @@
 - Apply Testing Driven Design (TDD) strictly: write failing tests first, then implement (red-green-refactor).
 - Make sure to have at least 80% code coverage.
 - When you make changes to the models, make sure remember to create migrations and run them to update database schema.
+- Whenever there is lock file issue due to running backend, stop the backend then continue.
 
 # Test Account Credentials
 - Username: Admin@ganka28.com

@@ -247,6 +247,11 @@ export function DrugInventoryTable({ drugs }: DrugInventoryTableProps) {
         ),
         enableSorting: true,
       }),
+      columnHelper.accessor("batchCount", {
+        header: () => t("inventory.batchCount"),
+        cell: (info) => <span className="text-sm text-muted-foreground">{info.getValue()}</span>,
+        enableSorting: false,
+      }),
       columnHelper.accessor("minStockLevel", {
         header: () => t("inventory.minStockLevel"),
         cell: (info) => <span className="text-sm text-muted-foreground">{info.getValue()}</span>,
@@ -261,7 +266,7 @@ export function DrugInventoryTable({ drugs }: DrugInventoryTableProps) {
             return (
               <div className="flex flex-col gap-1">
                 <Badge variant="destructive" className="text-xs">{t("inventory.statusExpiry")}</Badge>
-                <Badge variant="destructive" className="text-xs">{t("inventory.statusLow")}</Badge>
+                <Badge variant="outline" className="text-xs border-yellow-500 text-yellow-700 dark:text-yellow-400">{t("inventory.statusLow")}</Badge>
               </div>
             )
           }

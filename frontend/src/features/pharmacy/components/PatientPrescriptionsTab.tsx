@@ -9,6 +9,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/shared/co
 import { Separator } from "@/shared/components/Separator"
 import { PharmacyQueueTable } from "@/features/pharmacy/components/PharmacyQueueTable"
 import { useDispensingHistory } from "@/features/pharmacy/api/pharmacy-queries"
+import type { DispensingRecordDto } from "@/features/pharmacy/api/pharmacy-api"
 
 interface PatientPrescriptionsTabProps {
   patientId: string
@@ -16,11 +17,16 @@ interface PatientPrescriptionsTabProps {
 
 export function PatientPrescriptionsTab({ patientId }: PatientPrescriptionsTabProps) {
   const { t } = useTranslation("pharmacy")
-  const [historyOpen, setHistoryOpen] = useState(false)
+  const [historyOpen, setHistoryOpen] = useState(true)
+  const [expandedId, setExpandedId] = useState<string | null>(null)
 
   const { data: historyResult, isLoading: historyLoading } = useDispensingHistory(1, patientId)
   const historyItems = historyResult?.items ?? []
   const historyTotal = historyResult?.totalCount ?? 0
+
+  const toggleExpand = (id: string) => {
+    setExpandedId((prev) => (prev === id ? null : id))
+  }
 
   return (
     <div className="space-y-6">
@@ -44,7 +50,7 @@ export function PatientPrescriptionsTab({ patientId }: PatientPrescriptionsTabPr
 
       <Separator />
 
-      {/* Dispensing history section (collapsible) */}
+      {/* Dispensing history section (collapsible, expanded by default) */}
       <Collapsible open={historyOpen} onOpenChange={setHistoryOpen}>
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
@@ -88,9 +94,6 @@ export function PatientPrescriptionsTab({ patientId }: PatientPrescriptionsTabPr
                     <th className="text-left px-3 py-2 font-medium text-muted-foreground">
                       {t("queue.historyDispensedAt")}
                     </th>
-                    <th className="text-left px-3 py-2 font-medium text-muted-foreground">
-                      {t("queue.historyDispensedBy")}
-                    </th>
                     <th className="text-right px-3 py-2 font-medium text-muted-foreground">
                       {t("queue.historyLines")}
                     </th>
@@ -98,25 +101,12 @@ export function PatientPrescriptionsTab({ patientId }: PatientPrescriptionsTabPr
                 </thead>
                 <tbody>
                   {historyItems.map((record) => (
-                    <tr key={record.id} className="border-t">
-                      <td className="px-3 py-2">
-                        {new Date(record.dispensedAt).toLocaleString("vi-VN", {
-                          year: "numeric",
-                          month: "2-digit",
-                          day: "2-digit",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </td>
-                      <td className="px-3 py-2 text-muted-foreground">
-                        {record.dispensedByName}
-                      </td>
-                      <td className="px-3 py-2 text-right">
-                        <Badge variant="outline" className="text-xs">
-                          {record.lineCount}
-                        </Badge>
-                      </td>
-                    </tr>
+                    <HistoryRow
+                      key={record.id}
+                      record={record}
+                      expanded={expandedId === record.id}
+                      onToggle={() => toggleExpand(record.id)}
+                    />
                   ))}
                 </tbody>
               </table>
@@ -125,5 +115,72 @@ export function PatientPrescriptionsTab({ patientId }: PatientPrescriptionsTabPr
         </CollapsibleContent>
       </Collapsible>
     </div>
+  )
+}
+
+function HistoryRow({
+  record,
+  expanded,
+  onToggle,
+}: {
+  record: DispensingRecordDto
+  expanded: boolean
+  onToggle: () => void
+}) {
+  const lineCount = record.lines?.length ?? 0
+
+  return (
+    <>
+      <tr
+        className="border-t cursor-pointer hover:bg-muted/30 transition-colors"
+        onClick={onToggle}
+      >
+        <td className="px-3 py-2">
+          {new Date(record.dispensedAt).toLocaleString("vi-VN", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
+        </td>
+        <td className="px-3 py-2 text-right">
+          <Badge variant="outline" className="text-xs">
+            {lineCount}
+          </Badge>
+        </td>
+      </tr>
+      {expanded && record.lines && record.lines.length > 0 && (
+        <tr>
+          <td colSpan={2} className="px-3 py-2 bg-muted/20">
+            <div className="space-y-1">
+              {record.lines.map((line) => (
+                <div
+                  key={line.id}
+                  className="flex items-center justify-between text-xs"
+                >
+                  <span className="text-foreground">{line.drugName}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-muted-foreground">
+                      x{line.quantity} {line.unit}
+                    </span>
+                    {line.status === 1 && (
+                      <Badge variant="outline" className="text-xs text-yellow-600">
+                        Bỏ qua
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+              ))}
+              {record.overrideReason && (
+                <p className="text-xs text-yellow-600 mt-1">
+                  Ghi đè: {record.overrideReason}
+                </p>
+              )}
+            </div>
+          </td>
+        </tr>
+      )}
+    </>
   )
 }

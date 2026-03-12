@@ -21,6 +21,7 @@ public sealed record DispensingLineDto(
     Guid Id,
     Guid DrugCatalogItemId,
     string DrugName,
+    string Unit,
     int Quantity,
     int Status,
     List<BatchDeductionDto> BatchDeductions);

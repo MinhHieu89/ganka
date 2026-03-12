@@ -584,6 +584,9 @@ export function useSignOffVisit() {
         queryKey: clinicalKeys.visit(variables.visitId),
       })
       queryClient.invalidateQueries({ queryKey: clinicalKeys.activeVisits() })
+      // Sign-off finalizes prescriptions — they become pending in pharmacy queue
+      queryClient.invalidateQueries({ queryKey: ["pharmacy", "dispensing", "pending-count"] })
+      queryClient.invalidateQueries({ queryKey: ["pharmacy", "dispensing", "pending"] })
     },
   })
 }

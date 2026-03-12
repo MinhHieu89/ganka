@@ -50,6 +50,14 @@ public static class ConsumablesApiEndpoints
             return result.ToHttpResult();
         });
 
+        // GET /api/consumables/{id}/batches -- all batches for an ExpiryTracked consumable
+        group.MapGet("/{id:guid}/batches", async (Guid id, IMessageBus bus, CancellationToken ct) =>
+        {
+            var result = await bus.InvokeAsync<Result<List<ConsumableBatchDto>>>(
+                new GetConsumableBatchesQuery(id), ct);
+            return result.ToHttpResult();
+        });
+
         // POST /api/consumables/{id}/stock -- add stock to a consumable item
         group.MapPost("/{id:guid}/stock", async (Guid id, AddConsumableStockCommand command, IMessageBus bus, CancellationToken ct) =>
         {

@@ -49,31 +49,48 @@ public sealed class DispensingRepository(PharmacyDbContext context, IMessageBus 
 
         var totalCount = await query.CountAsync(ct);
 
-        var items = await query
+        var records = await query
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .Include(r => r.Lines)
                 .ThenInclude(l => l.BatchDeductions)
-            .Select(r => new DispensingRecordDto(
-                r.Id,
-                r.PrescriptionId,
-                r.VisitId,
-                r.PatientId,
-                r.PatientName,
-                r.DispensedAt,
-                r.OverrideReason,
-                r.Lines.Select(l => new DispensingLineDto(
-                    l.Id,
-                    l.DrugCatalogItemId,
-                    l.DrugName,
-                    l.Quantity,
-                    (int)l.Status,
-                    l.BatchDeductions.Select(bd => new BatchDeductionDto(
-                        bd.Id,
-                        bd.DrugBatchId,
-                        bd.BatchNumber,
-                        bd.Quantity)).ToList())).ToList()))
             .ToListAsync(ct);
+
+        // Batch-load units for all drug IDs in one query
+        var drugIds = records
+            .SelectMany(r => r.Lines)
+            .Select(l => l.DrugCatalogItemId)
+            .Distinct()
+            .ToList();
+
+        var unitMap = drugIds.Count > 0
+            ? await context.DrugCatalogItems
+                .AsNoTracking()
+                .Where(d => drugIds.Contains(d.Id))
+                .Select(d => new { d.Id, d.Unit })
+                .ToDictionaryAsync(d => d.Id, d => d.Unit, ct)
+            : new Dictionary<Guid, string>();
+
+        var items = records.Select(r => new DispensingRecordDto(
+            r.Id,
+            r.PrescriptionId,
+            r.VisitId,
+            r.PatientId,
+            r.PatientName,
+            r.DispensedAt,
+            r.OverrideReason,
+            r.Lines.Select(l => new DispensingLineDto(
+                l.Id,
+                l.DrugCatalogItemId,
+                l.DrugName,
+                unitMap.GetValueOrDefault(l.DrugCatalogItemId, ""),
+                l.Quantity,
+                (int)l.Status,
+                l.BatchDeductions.Select(bd => new BatchDeductionDto(
+                    bd.Id,
+                    bd.DrugBatchId,
+                    bd.BatchNumber,
+                    bd.Quantity)).ToList())).ToList())).ToList();
 
         return (items, totalCount);
     }

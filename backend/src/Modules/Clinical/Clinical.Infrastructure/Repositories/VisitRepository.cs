@@ -137,7 +137,8 @@ public sealed class VisitRepository : IVisitRepository
                 dp => dp.VisitId,
                 v => v.Id,
                 (dp, v) => new { Prescription = dp, Visit = v })
-            .Where(x => !x.Visit.IsDeleted);
+            .Where(x => !x.Visit.IsDeleted
+                && (x.Visit.Status == VisitStatus.Signed || x.Visit.Status == VisitStatus.Amended));
 
         if (patientId.HasValue)
             query = query.Where(x => x.Visit.PatientId == patientId.Value);

@@ -38,17 +38,16 @@ import { importStockFromExcel } from "@/features/pharmacy/api/pharmacy-api"
 const TEMPLATE_HEADERS = [
   "DrugName",
   "BatchNumber",
-  "ExpiryDate (yyyy-MM-dd)",
+  "ExpiryDate",
   "Quantity",
   "PurchasePrice",
 ]
 
 function generateExcelTemplate(): Blob {
-  // Build a minimal CSV-like TSV that opens in Excel
-  const header = TEMPLATE_HEADERS.join("\t")
-  const example = "Thuốc Nhỏ Mắt Rohto\tLO001\t2026-12-31\t100\t15000"
+  const header = TEMPLATE_HEADERS.join(",")
+  const example = "Thuốc Nhỏ Mắt Rohto,LO001,2026-12-31,100,15000"
   const content = `${header}\n${example}\n`
-  return new Blob(["\uFEFF" + content], { type: "text/tab-separated-values;charset=utf-8;" })
+  return new Blob([content], { type: "text/csv;charset=utf-8;" })
 }
 
 interface ExcelImportDialogProps {
@@ -86,7 +85,7 @@ export function ExcelImportDialog({
     const url = URL.createObjectURL(blob)
     const a = document.createElement("a")
     a.href = url
-    a.download = "stock-import-template.tsv"
+    a.download = "stock-import-template.csv"
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
@@ -94,30 +93,14 @@ export function ExcelImportDialog({
   }, [])
 
   const handleFileChange = useCallback(
-    async (e: React.ChangeEvent<HTMLInputElement>) => {
+    (e: React.ChangeEvent<HTMLInputElement>) => {
       const selectedFile = e.target.files?.[0]
       if (!selectedFile) return
 
       setFile(selectedFile)
       setPreview(null)
-
-      if (!supplierId) {
-        return
-      }
-
-      setIsUploading(true)
-      try {
-        const result = await importStockFromExcel(selectedFile, supplierId)
-        setPreview(result)
-      } catch (error) {
-        toast.error(
-          error instanceof Error ? error.message : "Failed to process Excel file",
-        )
-      } finally {
-        setIsUploading(false)
-      }
     },
-    [supplierId],
+    [],
   )
 
   const handleUpload = useCallback(async () => {
@@ -211,7 +194,7 @@ export function ExcelImportDialog({
               <input
                 ref={fileInputRef}
                 type="file"
-                accept=".xlsx,.xls,.tsv,.csv"
+                accept=".xlsx,.xls,.csv"
                 className="hidden"
                 onChange={handleFileChange}
               />
@@ -231,7 +214,7 @@ export function ExcelImportDialog({
               )}
             </div>
 
-            {file && !preview && (
+            {file && (
               <Button
                 type="button"
                 size="sm"
@@ -274,7 +257,7 @@ export function ExcelImportDialog({
                 <div className="rounded-md border border-destructive/40 bg-destructive/5 p-3 space-y-1">
                   {preview.errors.map((err, i) => (
                     <p key={i} className="text-xs text-destructive">
-                      {err}
+                      Row {err.rowNumber}, {err.columnName}: {err.message}
                     </p>
                   ))}
                 </div>

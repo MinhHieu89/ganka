@@ -27,31 +27,31 @@ public static class GetDrugBatchesHandler
     public static async Task<Result<List<DrugBatchDto>>> Handle(
         GetDrugBatchesQuery query,
         IDrugBatchRepository drugBatchRepository,
+        ISupplierRepository supplierRepository,
         CancellationToken ct)
     {
         var batches = await drugBatchRepository.GetBatchesForDrugAsync(query.DrugCatalogItemId, ct);
 
+        // Batch-load supplier names for all unique supplier IDs
+        var supplierIds = batches.Select(b => b.SupplierId).Distinct().ToList();
+        var suppliers = await supplierRepository.GetAllActiveAsync(ct);
+        var supplierNames = suppliers.ToDictionary(s => s.Id, s => s.Name);
+
         // Map domain entities to DTOs, ordered by expiry date (FEFO order for UI display)
         var dtos = batches
             .OrderBy(b => b.ExpiryDate)
-            .Select(b => MapToDto(b))
+            .Select(b => MapToDto(b, supplierNames))
             .ToList();
 
         return Result<List<DrugBatchDto>>.Success(dtos);
     }
 
-    /// <summary>
-    /// Maps a DrugBatch domain entity to a DrugBatchDto for API responses.
-    /// IsExpired and IsNearExpiry are computed from the domain entity properties.
-    /// SupplierName is not available from the domain entity alone — set to empty for now;
-    /// the endpoint can join supplier data if needed.
-    /// </summary>
-    private static DrugBatchDto MapToDto(DrugBatch batch) =>
+    private static DrugBatchDto MapToDto(DrugBatch batch, Dictionary<Guid, string> supplierNames) =>
         new(
             Id: batch.Id,
             DrugCatalogItemId: batch.DrugCatalogItemId,
             SupplierId: batch.SupplierId,
-            SupplierName: string.Empty, // Populated by Infrastructure query if needed
+            SupplierName: supplierNames.GetValueOrDefault(batch.SupplierId, ""),
             BatchNumber: batch.BatchNumber,
             ExpiryDate: batch.ExpiryDate,
             InitialQuantity: batch.InitialQuantity,

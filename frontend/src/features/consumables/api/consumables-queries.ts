@@ -7,6 +7,7 @@ import {
   addConsumableStock,
   adjustConsumableStock,
   getConsumableAlerts,
+  getConsumableBatches,
 } from "./consumables-api"
 import type {
   CreateConsumableItemInput,
@@ -21,6 +22,9 @@ export const consumableKeys = {
   all: ["consumables"] as const,
   items: {
     all: () => [...consumableKeys.all, "items"] as const,
+  },
+  batches: {
+    byItem: (id: string) => [...consumableKeys.all, "batches", id] as const,
   },
   alerts: {
     all: () => [...consumableKeys.all, "alerts"] as const,
@@ -40,6 +44,14 @@ export function useConsumableAlerts() {
   return useQuery({
     queryKey: consumableKeys.alerts.all(),
     queryFn: getConsumableAlerts,
+  })
+}
+
+export function useConsumableBatches(itemId: string | null) {
+  return useQuery({
+    queryKey: consumableKeys.batches.byItem(itemId ?? ""),
+    queryFn: () => getConsumableBatches(itemId!),
+    enabled: !!itemId,
   })
 }
 
@@ -93,6 +105,7 @@ export function useAdjustConsumableStock() {
       adjustConsumableStock(id, input),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: consumableKeys.items.all() })
+      queryClient.invalidateQueries({ queryKey: consumableKeys.all })
     },
     onError: (error: Error) => {
       toast.error(error.message)

@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
@@ -23,7 +23,10 @@ import {
   SelectValue,
 } from "@/shared/components/Select"
 import { type ConsumableItemDto } from "@/features/consumables/api/consumables-api"
-import { useAdjustConsumableStock } from "@/features/consumables/api/consumables-queries"
+import {
+  useAdjustConsumableStock,
+  useConsumableBatches,
+} from "@/features/consumables/api/consumables-queries"
 
 // Must match backend ConsumableAdjustmentReason enum
 const ADJUSTMENT_REASON = {
@@ -33,6 +36,9 @@ const ADJUSTMENT_REASON = {
   Expired: 3,
   Other: 4,
 } as const
+
+// Must match backend ConsumableTrackingMode enum
+const TRACKING_MODE_EXPIRY = 0
 
 const adjustmentSchema = z.object({
   quantity: z.coerce
@@ -57,6 +63,14 @@ export function ConsumableAdjustDialog({
   onOpenChange,
 }: ConsumableAdjustDialogProps) {
   const adjustStock = useAdjustConsumableStock()
+  const isExpiryTracked = item?.trackingMode === TRACKING_MODE_EXPIRY
+  const { data: batches } = useConsumableBatches(
+    open && isExpiryTracked ? item?.id ?? null : null,
+  )
+
+  const [selectedBatchId, setSelectedBatchId] = useState<string>("")
+
+  const selectedBatch = batches?.find((b) => b.id === selectedBatchId)
 
   const form = useForm<AdjustmentValues>({
     resolver: zodResolver(adjustmentSchema),
@@ -74,11 +88,15 @@ export function ConsumableAdjustDialog({
         reason: ADJUSTMENT_REASON.Correction,
         notes: "",
       })
+      setSelectedBatchId("")
     }
   }, [open, form])
 
   const quantity = form.watch("quantity")
-  const newQuantity = item ? item.currentStock + (Number(quantity) || 0) : 0
+  const currentStock = isExpiryTracked
+    ? (selectedBatch?.currentQuantity ?? 0)
+    : (item?.currentStock ?? 0)
+  const newQuantity = currentStock + (Number(quantity) || 0)
   const isInvalid = newQuantity < 0
 
   const handleSubmit = async (data: AdjustmentValues) => {
@@ -87,12 +105,17 @@ export function ConsumableAdjustDialog({
       form.setError("quantity", { message: "Số lượng mới không được âm" })
       return
     }
+    if (isExpiryTracked && !selectedBatchId) {
+      toast.error("Vui lòng chọn lô hàng")
+      return
+    }
     try {
       await adjustStock.mutateAsync({
         id: item.id,
-        quantity: data.quantity,
+        quantityChange: data.quantity,
         reason: data.reason,
         notes: data.notes || null,
+        consumableBatchId: isExpiryTracked ? selectedBatchId : null,
       })
       toast.success("Đã điều chỉnh tồn kho")
       onOpenChange(false)
@@ -112,11 +135,33 @@ export function ConsumableAdjustDialog({
         </DialogHeader>
 
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          {/* Batch selector for ExpiryTracked items */}
+          {isExpiryTracked && (
+            <Field>
+              <FieldLabel>Lô hàng</FieldLabel>
+              <Select value={selectedBatchId} onValueChange={setSelectedBatchId}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Chọn lô hàng..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {batches
+                    ?.filter((b) => b.currentQuantity > 0)
+                    .map((b) => (
+                      <SelectItem key={b.id} value={b.id}>
+                        {b.batchNumber} — SL: {b.currentQuantity} — HSD:{" "}
+                        {new Date(b.expiryDate).toLocaleDateString("vi-VN")}
+                      </SelectItem>
+                    ))}
+                </SelectContent>
+              </Select>
+            </Field>
+          )}
+
           {/* Current → New preview */}
           <div className="flex items-center gap-3 rounded-lg border bg-muted/30 px-4 py-3">
             <div className="text-center">
               <p className="text-xs text-muted-foreground">Hiện tại</p>
-              <p className="text-xl font-bold">{item.currentStock}</p>
+              <p className="text-xl font-bold">{currentStock}</p>
             </div>
             <IconArrowRight className="h-5 w-5 text-muted-foreground shrink-0" />
             <div className="text-center">
@@ -125,7 +170,7 @@ export function ConsumableAdjustDialog({
                 className={`text-xl font-bold ${
                   isInvalid
                     ? "text-destructive"
-                    : newQuantity !== item.currentStock
+                    : newQuantity !== currentStock
                       ? "text-primary"
                       : ""
                 }`}
@@ -231,7 +276,14 @@ export function ConsumableAdjustDialog({
             >
               Huỷ
             </Button>
-            <Button type="submit" disabled={adjustStock.isPending || isInvalid}>
+            <Button
+              type="submit"
+              disabled={
+                adjustStock.isPending ||
+                isInvalid ||
+                (isExpiryTracked && !selectedBatchId)
+              }
+            >
               {adjustStock.isPending && (
                 <IconLoader2 className="h-4 w-4 mr-2 animate-spin" />
               )}

@@ -81,25 +81,24 @@ function DrugCombobox({ value, onSelect, disabled }: DrugComboboxProps) {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <div>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            disabled={disabled}
-            className={cn(
-              "w-full justify-start text-left font-normal",
-              !selectedDrug && "text-muted-foreground",
-            )}
-          >
-            <IconSearch className="h-4 w-4 mr-2 shrink-0" />
-            {selectedDrug ? (
-              <span className="truncate">{selectedDrug.nameVi || selectedDrug.name}</span>
-            ) : (
-              t("stockImport.selectDrug")
-            )}
-          </Button>
-        </div>
+        <Button
+          type="button"
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          disabled={disabled}
+          className={cn(
+            "w-full justify-start text-left font-normal",
+            !selectedDrug && "text-muted-foreground",
+          )}
+        >
+          <IconSearch className="h-4 w-4 mr-2 shrink-0" />
+          {selectedDrug ? (
+            <span className="truncate">{selectedDrug.nameVi || selectedDrug.name}</span>
+          ) : (
+            t("stockImport.selectDrug")
+          )}
+        </Button>
       </PopoverTrigger>
       <PopoverContent className="w-72 p-0" align="start">
         <Command shouldFilter={false}>

@@ -58,10 +58,10 @@ export interface AddConsumableStockInput {
 }
 
 export interface AdjustConsumableStockInput {
-  quantity: number
+  quantityChange: number
   reason: number
   notes?: string | null
-  batchId?: string | null
+  consumableBatchId?: string | null
 }
 
 // -- API functions --
@@ -124,12 +124,20 @@ export async function adjustConsumableStock(
   if (error || !response.ok) {
     const err = error as Record<string, unknown> | undefined
     if (err?.errors) throw new Error(JSON.stringify(err))
+    if (err?.detail) throw new Error(String(err.detail))
+    if (err?.title) throw new Error(String(err.title))
     throw new Error("Failed to adjust consumable stock")
   }
 }
 
-export async function getConsumableAlerts(): Promise<ConsumableAlertDto[]> {
+export async function getConsumableBatches(id: string): Promise<ConsumableBatchDto[]> {
+  const { data, error } = await api.GET(`/api/consumables/${id}/batches` as never)
+  if (error) throw new Error("Failed to fetch consumable batches")
+  return (data as ConsumableBatchDto[]) ?? []
+}
+
+export async function getConsumableAlerts(): Promise<ConsumableItemDto[]> {
   const { data, error } = await api.GET("/api/consumables/alerts" as never)
   if (error) throw new Error("Failed to fetch consumable alerts")
-  return (data as ConsumableAlertDto[]) ?? []
+  return (data as ConsumableItemDto[]) ?? []
 }

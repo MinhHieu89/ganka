@@ -67,10 +67,10 @@ export function ConsumableAlertBanner() {
               </div>
               {alerts?.map((alert) => (
                 <div
-                  key={alert.consumableItemId}
+                  key={alert.id}
                   className="grid grid-cols-3 gap-2 text-xs py-0.5"
                 >
-                  <span className="font-medium truncate">{alert.name}</span>
+                  <span className="font-medium truncate">{alert.nameVi || alert.name}</span>
                   <span
                     className={`font-medium ${alert.currentStock === 0 ? "text-destructive" : "text-yellow-600 dark:text-yellow-400"}`}
                   >

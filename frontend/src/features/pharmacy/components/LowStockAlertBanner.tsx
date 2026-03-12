@@ -74,9 +74,9 @@ export function LowStockAlertBanner() {
                 >
                   <span className="font-medium truncate">{alert.drugName}</span>
                   <span
-                    className={`font-medium ${alert.currentStock === 0 ? "text-destructive" : "text-yellow-600 dark:text-yellow-400"}`}
+                    className={`font-medium ${alert.totalStock === 0 ? "text-destructive" : "text-yellow-600 dark:text-yellow-400"}`}
                   >
-                    {alert.currentStock}
+                    {alert.totalStock}
                   </span>
                   <span className="text-muted-foreground">{alert.minStockLevel}</span>
                 </div>

@@ -44,7 +44,8 @@ public sealed record ExcelImportError(
 /// </summary>
 public sealed record ImportStockFromExcelCommand(
     Stream FileStream,
-    Guid SupplierId);
+    Guid SupplierId,
+    string FileName = "");
 
 /// <summary>
 /// Wolverine static handler for parsing and validating an Excel stock import file.
@@ -64,7 +65,20 @@ public static class ImportStockFromExcelHandler
         IEnumerable<StockImportRow> rows;
         try
         {
-            rows = MiniExcel.Query<StockImportRow>(command.FileStream, hasHeader: true).ToList();
+            var excelType = ResolveExcelType(command.FileName);
+            Stream parseStream = command.FileStream;
+
+            // Strip BOM for CSV files — BOM can break MiniExcel column-to-property mapping
+            if (excelType == ExcelType.CSV)
+            {
+                var ms = new MemoryStream();
+                await command.FileStream.CopyToAsync(ms, ct);
+                var bytes = ms.ToArray();
+                var offset = bytes.Length >= 3 && bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF ? 3 : 0;
+                parseStream = new MemoryStream(bytes, offset, bytes.Length - offset);
+            }
+
+            rows = MiniExcel.Query<StockImportRow>(parseStream, hasHeader: true, excelType: excelType).ToList();
         }
         catch (Exception ex)
         {
@@ -203,5 +217,18 @@ public static class ImportStockFromExcelHandler
         if (value is int i) { result = i; return true; }
         if (value is long l) { result = l; return true; }
         return decimal.TryParse(value.ToString(), out result);
+    }
+
+    /// <summary>Resolves MiniExcel ExcelType from file extension.</summary>
+    private static ExcelType ResolveExcelType(string fileName)
+    {
+        var ext = Path.GetExtension(fileName)?.ToLowerInvariant();
+        return ext switch
+        {
+            ".csv" => ExcelType.CSV,
+            ".xlsx" => ExcelType.XLSX,
+            ".xls" => ExcelType.XLSX,
+            _ => ExcelType.XLSX,
+        };
     }
 }
