@@ -35,5 +35,11 @@ public enum GlassesOrderStatus
     /// Delivered (Đã giao) — glasses have been picked up or delivered to the patient.
     /// This is the terminal status; warranty period starts from this date.
     /// </summary>
-    Delivered = 4
+    Delivered = 4,
+
+    /// <summary>
+    /// Cancelled (Đã hủy) — order was cancelled before delivery.
+    /// Can be cancelled from Ordered or Processing status only.
+    /// </summary>
+    Cancelled = 5
 }

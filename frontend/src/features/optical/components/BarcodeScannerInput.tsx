@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { IconBarcode } from "@tabler/icons-react"
 import { Input } from "@/shared/components/Input"
 import { cn } from "@/shared/lib/utils"
@@ -15,6 +15,7 @@ export function BarcodeScannerInput({
   className,
 }: BarcodeScannerInputProps) {
   const inputRef = useRef<HTMLInputElement>(null)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     if (autoFocus && inputRef.current) {
@@ -27,10 +28,14 @@ export function BarcodeScannerInput({
       e.preventDefault()
       const value = inputRef.current?.value?.trim()
       if (value && /^\d{13}$/.test(value)) {
+        setError(null)
         onScan(value)
         if (inputRef.current) {
           inputRef.current.value = ""
         }
+      } else if (value) {
+        setError("Invalid barcode. Must be exactly 13 digits.")
+        setTimeout(() => setError(null), 3000)
       }
     }
   }
@@ -44,10 +49,13 @@ export function BarcodeScannerInput({
         ref={inputRef}
         onKeyDown={handleKeyDown}
         placeholder="Scan barcode..."
-        className="pl-9"
+        className={cn("pl-9", error && "border-red-500")}
         inputMode="numeric"
         autoComplete="off"
       />
+      {error && (
+        <p className="absolute -bottom-5 left-0 text-xs text-red-500">{error}</p>
+      )}
     </div>
   )
 }

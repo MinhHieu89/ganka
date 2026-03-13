@@ -116,6 +116,9 @@ public class ComboPackage : AggregateRoot, IAuditable
         if (comboPrice <= 0)
             throw new ArgumentException("Combo price must be greater than zero.", nameof(comboPrice));
 
+        if (originalTotalPrice.HasValue && originalTotalPrice.Value <= 0)
+            throw new ArgumentException("Original total price must be greater than zero when provided.", nameof(originalTotalPrice));
+
         Name = name;
         Description = description;
         FrameId = frameId;

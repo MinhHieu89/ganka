@@ -85,6 +85,10 @@ public class GlassesOrderConfiguration : IEntityTypeConfiguration<GlassesOrder>
             .HasForeignKey(x => x.GlassesOrderId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        // Optimistic concurrency token
+        builder.Property(x => x.RowVersion)
+            .IsRowVersion();
+
         // Performance indexes
         builder.HasIndex(x => x.PatientId);
         builder.HasIndex(x => x.VisitId);

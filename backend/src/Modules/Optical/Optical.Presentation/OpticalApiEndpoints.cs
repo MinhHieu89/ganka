@@ -76,7 +76,7 @@ public static class OpticalApiEndpoints
                 command.LensWidth, command.BridgeWidth, command.TempleLength,
                 command.Material, command.FrameType, command.Gender,
                 command.SellingPrice, command.CostPrice, command.Barcode,
-                command.StockQuantity, command.MinStockLevel, command.IsActive);
+                command.IsActive);
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
         });
@@ -144,19 +144,20 @@ public static class OpticalApiEndpoints
             return result.ToHttpResult();
         });
 
+        // GET /api/optical/orders/overdue -- orders past estimated delivery date
+        // Registered before {id:guid} to ensure literal route takes precedence
+        group.MapGet("/orders/overdue", async (IMessageBus bus, CancellationToken ct) =>
+        {
+            var result = await bus.InvokeAsync<Result<List<GlassesOrderSummaryDto>>>(
+                new GetOverdueOrdersQuery(), ct);
+            return result.ToHttpResult();
+        });
+
         // GET /api/optical/orders/{id} -- single glasses order with full item details
         group.MapGet("/orders/{id:guid}", async (Guid id, IMessageBus bus, CancellationToken ct) =>
         {
             var result = await bus.InvokeAsync<Result<GlassesOrderDto>>(
                 new GetGlassesOrderByIdQuery(id), ct);
-            return result.ToHttpResult();
-        });
-
-        // GET /api/optical/orders/overdue -- orders past estimated delivery date
-        group.MapGet("/orders/overdue", async (IMessageBus bus, CancellationToken ct) =>
-        {
-            var result = await bus.InvokeAsync<Result<List<GlassesOrderSummaryDto>>>(
-                new GetOverdueOrdersQuery(), ct);
             return result.ToHttpResult();
         });
 

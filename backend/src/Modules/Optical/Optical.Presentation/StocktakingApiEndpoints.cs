@@ -62,7 +62,7 @@ public static class StocktakingApiEndpoints
         group.MapPost("/stocktaking/{id:guid}/scan", async (Guid id, RecordStocktakingItemCommand command, IMessageBus bus, CancellationToken ct) =>
         {
             var enriched = new RecordStocktakingItemCommand(id, command.Barcode, command.PhysicalCount);
-            var result = await bus.InvokeAsync<Result>(enriched, ct);
+            var result = await bus.InvokeAsync<Result<StocktakingItemDto>>(enriched, ct);
             return result.ToHttpResult();
         });
 
@@ -72,7 +72,7 @@ public static class StocktakingApiEndpoints
             var enriched = new CompleteStocktakingCommand(id, command.Notes);
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
-        });
+        }).RequireAuthorization(policy => policy.RequireRole("Admin", "Manager"));
     }
 }
 

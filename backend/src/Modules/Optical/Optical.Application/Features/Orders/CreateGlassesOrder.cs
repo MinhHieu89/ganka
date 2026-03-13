@@ -62,19 +62,17 @@ public static class CreateGlassesOrderHandler
         IGlassesOrderRepository orderRepository,
         IUnitOfWork unitOfWork,
         ICurrentUser currentUser,
+        IValidator<CreateGlassesOrderCommand> validator,
         CancellationToken ct)
     {
-        // Inline validation without FluentValidation DI to keep handler testable
-        if (command.PatientId == Guid.Empty)
-            return Result.Failure<Guid>(Error.Validation("Patient ID is required."));
-        if (string.IsNullOrWhiteSpace(command.PatientName))
-            return Result.Failure<Guid>(Error.Validation("Patient name is required."));
-        if (command.VisitId == Guid.Empty)
-            return Result.Failure<Guid>(Error.Validation("Visit ID is required."));
-        if (command.OpticalPrescriptionId == Guid.Empty)
-            return Result.Failure<Guid>(Error.Validation("Optical prescription ID is required."));
-        if (command.TotalPrice <= 0)
-            return Result.Failure<Guid>(Error.Validation("Total price must be greater than zero."));
+        var validationResult = await validator.ValidateAsync(command, ct);
+        if (!validationResult.IsValid)
+        {
+            var errors = validationResult.Errors
+                .GroupBy(e => e.PropertyName)
+                .ToDictionary(g => g.Key, g => g.Select(e => e.ErrorMessage).ToArray());
+            return Result.Failure<Guid>(Error.ValidationWithDetails(errors));
+        }
 
         var branchId = new BranchId(currentUser.BranchId);
 

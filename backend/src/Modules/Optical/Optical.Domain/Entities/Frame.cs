@@ -176,7 +176,7 @@ public class Frame : AggregateRoot, IAuditable
         StockQuantity = newQuantity;
         SetUpdatedAt();
 
-        if (StockQuantity <= MinStockLevel)
+        if (quantityChange < 0 && StockQuantity <= MinStockLevel)
         {
             AddDomainEvent(new LowStockAlertEvent(
                 EntityId: Id,

@@ -34,8 +34,13 @@ public class CreateWarrantyClaimCommandValidator : AbstractValidator<CreateWarra
             .MaximumLength(2000).WithMessage("Assessment notes must not exceed 2000 characters.");
 
         RuleFor(x => x.DiscountAmount)
+            .NotNull().WithMessage("Discount amount is required for Discount resolution.")
             .GreaterThan(0).WithMessage("Discount amount must be greater than zero.")
-            .When(x => x.DiscountAmount.HasValue);
+            .When(x => x.Resolution == (int)WarrantyResolution.Discount);
+
+        RuleFor(x => x.DiscountAmount)
+            .GreaterThan(0).WithMessage("Discount amount must be greater than zero.")
+            .When(x => x.DiscountAmount.HasValue && x.Resolution != (int)WarrantyResolution.Discount);
     }
 }
 

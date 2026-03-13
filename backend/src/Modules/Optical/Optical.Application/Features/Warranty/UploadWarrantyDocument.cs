@@ -23,6 +23,9 @@ public static class UploadWarrantyDocumentHandler
         IUnitOfWork unitOfWork,
         CancellationToken ct)
     {
+        if (string.IsNullOrWhiteSpace(command.FileName))
+            return Result.Failure<string>(Error.Validation("File name is required."));
+
         var claim = await repository.GetByIdAsync(command.ClaimId, ct);
         if (claim is null)
             return Result.Failure<string>(Error.NotFound("WarrantyClaim", command.ClaimId));
@@ -49,18 +52,20 @@ public static class UploadWarrantyDocumentHandler
     private static string SanitizeFileName(string fileName) =>
         string.Join("_", fileName.Split(Path.GetInvalidFileNameChars()));
 
+    private static readonly HashSet<string> AllowedExtensions = [".pdf", ".jpg", ".jpeg", ".png"];
+
     private static string GetContentType(string fileName)
     {
         var ext = Path.GetExtension(fileName).ToLowerInvariant();
+
+        if (!AllowedExtensions.Contains(ext))
+            throw new ArgumentException($"File type '{ext}' is not allowed. Only PDF, JPG, and PNG files are accepted.");
+
         return ext switch
         {
             ".pdf" => "application/pdf",
             ".jpg" or ".jpeg" => "image/jpeg",
             ".png" => "image/png",
-            ".gif" => "image/gif",
-            ".mp4" => "video/mp4",
-            ".doc" => "application/msword",
-            ".docx" => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             _ => "application/octet-stream"
         };
     }

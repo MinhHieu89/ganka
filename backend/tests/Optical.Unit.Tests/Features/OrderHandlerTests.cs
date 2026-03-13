@@ -1,6 +1,8 @@
 using Billing.Contracts.Dtos;
 using Billing.Contracts.Queries;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using NSubstitute;
 using Optical.Application.Features.Orders;
 using Optical.Application.Interfaces;
@@ -24,6 +26,7 @@ public class OrderHandlerTests
     private readonly IUnitOfWork _unitOfWork = Substitute.For<IUnitOfWork>();
     private readonly IMessageBus _messageBus = Substitute.For<IMessageBus>();
     private readonly ICurrentUser _currentUser = Substitute.For<ICurrentUser>();
+    private readonly IValidator<CreateGlassesOrderCommand> _createOrderValidator = Substitute.For<IValidator<CreateGlassesOrderCommand>>();
 
     private static readonly Guid DefaultBranchId = Guid.Parse("00000000-0000-0000-0000-000000000001");
     private static readonly Guid DefaultPatientId = Guid.Parse("00000000-0000-0000-0000-000000000010");
@@ -33,6 +36,8 @@ public class OrderHandlerTests
     public OrderHandlerTests()
     {
         _currentUser.BranchId.Returns(DefaultBranchId);
+        _createOrderValidator.ValidateAsync(Arg.Any<CreateGlassesOrderCommand>(), Arg.Any<CancellationToken>())
+            .Returns(new ValidationResult());
     }
 
     // -------------------------------------------------------------------------
@@ -119,7 +124,7 @@ public class OrderHandlerTests
 
         // Act
         var result = await CreateGlassesOrderHandler.Handle(
-            command, _orderRepository, _unitOfWork, _currentUser, CancellationToken.None);
+            command, _orderRepository, _unitOfWork, _currentUser, _createOrderValidator, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -144,9 +149,12 @@ public class OrderHandlerTests
             Notes: null,
             Items: []);
 
+        _createOrderValidator.ValidateAsync(command, Arg.Any<CancellationToken>())
+            .Returns(new ValidationResult(new[] { new ValidationFailure("PatientId", "Patient ID is required.") }));
+
         // Act
         var result = await CreateGlassesOrderHandler.Handle(
-            command, _orderRepository, _unitOfWork, _currentUser, CancellationToken.None);
+            command, _orderRepository, _unitOfWork, _currentUser, _createOrderValidator, CancellationToken.None);
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -169,9 +177,12 @@ public class OrderHandlerTests
             Notes: null,
             Items: []);
 
+        _createOrderValidator.ValidateAsync(command, Arg.Any<CancellationToken>())
+            .Returns(new ValidationResult(new[] { new ValidationFailure("TotalPrice", "Total price must be greater than zero.") }));
+
         // Act
         var result = await CreateGlassesOrderHandler.Handle(
-            command, _orderRepository, _unitOfWork, _currentUser, CancellationToken.None);
+            command, _orderRepository, _unitOfWork, _currentUser, _createOrderValidator, CancellationToken.None);
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -206,7 +217,7 @@ public class OrderHandlerTests
 
         // Act
         var result = await CreateGlassesOrderHandler.Handle(
-            command, _orderRepository, _unitOfWork, _currentUser, CancellationToken.None);
+            command, _orderRepository, _unitOfWork, _currentUser, _createOrderValidator, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();

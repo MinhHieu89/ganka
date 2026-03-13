@@ -76,8 +76,6 @@ public class FrameHandlerTests
             SellingPrice: 3_000_000m,
             CostPrice: 1_500_000m,
             Barcode: barcode,
-            StockQuantity: 3,
-            MinStockLevel: 1,
             IsActive: true);
 
     private static Frame MakeFrame() =>

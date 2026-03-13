@@ -71,12 +71,11 @@ public sealed class FrameRepository : IFrameRepository
     /// <inheritdoc />
     public async Task<long> GetNextSequenceNumberAsync(CancellationToken ct)
     {
-        // Simple approach: total frame count + 1.
-        // This is used as the sequence component in clinic-prefix EAN-13 generation.
-        // Not guaranteed to be globally unique but provides a monotonically increasing
-        // value suitable for barcode suffix generation when combined with the clinic prefix.
-        var count = await _context.Frames.CountAsync(ct);
-        return count + 1;
+        // Uses SQL SEQUENCE for concurrency-safe barcode generation.
+        // Prevents duplicate barcodes under concurrent frame creation (same pattern as Billing CR-02).
+        return await _context.Database
+            .SqlQueryRaw<long>("SELECT NEXT VALUE FOR optical.FrameBarcodeSeq AS Value")
+            .FirstAsync(ct);
     }
 
     /// <inheritdoc />

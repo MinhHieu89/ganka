@@ -59,6 +59,7 @@ public sealed class GlassesOrderRepository(OpticalDbContext context) : IGlassesO
             .AsNoTracking()
             .Where(x => x.PatientId == patientId)
             .OrderByDescending(x => x.CreatedAt)
+            .Take(100)
             .ToListAsync(ct);
     }
 

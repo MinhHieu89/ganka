@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import {
   IconUpload,
   IconFile,
@@ -68,14 +68,14 @@ function ImagePreview({
   file: File
   onRemove: () => void
 }) {
-  const previewUrl = URL.createObjectURL(file)
+  const previewUrl = useMemo(() => URL.createObjectURL(file), [file])
+  useEffect(() => () => URL.revokeObjectURL(previewUrl), [previewUrl])
   return (
     <div className="relative group inline-block">
       <img
         src={previewUrl}
         alt={file.name}
         className="h-20 w-20 rounded-md border object-cover"
-        onLoad={() => URL.revokeObjectURL(previewUrl)}
       />
       <button
         type="button"
@@ -155,6 +155,7 @@ export function WarrantyDocumentUpload({
   }
 
   const handleUploadAll = async () => {
+    const failedFiles: File[] = []
     for (let i = 0; i < selectedFiles.length; i++) {
       const file = selectedFiles[i]
       if (!file) continue
@@ -164,10 +165,11 @@ export function WarrantyDocumentUpload({
         setUploadedDocuments((prev) => [...prev, result.documentUrl])
         toast.success(`${file.name} uploaded successfully.`)
       } catch {
-        // error handled by mutation
+        failedFiles.push(file)
+        toast.error(`${file.name} failed to upload.`)
       }
     }
-    setSelectedFiles([])
+    setSelectedFiles(failedFiles)
     setUploadingIndex(null)
   }
 

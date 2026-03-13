@@ -47,7 +47,7 @@ public static class WarrantyApiEndpoints
             var enriched = new ApproveWarrantyClaimCommand(id, command.IsApproved, command.Notes);
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
-        });
+        }).RequireAuthorization(policy => policy.RequireRole("Admin", "Manager"));
 
         // POST /api/optical/warranty/{id}/documents -- upload supporting document (multipart)
         group.MapPost("/warranty/{id:guid}/documents", async (Guid id, HttpRequest request, IMessageBus bus, CancellationToken ct) =>
@@ -59,6 +59,14 @@ public static class WarrantyApiEndpoints
             var file = form.Files.GetFile("file");
             if (file is null)
                 return Results.BadRequest("A file named 'file' is required.");
+
+            const long maxFileSizeBytes = 10 * 1024 * 1024; // 10 MB
+            if (file.Length > maxFileSizeBytes)
+                return Results.BadRequest("File must not exceed 10 MB.");
+
+            var allowedTypes = new[] { "application/pdf", "image/jpeg", "image/png" };
+            if (!allowedTypes.Contains(file.ContentType))
+                return Results.BadRequest("Only PDF, JPEG, and PNG files are permitted.");
 
             using var stream = file.OpenReadStream();
             var result = await bus.InvokeAsync<Result<string>>(

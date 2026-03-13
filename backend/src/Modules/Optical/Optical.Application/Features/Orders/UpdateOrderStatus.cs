@@ -51,7 +51,15 @@ public static class UpdateOrderStatusHandler
             order.ConfirmPayment();
         }
 
-        order.TransitionTo(newStatus);
+        try
+        {
+            order.TransitionTo(newStatus);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Result.Failure(Error.Validation(ex.Message));
+        }
+
         await unitOfWork.SaveChangesAsync(ct);
 
         return Result.Success();

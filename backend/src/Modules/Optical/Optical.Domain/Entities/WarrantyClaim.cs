@@ -81,6 +81,9 @@ public class WarrantyClaim : Entity, IAuditable
         if (glassesOrderId == Guid.Empty)
             throw new ArgumentException("Glasses order ID is required.", nameof(glassesOrderId));
 
+        if (claimDate > DateTime.UtcNow.AddMinutes(5))
+            throw new ArgumentException("Claim date cannot be in the future.", nameof(claimDate));
+
         if (string.IsNullOrWhiteSpace(assessmentNotes))
             throw new ArgumentException("Assessment notes are required.", nameof(assessmentNotes));
 

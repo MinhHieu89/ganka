@@ -45,8 +45,9 @@ public sealed class StocktakingRepository(OpticalDbContext context) : IStocktaki
     /// </summary>
     public async Task<List<StocktakingSession>> GetAllAsync(int page, int pageSize, CancellationToken ct)
     {
+        // List view does not need Items — only session-level summary data.
+        // Items are loaded when accessing a specific session by ID.
         return await context.StocktakingSessions
-            .Include(x => x.Items)
             .AsNoTracking()
             .OrderByDescending(x => x.CreatedAt)
             .Skip((page - 1) * pageSize)

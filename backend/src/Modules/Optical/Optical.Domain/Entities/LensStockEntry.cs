@@ -7,7 +7,7 @@ namespace Optical.Domain.Entities;
 /// Supports per-piece quantity tracking for common lens powers stored in bulk.
 /// Low-stock alerts fire when quantity drops below MinStockLevel.
 /// </summary>
-public class LensStockEntry : Entity
+public class LensStockEntry : Entity, IAuditable
 {
     /// <summary>Foreign key to the parent LensCatalogItem.</summary>
     public Guid LensCatalogItemId { get; private set; }

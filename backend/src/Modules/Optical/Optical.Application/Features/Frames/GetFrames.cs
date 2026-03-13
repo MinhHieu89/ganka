@@ -28,11 +28,16 @@ public static class GetFramesHandler
     {
         var frames = await repository.GetAllAsync(query.IncludeInactive, ct);
 
-        var items = frames.Select(ToSummaryDto).ToList();
+        var totalCount = frames.Count;
+        var paged = frames
+            .Skip((query.Page - 1) * query.PageSize)
+            .Take(query.PageSize)
+            .Select(ToSummaryDto)
+            .ToList();
 
         return new PagedFramesResult(
-            Items: items,
-            TotalCount: items.Count,
+            Items: paged,
+            TotalCount: totalCount,
             Page: query.Page,
             PageSize: query.PageSize);
     }

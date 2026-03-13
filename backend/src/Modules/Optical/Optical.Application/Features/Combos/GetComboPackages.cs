@@ -23,25 +23,32 @@ public static class GetComboPackagesHandler
     {
         var combos = await repository.GetAllAsync(query.IncludeInactive, ct);
 
+        // Batch-load all referenced frames and lenses to avoid N+1 queries
+        var frameIds = combos.Where(c => c.FrameId.HasValue).Select(c => c.FrameId!.Value).Distinct().ToList();
+        var lensIds = combos.Where(c => c.LensCatalogItemId.HasValue).Select(c => c.LensCatalogItemId!.Value).Distinct().ToList();
+
+        var frameLookup = new Dictionary<Guid, string>();
+        foreach (var frameId in frameIds)
+        {
+            var frame = await frameRepository.GetByIdAsync(frameId, ct);
+            if (frame is not null)
+                frameLookup[frameId] = $"{frame.Brand} {frame.Model}";
+        }
+
+        var lensLookup = new Dictionary<Guid, string>();
+        foreach (var lensId in lensIds)
+        {
+            var lens = await lensRepository.GetByIdAsync(lensId, ct);
+            if (lens is not null)
+                lensLookup[lensId] = $"{lens.Brand} {lens.Name}";
+        }
+
         var result = new List<ComboPackageDto>(combos.Count);
 
         foreach (var combo in combos)
         {
-            string? frameName = null;
-            if (combo.FrameId.HasValue)
-            {
-                var frame = await frameRepository.GetByIdAsync(combo.FrameId.Value, ct);
-                if (frame is not null)
-                    frameName = $"{frame.Brand} {frame.Model}";
-            }
-
-            string? lensName = null;
-            if (combo.LensCatalogItemId.HasValue)
-            {
-                var lens = await lensRepository.GetByIdAsync(combo.LensCatalogItemId.Value, ct);
-                if (lens is not null)
-                    lensName = $"{lens.Brand} {lens.Name}";
-            }
+            string? frameName = combo.FrameId.HasValue && frameLookup.TryGetValue(combo.FrameId.Value, out var fn) ? fn : null;
+            string? lensName = combo.LensCatalogItemId.HasValue && lensLookup.TryGetValue(combo.LensCatalogItemId.Value, out var ln) ? ln : null;
 
             result.Add(new ComboPackageDto(
                 Id: combo.Id,

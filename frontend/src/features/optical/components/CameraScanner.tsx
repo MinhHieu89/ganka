@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useId, useRef, useState } from "react"
 import { Html5QrcodeScanner, Html5QrcodeSupportedFormats } from "html5-qrcode"
 import { IconCamera, IconCameraOff } from "@tabler/icons-react"
 import { Button } from "@/shared/components/Button"
@@ -16,14 +16,14 @@ interface CameraScannerProps {
   isActive?: boolean
 }
 
-const SCANNER_ELEMENT_ID = "optical-barcode-reader"
-
 export function CameraScanner({
   onScan,
   onError,
   isActive: externalIsActive,
 }: CameraScannerProps) {
   const scannerRef = useRef<Html5QrcodeScanner | null>(null)
+  const uniqueId = useId()
+  const scannerElementId = `optical-barcode-reader-${uniqueId.replace(/:/g, "")}`
   const [internalActive, setInternalActive] = useState(false)
 
   // If the parent controls activation via prop, use that; otherwise use internal state
@@ -40,7 +40,7 @@ export function CameraScanner({
     }
 
     const scanner = new Html5QrcodeScanner(
-      SCANNER_ELEMENT_ID,
+      scannerElementId,
       {
         fps: 10,
         qrbox: { width: 300, height: 100 },
@@ -68,7 +68,7 @@ export function CameraScanner({
       scanner.clear().catch(() => {})
       scannerRef.current = null
     }
-  }, [isActive, onScan, onError])
+  }, [isActive, onScan, onError, scannerElementId])
 
   const handleToggle = () => {
     setInternalActive((prev) => !prev)
@@ -107,7 +107,7 @@ export function CameraScanner({
       </CardHeader>
       <CardContent>
         <div
-          id={SCANNER_ELEMENT_ID}
+          id={scannerElementId}
           className="min-h-[200px]"
           style={{ display: isActive ? "block" : "none" }}
         />

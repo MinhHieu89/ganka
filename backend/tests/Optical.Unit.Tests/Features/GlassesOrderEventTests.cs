@@ -1,4 +1,6 @@
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using NSubstitute;
 using Optical.Application.Features.Orders;
 using Optical.Application.Interfaces;
@@ -21,6 +23,7 @@ public class GlassesOrderEventTests
     private readonly IGlassesOrderRepository _orderRepository = Substitute.For<IGlassesOrderRepository>();
     private readonly IUnitOfWork _unitOfWork = Substitute.For<IUnitOfWork>();
     private readonly ICurrentUser _currentUser = Substitute.For<ICurrentUser>();
+    private readonly IValidator<CreateGlassesOrderCommand> _createOrderValidator = Substitute.For<IValidator<CreateGlassesOrderCommand>>();
 
     private static readonly Guid DefaultBranchId = Guid.Parse("00000000-0000-0000-0000-000000000001");
     private static readonly Guid DefaultPatientId = Guid.Parse("00000000-0000-0000-0000-000000000010");
@@ -30,6 +33,8 @@ public class GlassesOrderEventTests
     public GlassesOrderEventTests()
     {
         _currentUser.BranchId.Returns(DefaultBranchId);
+        _createOrderValidator.ValidateAsync(Arg.Any<CreateGlassesOrderCommand>(), Arg.Any<CancellationToken>())
+            .Returns(new ValidationResult());
     }
 
     // -------------------------------------------------------------------------
@@ -74,7 +79,7 @@ public class GlassesOrderEventTests
 
         // Act
         var result = await CreateGlassesOrderHandler.Handle(
-            command, _orderRepository, _unitOfWork, _currentUser, CancellationToken.None);
+            command, _orderRepository, _unitOfWork, _currentUser, _createOrderValidator, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();

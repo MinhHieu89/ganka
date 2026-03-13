@@ -70,8 +70,8 @@ public class GlassesOrder : AggregateRoot, IAuditable
     /// </summary>
     private static readonly Dictionary<GlassesOrderStatus, GlassesOrderStatus[]> AllowedTransitions = new()
     {
-        [GlassesOrderStatus.Ordered]    = [GlassesOrderStatus.Processing],
-        [GlassesOrderStatus.Processing] = [GlassesOrderStatus.Received],
+        [GlassesOrderStatus.Ordered]    = [GlassesOrderStatus.Processing, GlassesOrderStatus.Cancelled],
+        [GlassesOrderStatus.Processing] = [GlassesOrderStatus.Received, GlassesOrderStatus.Cancelled],
         [GlassesOrderStatus.Received]   = [GlassesOrderStatus.Ready],
         [GlassesOrderStatus.Ready]      = [GlassesOrderStatus.Delivered],
     };
@@ -93,6 +93,17 @@ public class GlassesOrder : AggregateRoot, IAuditable
         string? notes,
         BranchId branchId)
     {
+        if (patientId == Guid.Empty)
+            throw new ArgumentException("PatientId is required.", nameof(patientId));
+        if (string.IsNullOrWhiteSpace(patientName))
+            throw new ArgumentException("Patient name is required.", nameof(patientName));
+        if (visitId == Guid.Empty)
+            throw new ArgumentException("VisitId is required.", nameof(visitId));
+        if (opticalPrescriptionId == Guid.Empty)
+            throw new ArgumentException("OpticalPrescriptionId is required.", nameof(opticalPrescriptionId));
+        if (totalPrice < 0)
+            throw new ArgumentException("Total price cannot be negative.", nameof(totalPrice));
+
         var order = new GlassesOrder
         {
             PatientId             = patientId,
@@ -159,6 +170,9 @@ public class GlassesOrder : AggregateRoot, IAuditable
     /// </summary>
     public void AddItem(GlassesOrderItem item)
     {
+        if (item.GlassesOrderId != Id)
+            throw new ArgumentException(
+                "Item does not belong to this glasses order.", nameof(item));
         _items.Add(item);
     }
 
@@ -198,6 +212,9 @@ public class GlassesOrder : AggregateRoot, IAuditable
         EstimatedDeliveryDate.HasValue
         && Status != GlassesOrderStatus.Delivered
         && DateTime.UtcNow > EstimatedDeliveryDate.Value;
+
+    /// <summary>Optimistic concurrency token for preventing conflicting status transitions.</summary>
+    public byte[] RowVersion { get; private set; } = [];
 
     // --- EF Core ---
 

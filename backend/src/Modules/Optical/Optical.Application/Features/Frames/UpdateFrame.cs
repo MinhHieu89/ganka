@@ -22,8 +22,6 @@ public sealed record UpdateFrameCommand(
     decimal SellingPrice,
     decimal CostPrice,
     string? Barcode,
-    int StockQuantity,
-    int MinStockLevel,
     bool IsActive);
 
 /// <summary>
@@ -128,6 +126,11 @@ public static class UpdateFrameHandler
             command.SellingPrice,
             command.CostPrice,
             command.Barcode);
+
+        if (command.IsActive && !frame.IsActive)
+            frame.Activate();
+        else if (!command.IsActive && frame.IsActive)
+            frame.Deactivate();
 
         await unitOfWork.SaveChangesAsync(ct);
         return Result.Success();
