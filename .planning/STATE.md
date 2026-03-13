@@ -3,6 +3,21 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
+stopped_at: Completed 07.2-05-PLAN.md
+last_updated: "2026-03-13T16:49:12.704Z"
+last_activity: "2026-03-13 - Completed quick task 2: Add Serilog with file output for development"
+progress:
+  total_phases: 16
+  completed_phases: 13
+  total_plans: 248
+  completed_plans: 242
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: in-progress
 stopped_at: Inserted Phase 07.2 for code review fixes
 last_updated: "2026-03-13T17:00:00.000Z"
 last_activity: "2026-03-13 - Inserted Phase 07.2 Fix Phase 07.1 Code Review Issues"
@@ -1196,6 +1211,9 @@ Recent decisions affecting current work:
 - [Phase 07.1]: Fire-and-forget pattern for SignalR notifications: failures logged as warnings, never thrown
 - [Phase 07.1]: Used plain ILogger for static Wolverine handlers (C# static type constraint)
 - [Phase 07.1]: Get-or-create invoice pattern for race condition safety in concurrent event handlers
+- [Phase 07.2]: Kept single Zod schema for create/edit with isActive default(true) rather than splitting
+- [Phase 07.2]: Converted all billing enum maps to i18n key maps for full Vietnamese support
+- [Phase 07.2]: Used useRef pattern for queryClient to prevent SignalR reconnection storms
 
 ### Roadmap Evolution
 
@@ -1226,6 +1244,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-13T08:56:49.193Z
-Stopped at: Completed 07.1-03-PLAN.md
+Last session: 2026-03-13T16:49:12.692Z
+Stopped at: Completed 07.2-05-PLAN.md
 Resume file: None
