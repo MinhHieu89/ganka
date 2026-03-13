@@ -176,6 +176,7 @@ public class CancelVisitTests
         integrationEvent.VisitId.Should().Be(visitId);
         integrationEvent.PatientId.Should().Be(patientId);
         integrationEvent.PatientName.Should().Be("Nguyen Van A");
+        integrationEvent.BranchId.Should().Be(DefaultBranchId);
     }
 
     [Fact]
@@ -190,5 +191,6 @@ public class CancelVisitTests
 
         // Assert
         integrationEvent.VisitId.Should().Be(visitId);
+        integrationEvent.BranchId.Should().Be(DefaultBranchId);
     }
 }

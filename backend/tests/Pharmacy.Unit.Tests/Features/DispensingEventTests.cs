@@ -104,7 +104,8 @@ public class DispensingEventTests
             new("Tobramycin 0.3%", "Tobramycin 0,3%", 2, 50000m),
             new("Dexamethasone 0.1%", "Dexamethasone 0,1%", 1, 75000m)
         };
-        var domainEvent = new DrugDispensedEvent(visitId, patientId, "Nguyen Van A", items, Guid.NewGuid());
+        var branchId = Guid.NewGuid();
+        var domainEvent = new DrugDispensedEvent(visitId, patientId, "Nguyen Van A", items, branchId);
 
         // Act
         var integrationEvent = PublishDrugDispensedIntegrationEventHandler.Handle(domainEvent);
@@ -114,6 +115,7 @@ public class DispensingEventTests
         integrationEvent.VisitId.Should().Be(visitId);
         integrationEvent.PatientId.Should().Be(patientId);
         integrationEvent.PatientName.Should().Be("Nguyen Van A");
+        integrationEvent.BranchId.Should().Be(branchId);
         integrationEvent.Items.Should().HaveCount(2);
         integrationEvent.Items[0].DrugName.Should().Be("Tobramycin 0.3%");
         integrationEvent.Items[0].DrugNameVi.Should().Be("Tobramycin 0,3%");

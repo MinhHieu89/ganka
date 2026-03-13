@@ -136,6 +136,7 @@ public class GlassesOrderEventTests
         integrationEvent.VisitId.Should().Be(visitId);
         integrationEvent.PatientId.Should().Be(patientId);
         integrationEvent.PatientName.Should().Be("Tran Thi B");
+        integrationEvent.BranchId.Should().Be(DefaultBranchId);
         integrationEvent.Items.Should().HaveCount(2);
 
         integrationEvent.Items[0].Description.Should().Be("Frame ABC");

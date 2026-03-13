@@ -112,7 +112,8 @@ public class OtcSaleEventTests
             new("Artificial Tears", "Nuoc mat nhan tao", 3, 35000m),
             new("Vitamin A Eye Drops", "Nho mat Vitamin A", 1, 45000m)
         };
-        var domainEvent = new OtcSaleCompletedEvent(saleId, patientId, "Tran Thi B", items, Guid.NewGuid());
+        var branchId = Guid.NewGuid();
+        var domainEvent = new OtcSaleCompletedEvent(saleId, patientId, "Tran Thi B", items, branchId);
 
         // Act
         var integrationEvent = PublishOtcSaleCompletedIntegrationEventHandler.Handle(domainEvent);
@@ -122,6 +123,7 @@ public class OtcSaleEventTests
         integrationEvent.OtcSaleId.Should().Be(saleId);
         integrationEvent.PatientId.Should().Be(patientId);
         integrationEvent.CustomerName.Should().Be("Tran Thi B");
+        integrationEvent.BranchId.Should().Be(branchId);
         integrationEvent.Items.Should().HaveCount(2);
         integrationEvent.Items[0].DrugName.Should().Be("Artificial Tears");
         integrationEvent.Items[0].DrugNameVi.Should().Be("Nuoc mat nhan tao");
