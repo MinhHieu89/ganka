@@ -97,7 +97,7 @@ public class OtcSaleAndInventoryHandlerTests
 
         // Act
         var result = await CreateOtcSaleHandler.Handle(
-            command, _createOtcSaleValidator, _otcSaleRepository, _drugBatchRepository, _unitOfWork, _currentUser, CancellationToken.None);
+            command, _createOtcSaleValidator, _otcSaleRepository, _drugBatchRepository, _drugCatalogItemRepository, _unitOfWork, _currentUser, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -131,7 +131,7 @@ public class OtcSaleAndInventoryHandlerTests
 
         // Act
         var result = await CreateOtcSaleHandler.Handle(
-            command, _createOtcSaleValidator, _otcSaleRepository, _drugBatchRepository, _unitOfWork, _currentUser, CancellationToken.None);
+            command, _createOtcSaleValidator, _otcSaleRepository, _drugBatchRepository, _drugCatalogItemRepository, _unitOfWork, _currentUser, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -161,7 +161,7 @@ public class OtcSaleAndInventoryHandlerTests
 
         // Act
         var result = await CreateOtcSaleHandler.Handle(
-            command, _createOtcSaleValidator, _otcSaleRepository, _drugBatchRepository, _unitOfWork, _currentUser, CancellationToken.None);
+            command, _createOtcSaleValidator, _otcSaleRepository, _drugBatchRepository, _drugCatalogItemRepository, _unitOfWork, _currentUser, CancellationToken.None);
 
         // Assert
         result.IsFailure.Should().BeTrue();

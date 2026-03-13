@@ -1,6 +1,7 @@
 using FluentValidation;
 using Pharmacy.Application.Interfaces;
 using Pharmacy.Domain.Entities;
+using Pharmacy.Domain.Events;
 using Pharmacy.Domain.Services;
 using Shared.Application;
 using Shared.Domain;
@@ -77,6 +78,7 @@ public static class CreateOtcSaleHandler
         IValidator<CreateOtcSaleCommand> validator,
         IOtcSaleRepository otcSaleRepository,
         IDrugBatchRepository drugBatchRepository,
+        IDrugCatalogItemRepository drugCatalogItemRepository,
         IUnitOfWork unitOfWork,
         ICurrentUser currentUser,
         CancellationToken ct)
@@ -98,6 +100,9 @@ public static class CreateOtcSaleHandler
             soldById: currentUser.UserId,
             notes: command.Notes,
             branchId: new BranchId(currentUser.BranchId));
+
+        // Collect sale line items for the domain event
+        var saleItems = new List<OtcSaleCompletedEvent.DrugLineDto>();
 
         // Step 3: Process each line with FEFO batch allocation
         foreach (var lineInput in command.Lines)
@@ -131,7 +136,18 @@ public static class CreateOtcSaleHandler
                 if (batch is not null)
                     batch.Deduct(allocation.Quantity);
             }
+
+            // Enrich with catalog data for billing integration event
+            var catalogItem = await drugCatalogItemRepository.GetByIdAsync(lineInput.DrugCatalogItemId, ct);
+            saleItems.Add(new OtcSaleCompletedEvent.DrugLineDto(
+                catalogItem?.Name ?? lineInput.DrugName,
+                catalogItem?.NameVi ?? string.Empty,
+                lineInput.Quantity,
+                lineInput.UnitPrice));
         }
+
+        // Step 3b: Raise OtcSaleCompletedEvent with enriched line items
+        sale.RaiseSaleCompletedEvent(saleItems);
 
         // Step 4: Save
         otcSaleRepository.Add(sale);

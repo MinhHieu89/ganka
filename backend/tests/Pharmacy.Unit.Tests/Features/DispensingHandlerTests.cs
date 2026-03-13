@@ -21,6 +21,7 @@ public class DispensingHandlerTests
 {
     private readonly IDispensingRepository _dispensingRepository = Substitute.For<IDispensingRepository>();
     private readonly IDrugBatchRepository _drugBatchRepository = Substitute.For<IDrugBatchRepository>();
+    private readonly IDrugCatalogItemRepository _drugCatalogItemRepository = Substitute.For<IDrugCatalogItemRepository>();
     private readonly IUnitOfWork _unitOfWork = Substitute.For<IUnitOfWork>();
     private readonly ICurrentUser _currentUser = Substitute.For<ICurrentUser>();
     private readonly IValidator<DispenseDrugsCommand> _validator = Substitute.For<IValidator<DispenseDrugsCommand>>();
@@ -102,7 +103,7 @@ public class DispensingHandlerTests
 
         // Act
         var result = await DispenseDrugsHandler.Handle(
-            command, _dispensingRepository, _drugBatchRepository, _unitOfWork, _validator, _currentUser, CancellationToken.None);
+            command, _dispensingRepository, _drugBatchRepository, _drugCatalogItemRepository, _unitOfWork, _validator, _currentUser, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -123,7 +124,7 @@ public class DispensingHandlerTests
 
         // Act
         var result = await DispenseDrugsHandler.Handle(
-            command, _dispensingRepository, _drugBatchRepository, _unitOfWork, _validator, _currentUser, CancellationToken.None);
+            command, _dispensingRepository, _drugBatchRepository, _drugCatalogItemRepository, _unitOfWork, _validator, _currentUser, CancellationToken.None);
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -150,7 +151,7 @@ public class DispensingHandlerTests
 
         // Act
         var result = await DispenseDrugsHandler.Handle(
-            command, _dispensingRepository, _drugBatchRepository, _unitOfWork, _validator, _currentUser, CancellationToken.None);
+            command, _dispensingRepository, _drugBatchRepository, _drugCatalogItemRepository, _unitOfWork, _validator, _currentUser, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -180,7 +181,7 @@ public class DispensingHandlerTests
 
         // Act
         var result = await DispenseDrugsHandler.Handle(
-            command, _dispensingRepository, _drugBatchRepository, _unitOfWork, _validator, _currentUser, CancellationToken.None);
+            command, _dispensingRepository, _drugBatchRepository, _drugCatalogItemRepository, _unitOfWork, _validator, _currentUser, CancellationToken.None);
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -217,7 +218,7 @@ public class DispensingHandlerTests
 
         // Act
         var result = await DispenseDrugsHandler.Handle(
-            command, _dispensingRepository, _drugBatchRepository, _unitOfWork, _validator, _currentUser, CancellationToken.None);
+            command, _dispensingRepository, _drugBatchRepository, _drugCatalogItemRepository, _unitOfWork, _validator, _currentUser, CancellationToken.None);
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -251,7 +252,7 @@ public class DispensingHandlerTests
 
         // Act
         var result = await DispenseDrugsHandler.Handle(
-            command, _dispensingRepository, _drugBatchRepository, _unitOfWork, _validator, _currentUser, CancellationToken.None);
+            command, _dispensingRepository, _drugBatchRepository, _drugCatalogItemRepository, _unitOfWork, _validator, _currentUser, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -294,7 +295,7 @@ public class DispensingHandlerTests
 
         // Act
         var result = await DispenseDrugsHandler.Handle(
-            command, _dispensingRepository, _drugBatchRepository, _unitOfWork, _validator, _currentUser, CancellationToken.None);
+            command, _dispensingRepository, _drugBatchRepository, _drugCatalogItemRepository, _unitOfWork, _validator, _currentUser, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();

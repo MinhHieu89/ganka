@@ -1,3 +1,4 @@
+using Pharmacy.Domain.Events;
 using Shared.Domain;
 
 namespace Pharmacy.Domain.Entities;
@@ -92,5 +93,20 @@ public class OtcSale : AggregateRoot, IAuditable
         var line = OtcSaleLine.Create(Id, drugCatalogItemId, drugName, quantity, unitPrice);
         _lines.Add(line);
         return line;
+    }
+
+    /// <summary>
+    /// Raises an OtcSaleCompletedEvent domain event with the provided drug line items.
+    /// Called by the handler after all sale lines are processed and enriched with
+    /// catalog data (Vietnamese name) for downstream billing integration.
+    /// </summary>
+    /// <param name="items">Enriched drug line items with names, quantities, and unit prices.</param>
+    public void RaiseSaleCompletedEvent(List<OtcSaleCompletedEvent.DrugLineDto> items)
+    {
+        AddDomainEvent(new OtcSaleCompletedEvent(
+            OtcSaleId: Id,
+            PatientId: PatientId,
+            CustomerName: CustomerName,
+            Items: items));
     }
 }

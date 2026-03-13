@@ -1,4 +1,5 @@
 using Pharmacy.Domain.Enums;
+using Pharmacy.Domain.Events;
 using Shared.Domain;
 
 namespace Pharmacy.Domain.Entities;
@@ -118,5 +119,20 @@ public class DispensingRecord : AggregateRoot, IAuditable
 
         _lines.Add(line);
         return line;
+    }
+
+    /// <summary>
+    /// Raises a DrugDispensedEvent domain event with the provided drug line items.
+    /// Called by the handler after all dispensing lines are processed and enriched with
+    /// catalog data (Vietnamese name, selling price) for downstream billing integration.
+    /// </summary>
+    /// <param name="items">Enriched drug line items with names, quantities, and unit prices.</param>
+    public void RaiseDispensedEvent(List<DrugDispensedEvent.DrugLineDto> items)
+    {
+        AddDomainEvent(new DrugDispensedEvent(
+            VisitId: VisitId,
+            PatientId: PatientId,
+            PatientName: PatientName,
+            Items: items));
     }
 }

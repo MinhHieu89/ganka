@@ -2,6 +2,7 @@ using FluentValidation;
 using Pharmacy.Application.Interfaces;
 using Pharmacy.Domain.Entities;
 using Pharmacy.Domain.Enums;
+using Pharmacy.Domain.Events;
 using Pharmacy.Domain.Services;
 using Shared.Application;
 using Shared.Domain;
@@ -90,6 +91,7 @@ public static class DispenseDrugsHandler
         DispenseDrugsCommand command,
         IDispensingRepository dispensingRepository,
         IDrugBatchRepository drugBatchRepository,
+        IDrugCatalogItemRepository drugCatalogItemRepository,
         IUnitOfWork unitOfWork,
         IValidator<DispenseDrugsCommand> validator,
         ICurrentUser currentUser,
@@ -131,6 +133,9 @@ public static class DispenseDrugsHandler
             overrideReason: string.IsNullOrWhiteSpace(command.OverrideReason) ? null : command.OverrideReason,
             branchId: new BranchId(currentUser.BranchId));
 
+        // Collect dispensed drug line items for the domain event
+        var dispensedItems = new List<DrugDispensedEvent.DrugLineDto>();
+
         // Step 5: Process each line
         foreach (var line in command.Lines)
         {
@@ -155,6 +160,10 @@ public static class DispenseDrugsHandler
                     drugName: line.DrugName,
                     quantity: line.Quantity,
                     status: DispensingStatus.Dispensed);
+
+                // Off-catalog: no catalog data available, use defaults
+                dispensedItems.Add(new DrugDispensedEvent.DrugLineDto(
+                    line.DrugName, string.Empty, line.Quantity, 0m));
                 continue;
             }
 
@@ -203,6 +212,20 @@ public static class DispenseDrugsHandler
                 if (batch is not null)
                     batch.Deduct(allocation.Quantity);
             }
+
+            // Enrich with catalog data for billing integration event
+            var catalogItem = await drugCatalogItemRepository.GetByIdAsync(line.DrugCatalogItemId.Value, ct);
+            dispensedItems.Add(new DrugDispensedEvent.DrugLineDto(
+                catalogItem?.Name ?? line.DrugName,
+                catalogItem?.NameVi ?? string.Empty,
+                line.Quantity,
+                catalogItem?.SellingPrice ?? 0m));
+        }
+
+        // Step 5b: Raise DrugDispensedEvent with enriched line items
+        if (dispensedItems.Count > 0)
+        {
+            record.RaiseDispensedEvent(dispensedItems);
         }
 
         // Step 6: Save
