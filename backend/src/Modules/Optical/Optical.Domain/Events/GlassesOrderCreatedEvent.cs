@@ -9,7 +9,7 @@ namespace Optical.Domain.Events;
 /// </summary>
 public sealed record GlassesOrderCreatedEvent(
     Guid OrderId,
-    Guid? VisitId,
+    Guid VisitId,
     Guid PatientId,
     string PatientName,
     List<GlassesOrderCreatedEvent.OrderLineDto> Items,

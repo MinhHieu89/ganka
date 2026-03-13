@@ -22,8 +22,8 @@ public class Invoice : AggregateRoot, IAuditable
     /// <summary>Visit this invoice is linked to (nullable for OTC sales).</summary>
     public Guid? VisitId { get; private set; }
 
-    /// <summary>Patient this invoice belongs to.</summary>
-    public Guid PatientId { get; private set; }
+    /// <summary>Patient this invoice belongs to (nullable for anonymous OTC sales).</summary>
+    public Guid? PatientId { get; private set; }
 
     /// <summary>Denormalized patient name to avoid cross-module joins.</summary>
     public string PatientName { get; private set; } = string.Empty;
@@ -81,7 +81,7 @@ public class Invoice : AggregateRoot, IAuditable
     /// </summary>
     public static Invoice Create(
         string invoiceNumber,
-        Guid patientId,
+        Guid? patientId,
         string patientName,
         Guid? visitId,
         BranchId branchId)

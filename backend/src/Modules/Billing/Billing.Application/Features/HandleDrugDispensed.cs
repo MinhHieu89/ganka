@@ -64,17 +64,10 @@ public static class HandleDrugDispensedHandler
 
         await unitOfWork.SaveChangesAsync(ct);
 
-        try
+        foreach (var item in @event.Items)
         {
-            foreach (var item in @event.Items)
-            {
-                await notificationService.NotifyLineItemAddedAsync(
-                    invoice.Id, invoice.InvoiceNumber, item.DrugName, item.UnitPrice * item.Quantity, "Pharmacy", ct);
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogWarning(ex, "Failed to send SignalR notification for drug dispensed on invoice {InvoiceId}", invoice.Id);
+            await notificationService.NotifyLineItemAddedAsync(
+                invoice.Id, invoice.InvoiceNumber, item.DrugName, item.UnitPrice * item.Quantity, "Pharmacy", ct);
         }
     }
 }

@@ -242,15 +242,15 @@ public static class BillingApiEndpoints
 
     private static void MapServiceCatalogEndpoints(RouteGroupBuilder group)
     {
-        // POST /api/billing/service-catalog -- create a new service catalog item
+        // POST /api/billing/service-catalog -- create a new service catalog item (Admin/Manager only)
         group.MapPost("/service-catalog",
             async (CreateServiceCatalogItemCommand command, IMessageBus bus, CancellationToken ct) =>
         {
             var result = await bus.InvokeAsync<Result<ServiceCatalogItemDto>>(command, ct);
             return result.ToCreatedHttpResult("/api/billing/service-catalog");
-        });
+        }).RequireAuthorization(policy => policy.RequireRole("Admin", "Manager"));
 
-        // PUT /api/billing/service-catalog/{id} -- update a service catalog item
+        // PUT /api/billing/service-catalog/{id} -- update a service catalog item (Admin/Manager only)
         group.MapPut("/service-catalog/{id:guid}",
             async (Guid id, UpdateServiceCatalogItemCommand command, IMessageBus bus, CancellationToken ct) =>
         {
@@ -258,7 +258,7 @@ public static class BillingApiEndpoints
                 id, command.Name, command.NameVi, command.Price, command.IsActive, command.Description);
             var result = await bus.InvokeAsync<Result<ServiceCatalogItemDto>>(enriched, ct);
             return result.ToHttpResult();
-        });
+        }).RequireAuthorization(policy => policy.RequireRole("Admin", "Manager"));
 
         // GET /api/billing/service-catalog -- list service catalog items
         group.MapGet("/service-catalog",

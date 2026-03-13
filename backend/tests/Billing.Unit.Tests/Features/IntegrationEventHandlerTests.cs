@@ -471,29 +471,6 @@ public class IntegrationEventHandlerTests
         invoice.LineItems.Should().HaveCount(2);
     }
 
-    [Fact]
-    public async Task HandleGlassesOrderCreated_NullVisitId_CreatesStandaloneInvoice()
-    {
-        // Arrange
-        var orderId = Guid.NewGuid();
-        var patientId = Guid.NewGuid();
-        var items = new List<GlassesOrderCreatedIntegrationEvent.OrderLineDto>
-        {
-            new("Frame", "Gong kinh", 500000m, 1)
-        };
-        var @event = new GlassesOrderCreatedIntegrationEvent(orderId, null, patientId, "Patient", items, DefaultBranchId);
-
-        // Act
-        await HandleGlassesOrderCreatedHandler.Handle(
-            @event, _invoiceRepository, _notificationService, _unitOfWork, _glassesLogger, CancellationToken.None);
-
-        // Assert
-        _invoiceRepository.Received(1).Add(Arg.Is<Invoice>(inv =>
-            inv.VisitId == null &&
-            inv.LineItems.Count == 1));
-        await _unitOfWork.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
-    }
-
     #endregion
 
     #region HandleTreatmentSessionCompleted Tests
@@ -509,7 +486,7 @@ public class IntegrationEventHandlerTests
             .Returns(invoice);
 
         var @event = new TreatmentSessionCompletedIntegrationEvent(
-            Guid.NewGuid(), sessionId, Guid.NewGuid(), (int)TreatmentType.IPL,
+            Guid.NewGuid(), sessionId, Guid.NewGuid(), "Test Patient", (int)TreatmentType.IPL,
             new List<TreatmentSessionCompletedIntegrationEvent.ConsumableUsageDto>(),
             visitId, 200000m, DefaultBranchId);
 
@@ -531,7 +508,7 @@ public class IntegrationEventHandlerTests
     {
         // Arrange
         var @event = new TreatmentSessionCompletedIntegrationEvent(
-            Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), (int)TreatmentType.LLLT,
+            Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), "Test Patient", (int)TreatmentType.LLLT,
             new List<TreatmentSessionCompletedIntegrationEvent.ConsumableUsageDto>(),
             null, 150000m, DefaultBranchId);
 
@@ -555,7 +532,7 @@ public class IntegrationEventHandlerTests
             .Returns((Invoice?)null);
 
         var @event = new TreatmentSessionCompletedIntegrationEvent(
-            Guid.NewGuid(), sessionId, patientId, (int)TreatmentType.LidCare,
+            Guid.NewGuid(), sessionId, patientId, "Test Patient", (int)TreatmentType.LidCare,
             new List<TreatmentSessionCompletedIntegrationEvent.ConsumableUsageDto>(),
             visitId, 100000m, DefaultBranchId);
 
@@ -583,7 +560,7 @@ public class IntegrationEventHandlerTests
             .Returns(invoice);
 
         var @event = new TreatmentSessionCompletedIntegrationEvent(
-            Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), (int)TreatmentType.IPL,
+            Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), "Test Patient", (int)TreatmentType.IPL,
             new List<TreatmentSessionCompletedIntegrationEvent.ConsumableUsageDto>(),
             visitId, 200000m, DefaultBranchId);
 

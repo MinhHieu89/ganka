@@ -147,6 +147,7 @@ public class SessionCompletedEventTests
             PackageId: Guid.NewGuid(),
             SessionId: Guid.NewGuid(),
             PatientId: DefaultPatientId,
+            PatientName: "Test Patient",
             TreatmentType: TreatmentType.IPL,
             Consumables: [],
             VisitId: visitId,
@@ -159,6 +160,7 @@ public class SessionCompletedEventTests
         // Assert
         integrationEvent.VisitId.Should().Be(visitId);
         integrationEvent.SessionFeeAmount.Should().Be(1_200_000m);
+        integrationEvent.PatientName.Should().Be("Test Patient");
     }
 
     [Fact]
@@ -169,6 +171,7 @@ public class SessionCompletedEventTests
             PackageId: Guid.NewGuid(),
             SessionId: Guid.NewGuid(),
             PatientId: DefaultPatientId,
+            PatientName: "Test Patient",
             TreatmentType: TreatmentType.IPL,
             Consumables: [],
             VisitId: null,

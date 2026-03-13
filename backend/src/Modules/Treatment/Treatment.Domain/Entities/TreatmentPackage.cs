@@ -201,6 +201,7 @@ public class TreatmentPackage : AggregateRoot, IAuditable
             PackageId: Id,
             SessionId: session.Id,
             PatientId: PatientId,
+            PatientName: PatientName,
             TreatmentType: TreatmentType,
             Consumables: consumableUsages,
             VisitId: VisitId,

@@ -7,7 +7,7 @@ namespace Optical.Contracts.IntegrationEvents;
 /// </summary>
 public sealed record GlassesOrderCreatedIntegrationEvent(
     Guid OrderId,
-    Guid? VisitId,
+    Guid VisitId,
     Guid PatientId,
     string PatientName,
     List<GlassesOrderCreatedIntegrationEvent.OrderLineDto> Items,

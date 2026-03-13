@@ -27,7 +27,7 @@ public static class HandleOtcSaleCompletedHandler
 
         var invoice = Invoice.Create(
             number,
-            @event.PatientId ?? Guid.Empty,
+            @event.PatientId,
             @event.CustomerName ?? "Anonymous",
             null, // OTC sales have no visit
             new BranchId(@event.BranchId));
@@ -47,14 +47,7 @@ public static class HandleOtcSaleCompletedHandler
         invoiceRepository.Add(invoice);
         await unitOfWork.SaveChangesAsync(ct);
 
-        try
-        {
-            await notificationService.NotifyInvoiceCreatedAsync(
-                invoice.Id, invoice.InvoiceNumber, null, @event.CustomerName ?? "Anonymous", invoice.TotalAmount, ct);
-        }
-        catch (Exception ex)
-        {
-            logger.LogWarning(ex, "Failed to send SignalR notification for OTC invoice {InvoiceId}", invoice.Id);
-        }
+        await notificationService.NotifyInvoiceCreatedAsync(
+            invoice.Id, invoice.InvoiceNumber, null, @event.CustomerName ?? "Anonymous", invoice.TotalAmount, ct);
     }
 }

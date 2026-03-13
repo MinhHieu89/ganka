@@ -13,6 +13,7 @@ public sealed record TreatmentSessionCompletedEvent(
     Guid PackageId,
     Guid SessionId,
     Guid PatientId,
+    string PatientName,
     TreatmentType TreatmentType,
     List<ConsumableUsageInfo> Consumables,
     Guid? VisitId,

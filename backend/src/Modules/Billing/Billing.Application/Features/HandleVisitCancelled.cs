@@ -29,13 +29,6 @@ public static class HandleVisitCancelledHandler
         invoice.Void();
         await unitOfWork.SaveChangesAsync(ct);
 
-        try
-        {
-            await notificationService.NotifyInvoiceVoidedAsync(invoice.Id, invoice.InvoiceNumber, ct);
-        }
-        catch (Exception ex)
-        {
-            logger.LogWarning(ex, "Failed to send SignalR notification for voided invoice {InvoiceId}", invoice.Id);
-        }
+        await notificationService.NotifyInvoiceVoidedAsync(invoice.Id, invoice.InvoiceNumber, ct);
     }
 }

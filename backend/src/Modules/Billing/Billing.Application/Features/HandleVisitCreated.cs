@@ -52,14 +52,7 @@ public static class HandleVisitCreatedHandler
         invoiceRepository.Add(invoice);
         await unitOfWork.SaveChangesAsync(ct);
 
-        try
-        {
-            await notificationService.NotifyInvoiceCreatedAsync(
-                invoice.Id, invoice.InvoiceNumber, @event.VisitId, @event.PatientName, invoice.TotalAmount, ct);
-        }
-        catch (Exception ex)
-        {
-            logger.LogWarning(ex, "Failed to send SignalR notification for invoice {InvoiceId}", invoice.Id);
-        }
+        await notificationService.NotifyInvoiceCreatedAsync(
+            invoice.Id, invoice.InvoiceNumber, @event.VisitId, @event.PatientName, invoice.TotalAmount, ct);
     }
 }

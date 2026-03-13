@@ -10,7 +10,7 @@ namespace Billing.Application.Features;
 /// <summary>
 /// Wolverine handler for GlassesOrderCreatedIntegrationEvent.
 /// Adds frame/lens line items to the visit invoice using get-or-create pattern.
-/// Supports standalone orders (nullable VisitId).
+/// VisitId is always present (GlassesOrder entity enforces non-nullable VisitId).
 /// Sends SignalR notification after adding line items.
 /// </summary>
 public static class HandleGlassesOrderCreatedHandler
@@ -23,17 +23,8 @@ public static class HandleGlassesOrderCreatedHandler
         ILogger logger,
         CancellationToken ct)
     {
-        Invoice invoice;
-
-        if (@event.VisitId.HasValue)
-        {
-            invoice = await invoiceRepository.GetByVisitIdAsync(@event.VisitId.Value, ct)
-                ?? await CreateInvoiceAsync(@event.PatientId, @event.PatientName, @event.VisitId, invoiceRepository, @event.BranchId, ct);
-        }
-        else
-        {
-            invoice = await CreateInvoiceAsync(@event.PatientId, @event.PatientName, null, invoiceRepository, @event.BranchId, ct);
-        }
+        var invoice = await invoiceRepository.GetByVisitIdAsync(@event.VisitId, ct)
+            ?? await CreateInvoiceAsync(@event.PatientId, @event.PatientName, @event.VisitId, invoiceRepository, @event.BranchId, ct);
 
         // Idempotency: skip items already billed from this glasses order
         var existingDescriptions = invoice.LineItems
@@ -58,17 +49,10 @@ public static class HandleGlassesOrderCreatedHandler
 
         await unitOfWork.SaveChangesAsync(ct);
 
-        try
+        foreach (var item in @event.Items)
         {
-            foreach (var item in @event.Items)
-            {
-                await notificationService.NotifyLineItemAddedAsync(
-                    invoice.Id, invoice.InvoiceNumber, item.Description, item.UnitPrice * item.Quantity, "Optical", ct);
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogWarning(ex, "Failed to send SignalR notification for glasses order on invoice {InvoiceId}", invoice.Id);
+            await notificationService.NotifyLineItemAddedAsync(
+                invoice.Id, invoice.InvoiceNumber, item.Description, item.UnitPrice * item.Quantity, "Optical", ct);
         }
     }
 

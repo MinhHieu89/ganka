@@ -189,10 +189,10 @@ public class SharedKernelTests
             .ToList();
 
         // At least half of aggregate roots should be auditable
-        // This is a soft heuristic, not a hard rule
+        var minimumAuditableCount = aggregateRootTypes.Count / 2;
         auditableCount.Should().BeGreaterThanOrEqualTo(
-            0, // Relaxed: 0 is fine for early phases when modules are scaffolded
-            $"Aggregate roots that are user-facing should implement IAuditable. " +
+            minimumAuditableCount,
+            $"At least half ({minimumAuditableCount}) of aggregate roots should implement IAuditable. " +
             $"Non-auditable types: {string.Join(", ", nonAuditableTypes)}");
     }
 }

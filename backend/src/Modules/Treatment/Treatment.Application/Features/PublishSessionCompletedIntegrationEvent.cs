@@ -21,6 +21,7 @@ public static class PublishSessionCompletedIntegrationEventHandler
             PackageId: domainEvent.PackageId,
             SessionId: domainEvent.SessionId,
             PatientId: domainEvent.PatientId,
+            PatientName: domainEvent.PatientName,
             TreatmentType: (int)domainEvent.TreatmentType,
             Consumables: domainEvent.Consumables
                 .Select(c => new TreatmentSessionCompletedIntegrationEvent.ConsumableUsageDto(

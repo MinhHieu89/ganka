@@ -9,6 +9,7 @@ public sealed record TreatmentSessionCompletedIntegrationEvent(
     Guid PackageId,
     Guid SessionId,
     Guid PatientId,
+    string PatientName,
     int TreatmentType,
     List<TreatmentSessionCompletedIntegrationEvent.ConsumableUsageDto> Consumables,
     Guid? VisitId,

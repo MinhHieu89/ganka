@@ -20,7 +20,7 @@ public static class GetServiceCatalogItemByCodeHandler
         IServiceCatalogRepository repository,
         CancellationToken ct)
     {
-        var item = await repository.GetActiveByCodeAsync(query.Code, ct);
+        var item = await repository.GetActiveByCodeAsync(query.Code.ToUpperInvariant(), ct);
 
         if (item is null)
             return Result.Success<ServiceCatalogItemDto?>(null);

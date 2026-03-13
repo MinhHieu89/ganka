@@ -66,14 +66,7 @@ public static class HandleTreatmentSessionCompletedHandler
 
         await unitOfWork.SaveChangesAsync(ct);
 
-        try
-        {
-            await notificationService.NotifyLineItemAddedAsync(
-                invoice.Id, invoice.InvoiceNumber, descriptionEn, @event.SessionFeeAmount, "Treatment", ct);
-        }
-        catch (Exception ex)
-        {
-            logger.LogWarning(ex, "Failed to send SignalR notification for treatment session on invoice {InvoiceId}", invoice.Id);
-        }
+        await notificationService.NotifyLineItemAddedAsync(
+            invoice.Id, invoice.InvoiceNumber, descriptionEn, @event.SessionFeeAmount, "Treatment", ct);
     }
 }

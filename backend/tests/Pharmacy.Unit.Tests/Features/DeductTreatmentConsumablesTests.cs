@@ -84,6 +84,7 @@ public class DeductTreatmentConsumablesTests
             PackageId: DefaultPackageId,
             SessionId: DefaultSessionId,
             PatientId: DefaultPatientId,
+            PatientName: "Test Patient",
             TreatmentType: 0, // IPL
             Consumables: consumables ?? [],
             VisitId: null,
