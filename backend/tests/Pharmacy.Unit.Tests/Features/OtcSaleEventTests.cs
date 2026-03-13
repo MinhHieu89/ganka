@@ -30,7 +30,7 @@ public class OtcSaleEventTests
         };
 
         // Act
-        var evt = new OtcSaleCompletedEvent(saleId, patientId, "Tran Thi B", items);
+        var evt = new OtcSaleCompletedEvent(saleId, patientId, "Tran Thi B", items, Guid.NewGuid());
 
         // Assert
         evt.OtcSaleId.Should().Be(saleId);
@@ -49,7 +49,7 @@ public class OtcSaleEventTests
     public void OtcSaleCompletedEvent_NullPatientId_ShouldBeAllowed()
     {
         // Arrange & Act
-        var evt = new OtcSaleCompletedEvent(Guid.NewGuid(), null, "Anonymous", []);
+        var evt = new OtcSaleCompletedEvent(Guid.NewGuid(), null, "Anonymous", [], Guid.NewGuid());
 
         // Assert
         evt.PatientId.Should().BeNull();
@@ -59,7 +59,7 @@ public class OtcSaleEventTests
     [Fact]
     public void OtcSaleCompletedEvent_ShouldImplementIDomainEvent()
     {
-        var evt = new OtcSaleCompletedEvent(Guid.NewGuid(), null, null, []);
+        var evt = new OtcSaleCompletedEvent(Guid.NewGuid(), null, null, [], Guid.NewGuid());
         evt.Should().BeAssignableTo<IDomainEvent>();
     }
 
@@ -112,7 +112,7 @@ public class OtcSaleEventTests
             new("Artificial Tears", "Nuoc mat nhan tao", 3, 35000m),
             new("Vitamin A Eye Drops", "Nho mat Vitamin A", 1, 45000m)
         };
-        var domainEvent = new OtcSaleCompletedEvent(saleId, patientId, "Tran Thi B", items);
+        var domainEvent = new OtcSaleCompletedEvent(saleId, patientId, "Tran Thi B", items, Guid.NewGuid());
 
         // Act
         var integrationEvent = PublishOtcSaleCompletedIntegrationEventHandler.Handle(domainEvent);
@@ -133,7 +133,7 @@ public class OtcSaleEventTests
     public void PublishOtcSaleCompletedIntegrationEventHandler_NullPatient_ShouldMapCorrectly()
     {
         // Arrange
-        var domainEvent = new OtcSaleCompletedEvent(Guid.NewGuid(), null, null, []);
+        var domainEvent = new OtcSaleCompletedEvent(Guid.NewGuid(), null, null, [], Guid.NewGuid());
 
         // Act
         var integrationEvent = PublishOtcSaleCompletedIntegrationEventHandler.Handle(domainEvent);

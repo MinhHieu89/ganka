@@ -3,7 +3,6 @@ using Billing.Domain.Entities;
 using Billing.Domain.Enums;
 using Microsoft.Extensions.Logging;
 using Optical.Contracts.IntegrationEvents;
-using Shared.Application;
 using Shared.Domain;
 
 namespace Billing.Application.Features;
@@ -21,7 +20,6 @@ public static class HandleGlassesOrderCreatedHandler
         IInvoiceRepository invoiceRepository,
         IBillingNotificationService notificationService,
         IUnitOfWork unitOfWork,
-        ICurrentUser currentUser,
         ILogger logger,
         CancellationToken ct)
     {
@@ -30,11 +28,11 @@ public static class HandleGlassesOrderCreatedHandler
         if (@event.VisitId.HasValue)
         {
             invoice = await invoiceRepository.GetByVisitIdAsync(@event.VisitId.Value, ct)
-                ?? await CreateInvoiceAsync(@event.PatientId, @event.PatientName, @event.VisitId, invoiceRepository, currentUser, ct);
+                ?? await CreateInvoiceAsync(@event.PatientId, @event.PatientName, @event.VisitId, invoiceRepository, @event.BranchId, ct);
         }
         else
         {
-            invoice = await CreateInvoiceAsync(@event.PatientId, @event.PatientName, null, invoiceRepository, currentUser, ct);
+            invoice = await CreateInvoiceAsync(@event.PatientId, @event.PatientName, null, invoiceRepository, @event.BranchId, ct);
         }
 
         foreach (var item in @event.Items)
@@ -67,10 +65,10 @@ public static class HandleGlassesOrderCreatedHandler
 
     private static async Task<Invoice> CreateInvoiceAsync(
         Guid patientId, string patientName, Guid? visitId,
-        IInvoiceRepository invoiceRepository, ICurrentUser currentUser, CancellationToken ct)
+        IInvoiceRepository invoiceRepository, Guid branchId, CancellationToken ct)
     {
         var number = await invoiceRepository.GetNextInvoiceNumberAsync(DateTime.UtcNow.Year, ct);
-        var invoice = Invoice.Create(number, patientId, patientName, visitId, new BranchId(currentUser.BranchId));
+        var invoice = Invoice.Create(number, patientId, patientName, visitId, new BranchId(branchId));
         invoiceRepository.Add(invoice);
         return invoice;
     }

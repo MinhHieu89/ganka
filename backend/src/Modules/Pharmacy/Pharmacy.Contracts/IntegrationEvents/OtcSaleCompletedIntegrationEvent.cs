@@ -8,7 +8,8 @@ public sealed record OtcSaleCompletedIntegrationEvent(
     Guid OtcSaleId,
     Guid? PatientId,
     string? CustomerName,
-    List<OtcSaleCompletedIntegrationEvent.DrugLineDto> Items)
+    List<OtcSaleCompletedIntegrationEvent.DrugLineDto> Items,
+    Guid BranchId)
 {
     /// <summary>
     /// Represents a single drug line item in an OTC sale.

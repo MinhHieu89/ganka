@@ -2,7 +2,6 @@ using Billing.Application.Interfaces;
 using Billing.Domain.Entities;
 using Clinical.Contracts.IntegrationEvents;
 using Microsoft.Extensions.Logging;
-using Shared.Application;
 using Shared.Domain;
 
 namespace Billing.Application.Features;
@@ -20,7 +19,6 @@ public static class HandleVisitCreatedHandler
         IServiceCatalogRepository serviceCatalogRepository,
         IBillingNotificationService notificationService,
         IUnitOfWork unitOfWork,
-        ICurrentUser currentUser,
         ILogger logger,
         CancellationToken ct)
     {
@@ -31,7 +29,7 @@ public static class HandleVisitCreatedHandler
             @event.PatientId,
             @event.PatientName,
             @event.VisitId,
-            new BranchId(currentUser.BranchId));
+            new BranchId(@event.BranchId));
 
         var consultation = await serviceCatalogRepository.GetActiveByCodeAsync("CONSULTATION", ct);
         if (consultation is not null)

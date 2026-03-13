@@ -150,7 +150,8 @@ public class SessionCompletedEventTests
             TreatmentType: TreatmentType.IPL,
             Consumables: [],
             VisitId: visitId,
-            SessionFeeAmount: 1_200_000m);
+            SessionFeeAmount: 1_200_000m,
+            BranchId: DefaultBranchId);
 
         // Act
         var integrationEvent = PublishSessionCompletedIntegrationEventHandler.Handle(domainEvent);
@@ -171,7 +172,8 @@ public class SessionCompletedEventTests
             TreatmentType: TreatmentType.IPL,
             Consumables: [],
             VisitId: null,
-            SessionFeeAmount: 0m);
+            SessionFeeAmount: 0m,
+            BranchId: DefaultBranchId);
 
         // Act
         var integrationEvent = PublishSessionCompletedIntegrationEventHandler.Handle(domainEvent);

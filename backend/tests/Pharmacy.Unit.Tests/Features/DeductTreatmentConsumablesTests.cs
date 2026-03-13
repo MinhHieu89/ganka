@@ -87,7 +87,8 @@ public class DeductTreatmentConsumablesTests
             TreatmentType: 0, // IPL
             Consumables: consumables ?? [],
             VisitId: null,
-            SessionFeeAmount: 0m);
+            SessionFeeAmount: 0m,
+            BranchId: DefaultBranchId);
     }
 
     #region Valid Deduction Tests

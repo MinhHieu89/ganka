@@ -44,6 +44,7 @@ using Billing.Presentation;
 using Treatment.Application;
 using Treatment.Presentation;
 using Shared.Infrastructure;
+using Shared.Infrastructure.Interceptors;
 using Shared.Presentation;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.RateLimiting;
@@ -118,7 +119,9 @@ void ConfigureDbContext<TContext>(IServiceCollection services) where TContext : 
     services.AddDbContext<TContext>((sp, options) =>
     {
         options.UseSqlServer(connectionString);
-        options.AddInterceptors(sp.GetRequiredService<AuditInterceptor>());
+        options.AddInterceptors(
+            sp.GetRequiredService<AuditInterceptor>(),
+            sp.GetRequiredService<DomainEventDispatcherInterceptor>());
     },
     optionsLifetime: ServiceLifetime.Singleton);
 }

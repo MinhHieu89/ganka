@@ -124,7 +124,8 @@ public class GlassesOrderEventTests
                     DescriptionVi: "Trong kinh XYZ",
                     UnitPrice: 1_000_000m,
                     Quantity: 2)
-            ]);
+            ],
+            BranchId: DefaultBranchId);
 
         // Act
         var integrationEvent = PublishGlassesOrderCreatedIntegrationEventHandler.Handle(domainEvent);

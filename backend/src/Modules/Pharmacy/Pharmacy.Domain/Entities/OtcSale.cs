@@ -107,6 +107,7 @@ public class OtcSale : AggregateRoot, IAuditable
             OtcSaleId: Id,
             PatientId: PatientId,
             CustomerName: CustomerName,
-            Items: items));
+            Items: items,
+            BranchId: BranchId.Value));
     }
 }

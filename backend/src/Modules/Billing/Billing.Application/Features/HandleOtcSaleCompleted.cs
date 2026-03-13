@@ -3,7 +3,6 @@ using Billing.Domain.Entities;
 using Billing.Domain.Enums;
 using Microsoft.Extensions.Logging;
 using Pharmacy.Contracts.IntegrationEvents;
-using Shared.Application;
 using Shared.Domain;
 
 namespace Billing.Application.Features;
@@ -21,7 +20,6 @@ public static class HandleOtcSaleCompletedHandler
         IInvoiceRepository invoiceRepository,
         IBillingNotificationService notificationService,
         IUnitOfWork unitOfWork,
-        ICurrentUser currentUser,
         ILogger logger,
         CancellationToken ct)
     {
@@ -32,7 +30,7 @@ public static class HandleOtcSaleCompletedHandler
             @event.PatientId ?? Guid.Empty,
             @event.CustomerName ?? "Anonymous",
             null, // OTC sales have no visit
-            new BranchId(currentUser.BranchId));
+            new BranchId(@event.BranchId));
 
         foreach (var item in @event.Items)
         {

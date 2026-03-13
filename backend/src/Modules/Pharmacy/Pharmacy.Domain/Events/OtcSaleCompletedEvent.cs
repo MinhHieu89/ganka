@@ -10,7 +10,8 @@ public sealed record OtcSaleCompletedEvent(
     Guid OtcSaleId,
     Guid? PatientId,
     string? CustomerName,
-    List<OtcSaleCompletedEvent.DrugLineDto> Items) : IDomainEvent
+    List<OtcSaleCompletedEvent.DrugLineDto> Items,
+    Guid BranchId) : IDomainEvent
 {
     public Guid EventId { get; } = Guid.NewGuid();
     public DateTime OccurredAt { get; } = DateTime.UtcNow;

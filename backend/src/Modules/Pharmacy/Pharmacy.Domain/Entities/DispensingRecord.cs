@@ -133,6 +133,7 @@ public class DispensingRecord : AggregateRoot, IAuditable
             VisitId: VisitId,
             PatientId: PatientId,
             PatientName: PatientName,
-            Items: items));
+            Items: items,
+            BranchId: BranchId.Value));
     }
 }

@@ -19,6 +19,7 @@ public static class PublishVisitCreatedIntegrationEventHandler
         return new VisitCreatedIntegrationEvent(
             VisitId: domainEvent.VisitId,
             PatientId: domainEvent.PatientId,
-            PatientName: domainEvent.PatientName);
+            PatientName: domainEvent.PatientName,
+            BranchId: domainEvent.BranchId);
     }
 }

@@ -10,7 +10,8 @@ public sealed record GlassesOrderCreatedIntegrationEvent(
     Guid? VisitId,
     Guid PatientId,
     string PatientName,
-    List<GlassesOrderCreatedIntegrationEvent.OrderLineDto> Items)
+    List<GlassesOrderCreatedIntegrationEvent.OrderLineDto> Items,
+    Guid BranchId)
 {
     /// <summary>
     /// Represents a glasses order line item for cross-module consumption.

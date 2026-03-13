@@ -23,6 +23,7 @@ public static class PublishOtcSaleCompletedIntegrationEventHandler
             Items: domainEvent.Items
                 .Select(i => new OtcSaleCompletedIntegrationEvent.DrugLineDto(
                     i.DrugName, i.DrugNameVi, i.Quantity, i.UnitPrice))
-                .ToList());
+                .ToList(),
+            BranchId: domainEvent.BranchId);
     }
 }

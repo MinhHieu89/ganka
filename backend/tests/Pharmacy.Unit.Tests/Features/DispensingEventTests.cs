@@ -30,7 +30,7 @@ public class DispensingEventTests
         };
 
         // Act
-        var evt = new DrugDispensedEvent(visitId, patientId, "Nguyen Van A", items);
+        var evt = new DrugDispensedEvent(visitId, patientId, "Nguyen Van A", items, Guid.NewGuid());
 
         // Assert
         evt.VisitId.Should().Be(visitId);
@@ -48,7 +48,7 @@ public class DispensingEventTests
     [Fact]
     public void DrugDispensedEvent_ShouldImplementIDomainEvent()
     {
-        var evt = new DrugDispensedEvent(Guid.NewGuid(), Guid.NewGuid(), "Test", []);
+        var evt = new DrugDispensedEvent(Guid.NewGuid(), Guid.NewGuid(), "Test", [], Guid.NewGuid());
         evt.Should().BeAssignableTo<IDomainEvent>();
     }
 
@@ -104,7 +104,7 @@ public class DispensingEventTests
             new("Tobramycin 0.3%", "Tobramycin 0,3%", 2, 50000m),
             new("Dexamethasone 0.1%", "Dexamethasone 0,1%", 1, 75000m)
         };
-        var domainEvent = new DrugDispensedEvent(visitId, patientId, "Nguyen Van A", items);
+        var domainEvent = new DrugDispensedEvent(visitId, patientId, "Nguyen Van A", items, Guid.NewGuid());
 
         // Act
         var integrationEvent = PublishDrugDispensedIntegrationEventHandler.Handle(domainEvent);
@@ -128,7 +128,7 @@ public class DispensingEventTests
     public void PublishDrugDispensedIntegrationEventHandler_EmptyItems_ShouldReturnEmptyList()
     {
         // Arrange
-        var domainEvent = new DrugDispensedEvent(Guid.NewGuid(), Guid.NewGuid(), "Test", []);
+        var domainEvent = new DrugDispensedEvent(Guid.NewGuid(), Guid.NewGuid(), "Test", [], Guid.NewGuid());
 
         // Act
         var integrationEvent = PublishDrugDispensedIntegrationEventHandler.Handle(domainEvent);

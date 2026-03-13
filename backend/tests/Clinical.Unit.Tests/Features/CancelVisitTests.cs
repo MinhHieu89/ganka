@@ -167,7 +167,7 @@ public class CancelVisitTests
         var visitId = Guid.NewGuid();
         var patientId = Guid.NewGuid();
         var doctorId = Guid.NewGuid();
-        var domainEvent = new VisitCreatedEvent(visitId, patientId, "Nguyen Van A", doctorId, "Dr. Tran");
+        var domainEvent = new VisitCreatedEvent(visitId, patientId, "Nguyen Van A", doctorId, "Dr. Tran", DefaultBranchId);
 
         // Act
         var integrationEvent = PublishVisitCreatedIntegrationEventHandler.Handle(domainEvent);
@@ -183,7 +183,7 @@ public class CancelVisitTests
     {
         // Arrange
         var visitId = Guid.NewGuid();
-        var domainEvent = new VisitCancelledEvent(visitId);
+        var domainEvent = new VisitCancelledEvent(visitId, DefaultBranchId);
 
         // Act
         var integrationEvent = PublishVisitCancelledIntegrationEventHandler.Handle(domainEvent);

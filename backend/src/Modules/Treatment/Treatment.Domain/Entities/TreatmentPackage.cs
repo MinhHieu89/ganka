@@ -204,7 +204,8 @@ public class TreatmentPackage : AggregateRoot, IAuditable
             TreatmentType: TreatmentType,
             Consumables: consumableUsages,
             VisitId: VisitId,
-            SessionFeeAmount: sessionFeeAmount));
+            SessionFeeAmount: sessionFeeAmount,
+            BranchId: BranchId.Value));
 
         // Auto-complete package if all sessions are done (TRT-04)
         if (IsComplete)

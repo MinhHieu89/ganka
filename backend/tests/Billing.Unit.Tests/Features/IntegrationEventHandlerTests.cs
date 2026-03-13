@@ -8,7 +8,6 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using Optical.Contracts.IntegrationEvents;
 using Pharmacy.Contracts.IntegrationEvents;
-using Shared.Application;
 using Shared.Domain;
 using Treatment.Contracts.IntegrationEvents;
 
@@ -20,7 +19,6 @@ public class IntegrationEventHandlerTests
     private readonly IServiceCatalogRepository _serviceCatalogRepository = Substitute.For<IServiceCatalogRepository>();
     private readonly IBillingNotificationService _notificationService = Substitute.For<IBillingNotificationService>();
     private readonly IUnitOfWork _unitOfWork = Substitute.For<IUnitOfWork>();
-    private readonly ICurrentUser _currentUser = Substitute.For<ICurrentUser>();
     private readonly ILogger _visitCreatedLogger = Substitute.For<ILogger>();
     private readonly ILogger _treatmentLogger = Substitute.For<ILogger>();
     private readonly ILogger _cancelledLogger = Substitute.For<ILogger>();
@@ -32,7 +30,6 @@ public class IntegrationEventHandlerTests
 
     public IntegrationEventHandlerTests()
     {
-        _currentUser.BranchId.Returns(DefaultBranchId);
         _invoiceRepository.GetNextInvoiceNumberAsync(Arg.Any<int>(), Arg.Any<CancellationToken>())
             .Returns("HD-2026-00001");
     }
@@ -55,7 +52,7 @@ public class IntegrationEventHandlerTests
         // Arrange
         var visitId = Guid.NewGuid();
         var patientId = Guid.NewGuid();
-        var @event = new VisitCreatedIntegrationEvent(visitId, patientId, "Nguyen Van A");
+        var @event = new VisitCreatedIntegrationEvent(visitId, patientId, "Nguyen Van A", DefaultBranchId);
 
         var consultationService = ServiceCatalogItem.Create(
             "CONSULTATION", "Consultation", "Kham benh", 150000m, new BranchId(DefaultBranchId));
@@ -64,7 +61,7 @@ public class IntegrationEventHandlerTests
 
         // Act
         await HandleVisitCreatedHandler.Handle(
-            @event, _invoiceRepository, _serviceCatalogRepository, _notificationService, _unitOfWork, _currentUser,
+            @event, _invoiceRepository, _serviceCatalogRepository, _notificationService, _unitOfWork,
             _visitCreatedLogger, CancellationToken.None);
 
         // Assert
@@ -85,14 +82,14 @@ public class IntegrationEventHandlerTests
     public async Task HandleVisitCreated_WithoutConsultationService_CreatesInvoiceWithoutLineItem()
     {
         // Arrange
-        var @event = new VisitCreatedIntegrationEvent(Guid.NewGuid(), Guid.NewGuid(), "Patient");
+        var @event = new VisitCreatedIntegrationEvent(Guid.NewGuid(), Guid.NewGuid(), "Patient", DefaultBranchId);
 
         _serviceCatalogRepository.GetActiveByCodeAsync("CONSULTATION", Arg.Any<CancellationToken>())
             .Returns((ServiceCatalogItem?)null);
 
         // Act
         await HandleVisitCreatedHandler.Handle(
-            @event, _invoiceRepository, _serviceCatalogRepository, _notificationService, _unitOfWork, _currentUser,
+            @event, _invoiceRepository, _serviceCatalogRepository, _notificationService, _unitOfWork,
             _visitCreatedLogger, CancellationToken.None);
 
         // Assert
@@ -105,7 +102,7 @@ public class IntegrationEventHandlerTests
     public async Task HandleVisitCreated_UsesNextInvoiceNumber()
     {
         // Arrange
-        var @event = new VisitCreatedIntegrationEvent(Guid.NewGuid(), Guid.NewGuid(), "Patient");
+        var @event = new VisitCreatedIntegrationEvent(Guid.NewGuid(), Guid.NewGuid(), "Patient", DefaultBranchId);
         _serviceCatalogRepository.GetActiveByCodeAsync("CONSULTATION", Arg.Any<CancellationToken>())
             .Returns((ServiceCatalogItem?)null);
         _invoiceRepository.GetNextInvoiceNumberAsync(Arg.Any<int>(), Arg.Any<CancellationToken>())
@@ -113,7 +110,7 @@ public class IntegrationEventHandlerTests
 
         // Act
         await HandleVisitCreatedHandler.Handle(
-            @event, _invoiceRepository, _serviceCatalogRepository, _notificationService, _unitOfWork, _currentUser,
+            @event, _invoiceRepository, _serviceCatalogRepository, _notificationService, _unitOfWork,
             _visitCreatedLogger, CancellationToken.None);
 
         // Assert
@@ -134,7 +131,7 @@ public class IntegrationEventHandlerTests
         _invoiceRepository.GetByVisitIdAsync(visitId, Arg.Any<CancellationToken>())
             .Returns(invoice);
 
-        var @event = new VisitCancelledIntegrationEvent(visitId);
+        var @event = new VisitCancelledIntegrationEvent(visitId, DefaultBranchId);
 
         // Act
         await HandleVisitCancelledHandler.Handle(
@@ -153,7 +150,7 @@ public class IntegrationEventHandlerTests
         _invoiceRepository.GetByVisitIdAsync(visitId, Arg.Any<CancellationToken>())
             .Returns((Invoice?)null);
 
-        var @event = new VisitCancelledIntegrationEvent(visitId);
+        var @event = new VisitCancelledIntegrationEvent(visitId, DefaultBranchId);
 
         // Act
         await HandleVisitCancelledHandler.Handle(
@@ -173,7 +170,7 @@ public class IntegrationEventHandlerTests
         _invoiceRepository.GetByVisitIdAsync(visitId, Arg.Any<CancellationToken>())
             .Returns(invoice);
 
-        var @event = new VisitCancelledIntegrationEvent(visitId);
+        var @event = new VisitCancelledIntegrationEvent(visitId, DefaultBranchId);
 
         // Act
         await HandleVisitCancelledHandler.Handle(
@@ -201,11 +198,11 @@ public class IntegrationEventHandlerTests
             new("Amoxicillin", "Amoxicillin VN", 2, 50000m),
             new("Ibuprofen", "Ibuprofen VN", 1, 30000m)
         };
-        var @event = new DrugDispensedIntegrationEvent(visitId, Guid.NewGuid(), "Patient", items);
+        var @event = new DrugDispensedIntegrationEvent(visitId, Guid.NewGuid(), "Patient", items, DefaultBranchId);
 
         // Act
         await HandleDrugDispensedHandler.Handle(
-            @event, _invoiceRepository, _notificationService, _unitOfWork, _currentUser, _drugLogger, CancellationToken.None);
+            @event, _invoiceRepository, _notificationService, _unitOfWork, _drugLogger, CancellationToken.None);
 
         // Assert
         invoice.LineItems.Should().HaveCount(2);
@@ -231,11 +228,11 @@ public class IntegrationEventHandlerTests
         {
             new("Amoxicillin", "Amoxicillin VN", 1, 50000m)
         };
-        var @event = new DrugDispensedIntegrationEvent(visitId, Guid.NewGuid(), "Patient", items);
+        var @event = new DrugDispensedIntegrationEvent(visitId, Guid.NewGuid(), "Patient", items, DefaultBranchId);
 
         // Act
         await HandleDrugDispensedHandler.Handle(
-            @event, _invoiceRepository, _notificationService, _unitOfWork, _currentUser, _drugLogger, CancellationToken.None);
+            @event, _invoiceRepository, _notificationService, _unitOfWork, _drugLogger, CancellationToken.None);
 
         // Assert
         _invoiceRepository.Received(1).Add(Arg.Is<Invoice>(inv =>
@@ -260,11 +257,11 @@ public class IntegrationEventHandlerTests
             new("Eye Drops", "Thuoc nho mat", 1, 120000m),
             new("Vitamins", "Vitamin", 2, 80000m)
         };
-        var @event = new OtcSaleCompletedIntegrationEvent(otcSaleId, patientId, "Customer Name", items);
+        var @event = new OtcSaleCompletedIntegrationEvent(otcSaleId, patientId, "Customer Name", items, DefaultBranchId);
 
         // Act
         await HandleOtcSaleCompletedHandler.Handle(
-            @event, _invoiceRepository, _notificationService, _unitOfWork, _currentUser, _otcLogger, CancellationToken.None);
+            @event, _invoiceRepository, _notificationService, _unitOfWork, _otcLogger, CancellationToken.None);
 
         // Assert
         _invoiceRepository.Received(1).Add(Arg.Is<Invoice>(inv =>
@@ -287,11 +284,11 @@ public class IntegrationEventHandlerTests
         {
             new("Eye Drops", "Thuoc nho mat", 1, 120000m)
         };
-        var @event = new OtcSaleCompletedIntegrationEvent(otcSaleId, null, null, items);
+        var @event = new OtcSaleCompletedIntegrationEvent(otcSaleId, null, null, items, DefaultBranchId);
 
         // Act
         await HandleOtcSaleCompletedHandler.Handle(
-            @event, _invoiceRepository, _notificationService, _unitOfWork, _currentUser, _otcLogger, CancellationToken.None);
+            @event, _invoiceRepository, _notificationService, _unitOfWork, _otcLogger, CancellationToken.None);
 
         // Assert
         _invoiceRepository.Received(1).Add(Arg.Is<Invoice>(inv =>
@@ -319,11 +316,11 @@ public class IntegrationEventHandlerTests
             new("Frame - Rayban", "Gong kinh - Rayban", 500000m, 1),
             new("Lens - Progressive", "Trong kinh da tieu cu", 1200000m, 2)
         };
-        var @event = new GlassesOrderCreatedIntegrationEvent(orderId, visitId, Guid.NewGuid(), "Patient", items);
+        var @event = new GlassesOrderCreatedIntegrationEvent(orderId, visitId, Guid.NewGuid(), "Patient", items, DefaultBranchId);
 
         // Act
         await HandleGlassesOrderCreatedHandler.Handle(
-            @event, _invoiceRepository, _notificationService, _unitOfWork, _currentUser, _glassesLogger, CancellationToken.None);
+            @event, _invoiceRepository, _notificationService, _unitOfWork, _glassesLogger, CancellationToken.None);
 
         // Assert
         invoice.LineItems.Should().HaveCount(2);
@@ -350,11 +347,11 @@ public class IntegrationEventHandlerTests
         {
             new("Frame", "Gong kinh", 500000m, 1)
         };
-        var @event = new GlassesOrderCreatedIntegrationEvent(orderId, visitId, Guid.NewGuid(), "Patient", items);
+        var @event = new GlassesOrderCreatedIntegrationEvent(orderId, visitId, Guid.NewGuid(), "Patient", items, DefaultBranchId);
 
         // Act
         await HandleGlassesOrderCreatedHandler.Handle(
-            @event, _invoiceRepository, _notificationService, _unitOfWork, _currentUser, _glassesLogger, CancellationToken.None);
+            @event, _invoiceRepository, _notificationService, _unitOfWork, _glassesLogger, CancellationToken.None);
 
         // Assert
         _invoiceRepository.Received(1).Add(Arg.Is<Invoice>(inv =>
@@ -374,11 +371,11 @@ public class IntegrationEventHandlerTests
         {
             new("Frame", "Gong kinh", 500000m, 1)
         };
-        var @event = new GlassesOrderCreatedIntegrationEvent(orderId, null, patientId, "Patient", items);
+        var @event = new GlassesOrderCreatedIntegrationEvent(orderId, null, patientId, "Patient", items, DefaultBranchId);
 
         // Act
         await HandleGlassesOrderCreatedHandler.Handle(
-            @event, _invoiceRepository, _notificationService, _unitOfWork, _currentUser, _glassesLogger, CancellationToken.None);
+            @event, _invoiceRepository, _notificationService, _unitOfWork, _glassesLogger, CancellationToken.None);
 
         // Assert
         _invoiceRepository.Received(1).Add(Arg.Is<Invoice>(inv =>
@@ -404,11 +401,11 @@ public class IntegrationEventHandlerTests
         var @event = new TreatmentSessionCompletedIntegrationEvent(
             Guid.NewGuid(), sessionId, Guid.NewGuid(), (int)TreatmentType.IPL,
             new List<TreatmentSessionCompletedIntegrationEvent.ConsumableUsageDto>(),
-            visitId, 200000m);
+            visitId, 200000m, DefaultBranchId);
 
         // Act
         await HandleTreatmentSessionCompletedHandler.Handle(
-            @event, _invoiceRepository, _notificationService, _unitOfWork, _currentUser, _treatmentLogger, CancellationToken.None);
+            @event, _invoiceRepository, _notificationService, _unitOfWork, _treatmentLogger, CancellationToken.None);
 
         // Assert
         invoice.LineItems.Should().HaveCount(1);
@@ -426,11 +423,11 @@ public class IntegrationEventHandlerTests
         var @event = new TreatmentSessionCompletedIntegrationEvent(
             Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), (int)TreatmentType.LLLT,
             new List<TreatmentSessionCompletedIntegrationEvent.ConsumableUsageDto>(),
-            null, 150000m);
+            null, 150000m, DefaultBranchId);
 
         // Act
         await HandleTreatmentSessionCompletedHandler.Handle(
-            @event, _invoiceRepository, _notificationService, _unitOfWork, _currentUser, _treatmentLogger, CancellationToken.None);
+            @event, _invoiceRepository, _notificationService, _unitOfWork, _treatmentLogger, CancellationToken.None);
 
         // Assert
         _invoiceRepository.DidNotReceive().Add(Arg.Any<Invoice>());
@@ -450,11 +447,11 @@ public class IntegrationEventHandlerTests
         var @event = new TreatmentSessionCompletedIntegrationEvent(
             Guid.NewGuid(), sessionId, patientId, (int)TreatmentType.LidCare,
             new List<TreatmentSessionCompletedIntegrationEvent.ConsumableUsageDto>(),
-            visitId, 100000m);
+            visitId, 100000m, DefaultBranchId);
 
         // Act
         await HandleTreatmentSessionCompletedHandler.Handle(
-            @event, _invoiceRepository, _notificationService, _unitOfWork, _currentUser, _treatmentLogger, CancellationToken.None);
+            @event, _invoiceRepository, _notificationService, _unitOfWork, _treatmentLogger, CancellationToken.None);
 
         // Assert
         _invoiceRepository.Received(1).Add(Arg.Is<Invoice>(inv =>
@@ -478,11 +475,11 @@ public class IntegrationEventHandlerTests
         var @event = new TreatmentSessionCompletedIntegrationEvent(
             Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), (int)TreatmentType.IPL,
             new List<TreatmentSessionCompletedIntegrationEvent.ConsumableUsageDto>(),
-            visitId, 200000m);
+            visitId, 200000m, DefaultBranchId);
 
         // Act
         await HandleTreatmentSessionCompletedHandler.Handle(
-            @event, _invoiceRepository, _notificationService, _unitOfWork, _currentUser, _treatmentLogger, CancellationToken.None);
+            @event, _invoiceRepository, _notificationService, _unitOfWork, _treatmentLogger, CancellationToken.None);
 
         // Assert
         invoice.LineItems[0].Description.Should().Contain("IPL");

@@ -16,7 +16,8 @@ public sealed record TreatmentSessionCompletedEvent(
     TreatmentType TreatmentType,
     List<ConsumableUsageInfo> Consumables,
     Guid? VisitId,
-    decimal SessionFeeAmount) : IDomainEvent
+    decimal SessionFeeAmount,
+    Guid BranchId) : IDomainEvent
 {
     public Guid EventId { get; } = Guid.NewGuid();
     public DateTime OccurredAt { get; } = DateTime.UtcNow;

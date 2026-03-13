@@ -24,6 +24,7 @@ public static class PublishGlassesOrderCreatedIntegrationEventHandler
             Items: domainEvent.Items
                 .Select(i => new GlassesOrderCreatedIntegrationEvent.OrderLineDto(
                     i.Description, i.DescriptionVi, i.UnitPrice, i.Quantity))
-                .ToList());
+                .ToList(),
+            BranchId: domainEvent.BranchId);
     }
 }

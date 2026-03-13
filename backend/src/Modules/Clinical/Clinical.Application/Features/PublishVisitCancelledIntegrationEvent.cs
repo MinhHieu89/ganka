@@ -17,6 +17,7 @@ public static class PublishVisitCancelledIntegrationEventHandler
         VisitCancelledEvent domainEvent)
     {
         return new VisitCancelledIntegrationEvent(
-            VisitId: domainEvent.VisitId);
+            VisitId: domainEvent.VisitId,
+            BranchId: domainEvent.BranchId);
     }
 }

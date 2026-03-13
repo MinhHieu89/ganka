@@ -5,4 +5,5 @@ namespace Clinical.Contracts.IntegrationEvents;
 /// Consumed by Billing module to void the associated invoice.
 /// </summary>
 public sealed record VisitCancelledIntegrationEvent(
-    Guid VisitId);
+    Guid VisitId,
+    Guid BranchId);

@@ -7,4 +7,5 @@ namespace Clinical.Contracts.IntegrationEvents;
 public sealed record VisitCreatedIntegrationEvent(
     Guid VisitId,
     Guid PatientId,
-    string PatientName);
+    string PatientName,
+    Guid BranchId);

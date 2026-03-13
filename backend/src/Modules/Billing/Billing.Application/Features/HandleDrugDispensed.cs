@@ -3,7 +3,6 @@ using Billing.Domain.Entities;
 using Billing.Domain.Enums;
 using Microsoft.Extensions.Logging;
 using Pharmacy.Contracts.IntegrationEvents;
-using Shared.Application;
 using Shared.Domain;
 
 namespace Billing.Application.Features;
@@ -20,7 +19,6 @@ public static class HandleDrugDispensedHandler
         IInvoiceRepository invoiceRepository,
         IBillingNotificationService notificationService,
         IUnitOfWork unitOfWork,
-        ICurrentUser currentUser,
         ILogger logger,
         CancellationToken ct)
     {
@@ -33,7 +31,7 @@ public static class HandleDrugDispensedHandler
                 @event.PatientId,
                 @event.PatientName,
                 @event.VisitId,
-                new BranchId(currentUser.BranchId));
+                new BranchId(@event.BranchId));
             invoiceRepository.Add(invoice);
         }
 

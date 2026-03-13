@@ -23,6 +23,7 @@ public static class PublishDrugDispensedIntegrationEventHandler
             Items: domainEvent.Items
                 .Select(i => new DrugDispensedIntegrationEvent.DrugLineDto(
                     i.DrugName, i.DrugNameVi, i.Quantity, i.UnitPrice))
-                .ToList());
+                .ToList(),
+            BranchId: domainEvent.BranchId);
     }
 }

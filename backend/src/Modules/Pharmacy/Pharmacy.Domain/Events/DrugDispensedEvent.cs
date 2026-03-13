@@ -10,7 +10,8 @@ public sealed record DrugDispensedEvent(
     Guid VisitId,
     Guid PatientId,
     string PatientName,
-    List<DrugDispensedEvent.DrugLineDto> Items) : IDomainEvent
+    List<DrugDispensedEvent.DrugLineDto> Items,
+    Guid BranchId) : IDomainEvent
 {
     public Guid EventId { get; } = Guid.NewGuid();
     public DateTime OccurredAt { get; } = DateTime.UtcNow;

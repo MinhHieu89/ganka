@@ -8,7 +8,8 @@ namespace Clinical.Domain.Events;
 /// converts this to an integration event for cross-module communication (billing invoice voiding).
 /// </summary>
 public sealed record VisitCancelledEvent(
-    Guid VisitId) : IDomainEvent
+    Guid VisitId,
+    Guid BranchId) : IDomainEvent
 {
     public Guid EventId { get; } = Guid.NewGuid();
     public DateTime OccurredAt { get; } = DateTime.UtcNow;

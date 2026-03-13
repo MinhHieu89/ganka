@@ -2,7 +2,6 @@ using Billing.Application.Interfaces;
 using Billing.Domain.Entities;
 using Billing.Domain.Enums;
 using Microsoft.Extensions.Logging;
-using Shared.Application;
 using Shared.Domain;
 using Treatment.Contracts.IntegrationEvents;
 
@@ -28,7 +27,6 @@ public static class HandleTreatmentSessionCompletedHandler
         IInvoiceRepository invoiceRepository,
         IBillingNotificationService notificationService,
         IUnitOfWork unitOfWork,
-        ICurrentUser currentUser,
         ILogger logger,
         CancellationToken ct)
     {
@@ -50,7 +48,7 @@ public static class HandleTreatmentSessionCompletedHandler
                 @event.PatientId,
                 string.Empty, // PatientName not available in treatment event
                 visitId,
-                new BranchId(currentUser.BranchId));
+                new BranchId(@event.BranchId));
             invoiceRepository.Add(invoice);
         }
 

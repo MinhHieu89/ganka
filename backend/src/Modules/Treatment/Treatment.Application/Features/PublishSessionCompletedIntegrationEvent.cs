@@ -27,6 +27,7 @@ public static class PublishSessionCompletedIntegrationEventHandler
                     c.ConsumableItemId, c.Quantity))
                 .ToList(),
             VisitId: domainEvent.VisitId,
-            SessionFeeAmount: domainEvent.SessionFeeAmount);
+            SessionFeeAmount: domainEvent.SessionFeeAmount,
+            BranchId: domainEvent.BranchId);
     }
 }

@@ -12,7 +12,8 @@ public sealed record VisitCreatedEvent(
     Guid PatientId,
     string PatientName,
     Guid DoctorId,
-    string DoctorName) : IDomainEvent
+    string DoctorName,
+    Guid BranchId) : IDomainEvent
 {
     public Guid EventId { get; } = Guid.NewGuid();
     public DateTime OccurredAt { get; } = DateTime.UtcNow;

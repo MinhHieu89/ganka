@@ -177,7 +177,8 @@ public class GlassesOrder : AggregateRoot, IAuditable
                 Description: i.ItemDescription,
                 DescriptionVi: string.Empty,
                 UnitPrice: i.UnitPrice,
-                Quantity: i.Quantity)).ToList()));
+                Quantity: i.Quantity)).ToList(),
+            BranchId: BranchId.Value));
     }
 
     // --- Computed properties ---

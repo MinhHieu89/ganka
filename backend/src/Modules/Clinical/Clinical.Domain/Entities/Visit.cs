@@ -74,7 +74,7 @@ public class Visit : AggregateRoot, IAuditable
 
         visit.SetBranchId(branchId);
         visit.AddDomainEvent(new VisitCreatedEvent(
-            visit.Id, patientId, patientName, doctorId, doctorName));
+            visit.Id, patientId, patientName, doctorId, doctorName, branchId.Value));
         return visit;
     }
 
@@ -119,7 +119,7 @@ public class Visit : AggregateRoot, IAuditable
 
         Status = VisitStatus.Cancelled;
         SetUpdatedAt();
-        AddDomainEvent(new VisitCancelledEvent(Id));
+        AddDomainEvent(new VisitCancelledEvent(Id, BranchId.Value));
     }
 
     /// <summary>

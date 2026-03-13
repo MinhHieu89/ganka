@@ -8,7 +8,8 @@ public sealed record DrugDispensedIntegrationEvent(
     Guid VisitId,
     Guid PatientId,
     string PatientName,
-    List<DrugDispensedIntegrationEvent.DrugLineDto> Items)
+    List<DrugDispensedIntegrationEvent.DrugLineDto> Items,
+    Guid BranchId)
 {
     /// <summary>
     /// Represents a single drug line item in a dispensing event.

@@ -12,7 +12,8 @@ public sealed record GlassesOrderCreatedEvent(
     Guid? VisitId,
     Guid PatientId,
     string PatientName,
-    List<GlassesOrderCreatedEvent.OrderLineDto> Items) : IDomainEvent
+    List<GlassesOrderCreatedEvent.OrderLineDto> Items,
+    Guid BranchId) : IDomainEvent
 {
     public Guid EventId { get; } = Guid.NewGuid();
     public DateTime OccurredAt { get; } = DateTime.UtcNow;
