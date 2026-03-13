@@ -15,7 +15,8 @@ public sealed record GlassesOrderItemRequest(
     Guid? LensCatalogItemId,
     string Description,
     decimal UnitPrice,
-    int Quantity);
+    int Quantity,
+    string? DescriptionVi = null);
 
 /// <summary>
 /// Command to create a new glasses order linked to a patient visit and optical prescription.
@@ -96,6 +97,7 @@ public static class CreateGlassesOrderHandler
                 frameId: item.FrameId,
                 lensCatalogItemId: item.LensCatalogItemId,
                 itemDescription: item.Description,
+                itemDescriptionVi: item.DescriptionVi ?? string.Empty,
                 unitPrice: item.UnitPrice,
                 quantity: item.Quantity);
             order.AddItem(orderItem);

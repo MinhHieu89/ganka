@@ -120,6 +120,11 @@ public class GlassesOrderItemConfiguration : IEntityTypeConfiguration<GlassesOrd
             .IsRequired()
             .HasMaxLength(300);
 
+        builder.Property(x => x.ItemDescriptionVi)
+            .IsRequired(false)
+            .HasMaxLength(300)
+            .HasDefaultValue(string.Empty);
+
         builder.Property(x => x.UnitPrice)
             .IsRequired()
             .HasColumnType("decimal(18,2)");

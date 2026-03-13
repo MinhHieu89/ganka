@@ -175,7 +175,7 @@ public class GlassesOrder : AggregateRoot, IAuditable
             PatientName: PatientName,
             Items: _items.Select(i => new GlassesOrderCreatedEvent.OrderLineDto(
                 Description: i.ItemDescription,
-                DescriptionVi: string.Empty,
+                DescriptionVi: i.ItemDescriptionVi,
                 UnitPrice: i.UnitPrice,
                 Quantity: i.Quantity)).ToList(),
             BranchId: BranchId.Value));

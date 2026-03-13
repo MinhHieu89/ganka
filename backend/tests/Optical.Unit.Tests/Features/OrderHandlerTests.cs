@@ -516,7 +516,7 @@ public class OrderHandlerTests
             5_000_000m, null, null, branchId);
 
         var item = GlassesOrderItem.Create(
-            order.Id, Guid.NewGuid(), null, "Test Frame", 2_000_000m, 1);
+            order.Id, Guid.NewGuid(), null, "Test Frame", "Gong kinh test", 2_000_000m, 1);
         order.AddItem(item);
 
         _orderRepository.GetByIdAsync(order.Id, Arg.Any<CancellationToken>()).Returns(order);

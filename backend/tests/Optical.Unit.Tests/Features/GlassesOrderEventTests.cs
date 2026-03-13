@@ -61,13 +61,15 @@ public class GlassesOrderEventTests
                     LensCatalogItemId: null,
                     Description: "Ray-Ban RB3025",
                     UnitPrice: 1_500_000m,
-                    Quantity: 1),
+                    Quantity: 1,
+                    DescriptionVi: "Gong kinh Ray-Ban RB3025"),
                 new GlassesOrderItemRequest(
                     FrameId: null,
                     LensCatalogItemId: Guid.NewGuid(),
                     Description: "Essilor Crizal",
                     UnitPrice: 750_000m,
-                    Quantity: 2)
+                    Quantity: 2,
+                    DescriptionVi: "Trong kinh Essilor Crizal")
             ]);
 
         // Act
@@ -88,9 +90,11 @@ public class GlassesOrderEventTests
         createdEvent.PatientName.Should().Be("Nguyen Van A");
         createdEvent.Items.Should().HaveCount(2);
         createdEvent.Items[0].Description.Should().Be("Ray-Ban RB3025");
+        createdEvent.Items[0].DescriptionVi.Should().Be("Gong kinh Ray-Ban RB3025");
         createdEvent.Items[0].UnitPrice.Should().Be(1_500_000m);
         createdEvent.Items[0].Quantity.Should().Be(1);
         createdEvent.Items[1].Description.Should().Be("Essilor Crizal");
+        createdEvent.Items[1].DescriptionVi.Should().Be("Trong kinh Essilor Crizal");
         createdEvent.Items[1].UnitPrice.Should().Be(750_000m);
         createdEvent.Items[1].Quantity.Should().Be(2);
     }

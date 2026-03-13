@@ -27,6 +27,11 @@ public class GlassesOrderItem : Entity
     /// </summary>
     public string ItemDescription { get; private set; } = string.Empty;
 
+    /// <summary>
+    /// Denormalized Vietnamese item description for display on invoices and reports.
+    /// </summary>
+    public string ItemDescriptionVi { get; private set; } = string.Empty;
+
     /// <summary>Unit price for this line item in VND at the time of order creation.</summary>
     public decimal UnitPrice { get; private set; }
 
@@ -46,6 +51,7 @@ public class GlassesOrderItem : Entity
     /// <param name="frameId">Optional FK to Frame catalog item.</param>
     /// <param name="lensCatalogItemId">Optional FK to LensCatalogItem.</param>
     /// <param name="itemDescription">Display name for this line item.</param>
+    /// <param name="itemDescriptionVi">Vietnamese display name for invoices and reports.</param>
     /// <param name="unitPrice">Price per unit in VND.</param>
     /// <param name="quantity">Number of units (typically 1 or 2).</param>
     public static GlassesOrderItem Create(
@@ -53,6 +59,7 @@ public class GlassesOrderItem : Entity
         Guid? frameId,
         Guid? lensCatalogItemId,
         string itemDescription,
+        string itemDescriptionVi,
         decimal unitPrice,
         int quantity)
     {
@@ -74,6 +81,7 @@ public class GlassesOrderItem : Entity
             FrameId = frameId,
             LensCatalogItemId = lensCatalogItemId,
             ItemDescription = itemDescription,
+            ItemDescriptionVi = itemDescriptionVi ?? string.Empty,
             UnitPrice = unitPrice,
             Quantity = quantity
         };
