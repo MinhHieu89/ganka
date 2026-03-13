@@ -23,7 +23,7 @@ public static class HandleVisitCancelledHandler
     {
         var invoice = await invoiceRepository.GetByVisitIdAsync(@event.VisitId, ct);
 
-        if (invoice is null || invoice.Status == InvoiceStatus.Voided)
+        if (invoice is null || invoice.Status != InvoiceStatus.Draft)
             return;
 
         invoice.Void();

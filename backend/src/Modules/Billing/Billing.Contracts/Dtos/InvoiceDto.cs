@@ -8,7 +8,7 @@ public sealed record InvoiceDto(
     Guid Id,
     string InvoiceNumber,
     Guid? VisitId,
-    Guid PatientId,
+    Guid? PatientId,
     string PatientName,
     int Status,
     decimal SubTotal,

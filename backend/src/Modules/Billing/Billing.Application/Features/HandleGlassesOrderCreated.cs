@@ -35,8 +35,17 @@ public static class HandleGlassesOrderCreatedHandler
             invoice = await CreateInvoiceAsync(@event.PatientId, @event.PatientName, null, invoiceRepository, @event.BranchId, ct);
         }
 
+        // Idempotency: skip items already billed from this glasses order
+        var existingDescriptions = invoice.LineItems
+            .Where(li => li.SourceType == "GlassesOrder" && li.SourceId == @event.OrderId)
+            .Select(li => li.Description)
+            .ToHashSet();
+
         foreach (var item in @event.Items)
         {
+            if (existingDescriptions.Contains(item.Description))
+                continue;
+
             invoice.AddLineItem(
                 item.Description,
                 item.DescriptionVi,

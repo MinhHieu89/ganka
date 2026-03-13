@@ -35,8 +35,23 @@ public static class HandleDrugDispensedHandler
             invoiceRepository.Add(invoice);
         }
 
+        // Idempotency: skip items already billed from this dispensing event
+        var existingDescriptions = invoice.LineItems
+            .Where(li => li.SourceType == "Dispensing" && li.SourceId == @event.VisitId)
+            .Select(li => li.Description)
+            .ToHashSet();
+
         foreach (var item in @event.Items)
         {
+            if (item.UnitPrice <= 0)
+            {
+                logger.LogWarning("Skipping zero-price dispensing item {DrugName} on invoice {InvoiceId}", item.DrugName, invoice.Id);
+                continue;
+            }
+
+            if (existingDescriptions.Contains(item.DrugName))
+                continue;
+
             invoice.AddLineItem(
                 item.DrugName,
                 item.DrugNameVi,

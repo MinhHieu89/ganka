@@ -327,6 +327,33 @@ public class IntegrationEventHandlerTests
     }
 
     [Fact]
+    public async Task HandleDrugDispensed_DuplicateEvent_DoesNotAddDuplicateLineItems()
+    {
+        // Arrange
+        var visitId = Guid.NewGuid();
+        var invoice = CreateTestInvoice(visitId);
+        // Pre-add line items that simulate a previous delivery of the same event
+        invoice.AddLineItem("Amoxicillin", "Amoxicillin VN", 50000m, 2, Department.Pharmacy, visitId, "Dispensing");
+        invoice.AddLineItem("Ibuprofen", "Ibuprofen VN", 30000m, 1, Department.Pharmacy, visitId, "Dispensing");
+        _invoiceRepository.GetByVisitIdAsync(visitId, Arg.Any<CancellationToken>())
+            .Returns(invoice);
+
+        var items = new List<DrugDispensedIntegrationEvent.DrugLineDto>
+        {
+            new("Amoxicillin", "Amoxicillin VN", 2, 50000m),
+            new("Ibuprofen", "Ibuprofen VN", 1, 30000m)
+        };
+        var @event = new DrugDispensedIntegrationEvent(visitId, Guid.NewGuid(), "Patient", items, DefaultBranchId);
+
+        // Act
+        await HandleDrugDispensedHandler.Handle(
+            @event, _invoiceRepository, _notificationService, _unitOfWork, _drugLogger, CancellationToken.None);
+
+        // Assert - should still have exactly 2 line items, not 4
+        invoice.LineItems.Should().HaveCount(2);
+    }
+
+    [Fact]
     public async Task HandleDrugDispensed_ZeroPriceItem_SkipsLineItem()
     {
         // Arrange
@@ -414,6 +441,34 @@ public class IntegrationEventHandlerTests
             inv.LineItems.Count == 1 &&
             inv.LineItems[0].Department == Department.Optical));
         await _unitOfWork.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task HandleGlassesOrderCreated_DuplicateEvent_DoesNotAddDuplicateLineItems()
+    {
+        // Arrange
+        var visitId = Guid.NewGuid();
+        var orderId = Guid.NewGuid();
+        var invoice = CreateTestInvoice(visitId);
+        // Pre-add line items that simulate a previous delivery of the same event
+        invoice.AddLineItem("Frame - Rayban", "Gong kinh - Rayban", 500000m, 1, Department.Optical, orderId, "GlassesOrder");
+        invoice.AddLineItem("Lens - Progressive", "Trong kinh da tieu cu", 1200000m, 2, Department.Optical, orderId, "GlassesOrder");
+        _invoiceRepository.GetByVisitIdAsync(visitId, Arg.Any<CancellationToken>())
+            .Returns(invoice);
+
+        var items = new List<GlassesOrderCreatedIntegrationEvent.OrderLineDto>
+        {
+            new("Frame - Rayban", "Gong kinh - Rayban", 500000m, 1),
+            new("Lens - Progressive", "Trong kinh da tieu cu", 1200000m, 2)
+        };
+        var @event = new GlassesOrderCreatedIntegrationEvent(orderId, visitId, Guid.NewGuid(), "Patient", items, DefaultBranchId);
+
+        // Act
+        await HandleGlassesOrderCreatedHandler.Handle(
+            @event, _invoiceRepository, _notificationService, _unitOfWork, _glassesLogger, CancellationToken.None);
+
+        // Assert - should still have exactly 2 line items, not 4
+        invoice.LineItems.Should().HaveCount(2);
     }
 
     [Fact]
