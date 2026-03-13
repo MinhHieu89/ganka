@@ -25,6 +25,8 @@ public static class PublishSessionCompletedIntegrationEventHandler
             Consumables: domainEvent.Consumables
                 .Select(c => new TreatmentSessionCompletedIntegrationEvent.ConsumableUsageDto(
                     c.ConsumableItemId, c.Quantity))
-                .ToList());
+                .ToList(),
+            VisitId: domainEvent.VisitId,
+            SessionFeeAmount: domainEvent.SessionFeeAmount);
     }
 }

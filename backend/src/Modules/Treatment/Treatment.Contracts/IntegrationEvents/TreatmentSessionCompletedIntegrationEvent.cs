@@ -10,7 +10,9 @@ public sealed record TreatmentSessionCompletedIntegrationEvent(
     Guid SessionId,
     Guid PatientId,
     int TreatmentType,
-    List<TreatmentSessionCompletedIntegrationEvent.ConsumableUsageDto> Consumables)
+    List<TreatmentSessionCompletedIntegrationEvent.ConsumableUsageDto> Consumables,
+    Guid? VisitId,
+    decimal SessionFeeAmount)
 {
     /// <summary>
     /// Represents a consumable item used during the treatment session.

@@ -189,12 +189,22 @@ public class TreatmentPackage : AggregateRoot, IAuditable
             .Select(c => new ConsumableUsageInfo(c.ConsumableItemId, c.Quantity))
             .ToList();
 
+        // Compute session fee amount based on pricing mode
+        var sessionFeeAmount = PricingMode switch
+        {
+            PricingMode.PerSession => SessionPrice,
+            PricingMode.PerPackage => PackagePrice / TotalSessions,
+            _ => 0m
+        };
+
         AddDomainEvent(new TreatmentSessionCompletedEvent(
             PackageId: Id,
             SessionId: session.Id,
             PatientId: PatientId,
             TreatmentType: TreatmentType,
-            Consumables: consumableUsages));
+            Consumables: consumableUsages,
+            VisitId: VisitId,
+            SessionFeeAmount: sessionFeeAmount));
 
         // Auto-complete package if all sessions are done (TRT-04)
         if (IsComplete)
