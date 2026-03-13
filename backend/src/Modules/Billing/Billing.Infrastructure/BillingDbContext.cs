@@ -21,6 +21,7 @@ public class BillingDbContext : DbContext
     public DbSet<Refund> Refunds => Set<Refund>();
     public DbSet<CashierShift> CashierShifts => Set<CashierShift>();
     public DbSet<ShiftTemplate> ShiftTemplates => Set<ShiftTemplate>();
+    public DbSet<ServiceCatalogItem> ServiceCatalogItems => Set<ServiceCatalogItem>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

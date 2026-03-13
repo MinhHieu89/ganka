@@ -20,6 +20,7 @@ public static class InfrastructureIoC
         services.AddScoped<IInvoiceRepository, InvoiceRepository>();
         services.AddScoped<IPaymentRepository, PaymentRepository>();
         services.AddScoped<ICashierShiftRepository, CashierShiftRepository>();
+        services.AddScoped<IServiceCatalogRepository, ServiceCatalogRepository>();
 
         // Unit of Work
         services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -29,6 +30,9 @@ public static class InfrastructureIoC
 
         // Shift template seeder (idempotent IHostedService)
         services.AddHostedService<ShiftTemplateSeeder>();
+
+        // Service catalog seeder (idempotent IHostedService)
+        services.AddHostedService<ServiceCatalogSeeder>();
 
         return services;
     }
