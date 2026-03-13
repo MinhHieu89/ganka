@@ -476,7 +476,7 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 Phase: 07-billing-finance
 Plan: 25 complete
 Status: Supplementary invoice & shift handlers complete
-Last activity: 2026-03-06 -- Completed 07-25 Supplementary Invoice & Shift Handlers (RemoveInvoiceLineItem, GetInvoiceById, GetInvoicesByVisit, GetShiftTemplates)
+Last activity: 2026-03-13 - Completed quick task 1: Fix ToCreatedHttpResult wrapping issue
 
 Progress: [█████████░] 96%
 
@@ -1164,6 +1164,12 @@ None yet.
 - Zalo OA account not yet created -- should start creation process during Phase 3-4 development (v2 dependency but long lead time)
 - TanStack Start is RC stage -- pin versions carefully, plan upgrade task when v1.0 stable ships
 - Barcode scanner hardware decision needed before Phase 8 planning
+
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 1 | Fix ToCreatedHttpResult wrapping issue — response returns wrapped object instead of DTO directly | 2026-03-13 | 77f5707 | [1-fix-tocreatedhttpresult-wrapping-issue-r](./quick/1-fix-tocreatedhttpresult-wrapping-issue-r/) |
 
 ## Session Continuity
 
