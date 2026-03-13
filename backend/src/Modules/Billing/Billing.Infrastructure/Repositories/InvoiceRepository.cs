@@ -79,26 +79,17 @@ public sealed class InvoiceRepository(BillingDbContext context) : IInvoiceReposi
         return await query.OrderByDescending(i => i.CreatedAt).ToListAsync(ct);
     }
 
+    /// <summary>
+    /// Generates the next invoice number using a SQL SEQUENCE for atomic, race-condition-free numbering.
+    /// The sequence is global (not year-scoped); the year prefix handles display only.
+    /// </summary>
     public async Task<string> GetNextInvoiceNumberAsync(int year, CancellationToken ct)
     {
-        var prefix = $"HD-{year}-";
+        var nextVal = await context.Database
+            .SqlQueryRaw<long>("SELECT NEXT VALUE FOR billing.InvoiceNumberSeq AS Value")
+            .FirstAsync(ct);
 
-        var lastInvoice = await context.Invoices
-            .IgnoreQueryFilters()
-            .Where(i => i.InvoiceNumber.StartsWith(prefix))
-            .OrderByDescending(i => i.InvoiceNumber)
-            .Select(i => i.InvoiceNumber)
-            .FirstOrDefaultAsync(ct);
-
-        var nextSequence = 1;
-        if (lastInvoice is not null)
-        {
-            var sequencePart = lastInvoice[(prefix.Length)..];
-            if (int.TryParse(sequencePart, out var currentSequence))
-                nextSequence = currentSequence + 1;
-        }
-
-        return $"{prefix}{nextSequence:D5}";
+        return $"HD-{year}-{nextVal:D5}";
     }
 
     public void Add(Invoice invoice)
