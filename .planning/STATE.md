@@ -476,7 +476,7 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 Phase: 07-billing-finance
 Plan: 25 complete
 Status: Supplementary invoice & shift handlers complete
-Last activity: 2026-03-13 - Completed quick task 1: Fix ToCreatedHttpResult wrapping issue
+Last activity: 2026-03-13 - Completed quick task 2: Add Serilog with file output for development
 
 Progress: [█████████░] 96%
 
@@ -1170,6 +1170,7 @@ None yet.
 | # | Description | Date | Commit | Directory |
 |---|-------------|------|--------|-----------|
 | 1 | Fix ToCreatedHttpResult wrapping issue — response returns wrapped object instead of DTO directly | 2026-03-13 | 77f5707 | [1-fix-tocreatedhttpresult-wrapping-issue-r](./quick/1-fix-tocreatedhttpresult-wrapping-issue-r/) |
+| 2 | Add Serilog with file output for development, update CLAUDE.md with log location | 2026-03-13 | bb9e1ae | [2-i-want-serilog-add-output-to-files-so-we](./quick/2-i-want-serilog-add-output-to-files-so-we/) |
 
 ## Session Continuity
 
