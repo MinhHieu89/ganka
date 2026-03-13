@@ -35,7 +35,7 @@ public static class GetDrugBatchesHandler
         // Batch-load supplier names for all unique supplier IDs
         var supplierIds = batches.Select(b => b.SupplierId).Distinct().ToList();
         var suppliers = await supplierRepository.GetAllActiveAsync(ct);
-        var supplierNames = suppliers.ToDictionary(s => s.Id, s => s.Name);
+        var supplierNames = (suppliers ?? []).ToDictionary(s => s.Id, s => s.Name);
 
         // Map domain entities to DTOs, ordered by expiry date (FEFO order for UI display)
         var dtos = batches

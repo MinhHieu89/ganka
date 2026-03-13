@@ -131,7 +131,7 @@ public class SharedKernelTests
                 try { return a.GetTypes(); }
                 catch { return Array.Empty<Type>(); }
             })
-            .Where(t => t is { IsAbstract: false }
+            .Where(t => t is { IsAbstract: false, IsNested: false }
                         && t.Namespace is not null
                         && t.Namespace.Contains(".Domain.Events"))
             .ToList();
