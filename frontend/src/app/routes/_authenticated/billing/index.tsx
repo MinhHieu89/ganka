@@ -21,24 +21,48 @@ import {
   useCurrentShift,
   type CashierShiftDto,
 } from "@/features/billing/api/shift-api"
+import { useBillingHub, type ConnectionStatus } from "@/features/billing/hooks/use-billing-hub"
 
 export const Route = createFileRoute("/_authenticated/billing/")({
   component: BillingDashboard,
 })
 
+function ConnectionStatusIndicator({ status }: { status: ConnectionStatus }) {
+  const { t } = useTranslation("billing")
+
+  const config: Record<ConnectionStatus, { color: string; label: string }> = {
+    connected: { color: "bg-green-500", label: t("connection.connected") },
+    reconnecting: { color: "bg-yellow-500", label: t("connection.reconnecting") },
+    disconnected: { color: "bg-red-500", label: t("connection.disconnected") },
+  }
+
+  const { color, label } = config[status]
+
+  return (
+    <Badge variant="outline" className="gap-1.5 text-xs font-normal">
+      <span className={`h-2 w-2 rounded-full ${color}`} />
+      {label}
+    </Badge>
+  )
+}
+
 function BillingDashboard() {
   const { t } = useTranslation("billing")
   const { data: invoices, isLoading: invoicesLoading } = usePendingInvoices()
   const { data: shift, isLoading: shiftLoading } = useCurrentShift()
+  const connectionStatus = useBillingHub()
 
   return (
     <div className="space-y-6">
       {/* Page header */}
-      <div>
-        <h1 className="text-2xl font-bold">{t("dashboard")}</h1>
-        <p className="text-sm text-muted-foreground mt-0.5">
-          {t("title")}
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">{t("dashboard")}</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">
+            {t("title")}
+          </p>
+        </div>
+        <ConnectionStatusIndicator status={connectionStatus} />
       </div>
 
       {/* Two-column layout: invoices left, shift status right */}
