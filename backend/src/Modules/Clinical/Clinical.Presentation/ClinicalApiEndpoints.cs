@@ -60,6 +60,12 @@ public static class ClinicalApiEndpoints
             return result.ToHttpResult();
         });
 
+        group.MapPost("/{visitId:guid}/cancel", async (Guid visitId, IMessageBus bus, CancellationToken ct) =>
+        {
+            var result = await bus.InvokeAsync<Result>(new CancelVisitCommand(visitId), ct);
+            return result.ToHttpResult();
+        });
+
         group.MapPost("/{visitId:guid}/amend", async (Guid visitId, AmendVisitCommand command, IMessageBus bus, CancellationToken ct) =>
         {
             var enriched = new AmendVisitCommand(visitId, command.Reason, command.FieldChangesJson);
