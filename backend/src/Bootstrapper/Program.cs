@@ -123,7 +123,7 @@ void ConfigureDbContext<TContext>(IServiceCollection services) where TContext : 
             sp.GetRequiredService<AuditInterceptor>(),
             sp.GetRequiredService<DomainEventDispatcherInterceptor>());
     },
-    optionsLifetime: ServiceLifetime.Singleton);
+    optionsLifetime: ServiceLifetime.Scoped);
 }
 
 ConfigureDbContext<AuthDbContext>(builder.Services);

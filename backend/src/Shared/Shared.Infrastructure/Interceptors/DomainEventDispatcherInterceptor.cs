@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.Extensions.DependencyInjection;
 using Shared.Domain;
 using Wolverine;
 
@@ -9,14 +8,17 @@ namespace Shared.Infrastructure.Interceptors;
 /// EF Core SaveChanges interceptor that dispatches domain events from aggregate roots
 /// via Wolverine's IMessageBus after successful save. This enables the cascading handler
 /// pattern where domain events are converted to integration events for cross-module communication.
+///
+/// Registered as Scoped so that the injected IMessageBus shares the same DI scope as the
+/// Wolverine handler pipeline, ensuring domain events participate in the transactional outbox.
 /// </summary>
 public sealed class DomainEventDispatcherInterceptor : SaveChangesInterceptor
 {
-    private readonly IServiceProvider _serviceProvider;
+    private readonly IMessageBus _messageBus;
 
-    public DomainEventDispatcherInterceptor(IServiceProvider serviceProvider)
+    public DomainEventDispatcherInterceptor(IMessageBus messageBus)
     {
-        _serviceProvider = serviceProvider;
+        _messageBus = messageBus;
     }
 
     public override async ValueTask<int> SavedChangesAsync(
@@ -52,12 +54,9 @@ public sealed class DomainEventDispatcherInterceptor : SaveChangesInterceptor
             aggregate.ClearDomainEvents();
         }
 
-        using var scope = _serviceProvider.CreateScope();
-        var messageBus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
-
         foreach (var domainEvent in domainEvents)
         {
-            await messageBus.PublishAsync(domainEvent);
+            await _messageBus.PublishAsync(domainEvent);
         }
     }
 }

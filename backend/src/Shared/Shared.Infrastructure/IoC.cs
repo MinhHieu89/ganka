@@ -22,7 +22,7 @@ public static class IoC
         services.AddScoped<IAzureBlobService, AzureBlobService>();
         services.AddScoped<IClinicSettingsService, ClinicSettingsService>();
         services.AddScoped<IReferenceDataRepository, ReferenceDataRepository>();
-        services.AddSingleton<DomainEventDispatcherInterceptor>();
+        services.AddScoped<DomainEventDispatcherInterceptor>();
 
         return services;
     }
