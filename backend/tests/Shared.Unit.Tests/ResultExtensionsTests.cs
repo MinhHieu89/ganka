@@ -14,6 +14,8 @@ namespace Shared.Unit.Tests;
 /// </summary>
 public class ResultExtensionsTests
 {
+    private record TestDto(Guid Id, string Name);
+
     [Fact]
     public void ErrorPreservesValidationErrorsThroughResult()
     {
@@ -96,6 +98,57 @@ public class ResultExtensionsTests
         // Assert
         var validationDetails = ExtractValidationProblemDetails(httpResult);
         validationDetails.Errors.Should().ContainKey("Name");
+    }
+
+    [Fact]
+    public void ToCreatedHttpResult_Guid_Success_ReturnsCreatedWithIdAndLocation()
+    {
+        // Arrange
+        var guid = Guid.NewGuid();
+        var result = Result<Guid>.Success(guid);
+
+        // Act
+        var httpResult = result.ToCreatedHttpResult("/api/test");
+
+        // Assert - Results.Created returns Created (non-generic) in .NET 10
+        httpResult.Should().BeAssignableTo<IStatusCodeHttpResult>();
+        var statusResult = (IStatusCodeHttpResult)httpResult;
+        statusResult.StatusCode.Should().Be(201);
+    }
+
+    [Fact]
+    public void ToCreatedHttpResult_Dto_Success_ReturnsDtoDirectly()
+    {
+        // Arrange
+        var guid = Guid.NewGuid();
+        var dto = new TestDto(guid, "Test");
+        var result = Result<TestDto>.Success(dto);
+
+        // Act
+        var httpResult = result.ToCreatedHttpResult("/api/test");
+
+        // Assert
+        var created = httpResult as Created<TestDto>;
+        created.Should().NotBeNull("DTO path should return Created<TestDto>");
+        created!.StatusCode.Should().Be(201);
+        created.Value.Should().Be(dto);
+    }
+
+    [Fact]
+    public void ToCreatedHttpResult_Dto_Success_DoesNotIncludeLocationWithGuid()
+    {
+        // Arrange
+        var guid = Guid.NewGuid();
+        var dto = new TestDto(guid, "Test");
+        var result = Result<TestDto>.Success(dto);
+
+        // Act
+        var httpResult = result.ToCreatedHttpResult("/api/test");
+
+        // Assert - DTO path should not have a meaningful location header
+        var created = httpResult as Created<TestDto>;
+        created.Should().NotBeNull();
+        created!.Location.Should().BeNull();
     }
 
     [Fact]
