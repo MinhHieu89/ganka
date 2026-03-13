@@ -108,5 +108,27 @@
   },
   "noShiftHistory": "Chưa có lịch sử ca",
   "viewReport": "Xem báo cáo",
-  "shiftsSubtitle": "Quản lý ca làm việc và đối chiếu tiền mặt"
+  "shiftsSubtitle": "Quản lý ca làm việc và đối chiếu tiền mặt",
+  "serviceCatalog": {
+    "title": "Danh mục dịch vụ",
+    "addService": "Thêm dịch vụ",
+    "editService": "Sửa dịch vụ",
+    "code": "Mã",
+    "name": "Tên dịch vụ",
+    "nameVi": "Tên dịch vụ (Tiếng Việt)",
+    "price": "Giá (VND)",
+    "description": "Mô tả",
+    "status": "Trạng thái",
+    "active": "Đang hoạt động",
+    "inactive": "Ngừng hoạt động",
+    "showInactive": "Hiển thị dịch vụ ngừng hoạt động",
+    "created": "Đã tạo dịch vụ thành công",
+    "updated": "Đã cập nhật dịch vụ thành công",
+    "noItems": "Chưa có dịch vụ nào"
+  },
+  "connection": {
+    "connected": "Đã kết nối",
+    "reconnecting": "Đang kết nối lại...",
+    "disconnected": "Mất kết nối"
+  }
 }

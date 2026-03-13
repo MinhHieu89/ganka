@@ -108,5 +108,27 @@
   },
   "noShiftHistory": "No shift history",
   "viewReport": "View Report",
-  "shiftsSubtitle": "Manage shifts and cash reconciliation"
+  "shiftsSubtitle": "Manage shifts and cash reconciliation",
+  "serviceCatalog": {
+    "title": "Service Catalog",
+    "addService": "Add Service",
+    "editService": "Edit Service",
+    "code": "Code",
+    "name": "Service Name",
+    "nameVi": "Service Name (Vietnamese)",
+    "price": "Price (VND)",
+    "description": "Description",
+    "status": "Status",
+    "active": "Active",
+    "inactive": "Inactive",
+    "showInactive": "Show Inactive",
+    "created": "Service created successfully",
+    "updated": "Service updated successfully",
+    "noItems": "No service catalog items"
+  },
+  "connection": {
+    "connected": "Connected",
+    "reconnecting": "Reconnecting...",
+    "disconnected": "Disconnected"
+  }
 }
