@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 07.1-01b-PLAN.md
-last_updated: "2026-03-13T08:46:31.597Z"
+stopped_at: Completed 07.1-02-PLAN.md
+last_updated: "2026-03-13T08:49:27.159Z"
 last_activity: "2026-03-13 - Completed quick task 2: Add Serilog with file output for development"
 progress:
   total_phases: 15
   completed_phases: 12
   total_plans: 243
-  completed_plans: 235
+  completed_plans: 236
 ---
 
 ---
@@ -716,6 +716,7 @@ Progress: [█████████░] 96%
 | Phase 07.1 P01a | 3min | 1 tasks | 11 files |
 | Phase 07.1 P08 | 5min | 1 tasks | 1 files |
 | Phase 07.1 P01b | 10min | 2 tasks | 17 files |
+| Phase 07.1 P02 | 13min | 2 tasks | 14 files |
 
 ## Accumulated Context
 
@@ -1170,6 +1171,7 @@ Recent decisions affecting current work:
 - [Phase 07.1]: Vietnamese user stories follow Phase 7 format with proper diacritics for all 8 INT requirements
 - [Phase 07.1]: Added RaiseDispensedEvent/RaiseSaleCompletedEvent on aggregates to preserve domain event ownership while allowing handlers to provide enriched data
 - [Phase 07.1]: SessionFeeAmount computed as SessionPrice for PerSession mode and PackagePrice/TotalSessions for PerPackage mode
+- [Phase 07.1]: Service catalog uses single price per item, code normalized to uppercase for consistent lookups
 
 ### Roadmap Evolution
 
@@ -1200,6 +1202,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-13T08:46:31.592Z
-Stopped at: Completed 07.1-01b-PLAN.md
+Last session: 2026-03-13T08:49:27.153Z
+Stopped at: Completed 07.1-02-PLAN.md
 Resume file: None
