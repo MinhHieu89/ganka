@@ -85,7 +85,9 @@ public class DeductTreatmentConsumablesTests
             SessionId: DefaultSessionId,
             PatientId: DefaultPatientId,
             TreatmentType: 0, // IPL
-            Consumables: consumables ?? []);
+            Consumables: consumables ?? [],
+            VisitId: null,
+            SessionFeeAmount: 0m);
     }
 
     #region Valid Deduction Tests
