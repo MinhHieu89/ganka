@@ -329,6 +329,22 @@ Plans:
 - [ ] 07-27-PLAN.md -- [UAT GAP] Fix DbUpdateConcurrencyException (remove redundant Update calls) + auto-populate RequestedById from ICurrentUser
 - [ ] 07-28-PLAN.md -- [UAT GAP] Add finalize-empty-invoice validation guards + create GetPendingInvoices handler
 
+### Phase 07.1: Clinical-Billing Integration (INSERTED)
+
+**Goal:** All department modules (Clinical, Pharmacy, Optical, Treatment) publish domain events that auto-populate invoice line items in Billing, with a configurable service price catalog and real-time SignalR push to the cashier dashboard
+**Depends on:** Phase 7
+**Requirements**: INT-01, INT-02, INT-03, INT-04, INT-05, INT-06, INT-07, INT-08
+**Plans:** 7 plans in 5 waves
+
+Plans:
+- [ ] 07.1-01-PLAN.md -- Source module domain events, integration event contracts, cascading handlers, CancelVisit feature
+- [ ] 07.1-02-PLAN.md -- ServiceCatalogItem entity, EF config, CRUD handlers, migration, seeder
+- [ ] 07.1-03-PLAN.md -- [TDD] All 6 billing integration event handlers
+- [ ] 07.1-04-PLAN.md -- SignalR BillingHub, notification service, Bootstrapper wiring
+- [ ] 07.1-05-PLAN.md -- Wire SignalR into event handlers, CancelVisit endpoint, cross-module refs, frontend SignalR install
+- [ ] 07.1-06-PLAN.md -- Frontend service catalog admin page, useBillingHub hook, cashier dashboard SignalR, i18n
+- [ ] 07.1-07-PLAN.md -- End-to-end verification checkpoint
+
 ### Phase 8: Optical Center
 **Goal**: Staff can manage frame/lens inventory with barcodes, track glasses orders through their full lifecycle, and handle warranty claims
 **Depends on**: Phase 5, Phase 7
@@ -447,5 +463,7 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 | 5.1 Fix Architecture Test Failures | 0/8 | Not started | - |
 | 6. Pharmacy & Consumables | 29/29 | Complete   | 2026-03-06 |
 | 7. Billing & Finance | 24/28 | In Progress|  |
+| 7.1 Clinical-Billing Integration | 0/7 | Not started | - |
+| 7.1 Clinical-Billing Integration | 0/7 | Not started | - |
 | 8. Optical Center | 39/39 | Complete   | 2026-03-08 |
 | 9. Treatment Protocols | 25/29 | In Progress|  |
