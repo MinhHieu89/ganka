@@ -20,8 +20,8 @@ public class IntegrationEventHandlerTests
     private readonly IServiceCatalogRepository _serviceCatalogRepository = Substitute.For<IServiceCatalogRepository>();
     private readonly IUnitOfWork _unitOfWork = Substitute.For<IUnitOfWork>();
     private readonly ICurrentUser _currentUser = Substitute.For<ICurrentUser>();
-    private readonly ILogger<HandleVisitCreatedHandler> _visitCreatedLogger = Substitute.For<ILogger<HandleVisitCreatedHandler>>();
-    private readonly ILogger<HandleTreatmentSessionCompletedHandler> _treatmentLogger = Substitute.For<ILogger<HandleTreatmentSessionCompletedHandler>>();
+    private readonly ILogger _visitCreatedLogger = Substitute.For<ILogger>();
+    private readonly ILogger _treatmentLogger = Substitute.For<ILogger>();
 
     private static readonly Guid DefaultBranchId = Guid.Parse("00000000-0000-0000-0000-000000000001");
 
