@@ -1,218 +1,176 @@
 ---
-status: completed
+status: testing
 phase: 07-billing-finance
 source: 07-01-SUMMARY.md through 07-28-SUMMARY.md
-started: 2026-03-06T19:00:00Z
-completed: 2026-03-07T17:55:00Z
+started: 2026-03-13T03:21:33Z
+updated: 2026-03-13T04:05:36Z
 ---
+
+## Current Test
+<!-- OVERWRITE each test - shows where we are -->
+
+number: 12
+name: Record Cash Payment
+expected: |
+  Selecting Cash payment method, entering amount, submitting records payment. Shift cash balance increases. Invoice balance due decreases.
+awaiting: user response (BLOCKED - need to fix AddLineItem 500 first)
 
 ## Tests
 
 ### 1. Cold Start Smoke Test
-expected: Backend boots on 5255, frontend on 3000, billing dashboard loads at /billing.
-result: PASS — Backend boots, migrations complete, /billing loads.
+expected: Kill any running server/service. Start backend on port 5255 and frontend on port 3000 from scratch. Backend boots without errors, billing migrations complete, and /billing dashboard loads.
+result: pass
 
-### 2. Billing Dashboard Two-Column Layout
-expected: Two-column layout with pending invoices left, current shift right.
-result: PASS — Layout renders correctly via API verification.
+### 2. Billing Sidebar Navigation
+expected: Sidebar shows "Billing" collapsible section with "Dashboard" and "Shifts" child links. Clicking navigates to /billing and /billing/shifts respectively.
+result: pass
 
-### 3. Billing Sidebar Navigation
-expected: Billing collapsible section with Dashboard + Shifts links.
-result: PASS — Both links present and navigate correctly.
+### 3. Billing Dashboard Layout
+expected: Dashboard displays two-column layout — pending invoices list on left, current shift summary on right.
+result: pass
 
-### 4. Create Invoice
-expected: Auto-numbered HD-YYYY-NNNNN format, Draft status.
-result: PASS — HD-2026-00013+ created in Draft status.
+### 4. Create Invoice for Visit
+expected: Creating invoice generates auto-numbered HD-YYYY-NNNNN format (e.g., HD-2026-00001), status Draft, linked to patient visit. Appears in pending invoices list.
+result: skipped
+reason: No UI to create invoices from billing dashboard. Per FIN-01, invoices are per-visit — creation flow belongs in clinical workflow.
 
-### 5. View Invoice Detail
-expected: Invoice detail shows line items, totals, status, payments.
-result: PASS — All fields returned correctly via API.
+### 5. Invoice Detail Page
+expected: Clicking invoice shows detail with status badge (Draft=muted, Finalized=green), patient info, line items grouped by department (Medical/Pharmacy/Optical/Treatment) with subtotals, payments list, discounts list, and action buttons (Collect Payment, Apply Discount, Request Refund, Print, Finalize, E-Invoice Export).
+result: skipped
+reason: Depends on Test 4 (invoice creation)
 
-### 6. Add Line Item to Draft Invoice
-expected: Line item added, department grouping, totals recalculate.
-result: PASS — LineTotal and invoice TotalAmount recalculate correctly.
+### 6. Add Line Items to Invoice
+expected: Adding line items to draft invoice shows them grouped by department. Each has UnitPrice, Quantity, LineTotal. Grand total recalculates automatically.
+result: skipped
+reason: Depends on Test 4 (invoice creation)
 
-### 7. Remove Line Item from Draft Invoice
-expected: Line item removed, totals recalculate.
-result: PASS — Totals recalculate after removal.
+### 7. Remove Line Item from Invoice
+expected: Removing a line item from draft invoice removes it from the list and recalculates totals.
+result: skipped
+reason: Depends on Test 4 (invoice creation)
 
-### 8. View Pending Invoices List
-expected: Dashboard lists all Draft invoices.
-result: PASS — Returns Draft invoices with invoice number, patient, total.
+### 8. Finalize Invoice
+expected: Clicking Finalize on a draft invoice with line items and full payment changes status to Finalized. Line items become locked.
+result: skipped
+reason: Depends on Test 4 (invoice creation)
 
-### 9. Finalize Invoice
-expected: Finalize changes status to Finalized (1).
-result: PASS — Status changes to 1/Finalized. Requires cashierShiftId in body.
+### 9. Cannot Finalize Empty Invoice
+expected: Attempting to finalize invoice with no line items shows error "Cannot finalize an invoice with no line items."
+result: skipped
+reason: Depends on Test 4 (invoice creation)
 
-### 10. Cannot Finalize Empty Invoice
-expected: Error on finalize with no line items.
-result: PASS — 400 "Cannot finalize an invoice with no line items."
+### 10. Open Cashier Shift
+expected: Opening a new shift shows shift template selector (Morning 08:00-12:00 / Afternoon 13:00-20:00), enter opening balance. Shift created with Open status, displayed in dashboard current shift card.
+result: pass
 
-### 11. Cannot Finalize Invoice with Outstanding Balance
-expected: Error when balance due > 0.
-result: PASS — 400 returned.
+### 11. Cannot Open Duplicate Shift
+expected: When a shift is already open, attempting to open another shows error "A shift is already open for this branch."
+result: pass
 
-### 12. Invoice Status Badges
-expected: Draft=muted, Finalized=green, Balance Due red/green.
-result: SKIPPED — UI visual test, not verifiable via API. Frontend components exist.
+### 12. Record Cash Payment
+expected: Selecting Cash payment method, entering amount, submitting records payment. Shift cash balance increases. Invoice balance due decreases.
+result: [pending]
 
-### 13. Open New Cashier Shift
-expected: Open shift with template + opening balance.
-result: PASS — POST /shifts/open creates shift with status=0 (Open).
+### 13. Record Bank Transfer Payment
+expected: Selecting Bank Transfer shows reference number field. Payment recorded with reference number stored.
+result: [pending]
 
-### 14. Cannot Open Second Shift
-expected: Error when shift already open.
-result: PASS — 409 "A shift is already open for this branch."
+### 14. Record QR Payment (VNPay/MoMo/ZaloPay)
+expected: Selecting QR payment method shows reference number field. Payment recorded with method and reference.
+result: [pending]
 
-### 15. Record Cash Payment
-expected: Cash payment recorded, shift cash increases.
-result: PASS — 201 returned, shift CashReceived increases.
+### 15. Record Card Payment (Visa/Mastercard)
+expected: Selecting Card payment shows card type selector and last 4 digits field. Payment recorded with card details.
+result: [pending]
 
-### 16. Record Bank Transfer Payment
-expected: Bank transfer with reference number.
-result: PASS — method=1, referenceNumber stored correctly.
+### 16. Split Payment
+expected: Recording split payment marks first payment with IsSplitPayment=true, SplitSequence=1. Second payment gets SplitSequence=2. Both appear in payment list.
+result: [pending]
 
-### 17. Record QR Payment
-expected: QR payment with reference number.
-result: PASS — method=2 (VNPay) stored correctly.
+### 17. Payment Cannot Exceed Balance Due
+expected: Entering payment amount greater than balance due shows error "Payment exceeds balance due" or similar validation.
+result: [pending]
 
-### 18. Record Card Payment
-expected: Card payment with last 4 digits.
-result: PASS — method=5 (Visa), cardLast4 stored correctly.
+### 18. Cannot Pay Without Open Shift
+expected: Attempting to record payment without an open shift shows error "No open cashier shift found."
+result: [pending]
 
-### 19. Payment Method Selector UI
-expected: 7 selectable method cards with conditional fields.
-result: SKIPPED — UI visual test. Frontend PaymentForm component exists with method selector.
+### 19. Apply Percentage Discount
+expected: Applying percentage discount shows live preview of calculated VND amount. Discount created in Pending status awaiting manager approval.
+result: [pending]
 
-### 20. Split Payment
-expected: Split payment with sequence metadata.
-result: PASS — isSplitPayment=true, splitSequence=1/2 stored and returned correctly.
+### 20. Apply Fixed Amount Discount
+expected: Applying fixed VND discount to invoice or line item. Discount created in Pending status.
+result: [pending]
 
-### 21. Cannot Pay Without Open Shift
-expected: Error when no shift open.
-result: PASS — 400 "No open cashier shift found. Please open a shift before recording payments."
+### 21. Approve Discount with Manager PIN
+expected: Manager enters PIN, discount status changes to Approved, invoice total recalculates with discount applied.
+result: [pending]
 
-### 22. Payment Cannot Exceed Balance Due
-expected: Error when payment > balance.
-result: PASS — 400 "Payment exceeds balance due."
+### 22. Reject Discount with Manager PIN
+expected: Manager enters PIN and rejection reason. Discount status changes to Rejected. Invoice total unchanged.
+result: [pending]
 
-### 23. Apply Percentage Discount
-expected: Percentage discount with calculated amount.
-result: PASS — 10% on 800,000 = calculatedAmount 80,000. 15% = 120,000. Correct.
+### 23. Request Refund on Finalized Invoice
+expected: Requesting refund on finalized invoice creates refund in Requested status with reason and amount. Cannot refund draft invoice.
+result: [pending]
 
-### 24. Approve Discount with Manager PIN
-expected: PIN verification, status changes to Approved, invoice recalculates.
-result: PASS — 200 after VerifyManagerPin handler added to Auth module. DiscountTotal updates.
+### 24. Approve and Process Refund
+expected: Manager approves refund with PIN. Processing refund with cash method deducts from shift balance. Payment marked as refunded.
+result: [pending]
 
-### 25. Reject Discount with Manager PIN
-expected: Discount rejected with reason.
-result: PASS — 200 returned, discount status changes to Rejected.
+### 25. Close Shift with Cash Count
+expected: Entering actual cash count calculates discrepancy (actual - expected). Discrepancy shown color-coded (green=match, red=deficit, blue=surplus). Shift status changes to Closed.
+result: [pending]
 
-### 26. Discount >100% Validation
-expected: Percentage discount >100% rejected.
-result: PASS — 400 "Percentage discount cannot exceed 100%."
+### 26. Shift Report
+expected: Shift report shows revenue breakdown by payment method (Cash, Bank, QR, Card) with counts and amounts. Cash reconciliation table with opening/closing balances and discrepancy.
+result: [pending]
 
-### 27. Fixed Amount Discount
-expected: Fixed VND discount applied correctly.
-result: PASS — calculatedAmount equals the Value directly (50,000).
+### 27. Shift History
+expected: Shifts page shows DataTable of past shifts with date, opening balance, final balance, discrepancy. Clicking row expands inline report.
+result: [pending]
 
-### 28. Cannot Discount Finalized Invoice
-expected: Error on discount for non-draft invoice.
-result: PASS — 400 "Cannot apply discount to a non-draft invoice."
+### 28. Print Invoice PDF
+expected: Generates A4 PDF with clinic header, department-grouped line items, VND formatting with dot-thousands, signatures area. Opens in new tab.
+result: [pending]
 
-### 29. Request Refund on Finalized Invoice
-expected: Refund created in Requested status, RequestedById auto-populated.
-result: PASS — status=0 (Requested), requestedById populated from current user.
+### 29. Print Receipt PDF
+expected: Generates compact A5 receipt PDF with payment methods and amounts.
+result: [pending]
 
-### 30. Cannot Refund Draft Invoice
-expected: Error on refund for draft invoice.
-result: PASS — 400 "Refunds can only be requested on finalized invoices."
+### 30. E-Invoice PDF (Vietnamese Decree 123/2020)
+expected: E-invoice PDF includes seller/buyer tax codes, invoice template/symbol, tax breakdown (8% GTGT), amount in Vietnamese words.
+result: [pending]
 
-### 31. Refund Cannot Exceed Invoice Total
-expected: Validation blocks oversized refund.
-result: PASS — 400 returned (verified in previous session).
+### 31. E-Invoice Export JSON
+expected: JSON export with all mandatory e-invoice fields, Vietnamese Unicode preserved, MISA-compatible format.
+result: [pending]
 
-### 32. Approve and Process Refund
-expected: Approve (PIN), then Process with refund method.
-result: PASS — Approve returns 200, Process returns 200 with status=2 (Processed).
+### 32. E-Invoice Export XML
+expected: XML export with all mandatory e-invoice fields, MISA-compatible format.
+result: [pending]
 
-### 33. Close Shift
-expected: Close with actual cash count, discrepancy calculated.
-result: PASS — status=2 (Closed), discrepancy calculated as actualCash - expectedCash.
+### 33. Print Shift Report PDF
+expected: PDF with revenue-by-method table, cash reconciliation, highlighted discrepancy if non-zero.
+result: [pending]
 
-### 34. Close Shift with Discrepancy
-expected: Discrepancy shown when cash doesn't match.
-result: PASS — Discrepancy=-800000 shown when actualCashCount differs from expected.
+### 34. VND Currency Formatting
+expected: All monetary values throughout billing UI formatted as Vietnamese currency (e.g., "1.234.567 ₫" with dot-thousands separator).
+result: [pending]
 
-### 35. Shift Report
-expected: Revenue breakdown and cash reconciliation.
-result: PASS — ShiftReportDto returned with cashierName, openedAt, closedAt, totalRevenue, transactionCount.
-
-### 36. Shift Report PDF
-expected: PDF with revenue and reconciliation.
-result: PASS — 200 returned, 208KB PDF generated.
-
-### 37. Print Invoice PDF
-expected: A4 PDF with clinic header, line items, payment summary.
-result: PASS — GET /print/{id}/invoice returns 122KB PDF.
-
-### 38. Print Receipt PDF
-expected: Compact A5 receipt PDF.
-result: PASS — GET /print/{id}/receipt returns 86KB PDF.
-
-### 39. E-Invoice PDF
-expected: E-invoice with Decree 123/2020 fields.
-result: PASS — GET /print/{id}/e-invoice returns 196KB PDF.
-
-### 40. E-Invoice Export JSON
-expected: JSON with mandatory e-invoice fields.
-result: PASS — Returns JSON with invoiceTemplateSymbol, seller, buyer, lineItems, taxRate fields.
-
-### 41. E-Invoice Export XML
-expected: Well-formed XML with mandatory elements.
-result: PASS — Returns 1.2KB XML.
-
-### 42. VND Currency Formatting
-expected: Dot separator, no decimals, ₫ symbol throughout UI.
-result: SKIPPED — UI visual test. Backend returns raw numbers; formatting is frontend responsibility.
-
-### 43. Print Shift Report PDF
-expected: Shift report PDF with revenue breakdown.
-result: PASS — Same as T36. GET /shifts/{id}/report/pdf returns 208KB PDF.
+### 35. VND Amount in Vietnamese Words
+expected: Invoice displays amount in Vietnamese words (e.g., 1,000,000 → "Một triệu đồng").
+result: [pending]
 
 ## Summary
 
-total: 43
-passed: 40
-skipped: 3 (UI-only visual tests: T12, T19, T42)
+total: 35
+passed: 5
 issues: 0
-
-## Fixes Applied During UAT
-
-### 1. VerifyManagerPinQuery handler (NEW)
-- **Problem**: ApproveDiscount, RejectDiscount, and ApproveRefund all send a VerifyManagerPinQuery via IMessageBus, but no handler existed in the Auth module.
-- **Fix**: Created Auth.Contracts.Queries.VerifyManagerPinQuery/Response records, implemented stub handler in Auth.Application that accepts any non-empty PIN. Moved types from Billing.Application to Auth.Contracts for proper cross-module architecture.
-- **Files**: Auth.Contracts/Queries/VerifyManagerPinQuery.cs (new), Auth.Application/Features/VerifyManagerPin.cs (new), Billing.Application csproj (added Auth.Contracts ref), ApproveDiscount.cs, ApproveRefund.cs, RejectDiscount.cs (updated using)
-
-### 2. ValueGeneratedNever (from previous session)
-- **Problem**: EF Core ValueGeneratedOnAdd on Guid IDs caused new child entities to be treated as Modified (UPDATE) instead of Added (INSERT), triggering DbUpdateConcurrencyException on Invoice's RowVersion.
-- **Fix**: Applied ValueGenerated.Never loop in OnModelCreating of all 9 module DbContexts.
-
-### 3. Payment Method Enum (RESOLVED)
-- **Problem**: Previous UAT showed all payments as method:0.
-- **Status**: RESOLVED by ValueGeneratedNever fix. Methods 0-5 all store and return correctly now.
+pending: 24
+skipped: 6
 
 ## Gaps
 
-### 1. Shift History Endpoint Missing
-- No GET /api/billing/shifts/history endpoint exists. The Shifts page needs a list of past shifts.
-- Severity: Medium — shift data exists in DB but no API to list them.
-
-### 2. ToCreatedHttpResult Wraps DTOs in {id: {...}}
-- ResultExtensions.ToCreatedHttpResult wraps the full DTO in `new { Id = result.Value }`, producing `{"id": {...dto...}}` instead of returning the DTO directly.
-- Affects: All billing POST endpoints returning DTOs (invoices, payments, discounts, refunds, shifts).
-- Severity: Medium — frontend must unwrap `.id` to get the DTO, which is counterintuitive.
-
-### 3. VerifyManagerPin is a Stub
-- Current implementation accepts any non-empty PIN. Actual PIN verification needs to be built in Auth module.
-- Severity: Low for UAT, must be addressed before production.
+[none yet]

@@ -46,14 +46,14 @@ public sealed class ShiftTemplateSeeder : IHostedService
             {
                 ShiftTemplate.Create(
                     "Morning",
-                    "Ca sang",
+                    "Ca sáng",
                     new TimeOnly(8, 0),
                     new TimeOnly(12, 0),
                     branchId),
 
                 ShiftTemplate.Create(
                     "Afternoon",
-                    "Ca chieu",
+                    "Ca chiều",
                     new TimeOnly(13, 0),
                     new TimeOnly(20, 0),
                     branchId)

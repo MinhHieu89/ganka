@@ -100,7 +100,7 @@ async function getCurrentShift(): Promise<CashierShiftDto | null> {
 
 async function openShift(command: OpenShiftInput): Promise<{ id: string }> {
   const { data, error, response } = await api.POST(
-    "/api/billing/shifts" as never,
+    "/api/billing/shifts/open" as never,
     { body: command } as never,
   )
   if (error || !response.ok) {
@@ -112,11 +112,11 @@ async function openShift(command: OpenShiftInput): Promise<{ id: string }> {
 }
 
 async function closeShift(
-  shiftId: string,
+  _shiftId: string,
   command: CloseShiftInput,
 ): Promise<void> {
   const { error, response } = await api.POST(
-    `/api/billing/shifts/${shiftId}/close` as never,
+    "/api/billing/shifts/close" as never,
     { body: command } as never,
   )
   if (error || !response.ok) {
