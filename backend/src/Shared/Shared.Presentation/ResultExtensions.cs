@@ -41,7 +41,16 @@ public static class ResultExtensions
     public static IResult ToCreatedHttpResult<T>(this Result<T> result, string routePrefix)
     {
         if (result.IsSuccess)
-            return Results.Created($"{routePrefix}/{result.Value}", new { Id = result.Value });
+        {
+            if (typeof(T) == typeof(Guid))
+            {
+                // Guid path: return location header + wrapped Id object
+                return Results.Created($"{routePrefix}/{result.Value}", new { Id = result.Value });
+            }
+
+            // DTO path: return the DTO directly as 201 body, no location header
+            return TypedResults.Created((string?)null, result.Value);
+        }
 
         return MapError(result.Error);
     }
