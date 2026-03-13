@@ -21,6 +21,7 @@ using Scheduling.Infrastructure;
 using Pharmacy.Infrastructure;
 using Optical.Infrastructure;
 using Billing.Infrastructure;
+using Billing.Infrastructure.Hubs;
 using Treatment.Infrastructure;
 
 // Module IoC extension methods
@@ -182,6 +183,11 @@ builder.Services.AddCors(options =>
 });
 
 // ---------------------------------------------------------------------------
+// SignalR -- real-time push notifications (cashier dashboard, etc.)
+// ---------------------------------------------------------------------------
+builder.Services.AddSignalR();
+
+// ---------------------------------------------------------------------------
 // Rate Limiting -- public booking endpoint protection
 // ---------------------------------------------------------------------------
 builder.Services.AddRateLimiter(options =>
@@ -339,6 +345,9 @@ app.MapTreatmentApiEndpoints();
 app.MapWarrantyApiEndpoints();
 app.MapStocktakingApiEndpoints();
 app.MapSettingsApiEndpoints();
+
+// SignalR hubs
+app.MapHub<BillingHub>("/api/hubs/billing");
 
 app.Run();
 

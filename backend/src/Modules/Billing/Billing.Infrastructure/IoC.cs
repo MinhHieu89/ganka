@@ -28,6 +28,9 @@ public static class InfrastructureIoC
         // Document services (PDF generation and e-invoice export)
         services.AddScoped<IBillingDocumentService, BillingDocumentService>();
 
+        // Real-time notifications (SignalR push to cashier dashboard)
+        services.AddScoped<IBillingNotificationService, BillingNotificationService>();
+
         // Shift template seeder (idempotent IHostedService)
         services.AddHostedService<ShiftTemplateSeeder>();
 
