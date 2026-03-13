@@ -331,13 +331,17 @@ Plans:
 
 ### Phase 07.2: Fix Phase 07.1 Code Review Issues (INSERTED)
 
-**Goal:** [Urgent work - to be planned]
-**Requirements**: TBD
-**Depends on:** Phase 07
-**Plans:** 0 plans
+**Goal:** Fix all 22 critical, important, and design issues found by code review of Phase 07.1: DomainEventDispatcher scope isolation, invoice number race condition, handler guard clauses, idempotency, authorization, i18n, SignalR stability, and frontend quality
+**Requirements**: CR-01, CR-02, CR-03, CR-04, CR-05, CR-06, CR-07, CR-08, CR-09, CR-10, CR-11, CR-12, CR-13, CR-14, CR-15, CR-16, CR-17, CR-18, CR-19, CR-20, CR-21, CR-22
+**Depends on:** Phase 07.1
+**Plans:** 5 plans in 1 wave
 
 Plans:
-- [ ] TBD (run /gsd:plan-phase 07.2 to break down)
+- [ ] 07.2-01-PLAN.md -- Infrastructure: DomainEventDispatcher scoped + invoice number SQL SEQUENCE
+- [ ] 07.2-02-PLAN.md -- Handler guards: HandleVisitCancelled Draft-only + idempotency + PatientName event chain
+- [ ] 07.2-03-PLAN.md -- Backend misc: nullable PatientId, code normalization, endpoint auth, zero-price, dead code, arch test
+- [ ] 07.2-04-PLAN.md -- Missing Publish*IntegrationEvent tests + GlassesOrder DescriptionVi fix
+- [ ] 07.2-05-PLAN.md -- Frontend: SignalR stability, Zod i18n, typed router, dead buttons, sidebar, enum display
 
 ### Phase 07.1: Clinical-Billing Integration (INSERTED)
 
