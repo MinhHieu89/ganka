@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Phase 07.1 context gathered
-last_updated: "2026-03-13T07:32:51.020Z"
+stopped_at: Completed 07.1-01c-PLAN.md
+last_updated: "2026-03-13T08:38:30.445Z"
 last_activity: "2026-03-13 - Completed quick task 2: Add Serilog with file output for development"
 progress:
   total_phases: 15
   completed_phases: 12
-  total_plans: 233
-  completed_plans: 231
+  total_plans: 243
+  completed_plans: 232
 ---
 
 ---
@@ -712,6 +712,7 @@ Progress: [█████████░] 96%
 | Phase 03 P16 | 35min | 2 tasks | 1 files |
 | Phase 06 P31 | 3min | 1 tasks | 7 files |
 | Phase 06 P30 | 4min | 2 tasks | 10 files |
+| Phase 07.1 P01c | 5min | 1 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -1160,6 +1161,7 @@ Recent decisions affecting current work:
 - [Phase 06]: Reused existing useDispensingHistory hook without patientId for global dispensing query
 - [Phase 06]: Dedicated PATCH toggle endpoint for supplier active status instead of overloading PUT update
 - [Phase 06]: GetSuppliers returns all suppliers (active+inactive) so toggle UI is visible for both states
+- [Phase 07.1]: Raise GlassesOrderCreatedEvent via RaiseCreatedEvent() after items added, not in Create() factory
 
 ### Roadmap Evolution
 
@@ -1190,6 +1192,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-13T07:32:51.012Z
-Stopped at: Phase 07.1 context gathered
-Resume file: .planning/phases/07.1-clinical-billing-integration/07.1-CONTEXT.md
+Last session: 2026-03-13T08:38:30.440Z
+Stopped at: Completed 07.1-01c-PLAN.md
+Resume file: None
