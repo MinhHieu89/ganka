@@ -130,5 +130,11 @@
     "connected": "Đã kết nối",
     "reconnecting": "Đang kết nối lại...",
     "disconnected": "Mất kết nối"
+  },
+  "validation": {
+    "required": "Bắt buộc",
+    "mustBePositive": "Phải lớn hơn 0"
+  },
+  "shiftManagement": {
+    "comingSoon": "Quản lý ca làm việc sắp ra mắt"
   }
-}

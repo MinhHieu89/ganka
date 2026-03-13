@@ -1,9 +1,10 @@
-import { useEffect } from "react"
+import { useEffect, useMemo } from "react"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { toast } from "sonner"
 import { useTranslation } from "react-i18next"
+import type { TFunction } from "i18next"
 import { IconLoader2 } from "@tabler/icons-react"
 import {
   Dialog,
@@ -24,16 +25,26 @@ import {
   useUpdateServiceCatalogItem,
 } from "@/features/billing/api/service-catalog-api"
 
-const createSchema = z.object({
-  code: z.string().min(1, "required").max(50),
-  name: z.string().min(1, "required").max(200),
-  nameVi: z.string().min(1, "required").max(200),
-  price: z.coerce.number().positive("Must be greater than 0"),
-  description: z.string().max(500).optional().or(z.literal("")),
-  isActive: z.boolean(),
-})
+/**
+ * Schema factory: accepts translation function so Zod validation messages
+ * are displayed in the user's current language (CR-15).
+ *
+ * isActive is included in both create and edit schemas. For create mode it
+ * defaults to true and the field is not rendered, but keeping a single schema
+ * simplifies the code without side effects (CR-22).
+ */
+const createServiceCatalogSchema = (t: TFunction) =>
+  z.object({
+    code: z.string().min(1, t("validation.required")).max(50),
+    name: z.string().min(1, t("validation.required")).max(200),
+    nameVi: z.string().min(1, t("validation.required")).max(200),
+    price: z.coerce.number().positive(t("validation.mustBePositive")),
+    description: z.string().max(500).optional().or(z.literal("")),
+    // isActive: present in both create/edit. Defaults to true for create mode.
+    isActive: z.boolean().default(true),
+  })
 
-type FormValues = z.infer<typeof createSchema>
+type FormValues = z.infer<ReturnType<typeof createServiceCatalogSchema>>
 
 interface ServiceCatalogFormDialogProps {
   open: boolean
@@ -52,8 +63,10 @@ export function ServiceCatalogFormDialog({
   const updateMutation = useUpdateServiceCatalogItem()
   const isEdit = !!editItem
 
+  const schema = useMemo(() => createServiceCatalogSchema(t), [t])
+
   const form = useForm<FormValues>({
-    resolver: zodResolver(createSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
       code: "",
       name: "",
@@ -89,39 +102,31 @@ export function ServiceCatalogFormDialog({
   }, [open, editItem, form])
 
   const onSubmit = async (values: FormValues) => {
-    if (isEdit) {
-      await updateMutation.mutateAsync(
-        {
+    try {
+      if (isEdit) {
+        await updateMutation.mutateAsync({
           id: editItem.id,
           name: values.name,
           nameVi: values.nameVi,
           price: values.price,
           isActive: values.isActive,
           description: values.description || null,
-        },
-        {
-          onSuccess: () => {
-            toast.success(t("serviceCatalog.updated"))
-            onOpenChange(false)
-          },
-        },
-      )
-    } else {
-      await createMutation.mutateAsync(
-        {
+        })
+        toast.success(t("serviceCatalog.updated"))
+        onOpenChange(false)
+      } else {
+        await createMutation.mutateAsync({
           code: values.code,
           name: values.name,
           nameVi: values.nameVi,
           price: values.price,
           description: values.description || null,
-        },
-        {
-          onSuccess: () => {
-            toast.success(t("serviceCatalog.created"))
-            onOpenChange(false)
-          },
-        },
-      )
+        })
+        toast.success(t("serviceCatalog.created"))
+        onOpenChange(false)
+      }
+    } catch {
+      // Error handled by React Query's onError or global error handler
     }
   }
 

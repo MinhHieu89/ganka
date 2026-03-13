@@ -130,5 +130,11 @@
     "connected": "Connected",
     "reconnecting": "Reconnecting...",
     "disconnected": "Disconnected"
+  },
+  "validation": {
+    "required": "Required",
+    "mustBePositive": "Must be greater than 0"
+  },
+  "shiftManagement": {
+    "comingSoon": "Shift management coming soon"
   }
-}

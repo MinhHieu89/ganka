@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from "react"
+import { useEffect, useRef, useState } from "react"
 import {
   HubConnectionBuilder,
   HubConnection,
@@ -19,28 +19,17 @@ const HUB_URL = `${API_URL}/api/hubs/billing`
  * Joins the cashier-dashboard group and invalidates TanStack Query caches
  * when billing events occur (InvoiceCreated, LineItemAdded, InvoiceVoided).
  *
+ * Uses useRef for queryClient to keep the useEffect dependency array empty,
+ * preventing reconnection storms when queryClient reference changes.
+ *
  * Handles automatic reconnection and re-joins group after reconnect.
  */
 export function useBillingHub(): ConnectionStatus {
   const [status, setStatus] = useState<ConnectionStatus>("disconnected")
   const connectionRef = useRef<HubConnection | null>(null)
   const queryClient = useQueryClient()
-
-  const invalidatePendingInvoices = useCallback(() => {
-    queryClient.invalidateQueries({ queryKey: billingKeys.pendingInvoices() })
-  }, [queryClient])
-
-  const invalidateInvoice = useCallback(
-    (invoiceId: string) => {
-      queryClient.invalidateQueries({
-        queryKey: billingKeys.invoice(invoiceId),
-      })
-      queryClient.invalidateQueries({
-        queryKey: billingKeys.pendingInvoices(),
-      })
-    },
-    [queryClient],
-  )
+  const queryClientRef = useRef(queryClient)
+  queryClientRef.current = queryClient // Update ref each render, no effect trigger
 
   useEffect(() => {
     const connection = new HubConnectionBuilder()
@@ -55,17 +44,18 @@ export function useBillingHub(): ConnectionStatus {
 
     connectionRef.current = connection
 
-    // Register event handlers
+    // Register event handlers -- use queryClientRef.current for stable closure
     connection.on("InvoiceCreated", () => {
-      invalidatePendingInvoices()
+      queryClientRef.current.invalidateQueries({ queryKey: billingKeys.pendingInvoices() })
     })
 
-    connection.on("LineItemAdded", (_notification: { invoiceId: string }) => {
-      invalidateInvoice(_notification.invoiceId)
+    connection.on("LineItemAdded", (notification: { invoiceId: string }) => {
+      queryClientRef.current.invalidateQueries({ queryKey: billingKeys.invoice(notification.invoiceId) })
+      queryClientRef.current.invalidateQueries({ queryKey: billingKeys.pendingInvoices() })
     })
 
     connection.on("InvoiceVoided", () => {
-      invalidatePendingInvoices()
+      queryClientRef.current.invalidateQueries({ queryKey: billingKeys.pendingInvoices() })
     })
 
     // Connection lifecycle events
@@ -114,7 +104,7 @@ export function useBillingHub(): ConnectionStatus {
       }
       cleanup()
     }
-  }, [invalidatePendingInvoices, invalidateInvoice])
+  }, []) // Empty -- stable connection, queryClient accessed via ref
 
   return status
 }
