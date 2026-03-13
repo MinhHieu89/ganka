@@ -46,7 +46,7 @@ public static class HandleTreatmentSessionCompletedHandler
             invoice = Invoice.Create(
                 number,
                 @event.PatientId,
-                string.Empty, // PatientName not available in treatment event
+                @event.PatientName,
                 visitId,
                 new BranchId(@event.BranchId));
             invoiceRepository.Add(invoice);

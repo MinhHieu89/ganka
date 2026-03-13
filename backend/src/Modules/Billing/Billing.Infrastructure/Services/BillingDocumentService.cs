@@ -48,7 +48,9 @@ public sealed class BillingDocumentService : IBillingDocumentService
             ?? throw new InvalidOperationException($"Invoice {invoiceId} not found.");
 
         var header = await GetClinicHeaderDataAsync(ct);
-        var patientCode = await GetPatientCodeAsync(invoice.PatientId, ct);
+        var patientCode = invoice.PatientId.HasValue
+            ? await GetPatientCodeAsync(invoice.PatientId.Value, ct)
+            : null;
 
         var lineItems = invoice.LineItems
             .OrderBy(li => li.Department).ThenBy(li => li.CreatedAt)
@@ -93,7 +95,9 @@ public sealed class BillingDocumentService : IBillingDocumentService
             ?? throw new InvalidOperationException($"Invoice {invoiceId} not found.");
 
         var header = await GetClinicHeaderDataAsync(ct);
-        var patientCode = await GetPatientCodeAsync(invoice.PatientId, ct);
+        var patientCode = invoice.PatientId.HasValue
+            ? await GetPatientCodeAsync(invoice.PatientId.Value, ct)
+            : null;
 
         var payments = invoice.Payments
             .Where(p => p.Status == PaymentStatus.Confirmed)
