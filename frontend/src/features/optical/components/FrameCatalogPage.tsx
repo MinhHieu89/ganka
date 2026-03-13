@@ -8,6 +8,7 @@ import { FrameCatalogTable } from "./FrameCatalogTable"
 import { FrameFormDialog } from "./FrameFormDialog"
 import { type FrameDto } from "@/features/optical/api/optical-api"
 import {
+  useFrames,
   useSearchFrames,
   useGenerateBarcode,
 } from "@/features/optical/api/optical-queries"
@@ -23,11 +24,21 @@ export function FrameCatalogPage() {
     gender?: number
   }>({})
 
-  const { data: framesResult, isLoading } = useSearchFrames({
+  const hasFilters = !!(searchParams.searchTerm && searchParams.searchTerm.length >= 2) ||
+    searchParams.material != null ||
+    searchParams.frameType != null ||
+    searchParams.gender != null
+
+  const { data: allFramesResult, isLoading: isLoadingAll } = useFrames({ pageSize: 100 })
+  const { data: searchResult, isLoading: isLoadingSearch } = useSearchFrames({
     ...searchParams,
     pageSize: 100,
   })
-  const frames = framesResult?.items ?? []
+
+  const isLoading = hasFilters ? isLoadingSearch : isLoadingAll
+  const frames = hasFilters
+    ? (searchResult?.items ?? [])
+    : (allFramesResult?.items ?? [])
 
   const generateBarcodeMutation = useGenerateBarcode()
 
