@@ -12,6 +12,7 @@ namespace Billing.Application.Features;
 /// Wolverine handler for TreatmentSessionCompletedIntegrationEvent.
 /// Uses event.VisitId and event.SessionFeeAmount directly to add a session fee line item.
 /// Skips billing if VisitId is null (treatment not linked to a visit).
+/// Sends SignalR notification after adding line item.
 /// </summary>
 public static class HandleTreatmentSessionCompletedHandler
 {
@@ -25,6 +26,7 @@ public static class HandleTreatmentSessionCompletedHandler
     public static async Task Handle(
         TreatmentSessionCompletedIntegrationEvent @event,
         IInvoiceRepository invoiceRepository,
+        IBillingNotificationService notificationService,
         IUnitOfWork unitOfWork,
         ICurrentUser currentUser,
         ILogger logger,
@@ -65,5 +67,15 @@ public static class HandleTreatmentSessionCompletedHandler
             "TreatmentSession");
 
         await unitOfWork.SaveChangesAsync(ct);
+
+        try
+        {
+            await notificationService.NotifyLineItemAddedAsync(
+                invoice.Id, invoice.InvoiceNumber, descriptionEn, @event.SessionFeeAmount, "Treatment", ct);
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning(ex, "Failed to send SignalR notification for treatment session on invoice {InvoiceId}", invoice.Id);
+        }
     }
 }

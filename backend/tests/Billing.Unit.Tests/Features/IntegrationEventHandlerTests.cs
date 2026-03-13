@@ -18,10 +18,15 @@ public class IntegrationEventHandlerTests
 {
     private readonly IInvoiceRepository _invoiceRepository = Substitute.For<IInvoiceRepository>();
     private readonly IServiceCatalogRepository _serviceCatalogRepository = Substitute.For<IServiceCatalogRepository>();
+    private readonly IBillingNotificationService _notificationService = Substitute.For<IBillingNotificationService>();
     private readonly IUnitOfWork _unitOfWork = Substitute.For<IUnitOfWork>();
     private readonly ICurrentUser _currentUser = Substitute.For<ICurrentUser>();
     private readonly ILogger _visitCreatedLogger = Substitute.For<ILogger>();
     private readonly ILogger _treatmentLogger = Substitute.For<ILogger>();
+    private readonly ILogger _cancelledLogger = Substitute.For<ILogger>();
+    private readonly ILogger _drugLogger = Substitute.For<ILogger>();
+    private readonly ILogger _otcLogger = Substitute.For<ILogger>();
+    private readonly ILogger _glassesLogger = Substitute.For<ILogger>();
 
     private static readonly Guid DefaultBranchId = Guid.Parse("00000000-0000-0000-0000-000000000001");
 
@@ -59,7 +64,7 @@ public class IntegrationEventHandlerTests
 
         // Act
         await HandleVisitCreatedHandler.Handle(
-            @event, _invoiceRepository, _serviceCatalogRepository, _unitOfWork, _currentUser,
+            @event, _invoiceRepository, _serviceCatalogRepository, _notificationService, _unitOfWork, _currentUser,
             _visitCreatedLogger, CancellationToken.None);
 
         // Assert
@@ -87,7 +92,7 @@ public class IntegrationEventHandlerTests
 
         // Act
         await HandleVisitCreatedHandler.Handle(
-            @event, _invoiceRepository, _serviceCatalogRepository, _unitOfWork, _currentUser,
+            @event, _invoiceRepository, _serviceCatalogRepository, _notificationService, _unitOfWork, _currentUser,
             _visitCreatedLogger, CancellationToken.None);
 
         // Assert
@@ -108,7 +113,7 @@ public class IntegrationEventHandlerTests
 
         // Act
         await HandleVisitCreatedHandler.Handle(
-            @event, _invoiceRepository, _serviceCatalogRepository, _unitOfWork, _currentUser,
+            @event, _invoiceRepository, _serviceCatalogRepository, _notificationService, _unitOfWork, _currentUser,
             _visitCreatedLogger, CancellationToken.None);
 
         // Assert
@@ -133,7 +138,7 @@ public class IntegrationEventHandlerTests
 
         // Act
         await HandleVisitCancelledHandler.Handle(
-            @event, _invoiceRepository, _unitOfWork, CancellationToken.None);
+            @event, _invoiceRepository, _notificationService, _unitOfWork, _cancelledLogger, CancellationToken.None);
 
         // Assert
         invoice.Status.Should().Be(InvoiceStatus.Voided);
@@ -152,7 +157,7 @@ public class IntegrationEventHandlerTests
 
         // Act
         await HandleVisitCancelledHandler.Handle(
-            @event, _invoiceRepository, _unitOfWork, CancellationToken.None);
+            @event, _invoiceRepository, _notificationService, _unitOfWork, _cancelledLogger, CancellationToken.None);
 
         // Assert
         await _unitOfWork.DidNotReceive().SaveChangesAsync(Arg.Any<CancellationToken>());
@@ -172,7 +177,7 @@ public class IntegrationEventHandlerTests
 
         // Act
         await HandleVisitCancelledHandler.Handle(
-            @event, _invoiceRepository, _unitOfWork, CancellationToken.None);
+            @event, _invoiceRepository, _notificationService, _unitOfWork, _cancelledLogger, CancellationToken.None);
 
         // Assert - SaveChanges should not be called since already voided
         await _unitOfWork.DidNotReceive().SaveChangesAsync(Arg.Any<CancellationToken>());
@@ -200,7 +205,7 @@ public class IntegrationEventHandlerTests
 
         // Act
         await HandleDrugDispensedHandler.Handle(
-            @event, _invoiceRepository, _unitOfWork, _currentUser, CancellationToken.None);
+            @event, _invoiceRepository, _notificationService, _unitOfWork, _currentUser, _drugLogger, CancellationToken.None);
 
         // Assert
         invoice.LineItems.Should().HaveCount(2);
@@ -230,7 +235,7 @@ public class IntegrationEventHandlerTests
 
         // Act
         await HandleDrugDispensedHandler.Handle(
-            @event, _invoiceRepository, _unitOfWork, _currentUser, CancellationToken.None);
+            @event, _invoiceRepository, _notificationService, _unitOfWork, _currentUser, _drugLogger, CancellationToken.None);
 
         // Assert
         _invoiceRepository.Received(1).Add(Arg.Is<Invoice>(inv =>
@@ -259,7 +264,7 @@ public class IntegrationEventHandlerTests
 
         // Act
         await HandleOtcSaleCompletedHandler.Handle(
-            @event, _invoiceRepository, _unitOfWork, _currentUser, CancellationToken.None);
+            @event, _invoiceRepository, _notificationService, _unitOfWork, _currentUser, _otcLogger, CancellationToken.None);
 
         // Assert
         _invoiceRepository.Received(1).Add(Arg.Is<Invoice>(inv =>
@@ -286,7 +291,7 @@ public class IntegrationEventHandlerTests
 
         // Act
         await HandleOtcSaleCompletedHandler.Handle(
-            @event, _invoiceRepository, _unitOfWork, _currentUser, CancellationToken.None);
+            @event, _invoiceRepository, _notificationService, _unitOfWork, _currentUser, _otcLogger, CancellationToken.None);
 
         // Assert
         _invoiceRepository.Received(1).Add(Arg.Is<Invoice>(inv =>
@@ -318,7 +323,7 @@ public class IntegrationEventHandlerTests
 
         // Act
         await HandleGlassesOrderCreatedHandler.Handle(
-            @event, _invoiceRepository, _unitOfWork, _currentUser, CancellationToken.None);
+            @event, _invoiceRepository, _notificationService, _unitOfWork, _currentUser, _glassesLogger, CancellationToken.None);
 
         // Assert
         invoice.LineItems.Should().HaveCount(2);
@@ -349,7 +354,7 @@ public class IntegrationEventHandlerTests
 
         // Act
         await HandleGlassesOrderCreatedHandler.Handle(
-            @event, _invoiceRepository, _unitOfWork, _currentUser, CancellationToken.None);
+            @event, _invoiceRepository, _notificationService, _unitOfWork, _currentUser, _glassesLogger, CancellationToken.None);
 
         // Assert
         _invoiceRepository.Received(1).Add(Arg.Is<Invoice>(inv =>
@@ -373,7 +378,7 @@ public class IntegrationEventHandlerTests
 
         // Act
         await HandleGlassesOrderCreatedHandler.Handle(
-            @event, _invoiceRepository, _unitOfWork, _currentUser, CancellationToken.None);
+            @event, _invoiceRepository, _notificationService, _unitOfWork, _currentUser, _glassesLogger, CancellationToken.None);
 
         // Assert
         _invoiceRepository.Received(1).Add(Arg.Is<Invoice>(inv =>
@@ -403,7 +408,7 @@ public class IntegrationEventHandlerTests
 
         // Act
         await HandleTreatmentSessionCompletedHandler.Handle(
-            @event, _invoiceRepository, _unitOfWork, _currentUser, _treatmentLogger, CancellationToken.None);
+            @event, _invoiceRepository, _notificationService, _unitOfWork, _currentUser, _treatmentLogger, CancellationToken.None);
 
         // Assert
         invoice.LineItems.Should().HaveCount(1);
@@ -425,7 +430,7 @@ public class IntegrationEventHandlerTests
 
         // Act
         await HandleTreatmentSessionCompletedHandler.Handle(
-            @event, _invoiceRepository, _unitOfWork, _currentUser, _treatmentLogger, CancellationToken.None);
+            @event, _invoiceRepository, _notificationService, _unitOfWork, _currentUser, _treatmentLogger, CancellationToken.None);
 
         // Assert
         _invoiceRepository.DidNotReceive().Add(Arg.Any<Invoice>());
@@ -449,7 +454,7 @@ public class IntegrationEventHandlerTests
 
         // Act
         await HandleTreatmentSessionCompletedHandler.Handle(
-            @event, _invoiceRepository, _unitOfWork, _currentUser, _treatmentLogger, CancellationToken.None);
+            @event, _invoiceRepository, _notificationService, _unitOfWork, _currentUser, _treatmentLogger, CancellationToken.None);
 
         // Assert
         _invoiceRepository.Received(1).Add(Arg.Is<Invoice>(inv =>
@@ -477,7 +482,7 @@ public class IntegrationEventHandlerTests
 
         // Act
         await HandleTreatmentSessionCompletedHandler.Handle(
-            @event, _invoiceRepository, _unitOfWork, _currentUser, _treatmentLogger, CancellationToken.None);
+            @event, _invoiceRepository, _notificationService, _unitOfWork, _currentUser, _treatmentLogger, CancellationToken.None);
 
         // Assert
         invoice.LineItems[0].Description.Should().Contain("IPL");
