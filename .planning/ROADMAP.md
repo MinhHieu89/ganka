@@ -344,7 +344,7 @@ Plans:
 - [ ] 07.1-03-PLAN.md -- [TDD] All 6 billing integration event handlers
 - [ ] 07.1-04-PLAN.md -- SignalR BillingHub, notification service, Bootstrapper wiring
 - [ ] 07.1-05-PLAN.md -- Wire SignalR into event handlers, CancelVisit endpoint, cross-module refs, frontend SignalR install
-- [ ] 07.1-06-PLAN.md -- Frontend service catalog admin page, useBillingHub hook, cashier dashboard SignalR, sidebar link, i18n
+- [x] 07.1-06-PLAN.md -- Frontend service catalog admin page, useBillingHub hook, cashier dashboard SignalR, sidebar link, i18n
 - [ ] 07.1-07-PLAN.md -- End-to-end verification checkpoint
 - [ ] 07.1-08-PLAN.md -- Vietnamese user stories documentation (DOC-01)
 
