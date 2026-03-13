@@ -13,6 +13,8 @@
     <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.*-*" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.*-*" />
     <!-- Wolverine -->
+    <PackageVersion Include="Serilog.AspNetCore" Version="10.0.0" />
+    <PackageVersion Include="Serilog.Sinks.File" Version="7.0.0" />
     <PackageVersion Include="WolverineFx" Version="5.*" />
     <PackageVersion Include="WolverineFx.Http" Version="5.*" />
     <PackageVersion Include="WolverineFx.Http.FluentValidation" Version="5.*" />
