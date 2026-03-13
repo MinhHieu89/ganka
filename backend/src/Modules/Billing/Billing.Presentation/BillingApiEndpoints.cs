@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Billing.Application.Features;
+using Billing.Application.Features.ServiceCatalog;
 using Billing.Application.Interfaces;
 using Billing.Contracts.Dtos;
 using Billing.Contracts.Queries;
@@ -26,6 +27,7 @@ public static class BillingApiEndpoints
         MapDiscountEndpoints(group);
         MapRefundEndpoints(group);
         MapShiftEndpoints(group);
+        MapServiceCatalogEndpoints(group);
         MapPrintEndpoints(group);
         MapExportEndpoints(group);
 
@@ -235,6 +237,45 @@ public static class BillingApiEndpoints
         {
             var pdf = await docs.GenerateShiftReportPdfAsync(shiftId, ct);
             return Results.File(pdf, "application/pdf", $"shift-report-{shiftId}.pdf");
+        });
+    }
+
+    private static void MapServiceCatalogEndpoints(RouteGroupBuilder group)
+    {
+        // POST /api/billing/service-catalog -- create a new service catalog item
+        group.MapPost("/service-catalog",
+            async (CreateServiceCatalogItemCommand command, IMessageBus bus, CancellationToken ct) =>
+        {
+            var result = await bus.InvokeAsync<Result<ServiceCatalogItemDto>>(command, ct);
+            return result.ToCreatedHttpResult("/api/billing/service-catalog");
+        });
+
+        // PUT /api/billing/service-catalog/{id} -- update a service catalog item
+        group.MapPut("/service-catalog/{id:guid}",
+            async (Guid id, UpdateServiceCatalogItemCommand command, IMessageBus bus, CancellationToken ct) =>
+        {
+            var enriched = new UpdateServiceCatalogItemCommand(
+                id, command.Name, command.NameVi, command.Price, command.IsActive, command.Description);
+            var result = await bus.InvokeAsync<Result<ServiceCatalogItemDto>>(enriched, ct);
+            return result.ToHttpResult();
+        });
+
+        // GET /api/billing/service-catalog -- list service catalog items
+        group.MapGet("/service-catalog",
+            async (bool? includeInactive, IMessageBus bus, CancellationToken ct) =>
+        {
+            var result = await bus.InvokeAsync<Result<List<ServiceCatalogItemDto>>>(
+                new GetServiceCatalogItemsQuery(includeInactive ?? false), ct);
+            return result.ToHttpResult();
+        });
+
+        // GET /api/billing/service-catalog/by-code/{code} -- get service by code
+        group.MapGet("/service-catalog/by-code/{code}",
+            async (string code, IMessageBus bus, CancellationToken ct) =>
+        {
+            var result = await bus.InvokeAsync<Result<ServiceCatalogItemDto?>>(
+                new GetServiceCatalogItemByCodeQuery(code), ct);
+            return result.ToHttpResult();
         });
     }
 
