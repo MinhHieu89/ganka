@@ -1,4 +1,5 @@
 using Clinical.Domain.Enums;
+using Clinical.Domain.Events;
 using Shared.Domain;
 
 namespace Clinical.Domain.Entities;
@@ -72,6 +73,8 @@ public class Visit : AggregateRoot, IAuditable
         };
 
         visit.SetBranchId(branchId);
+        visit.AddDomainEvent(new VisitCreatedEvent(
+            visit.Id, patientId, patientName, doctorId, doctorName));
         return visit;
     }
 
@@ -102,6 +105,21 @@ public class Visit : AggregateRoot, IAuditable
         SignedAt = DateTime.UtcNow;
         SignedById = doctorId;
         SetUpdatedAt();
+    }
+
+    /// <summary>
+    /// Cancels the visit. Only Draft visits can be cancelled.
+    /// Raises VisitCancelledEvent for billing invoice voiding.
+    /// </summary>
+    public void Cancel()
+    {
+        if (Status != VisitStatus.Draft)
+            throw new InvalidOperationException(
+                "Only Draft visits can be cancelled.");
+
+        Status = VisitStatus.Cancelled;
+        SetUpdatedAt();
+        AddDomainEvent(new VisitCancelledEvent(Id));
     }
 
     /// <summary>
