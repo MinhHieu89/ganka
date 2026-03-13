@@ -41,6 +41,7 @@ import { Route as AuthenticatedOpticalLensesRouteImport } from './routes/_authen
 import { Route as AuthenticatedOpticalFramesRouteImport } from './routes/_authenticated/optical/frames'
 import { Route as AuthenticatedOpticalCombosRouteImport } from './routes/_authenticated/optical/combos'
 import { Route as AuthenticatedBillingShiftsRouteImport } from './routes/_authenticated/billing/shifts'
+import { Route as AuthenticatedBillingServiceCatalogRouteImport } from './routes/_authenticated/billing/service-catalog'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin/users'
 import { Route as AuthenticatedAdminRolesRouteImport } from './routes/_authenticated/admin/roles'
 import { Route as AuthenticatedAdminClinicSettingsRouteImport } from './routes/_authenticated/admin/clinic-settings'
@@ -232,6 +233,12 @@ const AuthenticatedBillingShiftsRoute =
     path: '/billing/shifts',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedBillingServiceCatalogRoute =
+  AuthenticatedBillingServiceCatalogRouteImport.update({
+    id: '/billing/service-catalog',
+    path: '/billing/service-catalog',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
   id: '/admin/users',
   path: '/admin/users',
@@ -278,6 +285,7 @@ export interface FileRoutesByFullPath {
   '/admin/clinic-settings': typeof AuthenticatedAdminClinicSettingsRoute
   '/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/billing/service-catalog': typeof AuthenticatedBillingServiceCatalogRoute
   '/billing/shifts': typeof AuthenticatedBillingShiftsRoute
   '/optical/combos': typeof AuthenticatedOpticalCombosRoute
   '/optical/frames': typeof AuthenticatedOpticalFramesRoute
@@ -317,6 +325,7 @@ export interface FileRoutesByTo {
   '/admin/clinic-settings': typeof AuthenticatedAdminClinicSettingsRoute
   '/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/billing/service-catalog': typeof AuthenticatedBillingServiceCatalogRoute
   '/billing/shifts': typeof AuthenticatedBillingShiftsRoute
   '/optical/combos': typeof AuthenticatedOpticalCombosRoute
   '/optical/frames': typeof AuthenticatedOpticalFramesRoute
@@ -358,6 +367,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/clinic-settings': typeof AuthenticatedAdminClinicSettingsRoute
   '/_authenticated/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/_authenticated/billing/service-catalog': typeof AuthenticatedBillingServiceCatalogRoute
   '/_authenticated/billing/shifts': typeof AuthenticatedBillingShiftsRoute
   '/_authenticated/optical/combos': typeof AuthenticatedOpticalCombosRoute
   '/_authenticated/optical/frames': typeof AuthenticatedOpticalFramesRoute
@@ -399,6 +409,7 @@ export interface FileRouteTypes {
     | '/admin/clinic-settings'
     | '/admin/roles'
     | '/admin/users'
+    | '/billing/service-catalog'
     | '/billing/shifts'
     | '/optical/combos'
     | '/optical/frames'
@@ -438,6 +449,7 @@ export interface FileRouteTypes {
     | '/admin/clinic-settings'
     | '/admin/roles'
     | '/admin/users'
+    | '/billing/service-catalog'
     | '/billing/shifts'
     | '/optical/combos'
     | '/optical/frames'
@@ -478,6 +490,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/clinic-settings'
     | '/_authenticated/admin/roles'
     | '/_authenticated/admin/users'
+    | '/_authenticated/billing/service-catalog'
     | '/_authenticated/billing/shifts'
     | '/_authenticated/optical/combos'
     | '/_authenticated/optical/frames'
@@ -742,6 +755,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedBillingShiftsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/billing/service-catalog': {
+      id: '/_authenticated/billing/service-catalog'
+      path: '/billing/service-catalog'
+      fullPath: '/billing/service-catalog'
+      preLoaderRoute: typeof AuthenticatedBillingServiceCatalogRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/admin/users': {
       id: '/_authenticated/admin/users'
       path: '/admin/users'
@@ -808,6 +828,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedAdminClinicSettingsRoute: typeof AuthenticatedAdminClinicSettingsRoute
   AuthenticatedAdminRolesRoute: typeof AuthenticatedAdminRolesRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
+  AuthenticatedBillingServiceCatalogRoute: typeof AuthenticatedBillingServiceCatalogRoute
   AuthenticatedBillingShiftsRoute: typeof AuthenticatedBillingShiftsRoute
   AuthenticatedOpticalCombosRoute: typeof AuthenticatedOpticalCombosRoute
   AuthenticatedOpticalFramesRoute: typeof AuthenticatedOpticalFramesRoute
@@ -842,6 +863,8 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAdminClinicSettingsRoute: AuthenticatedAdminClinicSettingsRoute,
   AuthenticatedAdminRolesRoute: AuthenticatedAdminRolesRoute,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
+  AuthenticatedBillingServiceCatalogRoute:
+    AuthenticatedBillingServiceCatalogRoute,
   AuthenticatedBillingShiftsRoute: AuthenticatedBillingShiftsRoute,
   AuthenticatedOpticalCombosRoute: AuthenticatedOpticalCombosRoute,
   AuthenticatedOpticalFramesRoute: AuthenticatedOpticalFramesRoute,

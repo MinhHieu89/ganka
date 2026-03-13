@@ -146,6 +146,7 @@ export function AppSidebar({ ...sidebarProps }: ComponentProps<typeof Sidebar>) 
       children: [
         { titleKey: "sidebar.billingDashboard", to: "/billing" },
         { titleKey: "sidebar.billingShifts", to: "/billing/shifts" },
+        { titleKey: "sidebar.serviceCatalog", to: "/billing/service-catalog" },
       ],
     },
     {
