@@ -2,70 +2,64 @@
 status: testing
 phase: 07-billing-finance
 source: 07-01-SUMMARY.md through 07-28-SUMMARY.md
-started: 2026-03-13T03:21:33Z
-updated: 2026-03-13T04:05:36Z
+started: 2026-03-13T10:00:00Z
+updated: 2026-03-13T10:00:00Z
 ---
 
 ## Current Test
 <!-- OVERWRITE each test - shows where we are -->
 
-number: 12
-name: Record Cash Payment
+number: 1
+name: Cold Start Smoke Test
 expected: |
-  Selecting Cash payment method, entering amount, submitting records payment. Shift cash balance increases. Invoice balance due decreases.
-awaiting: user response (BLOCKED - need to fix AddLineItem 500 first)
+  Kill any running server/service. Start backend on port 5255 and frontend on port 3000 from scratch. Backend boots without errors, billing migrations complete, and /billing dashboard loads.
+awaiting: user response
 
 ## Tests
 
 ### 1. Cold Start Smoke Test
 expected: Kill any running server/service. Start backend on port 5255 and frontend on port 3000 from scratch. Backend boots without errors, billing migrations complete, and /billing dashboard loads.
-result: pass
+result: [pending]
 
 ### 2. Billing Sidebar Navigation
 expected: Sidebar shows "Billing" collapsible section with "Dashboard" and "Shifts" child links. Clicking navigates to /billing and /billing/shifts respectively.
-result: pass
+result: [pending]
 
 ### 3. Billing Dashboard Layout
 expected: Dashboard displays two-column layout — pending invoices list on left, current shift summary on right.
-result: pass
+result: [pending]
 
 ### 4. Create Invoice for Visit
 expected: Creating invoice generates auto-numbered HD-YYYY-NNNNN format (e.g., HD-2026-00001), status Draft, linked to patient visit. Appears in pending invoices list.
-result: skipped
-reason: No UI to create invoices from billing dashboard. Per FIN-01, invoices are per-visit — creation flow belongs in clinical workflow.
+result: [pending]
 
 ### 5. Invoice Detail Page
 expected: Clicking invoice shows detail with status badge (Draft=muted, Finalized=green), patient info, line items grouped by department (Medical/Pharmacy/Optical/Treatment) with subtotals, payments list, discounts list, and action buttons (Collect Payment, Apply Discount, Request Refund, Print, Finalize, E-Invoice Export).
-result: skipped
-reason: Depends on Test 4 (invoice creation)
+result: [pending]
 
 ### 6. Add Line Items to Invoice
 expected: Adding line items to draft invoice shows them grouped by department. Each has UnitPrice, Quantity, LineTotal. Grand total recalculates automatically.
-result: skipped
-reason: Depends on Test 4 (invoice creation)
+result: [pending]
 
 ### 7. Remove Line Item from Invoice
 expected: Removing a line item from draft invoice removes it from the list and recalculates totals.
-result: skipped
-reason: Depends on Test 4 (invoice creation)
+result: [pending]
 
 ### 8. Finalize Invoice
 expected: Clicking Finalize on a draft invoice with line items and full payment changes status to Finalized. Line items become locked.
-result: skipped
-reason: Depends on Test 4 (invoice creation)
+result: [pending]
 
 ### 9. Cannot Finalize Empty Invoice
 expected: Attempting to finalize invoice with no line items shows error "Cannot finalize an invoice with no line items."
-result: skipped
-reason: Depends on Test 4 (invoice creation)
+result: [pending]
 
 ### 10. Open Cashier Shift
 expected: Opening a new shift shows shift template selector (Morning 08:00-12:00 / Afternoon 13:00-20:00), enter opening balance. Shift created with Open status, displayed in dashboard current shift card.
-result: pass
+result: [pending]
 
 ### 11. Cannot Open Duplicate Shift
 expected: When a shift is already open, attempting to open another shows error "A shift is already open for this branch."
-result: pass
+result: [pending]
 
 ### 12. Record Cash Payment
 expected: Selecting Cash payment method, entering amount, submitting records payment. Shift cash balance increases. Invoice balance due decreases.
@@ -160,16 +154,16 @@ expected: All monetary values throughout billing UI formatted as Vietnamese curr
 result: [pending]
 
 ### 35. VND Amount in Vietnamese Words
-expected: Invoice displays amount in Vietnamese words (e.g., 1,000,000 → "Một triệu đồng").
+expected: Invoice displays amount in Vietnamese words (e.g., 1,000,000 → "Mot trieu dong").
 result: [pending]
 
 ## Summary
 
 total: 35
-passed: 5
+passed: 0
 issues: 0
-pending: 24
-skipped: 6
+pending: 35
+skipped: 0
 
 ## Gaps
 

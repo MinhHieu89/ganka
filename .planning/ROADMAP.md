@@ -337,16 +337,16 @@ Plans:
 **Plans:** 10/10 plans complete
 
 Plans:
-- [ ] 07.1-01a-PLAN.md -- Clinical module: domain events (VisitCreated, VisitCancelled), integration events, cascading handlers, CancelVisit feature
-- [ ] 07.1-01b-PLAN.md -- Pharmacy module: domain events (DrugDispensed, OtcSaleCompleted), integration events, cascading handlers + extend TreatmentSessionCompletedIntegrationEvent with VisitId/SessionFeeAmount
-- [ ] 07.1-01c-PLAN.md -- Optical module: domain event (GlassesOrderCreated), integration event, cascading handler
-- [ ] 07.1-02-PLAN.md -- ServiceCatalogItem entity, EF config, CRUD handlers, migration, seeder
-- [ ] 07.1-03-PLAN.md -- [TDD] All 6 billing integration event handlers
-- [ ] 07.1-04-PLAN.md -- SignalR BillingHub, notification service, Bootstrapper wiring
-- [ ] 07.1-05-PLAN.md -- Wire SignalR into event handlers, CancelVisit endpoint, cross-module refs, frontend SignalR install
+- [x] 07.1-01a-PLAN.md -- Clinical module: domain events (VisitCreated, VisitCancelled), integration events, cascading handlers, CancelVisit feature
+- [x] 07.1-01b-PLAN.md -- Pharmacy module: domain events (DrugDispensed, OtcSaleCompleted), integration events, cascading handlers + extend TreatmentSessionCompletedIntegrationEvent with VisitId/SessionFeeAmount
+- [x] 07.1-01c-PLAN.md -- Optical module: domain event (GlassesOrderCreated), integration event, cascading handler
+- [x] 07.1-02-PLAN.md -- ServiceCatalogItem entity, EF config, CRUD handlers, migration, seeder
+- [x] 07.1-03-PLAN.md -- [TDD] All 6 billing integration event handlers
+- [x] 07.1-04-PLAN.md -- SignalR BillingHub, notification service, Bootstrapper wiring
+- [x] 07.1-05-PLAN.md -- Wire SignalR into event handlers, CancelVisit endpoint, cross-module refs, frontend SignalR install
 - [x] 07.1-06-PLAN.md -- Frontend service catalog admin page, useBillingHub hook, cashier dashboard SignalR, sidebar link, i18n
-- [ ] 07.1-07-PLAN.md -- End-to-end verification checkpoint
-- [ ] 07.1-08-PLAN.md -- Vietnamese user stories documentation (DOC-01)
+- [x] 07.1-07-PLAN.md -- End-to-end verification checkpoint
+- [x] 07.1-08-PLAN.md -- Vietnamese user stories documentation (DOC-01)
 
 ### Phase 8: Optical Center
 **Goal**: Staff can manage frame/lens inventory with barcodes, track glasses orders through their full lifecycle, and handle warranty claims
@@ -466,6 +466,6 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 | 5.1 Fix Architecture Test Failures | 0/8 | Not started | - |
 | 6. Pharmacy & Consumables | 29/29 | Complete   | 2026-03-06 |
 | 7. Billing & Finance | 24/28 | In Progress|  |
-| 7.1 Clinical-Billing Integration | 0/10 | Not started | - |
+| 7.1 Clinical-Billing Integration | 10/10 | Complete | 2026-03-13 |
 | 8. Optical Center | 39/39 | Complete   | 2026-03-08 |
 | 9. Treatment Protocols | 25/29 | In Progress|  |
