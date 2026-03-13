@@ -329,6 +329,16 @@ Plans:
 - [ ] 07-27-PLAN.md -- [UAT GAP] Fix DbUpdateConcurrencyException (remove redundant Update calls) + auto-populate RequestedById from ICurrentUser
 - [ ] 07-28-PLAN.md -- [UAT GAP] Add finalize-empty-invoice validation guards + create GetPendingInvoices handler
 
+### Phase 07.2: Fix Phase 07.1 Code Review Issues (INSERTED)
+
+**Goal:** [Urgent work - to be planned]
+**Requirements**: TBD
+**Depends on:** Phase 07
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd:plan-phase 07.2 to break down)
+
 ### Phase 07.1: Clinical-Billing Integration (INSERTED)
 
 **Goal:** All department modules (Clinical, Pharmacy, Optical, Treatment) publish domain events that auto-populate invoice line items in Billing, with a configurable service price catalog and real-time SignalR push to the cashier dashboard
