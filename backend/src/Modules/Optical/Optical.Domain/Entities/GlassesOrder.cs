@@ -162,6 +162,24 @@ public class GlassesOrder : AggregateRoot, IAuditable
         _items.Add(item);
     }
 
+    /// <summary>
+    /// Raises the <see cref="GlassesOrderCreatedEvent"/> domain event with the current
+    /// order state and line items. Should be called after all items have been added.
+    /// </summary>
+    public void RaiseCreatedEvent()
+    {
+        AddDomainEvent(new GlassesOrderCreatedEvent(
+            OrderId: Id,
+            VisitId: VisitId,
+            PatientId: PatientId,
+            PatientName: PatientName,
+            Items: _items.Select(i => new GlassesOrderCreatedEvent.OrderLineDto(
+                Description: i.ItemDescription,
+                DescriptionVi: string.Empty,
+                UnitPrice: i.UnitPrice,
+                Quantity: i.Quantity)).ToList()));
+    }
+
     // --- Computed properties ---
 
     /// <summary>

@@ -101,6 +101,8 @@ public static class CreateGlassesOrderHandler
             order.AddItem(orderItem);
         }
 
+        order.RaiseCreatedEvent();
+
         orderRepository.Add(order);
         await unitOfWork.SaveChangesAsync(ct);
 
