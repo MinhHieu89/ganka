@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 07.1-02-PLAN.md
-last_updated: "2026-03-13T08:49:27.159Z"
+stopped_at: Completed 07.1-03-PLAN.md
+last_updated: "2026-03-13T08:56:49.198Z"
 last_activity: "2026-03-13 - Completed quick task 2: Add Serilog with file output for development"
 progress:
   total_phases: 15
   completed_phases: 12
   total_plans: 243
-  completed_plans: 236
+  completed_plans: 238
 ---
 
 ---
@@ -717,6 +717,7 @@ Progress: [█████████░] 96%
 | Phase 07.1 P08 | 5min | 1 tasks | 1 files |
 | Phase 07.1 P01b | 10min | 2 tasks | 17 files |
 | Phase 07.1 P02 | 13min | 2 tasks | 14 files |
+| Phase 07.1 P04 | 4min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -1172,6 +1173,9 @@ Recent decisions affecting current work:
 - [Phase 07.1]: Added RaiseDispensedEvent/RaiseSaleCompletedEvent on aggregates to preserve domain event ownership while allowing handlers to provide enriched data
 - [Phase 07.1]: SessionFeeAmount computed as SessionPrice for PerSession mode and PackagePrice/TotalSessions for PerPackage mode
 - [Phase 07.1]: Service catalog uses single price per item, code normalized to uppercase for consistent lookups
+- [Phase 07.1]: Fire-and-forget pattern for SignalR notifications: failures logged as warnings, never thrown
+- [Phase 07.1]: Used plain ILogger for static Wolverine handlers (C# static type constraint)
+- [Phase 07.1]: Get-or-create invoice pattern for race condition safety in concurrent event handlers
 
 ### Roadmap Evolution
 
@@ -1202,6 +1206,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-13T08:49:27.153Z
-Stopped at: Completed 07.1-02-PLAN.md
+Last session: 2026-03-13T08:56:49.193Z
+Stopped at: Completed 07.1-03-PLAN.md
 Resume file: None
