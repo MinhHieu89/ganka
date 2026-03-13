@@ -17,6 +17,10 @@
     <ProjectReference Include="..\Billing.Contracts\Billing.Contracts.csproj" />
     <ProjectReference Include="..\..\..\Shared\Shared.Application\Shared.Application.csproj" />
     <ProjectReference Include="..\..\Auth\Auth.Contracts\Auth.Contracts.csproj" />
+    <ProjectReference Include="..\..\Clinical\Clinical.Contracts\Clinical.Contracts.csproj" />
+    <ProjectReference Include="..\..\Pharmacy\Pharmacy.Contracts\Pharmacy.Contracts.csproj" />
+    <ProjectReference Include="..\..\Optical\Optical.Contracts\Optical.Contracts.csproj" />
+    <ProjectReference Include="..\..\Treatment\Treatment.Contracts\Treatment.Contracts.csproj" />
   </ItemGroup>
 
 </Project>
