@@ -18,6 +18,13 @@
 - When you make changes to the models, make sure remember to create migrations and run them to update database schema.
 - Whenever there is lock file issue due to running backend, stop the backend then continue.
 
+# LOGS
+
+- Backend logs are written to `backend/src/Bootstrapper/logs/` (dev only, gitignored)
+- Log files rotate daily with pattern `ganka-YYYYMMDD.log`
+- Retained for 7 days, plain text format
+- To tail logs: `Get-Content backend/src/Bootstrapper/logs/ganka-*.log -Tail 50 -Wait` (PowerShell) or `tail -f backend/src/Bootstrapper/logs/ganka-*.log` (bash)
+
 # Test Account Credentials
 - Username: Admin@ganka28.com
 - Password: Admin@123456
