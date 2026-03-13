@@ -180,6 +180,33 @@ public class IntegrationEventHandlerTests
         await _unitOfWork.DidNotReceive().SaveChangesAsync(Arg.Any<CancellationToken>());
     }
 
+    [Fact]
+    public async Task HandleVisitCancelled_FinalizedInvoice_NoOp()
+    {
+        // Arrange
+        var visitId = Guid.NewGuid();
+        var invoice = CreateTestInvoice(visitId);
+        // Add a line item, pay, confirm, then finalize to get Finalized status
+        invoice.AddLineItem("Consultation", "Kham benh", 150000m, 1, Department.Medical, visitId, "Visit");
+        var payment = Payment.Create(invoice.Id, PaymentMethod.Cash, 150000m, Guid.NewGuid());
+        payment.Confirm();
+        invoice.RecordPayment(payment);
+        invoice.Finalize(Guid.NewGuid(), Guid.NewGuid());
+
+        _invoiceRepository.GetByVisitIdAsync(visitId, Arg.Any<CancellationToken>())
+            .Returns(invoice);
+
+        var @event = new VisitCancelledIntegrationEvent(visitId, DefaultBranchId);
+
+        // Act
+        await HandleVisitCancelledHandler.Handle(
+            @event, _invoiceRepository, _notificationService, _unitOfWork, _cancelledLogger, CancellationToken.None);
+
+        // Assert - Finalized invoice should NOT be voided, no SaveChanges
+        invoice.Status.Should().Be(InvoiceStatus.Finalized);
+        await _unitOfWork.DidNotReceive().SaveChangesAsync(Arg.Any<CancellationToken>());
+    }
+
     #endregion
 
     #region HandleDrugDispensed Tests
@@ -276,7 +303,7 @@ public class IntegrationEventHandlerTests
     }
 
     [Fact]
-    public async Task HandleOtcSaleCompleted_AnonymousCustomer_UsesDefaults()
+    public async Task HandleOtcSaleCompleted_AnonymousCustomer_UsesNullPatientId()
     {
         // Arrange
         var otcSaleId = Guid.NewGuid();
@@ -290,10 +317,38 @@ public class IntegrationEventHandlerTests
         await HandleOtcSaleCompletedHandler.Handle(
             @event, _invoiceRepository, _notificationService, _unitOfWork, _otcLogger, CancellationToken.None);
 
-        // Assert
+        // Assert - PatientId should be null, NOT Guid.Empty
         _invoiceRepository.Received(1).Add(Arg.Is<Invoice>(inv =>
             inv.VisitId == null &&
+            inv.PatientId == null &&
+            inv.PatientName == "Anonymous" &&
             inv.LineItems.Count == 1));
+        await _unitOfWork.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task HandleDrugDispensed_ZeroPriceItem_SkipsLineItem()
+    {
+        // Arrange
+        var visitId = Guid.NewGuid();
+        var invoice = CreateTestInvoice(visitId);
+        _invoiceRepository.GetByVisitIdAsync(visitId, Arg.Any<CancellationToken>())
+            .Returns(invoice);
+
+        var items = new List<DrugDispensedIntegrationEvent.DrugLineDto>
+        {
+            new("Free Sample", "Mau thu mien phi", 1, 0m),
+            new("Amoxicillin", "Amoxicillin VN", 2, 50000m)
+        };
+        var @event = new DrugDispensedIntegrationEvent(visitId, Guid.NewGuid(), "Patient", items, DefaultBranchId);
+
+        // Act
+        await HandleDrugDispensedHandler.Handle(
+            @event, _invoiceRepository, _notificationService, _unitOfWork, _drugLogger, CancellationToken.None);
+
+        // Assert - only the non-zero price item should be added
+        invoice.LineItems.Should().HaveCount(1);
+        invoice.LineItems[0].Description.Should().Be("Amoxicillin");
         await _unitOfWork.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
     }
 

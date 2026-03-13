@@ -240,6 +240,30 @@ public class ServiceCatalogHandlerTests
     }
 
     [Fact]
+    public async Task GetServiceCatalogItemByCode_LowercaseInput_NormalizesToUppercase()
+    {
+        // Arrange
+        var item = ServiceCatalogItem.Create(
+            "CONSULTATION", "Consultation", "Kham benh", 150000, new BranchId(DefaultBranchId));
+
+        _repository.GetActiveByCodeAsync("CONSULTATION", Arg.Any<CancellationToken>())
+            .Returns(item);
+
+        var query = new GetServiceCatalogItemByCodeQuery("consultation"); // lowercase input
+
+        // Act
+        var result = await GetServiceCatalogItemByCodeHandler.Handle(
+            query, _repository, CancellationToken.None);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().NotBeNull();
+        result.Value!.Code.Should().Be("CONSULTATION");
+        // Verify the repository was called with uppercase
+        await _repository.Received(1).GetActiveByCodeAsync("CONSULTATION", Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
     public async Task GetServiceCatalogItemByCode_NotFound_ReturnsNull()
     {
         // Arrange
