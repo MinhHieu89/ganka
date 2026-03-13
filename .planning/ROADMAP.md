@@ -334,7 +334,7 @@ Plans:
 **Goal:** All department modules (Clinical, Pharmacy, Optical, Treatment) publish domain events that auto-populate invoice line items in Billing, with a configurable service price catalog and real-time SignalR push to the cashier dashboard
 **Depends on:** Phase 7
 **Requirements**: INT-01, INT-02, INT-03, INT-04, INT-05, INT-06, INT-07, INT-08, DOC-01
-**Plans:** 7/10 plans executed
+**Plans:** 8/10 plans executed
 
 Plans:
 - [ ] 07.1-01a-PLAN.md -- Clinical module: domain events (VisitCreated, VisitCancelled), integration events, cascading handlers, CancelVisit feature
