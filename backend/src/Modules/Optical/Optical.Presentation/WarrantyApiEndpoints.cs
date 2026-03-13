@@ -47,7 +47,7 @@ public static class WarrantyApiEndpoints
             var enriched = new ApproveWarrantyClaimCommand(id, command.IsApproved, command.Notes);
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
-        }).RequireAuthorization(policy => policy.RequireRole("Admin", "Manager"));
+        }).RequirePermissions(Permissions.Optical.Manage);
 
         // POST /api/optical/warranty/{id}/documents -- upload supporting document (multipart)
         group.MapPost("/warranty/{id:guid}/documents", async (Guid id, HttpRequest request, IMessageBus bus, CancellationToken ct) =>

@@ -72,7 +72,7 @@ public static class StocktakingApiEndpoints
             var enriched = new CompleteStocktakingCommand(id, command.Notes);
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
-        }).RequireAuthorization(policy => policy.RequireRole("Admin", "Manager"));
+        }).RequirePermissions(Permissions.Optical.Manage);
     }
 }
 

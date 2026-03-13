@@ -5,6 +5,7 @@ using System.Text;
 using Auth.Application.Interfaces;
 using Auth.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Shared.Domain;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -55,7 +56,7 @@ public sealed class JwtService : IJwtService
         // Add permission claims
         foreach (var permission in permissions)
         {
-            claims.Add(new Claim("permissions", permission));
+            claims.Add(new Claim(Permissions.ClaimType, permission));
         }
 
         var credentials = new SigningCredentials(_signingKey, SecurityAlgorithms.HmacSha256);
