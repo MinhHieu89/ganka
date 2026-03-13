@@ -155,53 +155,54 @@ export interface FinalizeInvoiceInput {
   cashierShiftId: string
 }
 
-// -- Enum maps for frontend display --
+// -- Enum i18n key maps (CR-19) --
+// Values are i18n keys in the "billing" namespace. Use with t(key) for localized display.
 
-export const PAYMENT_METHOD_MAP: Record<number, string> = {
-  0: "Cash",
-  1: "Bank Transfer",
-  2: "QR - VNPay",
-  3: "QR - MoMo",
-  4: "QR - ZaloPay",
-  5: "Card - Visa",
-  6: "Card - Mastercard",
+export const PAYMENT_METHOD_I18N_KEY: Record<number, string> = {
+  0: "paymentMethods.cash",
+  1: "paymentMethods.bankTransfer",
+  2: "paymentMethods.qrVnpay",
+  3: "paymentMethods.qrMomo",
+  4: "paymentMethods.qrZalopay",
+  5: "paymentMethods.cardVisa",
+  6: "paymentMethods.cardMc",
 }
 
-export const DEPARTMENT_MAP: Record<number, string> = {
-  0: "Kham benh",
-  1: "Duoc pham",
-  2: "Kinh",
-  3: "Dieu tri",
+export const DEPARTMENT_I18N_KEY: Record<number, string> = {
+  0: "departments.medical",
+  1: "departments.pharmacy",
+  2: "departments.optical",
+  3: "departments.treatment",
 }
 
-export const INVOICE_STATUS_MAP: Record<number, string> = {
-  0: "Draft",
-  1: "Finalized",
-  2: "Voided",
+export const INVOICE_STATUS_I18N_KEY: Record<number, string> = {
+  0: "status.draft",
+  1: "status.finalized",
+  2: "status.voided",
 }
 
-export const PAYMENT_STATUS_MAP: Record<number, string> = {
-  0: "Pending",
-  1: "Confirmed",
-  2: "Refunded",
+export const PAYMENT_STATUS_I18N_KEY: Record<number, string> = {
+  0: "paymentStatus.pending",
+  1: "paymentStatus.confirmed",
+  2: "paymentStatus.refunded",
 }
 
-export const DISCOUNT_TYPE_MAP: Record<number, string> = {
-  0: "Percentage",
-  1: "Fixed Amount",
+export const DISCOUNT_TYPE_I18N_KEY: Record<number, string> = {
+  0: "discountTypes.percentage",
+  1: "discountTypes.fixedAmount",
 }
 
-export const APPROVAL_STATUS_MAP: Record<number, string> = {
-  0: "Pending",
-  1: "Approved",
-  2: "Rejected",
+export const APPROVAL_STATUS_I18N_KEY: Record<number, string> = {
+  0: "approvalStatus.pending",
+  1: "approvalStatus.approved",
+  2: "approvalStatus.rejected",
 }
 
-export const REFUND_STATUS_MAP: Record<number, string> = {
-  0: "Requested",
-  1: "Approved",
-  2: "Processed",
-  3: "Rejected",
+export const REFUND_STATUS_I18N_KEY: Record<number, string> = {
+  0: "refundStatus.requested",
+  1: "refundStatus.approved",
+  2: "refundStatus.processed",
+  3: "refundStatus.rejected",
 }
 
 // -- Query key factory --

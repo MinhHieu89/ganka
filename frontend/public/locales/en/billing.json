@@ -137,4 +137,24 @@
   },
   "shiftManagement": {
     "comingSoon": "Shift management coming soon"
+  },
+  "paymentStatus": {
+    "pending": "Pending",
+    "confirmed": "Confirmed",
+    "refunded": "Refunded"
+  },
+  "discountTypes": {
+    "percentage": "Percentage",
+    "fixedAmount": "Fixed Amount"
+  },
+  "approvalStatus": {
+    "pending": "Pending",
+    "approved": "Approved",
+    "rejected": "Rejected"
+  },
+  "refundStatus": {
+    "requested": "Requested",
+    "approved": "Approved",
+    "processed": "Processed",
+    "rejected": "Rejected"
   }

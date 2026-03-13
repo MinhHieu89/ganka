@@ -12,6 +12,11 @@ import { Badge } from "@/shared/components/Badge"
 import { Button } from "@/shared/components/Button"
 import { Skeleton } from "@/shared/components/Skeleton"
 import { Separator } from "@/shared/components/Separator"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/shared/components/Tooltip"
 import { formatVND } from "@/shared/lib/format-vnd"
 import {
   usePendingInvoices,
@@ -125,7 +130,8 @@ function InvoiceRow({ invoice }: { invoice: InvoiceSummaryDto }) {
 
   return (
     <Link
-      to={`/billing/invoices/${invoice.id}` as string}
+      to="/billing/invoices/$invoiceId"
+      params={{ invoiceId: invoice.id }}
       className="flex items-center justify-between p-3 rounded-lg border hover:bg-muted/50 transition-colors cursor-pointer group"
     >
       <div className="flex-1 min-w-0">
@@ -161,9 +167,14 @@ function NoOpenShift() {
     <div className="text-center py-8">
       <IconCash className="h-10 w-10 mx-auto mb-3 text-muted-foreground opacity-30" />
       <p className="text-muted-foreground mb-4">{t("noOpenShift")}</p>
-      <Button>
-        {t("openShift")}
-      </Button>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button disabled>
+            {t("openShift")}
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>{t("shiftManagement.comingSoon")}</TooltipContent>
+      </Tooltip>
     </div>
   )
 }
@@ -201,9 +212,14 @@ function ShiftInfo({ shift }: { shift: CashierShiftDto }) {
 
       <Separator />
 
-      <Button variant="outline" className="w-full">
-        {t("closeShift")}
-      </Button>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button variant="outline" className="w-full" disabled>
+            {t("closeShift")}
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>{t("shiftManagement.comingSoon")}</TooltipContent>
+      </Tooltip>
     </div>
   )
 }

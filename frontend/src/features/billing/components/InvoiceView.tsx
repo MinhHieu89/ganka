@@ -34,10 +34,10 @@ import { formatVND } from "@/shared/lib/format-vnd"
 import {
   useInvoice,
   useFinalizeInvoice,
-  PAYMENT_METHOD_MAP,
-  PAYMENT_STATUS_MAP,
-  APPROVAL_STATUS_MAP,
-  DISCOUNT_TYPE_MAP,
+  PAYMENT_METHOD_I18N_KEY,
+  PAYMENT_STATUS_I18N_KEY,
+  APPROVAL_STATUS_I18N_KEY,
+  DISCOUNT_TYPE_I18N_KEY,
 } from "@/features/billing/api/billing-api"
 import type { PaymentDto, DiscountDto } from "@/features/billing/api/billing-api"
 import { useCurrentShift, getInvoicePdf } from "@/features/billing/api/shift-api"
@@ -377,9 +377,10 @@ function SummaryRow({
 }
 
 function PaymentRow({ payment }: { payment: PaymentDto }) {
+  const { t } = useTranslation("billing")
   const MethodIcon = PAYMENT_METHOD_ICON[payment.method] ?? IconCash
-  const methodName = PAYMENT_METHOD_MAP[payment.method] ?? "Unknown"
-  const statusName = PAYMENT_STATUS_MAP[payment.status] ?? "Unknown"
+  const methodName = t(PAYMENT_METHOD_I18N_KEY[payment.method] ?? "paymentMethods.cash")
+  const statusName = t(PAYMENT_STATUS_I18N_KEY[payment.status] ?? "paymentStatus.pending")
   const statusVariant =
     payment.status === 1 ? "default" : payment.status === 2 ? "destructive" : "secondary"
 
@@ -408,8 +409,9 @@ function PaymentRow({ payment }: { payment: PaymentDto }) {
 }
 
 function DiscountRow({ discount }: { discount: DiscountDto }) {
-  const typeName = DISCOUNT_TYPE_MAP[discount.type] ?? "Unknown"
-  const statusName = APPROVAL_STATUS_MAP[discount.approvalStatus] ?? "Unknown"
+  const { t } = useTranslation("billing")
+  const typeName = t(DISCOUNT_TYPE_I18N_KEY[discount.type] ?? "discountTypes.percentage")
+  const statusName = t(APPROVAL_STATUS_I18N_KEY[discount.approvalStatus] ?? "approvalStatus.pending")
   const statusVariant =
     discount.approvalStatus === 1
       ? "default"

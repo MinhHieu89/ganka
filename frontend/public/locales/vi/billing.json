@@ -137,4 +137,24 @@
   },
   "shiftManagement": {
     "comingSoon": "Quản lý ca làm việc sắp ra mắt"
+  },
+  "paymentStatus": {
+    "pending": "Chờ xử lý",
+    "confirmed": "Đã xác nhận",
+    "refunded": "Đã hoàn tiền"
+  },
+  "discountTypes": {
+    "percentage": "Phần trăm",
+    "fixedAmount": "Số tiền cố định"
+  },
+  "approvalStatus": {
+    "pending": "Chờ duyệt",
+    "approved": "Đã duyệt",
+    "rejected": "Từ chối"
+  },
+  "refundStatus": {
+    "requested": "Đã yêu cầu",
+    "approved": "Đã duyệt",
+    "processed": "Đã xử lý",
+    "rejected": "Từ chối"
   }

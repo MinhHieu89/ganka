@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next"
 import { cn } from "@/shared/lib/utils"
 import {
   IconCash,
@@ -22,44 +23,45 @@ export type PaymentMethodValue =
 
 interface PaymentMethodOption {
   value: PaymentMethodValue
-  label: string
+  /** i18n key in the "billing" namespace for the label */
+  labelKey: string
   icon: React.ReactNode
 }
 
 const PAYMENT_METHOD_OPTIONS: PaymentMethodOption[] = [
   {
     value: PaymentMethod.Cash,
-    label: "Cash",
+    labelKey: "paymentMethods.cash",
     icon: <IconCash className="h-5 w-5" />,
   },
   {
     value: PaymentMethod.BankTransfer,
-    label: "Bank Transfer",
+    labelKey: "paymentMethods.bankTransfer",
     icon: <IconBuildingBank className="h-5 w-5" />,
   },
   {
     value: PaymentMethod.QrVnPay,
-    label: "VNPay",
+    labelKey: "paymentMethods.qrVnpay",
     icon: <IconQrcode className="h-5 w-5" />,
   },
   {
     value: PaymentMethod.QrMomo,
-    label: "MoMo",
+    labelKey: "paymentMethods.qrMomo",
     icon: <IconQrcode className="h-5 w-5" />,
   },
   {
     value: PaymentMethod.QrZaloPay,
-    label: "ZaloPay",
+    labelKey: "paymentMethods.qrZalopay",
     icon: <IconQrcode className="h-5 w-5" />,
   },
   {
     value: PaymentMethod.CardVisa,
-    label: "Visa",
+    labelKey: "paymentMethods.cardVisa",
     icon: <IconCreditCard className="h-5 w-5" />,
   },
   {
     value: PaymentMethod.CardMastercard,
-    label: "MC",
+    labelKey: "paymentMethods.cardMc",
     icon: <IconCreditCard className="h-5 w-5" />,
   },
 ]
@@ -75,6 +77,8 @@ export function PaymentMethodSelector({
   onChange,
   disabled,
 }: PaymentMethodSelectorProps) {
+  const { t } = useTranslation("billing")
+
   return (
     <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
       {PAYMENT_METHOD_OPTIONS.map((option) => (
@@ -94,7 +98,7 @@ export function PaymentMethodSelector({
           )}
         >
           {option.icon}
-          <span className="text-xs leading-tight">{option.label}</span>
+          <span className="text-xs leading-tight">{t(option.labelKey)}</span>
         </button>
       ))}
     </div>

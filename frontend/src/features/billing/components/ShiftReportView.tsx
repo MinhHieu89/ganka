@@ -16,7 +16,7 @@ import {
 import { formatVND } from "@/shared/lib/format-vnd"
 import { cn } from "@/shared/lib/utils"
 import { useShiftReport, getShiftReportPdf } from "../api/shift-api"
-import { PAYMENT_METHOD_MAP } from "../api/billing-api"
+import { PAYMENT_METHOD_I18N_KEY } from "../api/billing-api"
 
 interface ShiftReportViewProps {
   shiftId: string
@@ -103,7 +103,7 @@ export function ShiftReportView({ shiftId }: ShiftReportViewProps) {
                 {revenueEntries.map(([method, amount]) => (
                   <TableRow key={method}>
                     <TableCell>
-                      {getMethodDisplayName(method)}
+                      {getMethodDisplayName(method, t)}
                     </TableCell>
                     <TableCell className="text-right font-medium">
                       {formatVND(amount)}
@@ -227,11 +227,11 @@ function ReconciliationRow({
 
 // -- Helper functions --
 
-function getMethodDisplayName(method: string): string {
+function getMethodDisplayName(method: string, t: (key: string) => string): string {
   // Try numeric key first (when backend sends numeric keys)
   const numKey = parseInt(method, 10)
-  if (!isNaN(numKey) && PAYMENT_METHOD_MAP[numKey]) {
-    return PAYMENT_METHOD_MAP[numKey]
+  if (!isNaN(numKey) && PAYMENT_METHOD_I18N_KEY[numKey]) {
+    return t(PAYMENT_METHOD_I18N_KEY[numKey])
   }
   // Otherwise use the string directly (when backend sends method names)
   return method

@@ -67,7 +67,9 @@ interface NavItem {
 export function AppSidebar({ ...sidebarProps }: ComponentProps<typeof Sidebar>) {
   const { t } = useTranslation("common")
   const routerState = useRouterState()
-  const currentPath = routerState.location.pathname
+  // Normalize path by removing trailing slash for consistent active detection (CR-18)
+  const rawPath = routerState.location.pathname
+  const currentPath = rawPath.endsWith("/") && rawPath !== "/" ? rawPath.slice(0, -1) : rawPath
   const user = useAuthStore((s) => s.user)
   const { data: pendingCount } = usePendingCount()
 
