@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 07.2-03-PLAN.md
-last_updated: "2026-03-13T16:58:54.562Z"
+stopped_at: Completed 07.2-01-PLAN.md
+last_updated: "2026-03-13T17:03:01.382Z"
 last_activity: "2026-03-13 - Completed quick task 2: Add Serilog with file output for development"
 progress:
   total_phases: 16
-  completed_phases: 13
+  completed_phases: 14
   total_plans: 248
-  completed_plans: 245
+  completed_plans: 246
 ---
 
 ---
@@ -768,6 +768,7 @@ Progress: [█████████░] 96%
 | Phase 07.1 P01b | 10min | 2 tasks | 17 files |
 | Phase 07.1 P02 | 13min | 2 tasks | 14 files |
 | Phase 07.1 P04 | 4min | 2 tasks | 6 files |
+| Phase 07.2 P01 | 20min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -1229,6 +1230,8 @@ Recent decisions affecting current work:
 - [Phase 07.2]: Kept single Zod schema for create/edit with isActive default(true) rather than splitting
 - [Phase 07.2]: Converted all billing enum maps to i18n key maps for full Vietnamese support
 - [Phase 07.2]: Used useRef pattern for queryClient to prevent SignalR reconnection storms
+- [Phase 07.2]: Changed optionsLifetime from Singleton to Scoped for ConfigureDbContext to support scoped interceptor resolution
+- [Phase 07.2]: SQL SEQUENCE is global (not year-scoped) for invoice numbering; year prefix handles display
 
 ### Roadmap Evolution
 
@@ -1259,6 +1262,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-13T16:58:54.557Z
-Stopped at: Completed 07.2-03-PLAN.md
+Last session: 2026-03-13T17:02:49.846Z
+Stopped at: Completed 07.2-01-PLAN.md
 Resume file: None
