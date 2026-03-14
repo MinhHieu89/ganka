@@ -158,7 +158,31 @@ public class TreatmentPackage : AggregateRoot, IAuditable
             throw new InvalidOperationException(
                 "Cannot record more sessions than the total allowed for this package.");
 
-        var sessionNumber = _sessions.Count + 1;
+        // Enforce minimum interval between sessions (TRT-05)
+        if (MinIntervalDays > 0)
+        {
+            var lastCompletedSession = _sessions
+                .Where(s => s.Status != SessionStatus.Cancelled)
+                .OrderByDescending(s => s.CompletedAt ?? s.ScheduledAt ?? s.CreatedAt)
+                .FirstOrDefault();
+
+            if (lastCompletedSession is not null)
+            {
+                var lastSessionDate = lastCompletedSession.CompletedAt
+                    ?? lastCompletedSession.ScheduledAt
+                    ?? lastCompletedSession.CreatedAt;
+                var currentDate = scheduledAt ?? DateTime.UtcNow;
+                var daysSinceLastSession = (currentDate - lastSessionDate).TotalDays;
+
+                if (daysSinceLastSession < MinIntervalDays && string.IsNullOrWhiteSpace(intervalOverrideReason))
+                    throw new InvalidOperationException(
+                        $"Cannot record session: minimum interval of {MinIntervalDays} days between sessions has not been met " +
+                        $"({daysSinceLastSession:F0} days since last session). Provide an interval override reason to proceed.");
+            }
+        }
+
+        // Session numbering excludes cancelled sessions (TRT-02)
+        var sessionNumber = _sessions.Count(s => s.Status != SessionStatus.Cancelled) + 1;
 
         var session = TreatmentSession.Create(
             treatmentPackageId: Id,
@@ -235,6 +259,9 @@ public class TreatmentPackage : AggregateRoot, IAuditable
     {
         EnsureModifiable();
 
+        // Change detection: track whether any value actually changes
+        var hasChanges = false;
+
         // Capture current state as JSON snapshot
         var previousJson = System.Text.Json.JsonSerializer.Serialize(new
         {
@@ -244,7 +271,7 @@ public class TreatmentPackage : AggregateRoot, IAuditable
         });
 
         // Apply changes
-        if (totalSessions.HasValue)
+        if (totalSessions.HasValue && totalSessions.Value != TotalSessions)
         {
             if (totalSessions.Value < 1 || totalSessions.Value > 6)
                 throw new ArgumentOutOfRangeException(
@@ -255,35 +282,56 @@ public class TreatmentPackage : AggregateRoot, IAuditable
                     $"Cannot reduce total sessions to {totalSessions.Value} because {SessionsCompleted} sessions have already been completed.");
 
             TotalSessions = totalSessions.Value;
+            hasChanges = true;
         }
 
-        if (parametersJson is not null)
-            ParametersJson = parametersJson;
-
-        if (minIntervalDays.HasValue)
-            MinIntervalDays = minIntervalDays.Value;
-
-        // Capture new state as JSON snapshot
-        var currentJson = System.Text.Json.JsonSerializer.Serialize(new
+        if (parametersJson is not null && parametersJson != ParametersJson)
         {
-            TotalSessions,
-            ParametersJson,
-            MinIntervalDays
-        });
+            ParametersJson = parametersJson;
+            hasChanges = true;
+        }
 
-        // Create version snapshot
-        var versionNumber = _versions.Count + 1;
-        var version = ProtocolVersion.Create(
-            treatmentPackageId: Id,
-            versionNumber: versionNumber,
-            previousJson: previousJson,
-            currentJson: currentJson,
-            changeDescription: changeDescription,
-            changedById: changedById,
-            reason: reason);
+        if (minIntervalDays.HasValue && minIntervalDays.Value != MinIntervalDays)
+        {
+            MinIntervalDays = minIntervalDays.Value;
+            hasChanges = true;
+        }
 
-        _versions.Add(version);
-        SetUpdatedAt();
+        // Only create version snapshot and raise event if something actually changed
+        if (hasChanges)
+        {
+            // Capture new state as JSON snapshot
+            var currentJson = System.Text.Json.JsonSerializer.Serialize(new
+            {
+                TotalSessions,
+                ParametersJson,
+                MinIntervalDays
+            });
+
+            // Create version snapshot
+            var versionNumber = _versions.Count + 1;
+            var version = ProtocolVersion.Create(
+                treatmentPackageId: Id,
+                versionNumber: versionNumber,
+                previousJson: previousJson,
+                currentJson: currentJson,
+                changeDescription: changeDescription,
+                changedById: changedById,
+                reason: reason);
+
+            _versions.Add(version);
+            SetUpdatedAt();
+
+            // Auto-complete package if TotalSessions now equals completed count (TRT-04)
+            if (IsComplete && Status == PackageStatus.Active)
+            {
+                Status = PackageStatus.Completed;
+                AddDomainEvent(new TreatmentPackageCompletedEvent(
+                    PackageId: Id,
+                    PatientId: PatientId,
+                    TreatmentType: TreatmentType));
+            }
+        }
     }
 
     /// <summary>
@@ -320,6 +368,12 @@ public class TreatmentPackage : AggregateRoot, IAuditable
     {
         EnsureModifiable();
 
+        // Validate deduction percentage is within allowed range (TRT-09: 10-20%)
+        if (deductionPercent < 10 || deductionPercent > 20)
+            throw new ArgumentOutOfRangeException(
+                nameof(deductionPercent),
+                $"Deduction percentage must be between 10% and 20%. Received: {deductionPercent}%.");
+
         if (_cancellationRequest is not null && _cancellationRequest.Status == CancellationRequestStatus.Requested)
             throw new InvalidOperationException(
                 "A cancellation request is already pending for this package.");
@@ -339,8 +393,9 @@ public class TreatmentPackage : AggregateRoot, IAuditable
 
     /// <summary>
     /// Approves the pending cancellation request. Transitions status to Cancelled.
+    /// If a deduction override is provided, recalculates the refund amount before approving.
     /// </summary>
-    public void ApproveCancellation(Guid processedById, string? note)
+    public void ApproveCancellation(Guid processedById, string? note, decimal? deductionPercentOverride = null)
     {
         if (Status != PackageStatus.PendingCancellation)
             throw new InvalidOperationException(
@@ -349,6 +404,14 @@ public class TreatmentPackage : AggregateRoot, IAuditable
         if (_cancellationRequest is null)
             throw new InvalidOperationException(
                 "No cancellation request found to approve.");
+
+        // If manager provides a different deduction percentage, recalculate refund
+        if (deductionPercentOverride.HasValue &&
+            deductionPercentOverride.Value != _cancellationRequest.DeductionPercent)
+        {
+            var newRefund = CalculateRefundAmount(deductionPercentOverride.Value);
+            _cancellationRequest.UpdateDeduction(deductionPercentOverride.Value, newRefund);
+        }
 
         _cancellationRequest.Approve(processedById, note);
         Status = PackageStatus.Cancelled;

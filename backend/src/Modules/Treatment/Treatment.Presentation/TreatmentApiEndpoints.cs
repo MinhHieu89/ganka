@@ -37,7 +37,7 @@ public static class TreatmentApiEndpoints
         {
             var result = await bus.InvokeAsync<Result<TreatmentProtocolDto>>(command, ct);
             return result.ToCreatedHttpResult("/api/treatments/protocols");
-        });
+        }).RequirePermissions(Permissions.Treatment.Create);
 
         // PUT /api/treatments/protocols/{id} -- update an existing protocol template
         group.MapPut("/protocols/{id:guid}",
@@ -46,7 +46,7 @@ public static class TreatmentApiEndpoints
             var enriched = command with { Id = id };
             var result = await bus.InvokeAsync<Result<TreatmentProtocolDto>>(enriched, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Treatment.Update);
 
         // GET /api/treatments/protocols -- get all protocol templates (optional filters)
         group.MapGet("/protocols",
@@ -75,7 +75,7 @@ public static class TreatmentApiEndpoints
         {
             var result = await bus.InvokeAsync<Result<TreatmentPackageDto>>(command, ct);
             return result.ToCreatedHttpResult("/api/treatments/packages");
-        });
+        }).RequirePermissions(Permissions.Treatment.Create);
 
         // GET /api/treatments/packages -- get all active treatment packages
         group.MapGet("/packages",
@@ -123,7 +123,7 @@ public static class TreatmentApiEndpoints
             var enriched = command with { PackageId = packageId };
             var result = await bus.InvokeAsync<Result<RecordSessionResponse>>(enriched, ct);
             return result.ToCreatedHttpResult("/api/treatments/packages");
-        });
+        }).RequirePermissions(Permissions.Treatment.Create);
 
         // GET /api/treatments/packages/{packageId}/sessions -- get all sessions for a package
         group.MapGet("/packages/{packageId:guid}/sessions",
@@ -144,7 +144,7 @@ public static class TreatmentApiEndpoints
             var enriched = command with { PackageId = packageId };
             var result = await bus.InvokeAsync<Result<TreatmentPackageDto>>(enriched, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Treatment.Update);
 
         // POST /api/treatments/packages/{packageId}/switch -- switch treatment type
         group.MapPost("/packages/{packageId:guid}/switch",
@@ -153,7 +153,7 @@ public static class TreatmentApiEndpoints
             var enriched = command with { PackageId = packageId };
             var result = await bus.InvokeAsync<Result<TreatmentPackageDto>>(enriched, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Treatment.Update);
 
         // POST /api/treatments/packages/{packageId}/pause -- pause or resume a treatment package
         group.MapPost("/packages/{packageId:guid}/pause",
@@ -162,7 +162,7 @@ public static class TreatmentApiEndpoints
             var enriched = command with { PackageId = packageId };
             var result = await bus.InvokeAsync<Result<TreatmentPackageDto>>(enriched, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Treatment.Update);
     }
 
     private static void MapCancellationEndpoints(RouteGroupBuilder group)
@@ -174,7 +174,7 @@ public static class TreatmentApiEndpoints
             var enriched = command with { PackageId = packageId };
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Treatment.Update);
 
         // POST /api/treatments/packages/{packageId}/cancel/approve -- approve a pending cancellation
         group.MapPost("/packages/{packageId:guid}/cancel/approve",
@@ -183,7 +183,7 @@ public static class TreatmentApiEndpoints
             var enriched = command with { PackageId = packageId };
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Treatment.Manage);
 
         // POST /api/treatments/packages/{packageId}/cancel/reject -- reject a pending cancellation
         group.MapPost("/packages/{packageId:guid}/cancel/reject",
@@ -192,7 +192,7 @@ public static class TreatmentApiEndpoints
             var enriched = command with { PackageId = packageId };
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Treatment.Manage);
 
         // GET /api/treatments/cancellations/pending -- get all pending cancellation requests
         group.MapGet("/cancellations/pending",

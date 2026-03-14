@@ -1,4 +1,5 @@
 using FluentValidation;
+using Shared.Application;
 using Shared.Domain;
 using Treatment.Application.Interfaces;
 using Treatment.Contracts.Dtos;
@@ -69,6 +70,7 @@ public static class RecordTreatmentSessionHandler
         ITreatmentPackageRepository packageRepository,
         IUnitOfWork unitOfWork,
         IValidator<RecordTreatmentSessionCommand> validator,
+        ICurrentUser currentUser,
         CancellationToken ct)
     {
         // Validate command
@@ -124,7 +126,7 @@ public static class RecordTreatmentSessionHandler
             osdiScore: command.OsdiScore,
             osdiSeverity: command.OsdiSeverity,
             clinicalNotes: command.ClinicalNotes,
-            performedById: command.PerformedById,
+            performedById: currentUser.UserId,
             visitId: command.VisitId,
             scheduledAt: command.ScheduledAt,
             intervalOverrideReason: command.IntervalOverrideReason,

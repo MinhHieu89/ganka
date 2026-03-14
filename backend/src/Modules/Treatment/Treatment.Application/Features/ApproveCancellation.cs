@@ -74,9 +74,9 @@ public static class ApproveCancellationHandler
             return Result.Failure(Error.Validation("Invalid manager PIN."));
 
         // Approve the cancellation (domain method validates status and transitions)
-        // The CancellationRequest already has deduction/refund from the request phase,
-        // but the manager may adjust the deduction percentage at approval time
-        package.ApproveCancellation(command.ManagerId, null);
+        // The manager may adjust the deduction percentage at approval time;
+        // the domain will recalculate the refund amount if the override differs
+        package.ApproveCancellation(command.ManagerId, null, command.DeductionPercent);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 

@@ -69,6 +69,20 @@ public class CancellationRequest
     }
 
     /// <summary>
+    /// Updates the deduction percentage and recalculates the refund amount.
+    /// Used when a manager overrides the deduction at approval time.
+    /// </summary>
+    public void UpdateDeduction(decimal deductionPercent, decimal refundAmount)
+    {
+        if (Status != CancellationRequestStatus.Requested)
+            throw new InvalidOperationException(
+                $"Cannot update deduction for a cancellation request in '{Status}' status.");
+
+        DeductionPercent = deductionPercent;
+        RefundAmount = refundAmount;
+    }
+
+    /// <summary>
     /// Approves the cancellation request.
     /// </summary>
     public void Approve(Guid processedById, string? note)
