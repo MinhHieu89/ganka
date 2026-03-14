@@ -22,10 +22,10 @@ public interface ITreatmentProtocolRepository
     Task<List<TreatmentProtocol>> GetAllAsync(bool includeInactive, CancellationToken ct);
 
     /// <summary>
-    /// Gets all active treatment protocols filtered by treatment type.
+    /// Gets treatment protocols filtered by treatment type, optionally including inactive entries.
     /// Ordered by Name.
     /// </summary>
-    Task<List<TreatmentProtocol>> GetByTypeAsync(TreatmentType type, CancellationToken ct);
+    Task<List<TreatmentProtocol>> GetByTypeAsync(TreatmentType type, bool includeInactive, CancellationToken ct);
 
     /// <summary>
     /// Adds a new treatment protocol to the EF Core change tracker.

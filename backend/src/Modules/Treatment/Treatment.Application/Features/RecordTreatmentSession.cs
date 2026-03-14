@@ -54,6 +54,10 @@ public class RecordTreatmentSessionCommandValidator : AbstractValidator<RecordTr
     {
         RuleFor(x => x.PackageId).NotEmpty().WithMessage("Package ID is required.");
         RuleFor(x => x.ParametersJson).NotEmpty().WithMessage("Parameters JSON is required.");
+        RuleFor(x => x.OsdiScore)
+            .InclusiveBetween(0m, 100m)
+            .When(x => x.OsdiScore.HasValue)
+            .WithMessage("OSDI score must be between 0 and 100.");
     }
 }
 

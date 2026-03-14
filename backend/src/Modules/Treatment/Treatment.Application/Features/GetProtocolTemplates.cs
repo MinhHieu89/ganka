@@ -25,7 +25,7 @@ public static class GetProtocolTemplatesHandler
         CancellationToken ct)
     {
         var protocols = query.TreatmentType.HasValue
-            ? await repository.GetByTypeAsync((TreatmentType)query.TreatmentType.Value, ct)
+            ? await repository.GetByTypeAsync((TreatmentType)query.TreatmentType.Value, query.IncludeInactive, ct)
             : await repository.GetAllAsync(query.IncludeInactive, ct);
 
         var dtos = protocols.Select(CreateProtocolTemplateHandler.MapToDto).ToList();

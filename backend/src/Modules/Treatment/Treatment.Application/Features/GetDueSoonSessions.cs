@@ -21,12 +21,23 @@ public static class GetDueSoonSessionsHandler
     public static async Task<List<TreatmentPackageDto>> Handle(
         GetDueSoonSessionsQuery query,
         ITreatmentPackageRepository packageRepository,
+        ITreatmentProtocolRepository protocolRepository,
         CancellationToken ct)
     {
         var packages = await packageRepository.GetDueSoonAsync(ct);
 
+        // Load protocol names for all packages
+        var protocolIds = packages.Select(p => p.ProtocolTemplateId).Distinct().ToList();
+        var protocolNames = new Dictionary<Guid, string>();
+        foreach (var protocolId in protocolIds)
+        {
+            var protocol = await protocolRepository.GetByIdAsync(protocolId, ct);
+            if (protocol is not null)
+                protocolNames[protocolId] = protocol.Name;
+        }
+
         return packages
-            .Select(MapToDto)
+            .Select(p => MapToDto(p, protocolNames.GetValueOrDefault(p.ProtocolTemplateId, "")))
             .ToList();
     }
 
@@ -35,7 +46,7 @@ public static class GetDueSoonSessionsHandler
     /// Calculates LastSessionDate from the most recent completed session
     /// and NextDueDate from LastSessionDate + MinIntervalDays.
     /// </summary>
-    private static TreatmentPackageDto MapToDto(Treatment.Domain.Entities.TreatmentPackage package)
+    private static TreatmentPackageDto MapToDto(Treatment.Domain.Entities.TreatmentPackage package, string protocolTemplateName)
     {
         var completedSessions = package.Sessions
             .Where(s => s.Status == SessionStatus.Completed && s.CompletedAt.HasValue)
@@ -58,7 +69,7 @@ public static class GetDueSoonSessionsHandler
         return new TreatmentPackageDto(
             Id: package.Id,
             ProtocolTemplateId: package.ProtocolTemplateId,
-            ProtocolTemplateName: string.Empty, // Lightweight query -- no cross-aggregate lookup
+            ProtocolTemplateName: protocolTemplateName,
             PatientId: package.PatientId,
             PatientName: package.PatientName,
             TreatmentType: package.TreatmentType.ToString(),

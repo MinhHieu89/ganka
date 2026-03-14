@@ -2,7 +2,6 @@ using FluentValidation;
 using Shared.Domain;
 using Treatment.Application.Interfaces;
 using Treatment.Contracts.Dtos;
-using Treatment.Domain.Entities;
 
 namespace Treatment.Application.Features;
 
@@ -43,6 +42,7 @@ public static class PauseTreatmentPackageHandler
     public static async Task<Result<TreatmentPackageDto>> Handle(
         PauseTreatmentPackageCommand command,
         ITreatmentPackageRepository packageRepository,
+        ITreatmentProtocolRepository protocolRepository,
         IUnitOfWork unitOfWork,
         IValidator<PauseTreatmentPackageCommand> validator,
         CancellationToken cancellationToken)
@@ -75,6 +75,8 @@ public static class PauseTreatmentPackageHandler
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return CreateTreatmentPackageHandler.MapToDto(package, "");
+        // Load protocol template name for the DTO
+        var protocol = await protocolRepository.GetByIdAsync(package.ProtocolTemplateId, cancellationToken);
+        return CreateTreatmentPackageHandler.MapToDto(package, protocol?.Name ?? "");
     }
 }

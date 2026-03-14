@@ -68,7 +68,10 @@ public static class RequestCancellationHandler
 
         // Load protocol template to get default deduction percentage
         var protocol = await protocolRepository.GetByIdAsync(package.ProtocolTemplateId, cancellationToken);
-        var deductionPercent = protocol?.CancellationDeductionPercent ?? 15m;
+        if (protocol is null)
+            return Result.Failure(Error.NotFound("TreatmentProtocol", package.ProtocolTemplateId));
+
+        var deductionPercent = protocol.CancellationDeductionPercent;
 
         // Domain method handles status transition and CancellationRequest creation
         package.RequestCancellation(command.Reason, deductionPercent, currentUser.UserId);

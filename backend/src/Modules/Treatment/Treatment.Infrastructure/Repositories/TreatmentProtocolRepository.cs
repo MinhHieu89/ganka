@@ -36,14 +36,14 @@ public sealed class TreatmentProtocolRepository(TreatmentDbContext context) : IT
     }
 
     /// <summary>
-    /// Gets all active treatment protocols filtered by treatment type.
+    /// Gets treatment protocols filtered by treatment type, optionally including inactive entries.
     /// Ordered by Name ascending.
     /// </summary>
-    public async Task<List<TreatmentProtocol>> GetByTypeAsync(TreatmentType type, CancellationToken ct)
+    public async Task<List<TreatmentProtocol>> GetByTypeAsync(TreatmentType type, bool includeInactive, CancellationToken ct)
     {
         return await context.TreatmentProtocols
             .AsNoTracking()
-            .Where(x => x.TreatmentType == type && x.IsActive)
+            .Where(x => x.TreatmentType == type && (includeInactive || x.IsActive))
             .OrderBy(x => x.Name)
             .ToListAsync(ct);
     }

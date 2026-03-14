@@ -44,6 +44,7 @@ public static class ModifyTreatmentPackageHandler
     public static async Task<Result<TreatmentPackageDto>> Handle(
         ModifyTreatmentPackageCommand command,
         ITreatmentPackageRepository packageRepository,
+        ITreatmentProtocolRepository protocolRepository,
         IUnitOfWork unitOfWork,
         IValidator<ModifyTreatmentPackageCommand> validator,
         ICurrentUser currentUser,
@@ -88,8 +89,9 @@ public static class ModifyTreatmentPackageHandler
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        // Load protocol name for the DTO
-        return CreateTreatmentPackageHandler.MapToDto(package, "");
+        // Load protocol template name for the DTO
+        var protocol = await protocolRepository.GetByIdAsync(package.ProtocolTemplateId, cancellationToken);
+        return CreateTreatmentPackageHandler.MapToDto(package, protocol?.Name ?? "");
     }
 
     /// <summary>

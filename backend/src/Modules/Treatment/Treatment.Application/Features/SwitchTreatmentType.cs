@@ -62,7 +62,13 @@ public static class SwitchTreatmentTypeHandler
             return Result<TreatmentPackageDto>.Failure(
                 Error.NotFound("TreatmentPackage", command.PackageId));
 
-        // 2. Check modifiable status before loading template (fail fast)
+        // 2. Load new protocol template BEFORE mutating the existing package
+        var newTemplate = await protocolRepository.GetByIdAsync(command.NewProtocolTemplateId, cancellationToken);
+        if (newTemplate is null)
+            return Result<TreatmentPackageDto>.Failure(
+                Error.NotFound("TreatmentProtocol", command.NewProtocolTemplateId));
+
+        // 3. Mark existing package as switched (validates modifiable status)
         try
         {
             existingPackage.MarkAsSwitched();
@@ -71,12 +77,6 @@ public static class SwitchTreatmentTypeHandler
         {
             return Result<TreatmentPackageDto>.Failure(Error.Validation(ex.Message));
         }
-
-        // 3. Load new protocol template
-        var newTemplate = await protocolRepository.GetByIdAsync(command.NewProtocolTemplateId, cancellationToken);
-        if (newTemplate is null)
-            return Result<TreatmentPackageDto>.Failure(
-                Error.NotFound("TreatmentProtocol", command.NewProtocolTemplateId));
 
         // 4. Calculate remaining sessions
         var remainingSessions = existingPackage.TotalSessions - existingPackage.SessionsCompleted;

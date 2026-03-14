@@ -339,7 +339,7 @@ public class ProtocolTemplateHandlerTests
     public async Task GetProtocolTemplates_WithTypeFilter_CallsGetByType()
     {
         // Arrange
-        _repository.GetByTypeAsync(TreatmentType.IPL, Arg.Any<CancellationToken>())
+        _repository.GetByTypeAsync(TreatmentType.IPL, false, Arg.Any<CancellationToken>())
             .Returns(new List<TreatmentProtocol> { MakeProtocol() });
 
         var query = new GetProtocolTemplatesQuery(TreatmentType: (int)TreatmentType.IPL);
@@ -350,7 +350,7 @@ public class ProtocolTemplateHandlerTests
         // Assert
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().HaveCount(1);
-        await _repository.Received(1).GetByTypeAsync(TreatmentType.IPL, Arg.Any<CancellationToken>());
+        await _repository.Received(1).GetByTypeAsync(TreatmentType.IPL, false, Arg.Any<CancellationToken>());
     }
 
     [Fact]

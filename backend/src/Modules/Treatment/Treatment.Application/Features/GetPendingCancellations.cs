@@ -20,16 +20,27 @@ public static class GetPendingCancellationsHandler
     public static async Task<Result<List<TreatmentPackageDto>>> Handle(
         GetPendingCancellationsQuery query,
         ITreatmentPackageRepository packageRepository,
+        ITreatmentProtocolRepository protocolRepository,
         CancellationToken cancellationToken)
     {
         var packages = await packageRepository.GetPendingCancellationsAsync(cancellationToken);
 
-        var dtos = packages.Select(MapToDto).ToList();
+        // Load protocol names for all packages
+        var protocolIds = packages.Select(p => p.ProtocolTemplateId).Distinct().ToList();
+        var protocolNames = new Dictionary<Guid, string>();
+        foreach (var protocolId in protocolIds)
+        {
+            var protocol = await protocolRepository.GetByIdAsync(protocolId, cancellationToken);
+            if (protocol is not null)
+                protocolNames[protocolId] = protocol.Name;
+        }
+
+        var dtos = packages.Select(p => MapToDto(p, protocolNames.GetValueOrDefault(p.ProtocolTemplateId, ""))).ToList();
 
         return Result<List<TreatmentPackageDto>>.Success(dtos);
     }
 
-    private static TreatmentPackageDto MapToDto(TreatmentPackage package)
+    private static TreatmentPackageDto MapToDto(TreatmentPackage package, string protocolTemplateName)
     {
         var sessions = package.Sessions.Select(s => new TreatmentSessionDto(
             Id: s.Id,
@@ -84,7 +95,7 @@ public static class GetPendingCancellationsHandler
         return new TreatmentPackageDto(
             Id: package.Id,
             ProtocolTemplateId: package.ProtocolTemplateId,
-            ProtocolTemplateName: string.Empty, // Would need protocol repo query; not essential for approval queue
+            ProtocolTemplateName: protocolTemplateName,
             PatientId: package.PatientId,
             PatientName: package.PatientName,
             TreatmentType: package.TreatmentType.ToString(),
