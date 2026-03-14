@@ -10,13 +10,21 @@ namespace Treatment.Unit.Tests.Features;
 public class SessionHandlerTests
 {
     private readonly ITreatmentPackageRepository _packageRepository = Substitute.For<ITreatmentPackageRepository>();
+    private readonly ITreatmentProtocolRepository _protocolRepository = Substitute.For<ITreatmentProtocolRepository>();
     private readonly IUnitOfWork _unitOfWork = Substitute.For<IUnitOfWork>();
     private readonly IValidator<RecordTreatmentSessionCommand> _validator = Substitute.For<IValidator<RecordTreatmentSessionCommand>>();
+    private readonly ICurrentUser _currentUser = Substitute.For<ICurrentUser>();
 
     private static readonly Guid DefaultBranchId = Guid.Parse("00000000-0000-0000-0000-000000000001");
     private static readonly Guid DefaultUserId = Guid.Parse("00000000-0000-0000-0000-000000000002");
     private static readonly Guid DefaultPatientId = Guid.Parse("00000000-0000-0000-0000-000000000003");
     private static readonly Guid DefaultProtocolId = Guid.Parse("00000000-0000-0000-0000-000000000004");
+
+    public SessionHandlerTests()
+    {
+        _currentUser.UserId.Returns(DefaultUserId);
+        _currentUser.BranchId.Returns(DefaultBranchId);
+    }
 
     private void SetupValidValidator()
     {
@@ -81,7 +89,7 @@ public class SessionHandlerTests
 
         // Act
         var result = await RecordTreatmentSessionHandler.Handle(
-            command, _packageRepository, _unitOfWork, _validator, CancellationToken.None);
+            command, _packageRepository, _unitOfWork, _validator, _currentUser, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -109,7 +117,7 @@ public class SessionHandlerTests
 
         // Act
         var result = await RecordTreatmentSessionHandler.Handle(
-            command, _packageRepository, _unitOfWork, _validator, CancellationToken.None);
+            command, _packageRepository, _unitOfWork, _validator, _currentUser, CancellationToken.None);
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -130,7 +138,7 @@ public class SessionHandlerTests
 
         // Act
         var result = await RecordTreatmentSessionHandler.Handle(
-            command, _packageRepository, _unitOfWork, _validator, CancellationToken.None);
+            command, _packageRepository, _unitOfWork, _validator, _currentUser, CancellationToken.None);
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -139,7 +147,7 @@ public class SessionHandlerTests
     }
 
     [Fact]
-    public async Task RecordSession_WithinMinInterval_ReturnsWarningButStillRecords()
+    public async Task RecordSession_WithinMinInterval_WithOverride_ReturnsWarningButStillRecords()
     {
         // Arrange
         SetupValidValidator();
@@ -153,13 +161,15 @@ public class SessionHandlerTests
         _packageRepository.GetByIdAsync(package.Id, Arg.Any<CancellationToken>())
             .Returns(package);
 
-        var command = CreateRecordCommand(package.Id);
+        // Must provide override reason since domain enforces interval strictly
+        var command = CreateRecordCommand(package.Id,
+            intervalOverrideReason: "Patient travelling, needs early session");
 
         // Act
         var result = await RecordTreatmentSessionHandler.Handle(
-            command, _packageRepository, _unitOfWork, _validator, CancellationToken.None);
+            command, _packageRepository, _unitOfWork, _validator, _currentUser, CancellationToken.None);
 
-        // Assert -- should succeed with a warning (TRT-05: soft enforcement)
+        // Assert -- should succeed with a warning (TRT-05: handler-level soft enforcement)
         result.IsSuccess.Should().BeTrue();
         result.Value.Session.SessionNumber.Should().Be(2);
         result.Value.Warning.Should().NotBeNull();
@@ -190,7 +200,7 @@ public class SessionHandlerTests
 
         // Act
         var result = await RecordTreatmentSessionHandler.Handle(
-            command, _packageRepository, _unitOfWork, _validator, CancellationToken.None);
+            command, _packageRepository, _unitOfWork, _validator, _currentUser, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -202,7 +212,7 @@ public class SessionHandlerTests
     {
         // Arrange
         SetupValidValidator();
-        var package = CreateActivePackage(totalSessions: 2);
+        var package = CreateActivePackage(totalSessions: 2, minIntervalDays: 0);
 
         // Record first session (1 of 2)
         package.RecordSession(
@@ -216,7 +226,7 @@ public class SessionHandlerTests
 
         // Act
         var result = await RecordTreatmentSessionHandler.Handle(
-            command, _packageRepository, _unitOfWork, _validator, CancellationToken.None);
+            command, _packageRepository, _unitOfWork, _validator, _currentUser, CancellationToken.None);
 
         // Assert -- TRT-04: auto-completion
         result.IsSuccess.Should().BeTrue();
@@ -242,7 +252,7 @@ public class SessionHandlerTests
 
         // Act
         var result = await RecordTreatmentSessionHandler.Handle(
-            command, _packageRepository, _unitOfWork, _validator, CancellationToken.None);
+            command, _packageRepository, _unitOfWork, _validator, _currentUser, CancellationToken.None);
 
         // Assert -- TRT-03: OSDI score per session
         result.IsSuccess.Should().BeTrue();
@@ -270,7 +280,7 @@ public class SessionHandlerTests
 
         // Act
         var result = await RecordTreatmentSessionHandler.Handle(
-            command, _packageRepository, _unitOfWork, _validator, CancellationToken.None);
+            command, _packageRepository, _unitOfWork, _validator, _currentUser, CancellationToken.None);
 
         // Assert -- TRT-11: consumables tracked
         result.IsSuccess.Should().BeTrue();
@@ -294,7 +304,7 @@ public class SessionHandlerTests
 
         // Act
         var result = await RecordTreatmentSessionHandler.Handle(
-            command, _packageRepository, _unitOfWork, _validator, CancellationToken.None);
+            command, _packageRepository, _unitOfWork, _validator, _currentUser, CancellationToken.None);
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -320,7 +330,7 @@ public class SessionHandlerTests
 
         // Act
         var result = await RecordTreatmentSessionHandler.Handle(
-            command, _packageRepository, _unitOfWork, _validator, CancellationToken.None);
+            command, _packageRepository, _unitOfWork, _validator, _currentUser, CancellationToken.None);
 
         // Assert -- Domain event should contain consumable data for Pharmacy module
         result.IsSuccess.Should().BeTrue();
@@ -345,7 +355,7 @@ public class SessionHandlerTests
         // Arrange
         var package = CreateActivePackage(totalSessions: 4);
         package.RecordSession("{\"energy\":15}", 30m, "Moderate", "Good", DefaultUserId, null, null, null, []);
-        package.RecordSession("{\"energy\":16}", 22m, "Mild", "Better", DefaultUserId, null, null, null, []);
+        package.RecordSession("{\"energy\":16}", 22m, "Mild", "Better", DefaultUserId, null, null, "Test setup", []);
 
         _packageRepository.GetByIdAsync(package.Id, Arg.Any<CancellationToken>())
             .Returns(package);
@@ -419,7 +429,7 @@ public class SessionHandlerTests
 
         // Act
         var result = await GetDueSoonSessionsHandler.Handle(
-            query, _packageRepository, CancellationToken.None);
+            query, _packageRepository, _protocolRepository, CancellationToken.None);
 
         // Assert -- packages with no sessions are immediately due
         result.Should().HaveCount(1);
@@ -438,7 +448,7 @@ public class SessionHandlerTests
 
         // Act
         var result = await GetDueSoonSessionsHandler.Handle(
-            query, _packageRepository, CancellationToken.None);
+            query, _packageRepository, _protocolRepository, CancellationToken.None);
 
         // Assert
         result.Should().BeEmpty();
@@ -459,7 +469,7 @@ public class SessionHandlerTests
 
         // Act
         var result = await GetDueSoonSessionsHandler.Handle(
-            query, _packageRepository, CancellationToken.None);
+            query, _packageRepository, _protocolRepository, CancellationToken.None);
 
         // Assert
         result.Should().HaveCount(1);

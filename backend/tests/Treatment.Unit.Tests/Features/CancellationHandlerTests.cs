@@ -390,7 +390,7 @@ public class CancellationHandlerTests
 
         // Act
         var result = await GetPendingCancellationsHandler.Handle(
-            query, _packageRepository, CancellationToken.None);
+            query, _packageRepository, _protocolRepository, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -413,7 +413,7 @@ public class CancellationHandlerTests
 
         // Act
         var result = await GetPendingCancellationsHandler.Handle(
-            query, _packageRepository, CancellationToken.None);
+            query, _packageRepository, _protocolRepository, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();

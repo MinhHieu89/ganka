@@ -31,14 +31,5 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
-  <!-- Exclude tests for handlers not yet fully implemented by their respective plans -->
-  <ItemGroup>
-    <Compile Remove="Features\TreatmentPackageHandlerTests.cs" Condition="!Exists('Features\.TreatmentPackageHandlerTests.ready')" />
-    <Compile Remove="Features\SessionHandlerTests.cs" Condition="!Exists('Features\.SessionHandlerTests.ready')" />
-    <Compile Remove="Features\ModifyPackageHandlerTests.cs" Condition="!Exists('Features\.ModifyPackageHandlerTests.ready')" />
-    <Compile Remove="Features\CancellationHandlerTests.cs" Condition="!Exists('Features\.CancellationHandlerTests.ready')" />
-    <Compile Remove="Features\ProtocolTemplateHandlerTests.cs" Condition="!Exists('Features\.ProtocolTemplateHandlerTests.ready')" />
-    <Compile Remove="Features\SessionCompletedEventTests.cs" Condition="!Exists('Features\.SessionCompletedEventTests.ready')" />
-  </ItemGroup>
 
 </Project>

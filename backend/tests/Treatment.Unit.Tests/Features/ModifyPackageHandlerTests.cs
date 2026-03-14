@@ -79,7 +79,7 @@ public class ModifyPackageHandlerTests
                 performedById: Guid.NewGuid(),
                 visitId: null,
                 scheduledAt: null,
-                intervalOverrideReason: null,
+                intervalOverrideReason: i > 0 ? "Test setup: back-to-back sessions" : null,
                 consumables: []);
         }
 
@@ -122,7 +122,7 @@ public class ModifyPackageHandlerTests
 
         // Act
         var result = await ModifyTreatmentPackageHandler.Handle(
-            command, _packageRepository, _unitOfWork, _modifyValidator, _currentUser, CancellationToken.None);
+            command, _packageRepository, _protocolRepository, _unitOfWork, _modifyValidator, _currentUser, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -152,7 +152,7 @@ public class ModifyPackageHandlerTests
 
         // Act
         var result = await ModifyTreatmentPackageHandler.Handle(
-            command, _packageRepository, _unitOfWork, _modifyValidator, _currentUser, CancellationToken.None);
+            command, _packageRepository, _protocolRepository, _unitOfWork, _modifyValidator, _currentUser, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -177,7 +177,7 @@ public class ModifyPackageHandlerTests
 
         // Act
         var result = await ModifyTreatmentPackageHandler.Handle(
-            command, _packageRepository, _unitOfWork, _modifyValidator, _currentUser, CancellationToken.None);
+            command, _packageRepository, _protocolRepository, _unitOfWork, _modifyValidator, _currentUser, CancellationToken.None);
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -204,7 +204,7 @@ public class ModifyPackageHandlerTests
 
         // Act
         var result = await ModifyTreatmentPackageHandler.Handle(
-            command, _packageRepository, _unitOfWork, _modifyValidator, _currentUser, CancellationToken.None);
+            command, _packageRepository, _protocolRepository, _unitOfWork, _modifyValidator, _currentUser, CancellationToken.None);
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -228,7 +228,7 @@ public class ModifyPackageHandlerTests
 
         // Act
         var result = await ModifyTreatmentPackageHandler.Handle(
-            command, _packageRepository, _unitOfWork, _modifyValidator, _currentUser, CancellationToken.None);
+            command, _packageRepository, _protocolRepository, _unitOfWork, _modifyValidator, _currentUser, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -324,12 +324,14 @@ public class ModifyPackageHandlerTests
         package.RecordSession("{}", 10m, "Normal", "Done", Guid.NewGuid(), null, null, null, []);
         // Package is now Completed
 
+        var newTemplate = CreateProtocolTemplate();
         var command = new SwitchTreatmentTypeCommand(
             PackageId: package.Id,
-            NewProtocolTemplateId: Guid.NewGuid(),
+            NewProtocolTemplateId: newTemplate.Id,
             Reason: "Switch attempt");
 
         _packageRepository.GetByIdAsync(package.Id, Arg.Any<CancellationToken>()).Returns(package);
+        _protocolRepository.GetByIdAsync(newTemplate.Id, Arg.Any<CancellationToken>()).Returns(newTemplate);
 
         // Act
         var result = await SwitchTreatmentTypeHandler.Handle(
@@ -380,7 +382,7 @@ public class ModifyPackageHandlerTests
 
         // Act
         var result = await PauseTreatmentPackageHandler.Handle(
-            command, _packageRepository, _unitOfWork, _pauseValidator, CancellationToken.None);
+            command, _packageRepository, _protocolRepository, _unitOfWork, _pauseValidator, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -403,7 +405,7 @@ public class ModifyPackageHandlerTests
 
         // Act
         var result = await PauseTreatmentPackageHandler.Handle(
-            command, _packageRepository, _unitOfWork, _pauseValidator, CancellationToken.None);
+            command, _packageRepository, _protocolRepository, _unitOfWork, _pauseValidator, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -424,7 +426,7 @@ public class ModifyPackageHandlerTests
 
         // Act
         var result = await PauseTreatmentPackageHandler.Handle(
-            command, _packageRepository, _unitOfWork, _pauseValidator, CancellationToken.None);
+            command, _packageRepository, _protocolRepository, _unitOfWork, _pauseValidator, CancellationToken.None);
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -448,7 +450,7 @@ public class ModifyPackageHandlerTests
 
         // Act
         var result = await PauseTreatmentPackageHandler.Handle(
-            command, _packageRepository, _unitOfWork, _pauseValidator, CancellationToken.None);
+            command, _packageRepository, _protocolRepository, _unitOfWork, _pauseValidator, CancellationToken.None);
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -469,7 +471,7 @@ public class ModifyPackageHandlerTests
 
         // Act
         var result = await PauseTreatmentPackageHandler.Handle(
-            command, _packageRepository, _unitOfWork, _pauseValidator, CancellationToken.None);
+            command, _packageRepository, _protocolRepository, _unitOfWork, _pauseValidator, CancellationToken.None);
 
         // Assert
         result.IsFailure.Should().BeTrue();
