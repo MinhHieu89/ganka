@@ -25,6 +25,7 @@ public static class TreatmentApiEndpoints
         MapSessionEndpoints(group);
         MapModificationEndpoints(group);
         MapCancellationEndpoints(group);
+        MapOsdiEndpoints(group);
 
         return app;
     }
@@ -110,6 +111,15 @@ public static class TreatmentApiEndpoints
         {
             var result = await bus.InvokeAsync<Result<List<TreatmentPackageDto>>>(
                 new GetPatientTreatmentsQuery(patientId), ct);
+            return result.ToHttpResult();
+        });
+
+        // GET /api/treatments/packages/{id}/versions -- get version history for a package (TRT-07)
+        group.MapGet("/packages/{id:guid}/versions",
+            async (Guid id, IMessageBus bus, CancellationToken ct) =>
+        {
+            var result = await bus.InvokeAsync<Result<List<ProtocolVersionDto>>>(
+                new GetTreatmentPackageVersionsQuery(id), ct);
             return result.ToHttpResult();
         });
     }
@@ -200,6 +210,17 @@ public static class TreatmentApiEndpoints
         {
             var result = await bus.InvokeAsync<Result<List<TreatmentPackageDto>>>(
                 new GetPendingCancellationsQuery(), ct);
+            return result.ToHttpResult();
+        });
+    }
+
+    private static void MapOsdiEndpoints(RouteGroupBuilder group)
+    {
+        // POST /api/treatments/osdi-tokens -- register a QR token for OSDI self-fill (TRT-03)
+        group.MapPost("/osdi-tokens",
+            async (RegisterOsdiTokenCommand command, IMessageBus bus, CancellationToken ct) =>
+        {
+            var result = await bus.InvokeAsync<Result<RegisterOsdiTokenResponse>>(command, ct);
             return result.ToHttpResult();
         });
     }
