@@ -509,14 +509,14 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 | 8. Optical Center | 39/39 | Complete   | 2026-03-08 |
 | 9. Treatment Protocols | 25/29 | In Progress|  |
 | 9.1 Fix Phase 09 Code Review Issues | 8/8 | Complete   | 2026-03-14 |
-| 10. Address All Pending Todos | 4/7 | In Progress|  |
+| 10. Address All Pending Todos | 5/7 | In Progress|  |
 
 ### Phase 10: Address all pending todos
 
 **Goal:** Fix bugs, improve UX, and add missing features across Clinical, Pharmacy, Dry Eye, and Optical modules -- 13 todos covering auto-resize textareas, dry eye metric charts, OSDI answers display, realtime OSDI push, drug catalog Excel import, server-side pagination, OTC stock validation, batch pharmacy labels, clinic logo upload, and quick UX fixes
 **Requirements**: TODO-01, TODO-02, TODO-03, TODO-04, TODO-05, TODO-06, TODO-07, TODO-08, TODO-09, TODO-10, TODO-11, TODO-12, TODO-13
 **Depends on:** Phase 9
-**Plans:** 4/7 plans executed
+**Plans:** 5/7 plans executed
 
 Plans:
 - [ ] 10-01-PLAN.md -- Quick UX fixes: AutoResizeTextarea, OpticalPrescription defaultOpen, DrugCombobox auto-focus, patient name link
