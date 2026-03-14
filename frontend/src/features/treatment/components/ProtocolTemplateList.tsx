@@ -8,6 +8,7 @@ import {
   useReactTable,
   type SortingState,
 } from "@tanstack/react-table"
+import { useTranslation } from "react-i18next"
 import { IconEdit, IconPlus, IconChevronLeft, IconChevronRight } from "@tabler/icons-react"
 import { Button } from "@/shared/components/Button"
 import { Input } from "@/shared/components/Input"
@@ -37,11 +38,6 @@ const TREATMENT_TYPE_MAP: Record<string, { label: string; variant: "default" | "
   LidCare: { label: "Lid Care", variant: "default", className: "bg-green-500 hover:bg-green-600" },
 }
 
-const PRICING_MODE_MAP: Record<string, string> = {
-  PerSession: "Per Session",
-  PerPackage: "Per Package",
-}
-
 function formatVnd(amount: number): string {
   return new Intl.NumberFormat("vi-VN", {
     style: "currency",
@@ -51,6 +47,7 @@ function formatVnd(amount: number): string {
 }
 
 export function ProtocolTemplateList() {
+  const { t } = useTranslation("treatment")
   const { data: templates, isLoading, isError } = useProtocolTemplates()
   const canCreate = useAuthStore(
     (s) => s.user?.permissions?.includes("Treatment.Create") || s.user?.permissions?.includes("Admin"),
@@ -67,8 +64,8 @@ export function ProtocolTemplateList() {
 
   const filteredTemplates = useMemo(() => {
     if (!templates) return []
-    return templates.filter((t) => {
-      if (typeFilter !== ALL_VALUE && t.treatmentType !== typeFilter) return false
+    return templates.filter((tmpl) => {
+      if (typeFilter !== ALL_VALUE && tmpl.treatmentType !== typeFilter) return false
       return true
     })
   }, [templates, typeFilter])
@@ -86,12 +83,12 @@ export function ProtocolTemplateList() {
   const columns = useMemo(
     () => [
       columnHelper.accessor("name", {
-        header: "Name",
+        header: t("templateList.columns.name"),
         cell: (info) => <span className="font-medium">{info.getValue()}</span>,
         enableSorting: true,
       }),
       columnHelper.accessor("treatmentType", {
-        header: "Treatment Type",
+        header: t("templateList.columns.treatmentType"),
         cell: (info) => {
           const type = info.getValue()
           const config = TREATMENT_TYPE_MAP[type]
@@ -105,16 +102,16 @@ export function ProtocolTemplateList() {
         enableSorting: true,
       }),
       columnHelper.accessor("defaultSessionCount", {
-        header: "Sessions",
+        header: t("templateList.columns.sessions"),
         cell: (info) => info.getValue(),
         enableSorting: true,
       }),
       columnHelper.display({
         id: "pricing",
-        header: "Pricing",
+        header: t("templateList.columns.pricing"),
         cell: ({ row }) => {
           const { pricingMode, defaultPackagePrice, defaultSessionPrice } = row.original
-          const modeLabel = PRICING_MODE_MAP[pricingMode] ?? pricingMode
+          const modeLabel = t(`pricingMode.${pricingMode}`)
           const price = pricingMode === "PerPackage" ? defaultPackagePrice : defaultSessionPrice
           return (
             <div className="text-sm">
@@ -126,26 +123,26 @@ export function ProtocolTemplateList() {
       }),
       columnHelper.display({
         id: "interval",
-        header: "Interval",
+        header: t("templateList.columns.interval"),
         cell: ({ row }) => {
           const { minIntervalDays, maxIntervalDays } = row.original
           return (
             <span className="text-sm">
-              {minIntervalDays}-{maxIntervalDays} days
+              {minIntervalDays}-{maxIntervalDays} {t("templateList.days")}
             </span>
           )
         },
       }),
       columnHelper.accessor("cancellationDeductionPercent", {
-        header: "Deduction %",
+        header: t("templateList.columns.deduction"),
         cell: (info) => <span>{info.getValue()}%</span>,
         enableSorting: true,
       }),
       columnHelper.accessor("isActive", {
-        header: "Active",
+        header: t("templateList.columns.status"),
         cell: (info) => (
           <Badge variant={info.getValue() ? "default" : "secondary"}>
-            {info.getValue() ? "Active" : "Inactive"}
+            {info.getValue() ? t("templateList.active") : t("templateList.inactive")}
           </Badge>
         ),
         enableSorting: false,
@@ -154,7 +151,7 @@ export function ProtocolTemplateList() {
         ? [
             columnHelper.display({
               id: "actions",
-              header: "Actions",
+              header: t("templateList.columns.actions"),
               cell: ({ row }) => (
                 <Button
                   variant="ghost"
@@ -163,7 +160,7 @@ export function ProtocolTemplateList() {
                     e.stopPropagation()
                     openEditDialog(row.original)
                   }}
-                  title="Edit template"
+                  title={t("templateList.editTemplate")}
                 >
                   <IconEdit className="h-4 w-4" />
                 </Button>
@@ -172,7 +169,7 @@ export function ProtocolTemplateList() {
           ]
         : []),
     ],
-    [canManage],
+    [canManage, t],
   )
 
   const table = useReactTable({
@@ -200,7 +197,7 @@ export function ProtocolTemplateList() {
   if (isError) {
     return (
       <Alert variant="destructive">
-        <AlertDescription>Failed to load protocol templates. Please try again.</AlertDescription>
+        <AlertDescription>{t("templateList.loadError")}</AlertDescription>
       </Alert>
     )
   }
@@ -210,15 +207,15 @@ export function ProtocolTemplateList() {
       {/* Page header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Protocol Templates</h1>
+          <h1 className="text-2xl font-bold">{t("templateList.pageTitle")}</h1>
           <p className="text-sm text-muted-foreground mt-0.5">
-            Manage treatment protocol templates for IPL, LLLT, and Lid Care
+            {t("templateList.pageDescription")}
           </p>
         </div>
         {canCreate && (
           <Button onClick={openCreateDialog}>
             <IconPlus className="h-4 w-4 mr-2" />
-            Create Template
+            {t("createTemplate")}
           </Button>
         )}
       </div>
@@ -228,19 +225,19 @@ export function ProtocolTemplateList() {
         <Input
           value={globalFilter}
           onChange={(e) => setGlobalFilter(e.target.value)}
-          placeholder="Search templates..."
+          placeholder={t("templateList.searchPlaceholder")}
           className="max-w-sm"
         />
 
         <Select value={typeFilter} onValueChange={setTypeFilter}>
           <SelectTrigger className="w-40">
-            <SelectValue placeholder="Treatment Type" />
+            <SelectValue placeholder={t("templateList.treatmentTypeFilter")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value={ALL_VALUE}>All Types</SelectItem>
+            <SelectItem value={ALL_VALUE}>{t("templateList.allTypes")}</SelectItem>
             <SelectItem value="IPL">IPL</SelectItem>
             <SelectItem value="LLLT">LLLT</SelectItem>
-            <SelectItem value="LidCare">Lid Care</SelectItem>
+            <SelectItem value="LidCare">{t("treatmentType.LidCare")}</SelectItem>
           </SelectContent>
         </Select>
 
@@ -253,7 +250,7 @@ export function ProtocolTemplateList() {
               setGlobalFilter("")
             }}
           >
-            Clear filters
+            {t("templateList.clearFilters")}
           </Button>
         )}
       </div>
@@ -271,7 +268,7 @@ export function ProtocolTemplateList() {
         <DataTable
           table={table}
           columns={columns}
-          emptyMessage="No protocol templates found. Create one to get started."
+          emptyMessage={t("templateList.emptyMessage")}
           onRowClick={(template) => openEditDialog(template)}
         />
       )}
@@ -280,14 +277,14 @@ export function ProtocolTemplateList() {
       {!isLoading && table.getPageCount() > 1 && (
         <div className="flex items-center justify-between">
           <p className="text-sm text-muted-foreground">
-            Showing{" "}
-            {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1}
-            {" "}-{" "}
-            {Math.min(
-              (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize,
-              filteredTemplates.length,
-            )}{" "}
-            of {filteredTemplates.length} templates
+            {t("templateList.showing", {
+              from: table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1,
+              to: Math.min(
+                (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize,
+                filteredTemplates.length,
+              ),
+              total: filteredTemplates.length,
+            })}
           </p>
           <div className="flex items-center gap-2">
             <Button
@@ -299,7 +296,10 @@ export function ProtocolTemplateList() {
               <IconChevronLeft className="h-4 w-4" />
             </Button>
             <span className="text-sm">
-              Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+              {t("templateList.page", {
+                current: table.getState().pagination.pageIndex + 1,
+                total: table.getPageCount(),
+              })}
             </span>
             <Button
               variant="outline"

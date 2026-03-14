@@ -3,6 +3,7 @@ import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { toast } from "sonner"
+import { useTranslation } from "react-i18next"
 import { IconLoader2, IconAlertTriangle } from "@tabler/icons-react"
 import {
   Dialog,
@@ -50,6 +51,7 @@ export function CancellationRequestDialog({
   onOpenChange,
   package: pkg,
 }: CancellationRequestDialogProps) {
+  const { t } = useTranslation("treatment")
   const requestMutation = useRequestCancellation()
 
   const form = useForm<CancellationFormValues>({
@@ -88,7 +90,7 @@ export function CancellationRequestDialog({
         packageId: pkg.id,
         reason: data.reason,
       })
-      toast.success("Yeu cau huy da duoc gui")
+      toast.success(t("cancellationDialog.submitSuccess"))
       onOpenChange(false)
       form.reset()
     } catch (error) {
@@ -113,9 +115,9 @@ export function CancellationRequestDialog({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Yeu cau huy phac do</DialogTitle>
+          <DialogTitle>{t("cancellationDialog.title")}</DialogTitle>
           <DialogDescription>
-            Gui yeu cau huy phac do dieu tri. Yeu cau can duoc quan ly phe duyet.
+            {t("cancellationDialog.description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -124,11 +126,11 @@ export function CancellationRequestDialog({
             {/* Package summary */}
             <div className="rounded-md border p-3 space-y-1.5 text-sm">
               <div>
-                <span className="text-muted-foreground">Benh nhan:</span>{" "}
+                <span className="text-muted-foreground">{t("cancellationDialog.patient")}:</span>{" "}
                 <span className="font-medium">{pkg.patientName}</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-muted-foreground">Loai:</span>
+                <span className="text-muted-foreground">{t("cancellationDialog.type")}:</span>
                 <Badge
                   variant="outline"
                   className={`text-xs ${TREATMENT_TYPE_STYLES[pkg.treatmentType] ?? ""}`}
@@ -137,44 +139,44 @@ export function CancellationRequestDialog({
                 </Badge>
               </div>
               <div>
-                <span className="text-muted-foreground">Phac do:</span>{" "}
+                <span className="text-muted-foreground">{t("cancellationDialog.protocol")}:</span>{" "}
                 {pkg.protocolTemplateName}
               </div>
               <div>
-                <span className="text-muted-foreground">Tien trinh:</span>{" "}
-                {pkg.sessionsCompleted}/{pkg.totalSessions} phien
+                <span className="text-muted-foreground">{t("cancellationDialog.progress")}:</span>{" "}
+                {pkg.sessionsCompleted}/{pkg.totalSessions} {t("cancellationDialog.sessions")}
                 {pkg.sessionsRemaining > 0 && (
                   <span className="text-muted-foreground">
                     {" "}
-                    (con lai {pkg.sessionsRemaining})
+                    ({t("cancellationDialog.remaining", { count: pkg.sessionsRemaining })})
                   </span>
                 )}
               </div>
               <div>
-                <span className="text-muted-foreground">Gia:</span>{" "}
+                <span className="text-muted-foreground">{t("cancellationDialog.price")}:</span>{" "}
                 {pkg.pricingMode === "PerPackage"
                   ? formatVND(pkg.packagePrice)
-                  : `${formatVND(pkg.sessionPrice)} / phien`}
+                  : `${formatVND(pkg.sessionPrice)} / ${t("cancellationDialog.perSession")}`}
               </div>
             </div>
 
             {/* Refund estimate */}
             <div className="rounded-md bg-muted p-3 space-y-1 text-sm">
-              <div className="font-medium mb-1.5">Uoc tinh hoan tien</div>
+              <div className="font-medium mb-1.5">{t("cancellationDialog.refundEstimate")}</div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">
-                  Gia tri con lai ({pkg.sessionsRemaining} phien):
+                  {t("cancellationDialog.remainingValue", { count: pkg.sessionsRemaining })}:
                 </span>
                 <span>{formatVND(refundEstimate.remainingValue)}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">
-                  Khau tru mac dinh ({refundEstimate.deductionPercent}%):
+                  {t("cancellationDialog.defaultDeduction", { percent: refundEstimate.deductionPercent })}:
                 </span>
                 <span className="text-red-600">-{formatVND(refundEstimate.deduction)}</span>
               </div>
               <div className="flex justify-between border-t pt-1 mt-1">
-                <span className="font-medium">So tien hoan du kien:</span>
+                <span className="font-medium">{t("cancellationDialog.estimatedRefund")}:</span>
                 <span className="font-semibold">{formatVND(refundEstimate.refund)}</span>
               </div>
             </div>
@@ -185,7 +187,7 @@ export function CancellationRequestDialog({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>Ly do huy</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>{t("cancellationDialog.reasonLabel")}</FieldLabel>
                   <Textarea
                     {...field}
                     id={field.name}
@@ -203,7 +205,7 @@ export function CancellationRequestDialog({
             <div className="flex items-start gap-2 rounded-md border border-yellow-300 bg-yellow-50 dark:border-yellow-700 dark:bg-yellow-950 p-3 text-sm">
               <IconAlertTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-400 mt-0.5 flex-shrink-0" />
               <span className="text-yellow-800 dark:text-yellow-200">
-                Yeu cau huy se duoc gui den quan ly de phe duyet. Phac do se chuyen sang trang thai cho huy.
+                {t("cancellationDialog.warning")}
               </span>
             </div>
 
@@ -214,7 +216,7 @@ export function CancellationRequestDialog({
                 onClick={() => onOpenChange(false)}
                 disabled={requestMutation.isPending}
               >
-                Dong
+                {t("cancellationDialog.close")}
               </Button>
               <Button
                 type="submit"
@@ -224,7 +226,7 @@ export function CancellationRequestDialog({
                 {requestMutation.isPending && (
                   <IconLoader2 className="mr-2 h-4 w-4 animate-spin" />
                 )}
-                Gui yeu cau huy
+                {t("cancellationDialog.submitButton")}
               </Button>
             </DialogFooter>
           </form>

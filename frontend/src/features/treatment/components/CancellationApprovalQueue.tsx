@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { toast } from "sonner"
 import { format } from "date-fns"
+import { useTranslation } from "react-i18next"
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -103,6 +104,7 @@ interface ApproveDialogProps {
 }
 
 function ApproveDialog({ open, onOpenChange, pkg }: ApproveDialogProps) {
+  const { t } = useTranslation("treatment")
   const user = useAuthStore((s) => s.user)
   const approveMutation = useApproveCancellation()
 
@@ -130,11 +132,11 @@ function ApproveDialog({ open, onOpenChange, pkg }: ApproveDialogProps) {
         managerPin: data.managerPin,
         deductionPercent: data.deductionPercent,
       })
-      toast.success("Da phe duyet huy phac do")
+      toast.success(t("approvalQueue.approveSuccess"))
       onOpenChange(false)
       form.reset()
     } catch {
-      toast.error("Khong the phe duyet. Vui long kiem tra PIN.")
+      toast.error(t("approvalQueue.approveError"))
     }
   }
 
@@ -156,9 +158,9 @@ function ApproveDialog({ open, onOpenChange, pkg }: ApproveDialogProps) {
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Phe duyet huy phac do</DialogTitle>
+          <DialogTitle>{t("approvalQueue.approveDialogTitle")}</DialogTitle>
           <DialogDescription>
-            Xac nhan huy phac do dieu tri cho benh nhan{" "}
+            {t("approvalQueue.approveDialogDescription")}{" "}
             <span className="font-medium">{pkg?.patientName}</span>
           </DialogDescription>
         </DialogHeader>
@@ -168,21 +170,21 @@ function ApproveDialog({ open, onOpenChange, pkg }: ApproveDialogProps) {
             {/* Package summary */}
             <div className="rounded-md border p-3 space-y-1 text-sm">
               <div>
-                <span className="text-muted-foreground">Phac do:</span>{" "}
+                <span className="text-muted-foreground">{t("approvalQueue.protocol")}:</span>{" "}
                 {pkg.protocolTemplateName}
               </div>
               <div>
-                <span className="text-muted-foreground">Loai:</span>{" "}
+                <span className="text-muted-foreground">{t("approvalQueue.type")}:</span>{" "}
                 <Badge variant="outline" className={`text-xs ${TREATMENT_TYPE_STYLES[pkg.treatmentType] ?? ""}`}>
                   {pkg.treatmentType}
                 </Badge>
               </div>
               <div>
-                <span className="text-muted-foreground">Tien trinh:</span>{" "}
-                {pkg.sessionsCompleted}/{pkg.totalSessions} phien
+                <span className="text-muted-foreground">{t("approvalQueue.progress")}:</span>{" "}
+                {pkg.sessionsCompleted}/{pkg.totalSessions} {t("approvalQueue.sessions")}
               </div>
               <div>
-                <span className="text-muted-foreground">Ly do huy:</span>{" "}
+                <span className="text-muted-foreground">{t("approvalQueue.cancelReason")}:</span>{" "}
                 {pkg.cancellationRequest?.reason ?? "--"}
               </div>
             </div>
@@ -194,7 +196,7 @@ function ApproveDialog({ open, onOpenChange, pkg }: ApproveDialogProps) {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
                   <FieldLabel htmlFor={field.name}>
-                    Phan tram khau tru (%)
+                    {t("approvalQueue.deductionPercentLabel")}
                   </FieldLabel>
                   <Input
                     {...field}
@@ -214,7 +216,7 @@ function ApproveDialog({ open, onOpenChange, pkg }: ApproveDialogProps) {
 
             {/* Calculated refund amount */}
             <div className="rounded-md bg-muted p-3 text-sm">
-              <span className="text-muted-foreground">So tien hoan du kien:</span>{" "}
+              <span className="text-muted-foreground">{t("approvalQueue.estimatedRefund")}:</span>{" "}
               <span className="font-semibold text-base">{formatVND(refundAmount)}</span>
             </div>
 
@@ -224,7 +226,7 @@ function ApproveDialog({ open, onOpenChange, pkg }: ApproveDialogProps) {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>PIN quan ly</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>{t("approvalQueue.managerPin")}</FieldLabel>
                   <Input
                     {...field}
                     id={field.name}
@@ -252,13 +254,13 @@ function ApproveDialog({ open, onOpenChange, pkg }: ApproveDialogProps) {
                 onClick={() => onOpenChange(false)}
                 disabled={approveMutation.isPending}
               >
-                Huy
+                {t("approvalQueue.cancel")}
               </Button>
               <Button type="submit" disabled={approveMutation.isPending}>
                 {approveMutation.isPending && (
                   <IconLoader2 className="mr-2 h-4 w-4 animate-spin" />
                 )}
-                Phe duyet
+                {t("approvalQueue.approveButton")}
               </Button>
             </DialogFooter>
           </form>
@@ -277,6 +279,7 @@ interface RejectDialogProps {
 }
 
 function RejectDialog({ open, onOpenChange, pkg }: RejectDialogProps) {
+  const { t } = useTranslation("treatment")
   const user = useAuthStore((s) => s.user)
   const rejectMutation = useRejectCancellation()
 
@@ -296,11 +299,11 @@ function RejectDialog({ open, onOpenChange, pkg }: RejectDialogProps) {
         managerId: user.id,
         rejectionReason: data.rejectionReason,
       })
-      toast.success("Da tu choi yeu cau huy")
+      toast.success(t("approvalQueue.rejectSuccess"))
       onOpenChange(false)
       form.reset()
     } catch {
-      toast.error("Khong the tu choi yeu cau")
+      toast.error(t("approvalQueue.rejectError"))
     }
   }
 
@@ -318,9 +321,9 @@ function RejectDialog({ open, onOpenChange, pkg }: RejectDialogProps) {
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Tu choi yeu cau huy</DialogTitle>
+          <DialogTitle>{t("approvalQueue.rejectDialogTitle")}</DialogTitle>
           <DialogDescription>
-            Tu choi yeu cau huy phac do cho benh nhan{" "}
+            {t("approvalQueue.rejectDialogDescription")}{" "}
             <span className="font-medium">{pkg?.patientName}</span>
           </DialogDescription>
         </DialogHeader>
@@ -331,7 +334,7 @@ function RejectDialog({ open, onOpenChange, pkg }: RejectDialogProps) {
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
-                <FieldLabel htmlFor={field.name}>Ly do tu choi</FieldLabel>
+                <FieldLabel htmlFor={field.name}>{t("approvalQueue.rejectionReasonLabel")}</FieldLabel>
                 <Textarea
                   {...field}
                   id={field.name}
@@ -352,7 +355,7 @@ function RejectDialog({ open, onOpenChange, pkg }: RejectDialogProps) {
               onClick={() => onOpenChange(false)}
               disabled={rejectMutation.isPending}
             >
-              Huy
+              {t("approvalQueue.cancel")}
             </Button>
             <Button
               type="submit"
@@ -362,7 +365,7 @@ function RejectDialog({ open, onOpenChange, pkg }: RejectDialogProps) {
               {rejectMutation.isPending && (
                 <IconLoader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
-              Tu choi
+              {t("approvalQueue.rejectButton")}
             </Button>
           </DialogFooter>
         </form>
@@ -374,6 +377,7 @@ function RejectDialog({ open, onOpenChange, pkg }: RejectDialogProps) {
 // -- Main component --
 
 export function CancellationApprovalQueue() {
+  const { t } = useTranslation("treatment")
   const { data: packages = [], isLoading, isError } = usePendingCancellations()
   const canManage = useAuthStore(
     (s) => s.user?.permissions?.includes("Treatment.Manage") || s.user?.permissions?.includes("Admin"),
@@ -385,7 +389,7 @@ export function CancellationApprovalQueue() {
   const columns = useMemo(
     () => [
       columnHelper.accessor("patientName", {
-        header: "Benh nhan",
+        header: t("approvalQueue.columns.patient"),
         cell: (info) => (
           <Link
             to="/patients/$patientId"
@@ -399,7 +403,7 @@ export function CancellationApprovalQueue() {
         enableSorting: true,
       }),
       columnHelper.accessor("treatmentType", {
-        header: "Loai dieu tri",
+        header: t("approvalQueue.columns.treatmentType"),
         cell: (info) => {
           const type = info.getValue()
           return (
@@ -415,7 +419,7 @@ export function CancellationApprovalQueue() {
       }),
       columnHelper.display({
         id: "progress",
-        header: "Tien trinh",
+        header: t("approvalQueue.columns.progress"),
         cell: ({ row }) => {
           const pkg = row.original
           return (
@@ -427,7 +431,7 @@ export function CancellationApprovalQueue() {
       }),
       columnHelper.display({
         id: "requestedBy",
-        header: "Nguoi yeu cau",
+        header: t("approvalQueue.columns.requestedBy"),
         cell: ({ row }) => (
           <span className="text-sm">
             {row.original.cancellationRequest?.requestedByName ?? "--"}
@@ -436,7 +440,7 @@ export function CancellationApprovalQueue() {
       }),
       columnHelper.display({
         id: "requestDate",
-        header: "Ngay yeu cau",
+        header: t("approvalQueue.columns.requestDate"),
         cell: ({ row }) => {
           const req = row.original.cancellationRequest
           if (!req) return <span className="text-sm text-muted-foreground">--</span>
@@ -449,7 +453,7 @@ export function CancellationApprovalQueue() {
       }),
       columnHelper.display({
         id: "reason",
-        header: "Ly do",
+        header: t("approvalQueue.columns.reason"),
         cell: ({ row }) => (
           <span className="text-sm max-w-[200px] truncate block">
             {row.original.cancellationRequest?.reason ?? "--"}
@@ -458,7 +462,7 @@ export function CancellationApprovalQueue() {
       }),
       columnHelper.display({
         id: "deduction",
-        header: "Khau tru (%)",
+        header: t("approvalQueue.columns.deduction"),
         cell: ({ row }) => {
           const deduction = row.original.cancellationRequest?.deductionPercent
           return (
@@ -485,7 +489,7 @@ export function CancellationApprovalQueue() {
                     }}
                   >
                     <IconCheck className="h-4 w-4 mr-1" />
-                    Duyet
+                    {t("approvalQueue.approveButton")}
                   </Button>
                   <Button
                     size="sm"
@@ -497,7 +501,7 @@ export function CancellationApprovalQueue() {
                     }}
                   >
                     <IconX className="h-4 w-4 mr-1" />
-                    Tu choi
+                    {t("approvalQueue.rejectButton")}
                   </Button>
                 </div>
               ),
@@ -505,7 +509,7 @@ export function CancellationApprovalQueue() {
           ]
         : []),
     ],
-    [canManage],
+    [canManage, t],
   )
 
   const table = useReactTable({
@@ -524,7 +528,7 @@ export function CancellationApprovalQueue() {
   if (isError) {
     return (
       <div className="text-center py-12 text-destructive">
-        Khong the tai danh sach yeu cau huy. Vui long thu lai.
+        {t("approvalQueue.loadError")}
       </div>
     )
   }
@@ -544,7 +548,7 @@ export function CancellationApprovalQueue() {
       <DataTable
         table={table}
         columns={columns}
-        emptyMessage="Khong co yeu cau huy nao dang cho duyet"
+        emptyMessage={t("approvalQueue.emptyMessage")}
       />
 
       <ApproveDialog

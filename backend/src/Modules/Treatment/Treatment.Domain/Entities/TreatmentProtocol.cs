@@ -1,5 +1,6 @@
 using Shared.Domain;
 using Treatment.Domain.Enums;
+using Treatment.Domain.Events;
 
 namespace Treatment.Domain.Entities;
 
@@ -207,6 +208,11 @@ public class TreatmentProtocol : AggregateRoot, IAuditable
         Description = description;
 
         SetUpdatedAt();
+
+        AddDomainEvent(new ProtocolUpdatedEvent(
+            ProtocolId: Id,
+            Name: Name,
+            TreatmentType: TreatmentType));
     }
 
     /// <summary>
@@ -216,6 +222,8 @@ public class TreatmentProtocol : AggregateRoot, IAuditable
     {
         IsActive = false;
         SetUpdatedAt();
+
+        AddDomainEvent(new ProtocolDeactivatedEvent(ProtocolId: Id));
     }
 
     /// <summary>
@@ -225,5 +233,7 @@ public class TreatmentProtocol : AggregateRoot, IAuditable
     {
         IsActive = true;
         SetUpdatedAt();
+
+        AddDomainEvent(new ProtocolActivatedEvent(ProtocolId: Id));
     }
 }

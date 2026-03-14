@@ -161,16 +161,16 @@ public class TreatmentPackage : AggregateRoot, IAuditable
         // Enforce minimum interval between sessions (TRT-05)
         if (MinIntervalDays > 0)
         {
-            var lastCompletedSession = _sessions
+            var lastNonCancelledSession = _sessions
                 .Where(s => s.Status != SessionStatus.Cancelled)
-                .OrderByDescending(s => s.CompletedAt ?? s.ScheduledAt ?? s.CreatedAt)
+                .OrderByDescending(s => s.ScheduledAt ?? s.CompletedAt ?? s.CreatedAt)
                 .FirstOrDefault();
 
-            if (lastCompletedSession is not null)
+            if (lastNonCancelledSession is not null)
             {
-                var lastSessionDate = lastCompletedSession.CompletedAt
-                    ?? lastCompletedSession.ScheduledAt
-                    ?? lastCompletedSession.CreatedAt;
+                var lastSessionDate = lastNonCancelledSession.ScheduledAt
+                    ?? lastNonCancelledSession.CompletedAt
+                    ?? lastNonCancelledSession.CreatedAt;
                 var currentDate = scheduledAt ?? DateTime.UtcNow;
                 var daysSinceLastSession = (currentDate - lastSessionDate).TotalDays;
 
