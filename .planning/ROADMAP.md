@@ -459,6 +459,29 @@ Plans:
 - [ ] 09-28-PLAN.md -- End-to-end verification checkpoint
 - [ ] 09-29-PLAN.md -- Vietnamese user stories documentation (DOC-01)
 
+### Phase 9.1: Fix Phase 09 Code Review Issues
+**Goal**: Resolve all critical and important bugs, missing requirement implementations, and quality gaps found during Phase 9 code review
+**Depends on**: Phase 9
+**Requirements**: TRT-01, TRT-02, TRT-03, TRT-04, TRT-05, TRT-07, TRT-08, TRT-09, TRT-10, TRT-11
+**Success Criteria** (what must be TRUE):
+  1. All write endpoints enforce permission-based authorization (TRT-10) — Doctor role required for protocol/package/session operations, Manager role for cancellation approval
+  2. Domain layer enforces minimum interval between sessions with override reason support (TRT-05), validates 10-20% deduction range (TRT-09), and auto-completes on Modify() when applicable (TRT-04)
+  3. Migration includes BranchId column for TreatmentProtocols table — no runtime SqlException
+  4. All action buttons in TreatmentPackageDetail are functional and wired to their dialogs; session card displays correct parameter keys; QR OSDI self-fill flow works end-to-end
+  5. Frontend routes have permission guards, all UI strings use i18n, and all validators match backend constraints
+  6. Test coverage reaches 80%+ with sentinel file exclusions removed, validator tests added, and TRT-10 authorization tested
+
+**Plans**: 7 plans in 3 waves
+
+Plans:
+- [ ] 09.1-01-PLAN.md -- Domain fixes: interval enforcement, session numbering, Modify() auto-complete, deduction validation, Entity inheritance, dead enum removal, change detection
+- [ ] 09.1-02-PLAN.md -- Application + Presentation fixes: RequirePermissions on all write endpoints, ICurrentUser in RecordSession, ApproveCancellation deduction override, RequestCancellation fallback removal, DTO protocol names, SwitchTreatmentType reorder, OSDI validation, type filter fix
+- [ ] 09.1-03-PLAN.md -- Infrastructure fix: EF Core config updates for Entity inheritance + regenerate migration with UpdatedAt/IsDeleted columns
+- [ ] 09.1-04-PLAN.md -- Frontend fixes (Part 1): wire action buttons to dialogs, fix session card JSON keys, ModifyPackageDialog validation, back navigation, query key cache fix, PatientTreatmentsTab patientId
+- [ ] 09.1-05-PLAN.md -- Frontend fixes (Part 2): permission guards on treatment routes, i18n translations for CancellationApprovalQueue, CancellationRequestDialog, ProtocolTemplateList
+- [ ] 09.1-06-PLAN.md -- QR OSDI token flow: backend token registration endpoint + version history API endpoint + frontend QR URL fix + VersionHistoryDialog wiring
+- [ ] 09.1-07-PLAN.md -- Test fixes: remove sentinel file exclusions, fix existing tests for updated domain/handler signatures, add 12+ new tests for interval, numbering, auto-completion, deduction, ICurrentUser
+
 ## Progress
 
 **Execution Order:**
@@ -484,3 +507,4 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 | 7.2 Fix Phase 07.1 Code Review Issues | 0/5 | Not started | - |
 | 8. Optical Center | 39/39 | Complete   | 2026-03-08 |
 | 9. Treatment Protocols | 25/29 | In Progress|  |
+| 9.1 Fix Phase 09 Code Review Issues | 0/7 | Not started | - |
