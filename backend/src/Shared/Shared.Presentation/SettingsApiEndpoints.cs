@@ -1,7 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Shared.Application;
+using Shared.Application.Features;
 using Shared.Application.Interfaces;
+using Shared.Application.Services;
+using Shared.Domain;
 
 namespace Shared.Presentation;
 
@@ -40,6 +44,21 @@ public static class SettingsApiEndpoints
             var result = await service.CreateOrUpdateAsync(command, ct);
             return result.ToHttpResult();
         });
+
+        // POST /api/settings/clinic/logo
+        group.MapPost("/clinic/logo", async (
+            IFormFile file,
+            IAzureBlobService blobService,
+            IClinicSettingsService settingsService,
+            IBranchContext branchContext,
+            CancellationToken ct) =>
+        {
+            using var stream = file.OpenReadStream();
+            var command = new UploadClinicLogoCommand(stream, file.ContentType, file.FileName);
+            var result = await UploadClinicLogoHandler.Handle(
+                command, blobService, settingsService, branchContext, ct);
+            return result.ToHttpResult();
+        }).DisableAntiforgery();
 
         return app;
     }

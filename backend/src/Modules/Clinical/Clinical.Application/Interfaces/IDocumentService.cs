@@ -30,4 +30,10 @@ public interface IDocumentService
     /// Generates a pharmacy label PDF (small label ~70x35mm).
     /// </summary>
     Task<byte[]> GeneratePharmacyLabelAsync(Guid prescriptionItemId, CancellationToken ct);
+
+    /// <summary>
+    /// Generates a batch pharmacy label PDF with one label per drug in a prescription.
+    /// Each page is a 70x35mm label for thermal printer output.
+    /// </summary>
+    Task<byte[]> GenerateBatchPharmacyLabelsAsync(Guid prescriptionId, CancellationToken ct);
 }
