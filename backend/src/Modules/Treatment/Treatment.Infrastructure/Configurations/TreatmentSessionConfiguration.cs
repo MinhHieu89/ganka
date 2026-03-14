@@ -54,9 +54,6 @@ public class TreatmentSessionConfiguration : IEntityTypeConfiguration<TreatmentS
         builder.Property(x => x.CompletedAt)
             .IsRequired(false);
 
-        builder.Property(x => x.CreatedAt)
-            .IsRequired();
-
         builder.Property(x => x.IntervalOverrideReason)
             .HasMaxLength(500);
 
