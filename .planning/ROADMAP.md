@@ -508,4 +508,4 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 | 7.2 Fix Phase 07.1 Code Review Issues | 0/5 | Not started | - |
 | 8. Optical Center | 39/39 | Complete   | 2026-03-08 |
 | 9. Treatment Protocols | 25/29 | In Progress|  |
-| 9.1 Fix Phase 09 Code Review Issues | 0/8 | Not started | - |
+| 9.1 Fix Phase 09 Code Review Issues | 8/8 | Complete   | 2026-03-14 |

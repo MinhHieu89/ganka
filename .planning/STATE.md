@@ -3,11 +3,27 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
+stopped_at: Completed 09.1-08-PLAN.md
+last_updated: "2026-03-14T04:00:23.897Z"
+last_activity: "2026-03-13 - Completed quick task 2: Add Serilog with file output for development"
+progress:
+  total_phases: 17
+  completed_phases: 15
+  total_plans: 256
+  completed_plans: 254
+  percent: 99
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: in-progress
 stopped_at: Completed 09.1-07-PLAN.md
 last_updated: "2026-03-14T03:38:21Z"
 last_activity: "2026-03-14 - Completed 09.1-07 Treatment Unit Tests (sentinel removal, test fixes, new tests)"
 progress:
-  total_phases: 17
+  [██████████] 99%
   completed_phases: 14
   total_plans: 255
   completed_plans: 253
@@ -804,6 +820,7 @@ Progress: [█████████░] 96%
 | Phase 09.1 P03 | 2min | 2 tasks | 4 files |
 | Phase 09.1 P06 | 5min | 2 tasks | 13 files |
 | Phase 09.1 P04 | 6min | 2 tasks | 8 files |
+| Phase 09.1 P08 | 2min | 1 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -1273,6 +1290,7 @@ Recent decisions affecting current work:
 - [Phase 09.1]: Used in-memory ConcurrentDictionary with lazy TTL cleanup for OSDI tokens (no DB migration needed)
 - [Phase 09.1]: Used dynamic zod schema factory for runtime sessionsCompleted floor validation in ModifyPackageDialog
 - [Phase 09.1]: Used broader query key prefix for template mutation invalidation to cover all type-filtered caches
+- [Phase 09.1]: Removed Treatment.Manage exclusion from Manager role to close TRT-09 permission gap
 
 ### Roadmap Evolution
 
@@ -1303,6 +1321,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-14T03:28:29.128Z
-Stopped at: Completed 09.1-04-PLAN.md
+Last session: 2026-03-14T04:00:23.892Z
+Stopped at: Completed 09.1-08-PLAN.md
 Resume file: None
