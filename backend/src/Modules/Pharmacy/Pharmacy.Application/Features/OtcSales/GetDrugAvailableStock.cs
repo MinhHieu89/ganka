@@ -10,7 +10,8 @@ public sealed record GetDrugAvailableStockQuery(Guid DrugCatalogItemId);
 
 /// <summary>
 /// Wolverine static handler for retrieving available stock for a drug.
-/// Returns the sum of CurrentQuantity across all non-expired batches (FEFO query).
+/// Uses GetTotalStockAsync for efficient server-side aggregation instead of
+/// loading all batches into memory.
 /// </summary>
 public static class GetDrugAvailableStockHandler
 {
@@ -19,9 +20,7 @@ public static class GetDrugAvailableStockHandler
         IDrugBatchRepository batchRepository,
         CancellationToken ct)
     {
-        var batches = await batchRepository.GetAvailableBatchesFEFOAsync(
+        return await batchRepository.GetTotalStockAsync(
             query.DrugCatalogItemId, ct);
-
-        return batches.Sum(b => b.CurrentQuantity);
     }
 }

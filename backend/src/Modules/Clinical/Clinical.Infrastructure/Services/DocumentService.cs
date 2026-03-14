@@ -193,10 +193,17 @@ public sealed class DocumentService : IDocumentService
 
     public async Task<byte[]> GenerateBatchPharmacyLabelsAsync(Guid prescriptionId, CancellationToken ct)
     {
-        var prescription = await _clinicalDb.DrugPrescriptions
+        // Run prescription and header queries concurrently
+        var prescriptionTask = _clinicalDb.DrugPrescriptions
             .AsNoTracking()
             .Include(p => p.Items)
-            .FirstOrDefaultAsync(p => p.Id == prescriptionId, ct)
+            .FirstOrDefaultAsync(p => p.Id == prescriptionId, ct);
+
+        var headerTask = GetClinicHeaderDataAsync(ct);
+
+        await Task.WhenAll(prescriptionTask, headerTask);
+
+        var prescription = await prescriptionTask
             ?? throw new InvalidOperationException($"Drug prescription {prescriptionId} not found.");
 
         var visit = await _clinicalDb.Visits
@@ -204,7 +211,7 @@ public sealed class DocumentService : IDocumentService
             .FirstOrDefaultAsync(v => v.Id == prescription.VisitId, ct)
             ?? throw new InvalidOperationException($"Visit {prescription.VisitId} not found.");
 
-        var headerData = await GetClinicHeaderDataAsync(ct);
+        var headerData = await headerTask;
         var clinicName = headerData.ClinicNameVi ?? headerData.ClinicName;
 
         var labels = prescription.Items

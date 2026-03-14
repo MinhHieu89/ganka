@@ -32,10 +32,13 @@ public sealed class BatchPharmacyLabelDocument : IDocument
 
                 page.Content().Column(col =>
                 {
-                    // Clinic name (abbreviated if needed)
-                    var clinicDisplay = label.ClinicName.Length > 30
-                        ? label.ClinicName[..30] + "..."
-                        : label.ClinicName;
+                    // Clinic name (abbreviated if needed, null-safe)
+                    var clinicName = !string.IsNullOrEmpty(label.ClinicName)
+                        ? label.ClinicName
+                        : "Clinic";
+                    var clinicDisplay = clinicName.Length > 30
+                        ? clinicName[..30] + "..."
+                        : clinicName;
                     col.Item().Text(clinicDisplay).FontSize(6).Bold();
 
                     // Patient name

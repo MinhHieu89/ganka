@@ -26,7 +26,7 @@ public static class IoC
 
         // Services
         services.AddScoped<IDocumentService, DocumentService>();
-        services.AddScoped<IOsdiNotificationService, OsdiNotificationService>();
+        services.AddSingleton<IOsdiNotificationService, OsdiNotificationService>();
 
         return services;
     }

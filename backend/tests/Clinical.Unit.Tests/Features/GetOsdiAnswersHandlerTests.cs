@@ -32,9 +32,9 @@ public class GetOsdiAnswersHandlerTests
         // Assert
         result.Should().NotBeNull();
         result!.Groups.Should().HaveCount(3);
-        result.Groups[0].Category.Should().Be("Vision");
+        result.Groups[0].Category.Should().Be("Ocular Symptoms");
         result.Groups[0].Questions.Should().HaveCount(5);
-        result.Groups[1].Category.Should().Be("Eye Symptoms");
+        result.Groups[1].Category.Should().Be("Vision-Related Function");
         result.Groups[1].Questions.Should().HaveCount(4);
         result.Groups[2].Category.Should().Be("Environmental Triggers");
         result.Groups[2].Questions.Should().HaveCount(3);

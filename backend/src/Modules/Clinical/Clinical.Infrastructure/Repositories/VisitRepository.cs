@@ -162,7 +162,8 @@ public sealed class VisitRepository : IVisitRepository
                 d => d.VisitId,
                 v => v.Id,
                 (d, v) => new { Assessment = d, Visit = v })
-            .Where(x => x.Visit.PatientId == patientId && !x.Visit.IsDeleted);
+            .Where(x => x.Visit.PatientId == patientId && !x.Visit.IsDeleted
+                && (x.Visit.Status == VisitStatus.Signed || x.Visit.Status == VisitStatus.Amended));
 
         if (since.HasValue)
             query = query.Where(x => x.Visit.VisitDate >= since.Value);
