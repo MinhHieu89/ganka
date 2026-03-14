@@ -1,3 +1,4 @@
+using Shared.Domain;
 using Treatment.Domain.Enums;
 
 namespace Treatment.Domain.Entities;
@@ -6,17 +7,15 @@ namespace Treatment.Domain.Entities;
 /// Represents a single treatment session within a TreatmentPackage.
 /// Records device parameters, OSDI score (TRT-03), clinical notes,
 /// and consumables used (TRT-11). Child entity of TreatmentPackage aggregate.
+/// Extends Entity base class for Id, CreatedAt, UpdatedAt, IsDeleted tracking.
 /// </summary>
-public class TreatmentSession
+public class TreatmentSession : Entity
 {
     // --- Backing field ---
 
     private readonly List<SessionConsumable> _consumables = [];
 
     // --- Properties ---
-
-    /// <summary>Unique identifier for this session.</summary>
-    public Guid Id { get; private set; }
 
     /// <summary>FK to the parent TreatmentPackage.</summary>
     public Guid TreatmentPackageId { get; private set; }
@@ -51,9 +50,6 @@ public class TreatmentSession
     /// <summary>When the session was completed.</summary>
     public DateTime? CompletedAt { get; private set; }
 
-    /// <summary>When the session record was created.</summary>
-    public DateTime CreatedAt { get; private set; }
-
     /// <summary>Reason for overriding the minimum interval between sessions, if applicable.</summary>
     public string? IntervalOverrideReason { get; private set; }
 
@@ -71,6 +67,7 @@ public class TreatmentSession
 
     /// <summary>
     /// Creates a new treatment session. Status starts at Scheduled.
+    /// Id and CreatedAt are provided by Entity base class constructor.
     /// </summary>
     public static TreatmentSession Create(
         Guid treatmentPackageId,
@@ -86,7 +83,6 @@ public class TreatmentSession
     {
         return new TreatmentSession
         {
-            Id = Guid.NewGuid(),
             TreatmentPackageId = treatmentPackageId,
             SessionNumber = sessionNumber,
             Status = SessionStatus.Scheduled,
@@ -97,8 +93,7 @@ public class TreatmentSession
             PerformedById = performedById,
             VisitId = visitId,
             ScheduledAt = scheduledAt,
-            IntervalOverrideReason = intervalOverrideReason,
-            CreatedAt = DateTime.UtcNow
+            IntervalOverrideReason = intervalOverrideReason
         };
     }
 
@@ -117,6 +112,7 @@ public class TreatmentSession
 
         Status = SessionStatus.Completed;
         CompletedAt = DateTime.UtcNow;
+        SetUpdatedAt();
     }
 
     /// <summary>

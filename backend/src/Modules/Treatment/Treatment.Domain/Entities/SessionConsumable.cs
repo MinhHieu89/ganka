@@ -1,15 +1,14 @@
+using Shared.Domain;
+
 namespace Treatment.Domain.Entities;
 
 /// <summary>
 /// Represents a consumable item used during a treatment session (TRT-11).
 /// Links to Pharmacy.ConsumableItem via ConsumableItemId for inventory deduction.
-/// Child entity of TreatmentSession.
+/// Child entity of TreatmentSession. Extends Entity for Id, CreatedAt, UpdatedAt, IsDeleted tracking.
 /// </summary>
-public class SessionConsumable
+public class SessionConsumable : Entity
 {
-    /// <summary>Unique identifier.</summary>
-    public Guid Id { get; private set; }
-
     /// <summary>FK to the parent TreatmentSession.</summary>
     public Guid TreatmentSessionId { get; private set; }
 
@@ -27,6 +26,7 @@ public class SessionConsumable
 
     /// <summary>
     /// Factory method to create a new session consumable record.
+    /// Id and CreatedAt are provided by Entity base class constructor.
     /// </summary>
     public static SessionConsumable Create(
         Guid treatmentSessionId,
@@ -36,7 +36,6 @@ public class SessionConsumable
     {
         return new SessionConsumable
         {
-            Id = Guid.NewGuid(),
             TreatmentSessionId = treatmentSessionId,
             ConsumableItemId = consumableItemId,
             ConsumableName = consumableName,

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Treatment.Infrastructure;
 
@@ -11,9 +12,11 @@ using Treatment.Infrastructure;
 namespace Treatment.Infrastructure.Migrations
 {
     [DbContext(typeof(TreatmentDbContext))]
-    partial class TreatmentDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260314031624_AddEntityBaseToSessionEntities")]
+    partial class AddEntityBaseToSessionEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
