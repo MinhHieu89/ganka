@@ -22,6 +22,7 @@ using Pharmacy.Infrastructure;
 using Optical.Infrastructure;
 using Billing.Infrastructure;
 using Billing.Infrastructure.Hubs;
+using Clinical.Infrastructure.Hubs;
 using Treatment.Infrastructure;
 
 // Module IoC extension methods
@@ -351,6 +352,7 @@ app.MapSettingsApiEndpoints();
 
 // SignalR hubs
 app.MapHub<BillingHub>("/api/hubs/billing");
+app.MapHub<OsdiHub>("/api/hubs/osdi");
 
 app.Run();
 

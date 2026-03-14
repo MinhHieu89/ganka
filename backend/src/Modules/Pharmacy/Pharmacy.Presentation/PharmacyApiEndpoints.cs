@@ -76,6 +76,38 @@ public static class PharmacyApiEndpoints
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
         });
+
+        // POST /api/pharmacy/drugs/import/preview -- parse Excel file and return preview
+        group.MapPost("/drugs/import/preview", async (HttpRequest request, IMessageBus bus, CancellationToken ct) =>
+        {
+            if (!request.HasFormContentType)
+                return Results.BadRequest("Request must be multipart/form-data.");
+
+            var form = await request.ReadFormAsync(ct);
+            var file = form.Files.GetFile("file");
+            if (file is null)
+                return Results.BadRequest("A file named 'file' is required.");
+
+            using var stream = file.OpenReadStream();
+            var result = await bus.InvokeAsync<Result<DrugCatalogImportPreview>>(
+                new ImportDrugCatalogFromExcelCommand(stream, file.FileName), ct);
+            return result.ToHttpResult();
+        }).DisableAntiforgery();
+
+        // POST /api/pharmacy/drugs/import/confirm -- confirm and persist valid rows
+        group.MapPost("/drugs/import/confirm", async (ConfirmDrugCatalogImportCommand command, IMessageBus bus, CancellationToken ct) =>
+        {
+            var result = await bus.InvokeAsync<Result<int>>(command, ct);
+            return result.ToHttpResult();
+        });
+
+        // GET /api/pharmacy/drugs/import/template -- download Excel template
+        group.MapGet("/drugs/import/template", (IMessageBus bus) =>
+        {
+            var bytes = GetDrugCatalogTemplateHandler.Handle(new GetDrugCatalogTemplateQuery());
+            return Results.File(bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "drug-catalog-template.xlsx");
+        });
     }
 
     private static void MapSupplierEndpoints(RouteGroupBuilder group)

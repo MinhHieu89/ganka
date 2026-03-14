@@ -193,6 +193,13 @@ public static class ClinicalApiEndpoints
                 new GetDryEyeMetricHistoryQuery(patientId, timeRange ?? "all"), ct);
             return Results.Ok(result);
         });
+
+        group.MapGet("/visits/{visitId:guid}/osdi-answers", async (Guid visitId, IMessageBus bus, CancellationToken ct) =>
+        {
+            var result = await bus.InvokeAsync<OsdiAnswersResponse?>(
+                new GetOsdiAnswersQuery(visitId), ct);
+            return result is not null ? Results.Ok(result) : Results.NotFound();
+        });
     }
 
     private static void MapMedicalImageEndpoints(RouteGroupBuilder group)
