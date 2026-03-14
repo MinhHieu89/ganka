@@ -3,14 +3,29 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 07.2-01-PLAN.md
-last_updated: "2026-03-13T17:10:51.492Z"
+stopped_at: Completed 09.1-02-PLAN.md
+last_updated: "2026-03-14T03:10:58.292Z"
 last_activity: "2026-03-13 - Completed quick task 2: Add Serilog with file output for development"
+progress:
+  total_phases: 17
+  completed_phases: 14
+  total_plans: 255
+  completed_plans: 248
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: in-progress
+stopped_at: Completed 09.1-02-PLAN.md
+last_updated: "2026-03-14T03:09:25.000Z"
+last_activity: "2026-03-14 - Completed 09.1-02 Treatment Application Layer Fixes"
 progress:
   total_phases: 16
   completed_phases: 14
   total_plans: 248
-  completed_plans: 246
+  completed_plans: 247
 ---
 
 ---
@@ -1232,6 +1247,7 @@ Recent decisions affecting current work:
 - [Phase 07.2]: Used useRef pattern for queryClient to prevent SignalR reconnection storms
 - [Phase 07.2]: Changed optionsLifetime from Singleton to Scoped for ConfigureDbContext to support scoped interceptor resolution
 - [Phase 07.2]: SQL SEQUENCE is global (not year-scoped) for invoice numbering; year prefix handles display
+- [Phase 09.1]: Added UpdateDeduction to CancellationRequest entity for manager override at approval time
 
 ### Roadmap Evolution
 
@@ -1262,6 +1278,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-13T17:02:49.846Z
-Stopped at: Completed 07.2-01-PLAN.md
+Last session: 2026-03-14T03:10:53.183Z
+Stopped at: Completed 09.1-02-PLAN.md
 Resume file: None
