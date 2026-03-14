@@ -4,10 +4,6 @@ import { IconChevronDown, IconChevronUp } from "@tabler/icons-react"
 import { Button } from "@/shared/components/Button"
 import { Card, CardContent } from "@/shared/components/Card"
 import { Badge } from "@/shared/components/Badge"
-import {
-  Collapsible,
-  CollapsibleContent,
-} from "@/shared/components/Collapsible"
 import { useOsdiAnswers } from "../api/clinical-api"
 import type { OsdiAnswerGroup } from "../api/clinical-api"
 
@@ -23,21 +19,21 @@ export function OsdiAnswersSection({ visitId }: OsdiAnswersSectionProps) {
 
   return (
     <div className="mt-2">
-      <Collapsible open={open} onOpenChange={setOpen}>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="text-xs gap-1"
-          onClick={() => setOpen(!open)}
-        >
-          {open ? (
-            <IconChevronUp className="h-3.5 w-3.5" />
-          ) : (
-            <IconChevronDown className="h-3.5 w-3.5" />
-          )}
-          {t("osdi.viewDetails")}
-        </Button>
-        <CollapsibleContent>
+      <Button
+        variant="ghost"
+        size="sm"
+        className="text-xs gap-1"
+        onClick={() => setOpen(!open)}
+      >
+        {open ? (
+          <IconChevronUp className="h-3.5 w-3.5" />
+        ) : (
+          <IconChevronDown className="h-3.5 w-3.5" />
+        )}
+        {t("osdi.viewDetails")}
+      </Button>
+      {open && (
+        <>
           {isLoading ? (
             <div className="py-4 text-center text-sm text-muted-foreground">...</div>
           ) : !answers ? (
@@ -56,8 +52,8 @@ export function OsdiAnswersSection({ visitId }: OsdiAnswersSectionProps) {
               ))}
             </div>
           )}
-        </CollapsibleContent>
-      </Collapsible>
+        </>
+      )}
     </div>
   )
 }

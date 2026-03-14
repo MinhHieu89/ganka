@@ -37,6 +37,8 @@ export function useOsdiHub(visitId: string | undefined): ConnectionStatus {
   useEffect(() => {
     if (!visitId) return
 
+    const isMounted = { current: true }
+
     const connection = new HubConnectionBuilder()
       .withUrl(HUB_URL, {
         accessTokenFactory: () => {
@@ -51,6 +53,7 @@ export function useOsdiHub(visitId: string | undefined): ConnectionStatus {
 
     // Register event handler -- invalidate visit query cache on OSDI submission
     connection.on("OsdiSubmitted", () => {
+      if (!isMounted.current) return
       const currentVisitId = visitIdRef.current
       if (currentVisitId) {
         queryClientRef.current.invalidateQueries({
@@ -64,11 +67,11 @@ export function useOsdiHub(visitId: string | undefined): ConnectionStatus {
 
     // Connection lifecycle events
     connection.onreconnecting(() => {
-      setStatus("reconnecting")
+      if (isMounted.current) setStatus("reconnecting")
     })
 
     connection.onreconnected(async () => {
-      setStatus("connected")
+      if (isMounted.current) setStatus("connected")
       // Re-join the visit group (group membership lost on reconnect)
       try {
         const currentVisitId = visitIdRef.current
@@ -81,17 +84,17 @@ export function useOsdiHub(visitId: string | undefined): ConnectionStatus {
     })
 
     connection.onclose(() => {
-      setStatus("disconnected")
+      if (isMounted.current) setStatus("disconnected")
     })
 
     // Start connection
     const start = async () => {
       try {
         await connection.start()
-        setStatus("connected")
+        if (isMounted.current) setStatus("connected")
         await connection.invoke("JoinVisit", visitId)
       } catch {
-        setStatus("disconnected")
+        if (isMounted.current) setStatus("disconnected")
       }
     }
 
@@ -99,15 +102,26 @@ export function useOsdiHub(visitId: string | undefined): ConnectionStatus {
 
     // Cleanup on unmount
     return () => {
+      isMounted.current = false
+      // Nullify ref to prevent double-invocation
+      connectionRef.current = null
+
       const cleanup = async () => {
-        if (connection.state === HubConnectionState.Connected) {
-          try {
-            const currentVisitId = visitIdRef.current
-            if (currentVisitId) {
-              await connection.invoke("LeaveVisit", currentVisitId)
+        // Check that connection is in a state where we can invoke methods
+        if (
+          connection.state === HubConnectionState.Connected ||
+          connection.state === HubConnectionState.Connecting ||
+          connection.state === HubConnectionState.Reconnecting
+        ) {
+          if (connection.state === HubConnectionState.Connected) {
+            try {
+              const currentVisitId = visitIdRef.current
+              if (currentVisitId) {
+                await connection.invoke("LeaveVisit", currentVisitId)
+              }
+            } catch {
+              // Ignore errors during cleanup
             }
-          } catch {
-            // Ignore errors during cleanup
           }
         }
         await connection.stop()

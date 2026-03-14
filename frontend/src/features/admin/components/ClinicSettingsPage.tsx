@@ -119,6 +119,14 @@ export function ClinicSettingsPage() {
     const file = e.target.files?.[0]
     if (!file) return
 
+    // Client-side MIME type validation
+    const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"]
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      toast.error(t("clinicSettings.invalidImageType", "Only JPEG, PNG, WebP, or GIF images are allowed"))
+      if (fileInputRef.current) fileInputRef.current.value = ""
+      return
+    }
+
     // Show preview immediately
     const reader = new FileReader()
     reader.onload = (ev) => {

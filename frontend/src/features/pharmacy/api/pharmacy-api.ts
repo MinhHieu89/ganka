@@ -623,6 +623,9 @@ export async function confirmDrugCatalogImport(
   const { data, error, response } = await api.POST(
     "/api/pharmacy/drugs/import/confirm" as never,
     {
+      // TODO: Multi-branch support — replace hardcoded branchId with actual
+      // branch from auth context or clinic settings when multi-branch is implemented.
+      // Currently single-branch only, so empty GUID is the default branch.
       body: { validRows, branchId: "00000000-0000-0000-0000-000000000000" },
     } as never,
   )

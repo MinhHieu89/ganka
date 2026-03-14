@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react"
+import { useState, useCallback, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { IconPlus, IconFileSpreadsheet, IconDownload } from "@tabler/icons-react"
 import { toast } from "sonner"
@@ -25,10 +25,14 @@ export function DrugCatalogPage() {
     pageSize: 20,
   })
 
-  // Reset to page 1 when search changes
+  // Reset to page 1 when debounced search changes to avoid race condition
+  // where pagination reset happens before debounce fires
+  useEffect(() => {
+    setPagination((prev) => prev.pageIndex === 0 ? prev : { ...prev, pageIndex: 0 })
+  }, [debouncedSearch])
+
   const handleSearchChange = useCallback((value: string) => {
     setSearchInput(value)
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }))
   }, [])
 
   const { data, isLoading } = useSearchDrugCatalog(
