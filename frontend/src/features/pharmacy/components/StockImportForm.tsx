@@ -101,14 +101,15 @@ function DrugCombobox({ value, onSelect, disabled }: DrugComboboxProps) {
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-72 p-0" align="start">
-        <Command shouldFilter={false}>
+        <Command>
           <CommandInput placeholder={t("catalog.search")} />
           <CommandEmpty>{t("catalog.empty")}</CommandEmpty>
           <CommandGroup className="max-h-48 overflow-y-auto">
             {(drugs ?? []).map((drug) => (
               <CommandItem
                 key={drug.id}
-                value={drug.id}
+                value={drug.nameVi || drug.name}
+                keywords={[drug.name, drug.genericName ?? ""].filter(Boolean)}
                 onSelect={() => {
                   onSelect(drug.id, drug.nameVi || drug.name)
                   setOpen(false)
