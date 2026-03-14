@@ -54,5 +54,13 @@ public class OsdiNotificationServiceTests
 
         // Assert - should not throw
         await act.Should().NotThrowAsync();
+
+        // Assert - LogWarning was called with the exception
+        _logger.Received(1).Log(
+            LogLevel.Warning,
+            Arg.Any<EventId>(),
+            Arg.Is<object>(o => o.ToString()!.Contains("OsdiSubmitted")),
+            Arg.Is<Exception>(ex => ex.Message == "SignalR connection lost"),
+            Arg.Any<Func<object, Exception?, string>>());
     }
 }
