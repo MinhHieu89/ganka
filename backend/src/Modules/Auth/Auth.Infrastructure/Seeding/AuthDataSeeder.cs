@@ -153,10 +153,9 @@ public sealed class AuthDataSeeder : IHostedService
         opticalPerms.AddRange(GetModulePermissions(PermissionModule.Billing, PermissionAction.View));
         opticalStaff.UpdatePermissions(opticalPerms);
 
-        // 7. Manager
-        var manager = new Role("Manager", "Clinic manager with broad access except treatment management and clinical deletion", true, branchId);
+        // 7. Manager — TRT-09: Manager can process treatment cancellations (requires Treatment.Manage)
+        var manager = new Role("Manager", "Clinic manager with broad access except clinical deletion", true, branchId);
         var managerPerms = allPermissions
-            .Where(p => !(p.Module == PermissionModule.Treatment && p.Action == PermissionAction.Manage))
             .Where(p => !(p.Module == PermissionModule.Clinical && p.Action == PermissionAction.Delete))
             .ToList();
         manager.UpdatePermissions(managerPerms);
