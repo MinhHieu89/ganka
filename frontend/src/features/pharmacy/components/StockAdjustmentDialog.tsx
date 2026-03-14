@@ -14,7 +14,7 @@ import {
 } from "@/shared/components/Dialog"
 import { Button } from "@/shared/components/Button"
 import { Input } from "@/shared/components/Input"
-import { Textarea } from "@/shared/components/Textarea"
+import { AutoResizeTextarea } from "@/shared/components/AutoResizeTextarea"
 import { Field, FieldLabel, FieldError } from "@/shared/components/Field"
 import {
   Select,
@@ -237,7 +237,7 @@ export function StockAdjustmentDialog({
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
                 <FieldLabel htmlFor={field.name}>{t("stockAdjust.notes")}</FieldLabel>
-                <Textarea
+                <AutoResizeTextarea
                   {...field}
                   id={field.name}
                   rows={2}

@@ -19,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/components/Select"
-import { Textarea } from "@/shared/components/Textarea"
+import { AutoResizeTextarea } from "@/shared/components/AutoResizeTextarea"
 import { useCancelAppointment } from "@/features/scheduling/api/scheduling-api"
 import {
   AppointmentStatus,
@@ -198,7 +198,7 @@ export function AppointmentDetailDialog({
                   </SelectItem>
                 </SelectContent>
               </Select>
-              <Textarea
+              <AutoResizeTextarea
                 value={cancelNote}
                 onChange={(e) => setCancelNote(e.target.value)}
                 className="min-h-[60px]"

@@ -16,7 +16,7 @@ import {
   DialogTitle,
 } from "@/shared/components/Dialog"
 import { Input } from "@/shared/components/Input"
-import { Textarea } from "@/shared/components/Textarea"
+import { AutoResizeTextarea } from "@/shared/components/AutoResizeTextarea"
 import { Button } from "@/shared/components/Button"
 import { Field, FieldLabel, FieldError } from "@/shared/components/Field"
 import {
@@ -611,7 +611,7 @@ export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrde
               control={form.control}
               name="notes"
               render={({ field }) => (
-                <Textarea
+                <AutoResizeTextarea
                   {...field}
                   value={field.value ?? ""}
                   rows={3}

@@ -34,7 +34,7 @@ import {
   CommandList,
 } from "@/shared/components/Command"
 import { DatePicker } from "@/shared/components/DatePicker"
-import { Textarea } from "@/shared/components/Textarea"
+import { AutoResizeTextarea } from "@/shared/components/AutoResizeTextarea"
 import { usePatientSearch } from "@/features/patient/hooks/usePatientSearch"
 import {
   useBookAppointment,
@@ -369,7 +369,7 @@ export function AppointmentBookingDialog({
           {/* Notes */}
           <Field>
             <FieldLabel>{t("notes")}</FieldLabel>
-            <Textarea {...form.register("notes")} />
+            <AutoResizeTextarea {...form.register("notes")} />
           </Field>
 
           <DialogFooter>

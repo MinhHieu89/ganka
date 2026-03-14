@@ -12,7 +12,7 @@ import {
 import { Button } from "@/shared/components/Button"
 import { Badge } from "@/shared/components/Badge"
 import { Alert, AlertDescription, AlertTitle } from "@/shared/components/Alert"
-import { Textarea } from "@/shared/components/Textarea"
+import { AutoResizeTextarea } from "@/shared/components/AutoResizeTextarea"
 import { Separator } from "@/shared/components/Separator"
 import type { PendingPrescriptionDto, PendingPrescriptionItemDto } from "@/features/pharmacy/api/pharmacy-api"
 import { useDrugBatches } from "@/features/pharmacy/api/pharmacy-queries"
@@ -328,7 +328,7 @@ export function DispensingDialog({
                 >
                   {t("queue.overrideReasonLabel")} *
                 </label>
-                <Textarea
+                <AutoResizeTextarea
                   id="override-reason"
                   value={overrideReason}
                   onChange={(e) => setOverrideReason(e.target.value)}

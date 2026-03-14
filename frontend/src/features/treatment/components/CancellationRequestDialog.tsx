@@ -14,7 +14,7 @@ import {
   DialogDescription,
 } from "@/shared/components/Dialog"
 import { Button } from "@/shared/components/Button"
-import { Textarea } from "@/shared/components/Textarea"
+import { AutoResizeTextarea } from "@/shared/components/AutoResizeTextarea"
 import { Badge } from "@/shared/components/Badge"
 import { Field, FieldLabel, FieldError } from "@/shared/components/Field"
 import { formatVND } from "@/shared/lib/format-vnd"
@@ -188,7 +188,7 @@ export function CancellationRequestDialog({
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
                   <FieldLabel htmlFor={field.name}>{t("cancellationDialog.reasonLabel")}</FieldLabel>
-                  <Textarea
+                  <AutoResizeTextarea
                     {...field}
                     id={field.name}
                     rows={3}

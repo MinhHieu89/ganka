@@ -31,7 +31,7 @@ import {
   FieldLabel,
 } from "@/shared/components/Field"
 import { DatePicker } from "@/shared/components/DatePicker"
-import { Textarea } from "@/shared/components/Textarea"
+import { AutoResizeTextarea } from "@/shared/components/AutoResizeTextarea"
 import { Badge } from "@/shared/components/Badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card"
 import { Skeleton } from "@/shared/components/Skeleton"
@@ -312,7 +312,7 @@ export function PendingBookingsPanel() {
           <div className="space-y-4">
             <Field>
               <FieldLabel>{t("cancellationReason.title")}</FieldLabel>
-              <Textarea
+              <AutoResizeTextarea
                 value={rejectReason}
                 onChange={(e) => setRejectReason(e.target.value)}
               />

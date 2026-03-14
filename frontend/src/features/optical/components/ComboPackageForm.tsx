@@ -12,7 +12,7 @@ import {
   DialogTitle,
 } from "@/shared/components/Dialog"
 import { Input } from "@/shared/components/Input"
-import { Textarea } from "@/shared/components/Textarea"
+import { AutoResizeTextarea } from "@/shared/components/AutoResizeTextarea"
 import { Button } from "@/shared/components/Button"
 import { Field, FieldLabel, FieldError } from "@/shared/components/Field"
 import {
@@ -224,7 +224,7 @@ export function ComboPackageForm({
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
                 <FieldLabel htmlFor={field.name}>Description</FieldLabel>
-                <Textarea
+                <AutoResizeTextarea
                   {...field}
                   id={field.name}
                   rows={2}

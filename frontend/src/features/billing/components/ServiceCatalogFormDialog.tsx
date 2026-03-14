@@ -14,7 +14,7 @@ import {
   DialogTitle,
 } from "@/shared/components/Dialog"
 import { Input } from "@/shared/components/Input"
-import { Textarea } from "@/shared/components/Textarea"
+import { AutoResizeTextarea } from "@/shared/components/AutoResizeTextarea"
 import { Button } from "@/shared/components/Button"
 import { Switch } from "@/shared/components/Switch"
 import { Label } from "@/shared/components/Label"
@@ -176,7 +176,7 @@ export function ServiceCatalogFormDialog({
 
           <Field>
             <FieldLabel>{t("serviceCatalog.description")}</FieldLabel>
-            <Textarea {...form.register("description")} rows={3} />
+            <AutoResizeTextarea {...form.register("description")} rows={3} />
             <FieldError>
               {form.formState.errors.description?.message}
             </FieldError>

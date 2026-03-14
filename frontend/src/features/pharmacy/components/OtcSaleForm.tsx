@@ -14,7 +14,7 @@ import {
 } from "@tabler/icons-react"
 import { Button } from "@/shared/components/Button"
 import { Input } from "@/shared/components/Input"
-import { Textarea } from "@/shared/components/Textarea"
+import { AutoResizeTextarea } from "@/shared/components/AutoResizeTextarea"
 import { Field, FieldLabel, FieldError } from "@/shared/components/Field"
 import {
   Command,
@@ -444,7 +444,7 @@ export function OtcSaleForm({ onSuccess }: OtcSaleFormProps) {
         render={({ field, fieldState }) => (
           <Field data-invalid={fieldState.invalid || undefined}>
             <FieldLabel htmlFor={field.name}>{t("otcSale.notes")}</FieldLabel>
-            <Textarea
+            <AutoResizeTextarea
               {...field}
               id={field.name}
               rows={2}

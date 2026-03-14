@@ -12,7 +12,7 @@ import {
 } from "@/shared/components/Dialog"
 import { Button } from "@/shared/components/Button"
 import { Input } from "@/shared/components/Input"
-import { Textarea } from "@/shared/components/Textarea"
+import { AutoResizeTextarea } from "@/shared/components/AutoResizeTextarea"
 import { Label } from "@/shared/components/Label"
 import {
   Select,
@@ -462,7 +462,7 @@ export function DrugPrescriptionForm({
               control={control}
               name="dosageOverride"
               render={({ field }) => (
-                <Textarea
+                <AutoResizeTextarea
                   value={field.value ?? ""}
                   onChange={(e) =>
                     field.onChange(e.target.value || null)

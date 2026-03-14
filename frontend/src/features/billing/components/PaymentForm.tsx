@@ -14,7 +14,7 @@ import {
 } from "@/shared/components/Dialog"
 import { Button } from "@/shared/components/Button"
 import { Input } from "@/shared/components/Input"
-import { Textarea } from "@/shared/components/Textarea"
+import { AutoResizeTextarea } from "@/shared/components/AutoResizeTextarea"
 import { Checkbox } from "@/shared/components/Checkbox"
 import { Label } from "@/shared/components/Label"
 import {
@@ -314,7 +314,7 @@ export function PaymentForm({
               name="notes"
               control={control}
               render={({ field }) => (
-                <Textarea
+                <AutoResizeTextarea
                   rows={2}
                   disabled={isSubmitting}
                   value={field.value ?? ""}

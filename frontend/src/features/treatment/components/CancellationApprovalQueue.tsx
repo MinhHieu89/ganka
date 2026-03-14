@@ -26,7 +26,7 @@ import {
   DialogDescription,
 } from "@/shared/components/Dialog"
 import { Input } from "@/shared/components/Input"
-import { Textarea } from "@/shared/components/Textarea"
+import { AutoResizeTextarea } from "@/shared/components/AutoResizeTextarea"
 import { Skeleton } from "@/shared/components/Skeleton"
 import { DataTable } from "@/shared/components/DataTable"
 import { Field, FieldLabel, FieldError } from "@/shared/components/Field"
@@ -335,7 +335,7 @@ function RejectDialog({ open, onOpenChange, pkg }: RejectDialogProps) {
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
                 <FieldLabel htmlFor={field.name}>{t("approvalQueue.rejectionReasonLabel")}</FieldLabel>
-                <Textarea
+                <AutoResizeTextarea
                   {...field}
                   id={field.name}
                   rows={3}

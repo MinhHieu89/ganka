@@ -12,7 +12,7 @@ import {
   DialogTitle,
 } from "@/shared/components/Dialog"
 import { Button } from "@/shared/components/Button"
-import { Textarea } from "@/shared/components/Textarea"
+import { AutoResizeTextarea } from "@/shared/components/AutoResizeTextarea"
 import { Field, FieldLabel, FieldError } from "@/shared/components/Field"
 import { useAmendVisit, type VisitDetailDto } from "../api/clinical-api"
 
@@ -122,7 +122,7 @@ export function AmendmentDialog({ visitId, visit, open, onClose }: AmendmentDial
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
           <Field data-invalid={form.formState.errors.reason ? true : undefined}>
             <FieldLabel>{t("visit.amendReason")}</FieldLabel>
-            <Textarea
+            <AutoResizeTextarea
               className="min-h-[100px]"
               {...form.register("reason")}
               aria-invalid={!!form.formState.errors.reason}

@@ -10,7 +10,7 @@ import {
 } from "@tabler/icons-react"
 import { Badge } from "@/shared/components/Badge"
 import { Button } from "@/shared/components/Button"
-import { Textarea } from "@/shared/components/Textarea"
+import { AutoResizeTextarea } from "@/shared/components/AutoResizeTextarea"
 import { Label } from "@/shared/components/Label"
 import {
   AlertDialog,
@@ -355,7 +355,7 @@ export function DrugPrescriptionSection({
                 {/* Doctor's advice */}
                 <div className="space-y-1.5 mt-3">
                   <Label className="text-xs">{t("prescription.doctorAdvice")}</Label>
-                  <Textarea
+                  <AutoResizeTextarea
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
                     rows={2}

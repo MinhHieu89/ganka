@@ -14,7 +14,7 @@ import {
 } from "@/shared/components/Dialog"
 import { Button } from "@/shared/components/Button"
 import { Field, FieldLabel, FieldError } from "@/shared/components/Field"
-import { Textarea } from "@/shared/components/Textarea"
+import { AutoResizeTextarea } from "@/shared/components/AutoResizeTextarea"
 import { Input } from "@/shared/components/Input"
 import {
   Select,
@@ -351,7 +351,7 @@ export function WarrantyClaimForm({ open, onOpenChange }: WarrantyClaimFormProps
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
                 <FieldLabel>Assessment Notes</FieldLabel>
-                <Textarea
+                <AutoResizeTextarea
                   {...field}
                   rows={4}
                   aria-invalid={fieldState.invalid || undefined}

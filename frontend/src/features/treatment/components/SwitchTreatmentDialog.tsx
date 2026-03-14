@@ -14,7 +14,7 @@ import {
   DialogDescription,
 } from "@/shared/components/Dialog"
 import { Button } from "@/shared/components/Button"
-import { Textarea } from "@/shared/components/Textarea"
+import { AutoResizeTextarea } from "@/shared/components/AutoResizeTextarea"
 import { Badge } from "@/shared/components/Badge"
 import { Card, CardContent } from "@/shared/components/Card"
 import { Separator } from "@/shared/components/Separator"
@@ -231,7 +231,7 @@ export function SwitchTreatmentDialog({
                 <FieldLabel htmlFor="reason">
                   Lý do chuyển đổi *
                 </FieldLabel>
-                <Textarea
+                <AutoResizeTextarea
                   {...field}
                   id="reason"
                   rows={2}

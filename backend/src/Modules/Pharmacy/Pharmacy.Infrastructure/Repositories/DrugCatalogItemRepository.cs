@@ -71,6 +71,45 @@ public sealed class DrugCatalogItemRepository : IDrugCatalogItemRepository
         _dbContext.DrugCatalogItems.Update(item);
     }
 
+    public async Task<(List<DrugCatalogItemDto> Items, int TotalCount)> GetPaginatedAsync(
+        int page, int pageSize, string? search, CancellationToken ct)
+    {
+        var query = _dbContext.DrugCatalogItems
+            .AsNoTracking()
+            .Where(d => d.IsActive);
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            query = query.Where(d =>
+                d.Name.Contains(search) ||
+                d.NameVi.Contains(search) ||
+                d.GenericName.Contains(search));
+        }
+
+        var totalCount = await query.CountAsync(ct);
+
+        var items = await query
+            .OrderBy(d => d.Name)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Select(d => new DrugCatalogItemDto(
+                d.Id,
+                d.Name,
+                d.NameVi,
+                d.GenericName,
+                (int)d.Form,
+                d.Strength,
+                (int)d.Route,
+                d.Unit,
+                d.DefaultDosageTemplate,
+                d.IsActive,
+                d.SellingPrice,
+                d.MinStockLevel))
+            .ToListAsync(ct);
+
+        return (items, totalCount);
+    }
+
     /// <summary>
     /// Returns all active drug catalog items joined with their batch inventory data.
     /// Computes TotalStock (sum of non-expired batch quantities), BatchCount, IsLowStock,

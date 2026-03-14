@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
-import { Textarea } from "@/shared/components/Textarea"
+import { AutoResizeTextarea } from "@/shared/components/AutoResizeTextarea"
 import { useUpdateNotes } from "../api/clinical-api"
 import { VisitSection } from "./VisitSection"
 
@@ -66,7 +66,7 @@ export function ExaminationNotesSection({
 
   return (
     <VisitSection title={t("visit.examinationNotes")}>
-      <Textarea
+      <AutoResizeTextarea
         className="min-h-[120px] resize-y"
         rows={4}
         value={notes}

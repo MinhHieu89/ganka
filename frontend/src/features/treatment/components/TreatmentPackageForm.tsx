@@ -23,7 +23,7 @@ import {
   SelectValue,
 } from "@/shared/components/Select"
 import { Separator } from "@/shared/components/Separator"
-import { Textarea } from "@/shared/components/Textarea"
+import { AutoResizeTextarea } from "@/shared/components/AutoResizeTextarea"
 import { formatVND } from "@/shared/lib/format-vnd"
 import { handleServerValidationError } from "@/shared/lib/server-validation"
 import {
@@ -507,7 +507,7 @@ export function TreatmentPackageForm({
                     <FieldLabel htmlFor="parametersJson">
                       Tham số điều trị (JSON)
                     </FieldLabel>
-                    <Textarea
+                    <AutoResizeTextarea
                       {...field}
                       id="parametersJson"
                       value={field.value ?? ""}

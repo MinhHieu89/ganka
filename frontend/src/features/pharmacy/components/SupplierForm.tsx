@@ -13,7 +13,7 @@ import {
   DialogTitle,
 } from "@/shared/components/Dialog"
 import { Input } from "@/shared/components/Input"
-import { Textarea } from "@/shared/components/Textarea"
+import { AutoResizeTextarea } from "@/shared/components/AutoResizeTextarea"
 import { Button } from "@/shared/components/Button"
 import { Field, FieldLabel, FieldError } from "@/shared/components/Field"
 import type { SupplierDto } from "@/features/pharmacy/api/pharmacy-api"
@@ -143,7 +143,7 @@ export function SupplierForm({
                 <FieldLabel htmlFor={field.name}>
                   {t("supplier.contactInfo")}
                 </FieldLabel>
-                <Textarea
+                <AutoResizeTextarea
                   {...field}
                   id={field.name}
                   rows={3}

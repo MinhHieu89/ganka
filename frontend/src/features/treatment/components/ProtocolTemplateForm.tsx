@@ -13,7 +13,7 @@ import {
 } from "@/shared/components/Dialog"
 import { Input } from "@/shared/components/Input"
 import { Button } from "@/shared/components/Button"
-import { Textarea } from "@/shared/components/Textarea"
+import { AutoResizeTextarea } from "@/shared/components/AutoResizeTextarea"
 import { Field, FieldLabel, FieldError } from "@/shared/components/Field"
 import {
   Select,
@@ -565,7 +565,7 @@ export function ProtocolTemplateForm({
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
                 <FieldLabel htmlFor={field.name}>Description</FieldLabel>
-                <Textarea
+                <AutoResizeTextarea
                   {...field}
                   id={field.name}
                   rows={3}

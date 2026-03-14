@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next"
 import { format, addDays, getDay } from "date-fns"
 import { Button } from "@/shared/components/Button"
 import { Input } from "@/shared/components/Input"
-import { Textarea } from "@/shared/components/Textarea"
+import { AutoResizeTextarea } from "@/shared/components/AutoResizeTextarea"
 import {
   Select,
   SelectContent,
@@ -249,7 +249,7 @@ export function BookingForm({ onSubmit, isSubmitting, error }: BookingFormProps)
       {/* Notes */}
       <Field>
         <FieldLabel>{t("notes")}</FieldLabel>
-        <Textarea
+        <AutoResizeTextarea
           {...form.register("notes")}
         />
       </Field>

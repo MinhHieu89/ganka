@@ -36,6 +36,13 @@ public interface IDrugCatalogItemRepository
     void Update(DrugCatalogItem item);
 
     /// <summary>
+    /// Returns a paginated list of active drug catalog items, optionally filtered by search term.
+    /// Returns a tuple of (items on page, total count of matching items).
+    /// </summary>
+    Task<(List<DrugCatalogItemDto> Items, int TotalCount)> GetPaginatedAsync(
+        int page, int pageSize, string? search, CancellationToken ct);
+
+    /// <summary>
     /// Gets all active drug catalog items with aggregated inventory data from DrugBatches.
     /// Returns inventory summary including TotalStock, BatchCount, IsLowStock, and HasExpiryAlert.
     /// Used for the pharmacy inventory management list view.

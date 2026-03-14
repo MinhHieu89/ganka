@@ -17,7 +17,7 @@ import { Field, FieldLabel, FieldError } from "@/shared/components/Field"
 import { Label } from "@/shared/components/Label"
 import { Checkbox } from "@/shared/components/Checkbox"
 import { Separator } from "@/shared/components/Separator"
-import { Textarea } from "@/shared/components/Textarea"
+import { AutoResizeTextarea } from "@/shared/components/AutoResizeTextarea"
 import { Alert, AlertDescription, AlertTitle } from "@/shared/components/Alert"
 import { handleServerValidationError } from "@/shared/lib/server-validation"
 import { useAuthStore } from "@/shared/stores/authStore"
@@ -413,7 +413,7 @@ export function TreatmentSessionForm({
               name="clinicalNotes"
               control={form.control}
               render={({ field }) => (
-                <Textarea
+                <AutoResizeTextarea
                   {...field}
                   value={field.value ?? ""}
                   onChange={(e) =>
@@ -454,7 +454,7 @@ export function TreatmentSessionForm({
                 render={({ field }) => (
                   <Field>
                     <FieldLabel>Lý do ghi đè khoảng cách</FieldLabel>
-                    <Textarea
+                    <AutoResizeTextarea
                       {...field}
                       value={field.value ?? ""}
                       onChange={(e) =>

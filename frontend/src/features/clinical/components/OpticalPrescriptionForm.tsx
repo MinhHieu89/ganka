@@ -7,7 +7,7 @@ import { IconRefresh } from "@tabler/icons-react"
 import { Button } from "@/shared/components/Button"
 import { Input } from "@/shared/components/Input"
 import { Label } from "@/shared/components/Label"
-import { Textarea } from "@/shared/components/Textarea"
+import { AutoResizeTextarea } from "@/shared/components/AutoResizeTextarea"
 import {
   Select,
   SelectContent,
@@ -375,7 +375,7 @@ export function OpticalPrescriptionForm({
         <Label className="text-xs text-muted-foreground">
           {t("prescription.notes")}
         </Label>
-        <Textarea
+        <AutoResizeTextarea
           className="text-sm min-h-[60px]"
           value={form.watch("notes") ?? ""}
           disabled={disabled}

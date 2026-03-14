@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Routing;
 using Pharmacy.Application.Features;
 using Pharmacy.Application.Features.Alerts;
 using Pharmacy.Application.Features.Inventory;
+using Pharmacy.Application.Features.OtcSales;
 using Pharmacy.Application.Features.Suppliers;
 using Pharmacy.Application.Features.StockImport;
 using Pharmacy.Application.Features.DrugCatalog;
@@ -43,12 +44,19 @@ public static class PharmacyApiEndpoints
             return Results.Ok(results);
         });
 
-        // GET /api/pharmacy/drugs -- list all active drugs (admin)
-        group.MapGet("/drugs", async (IMessageBus bus, CancellationToken ct) =>
+        // GET /api/pharmacy/drugs?page=1&pageSize=20&search=term -- paginated drug catalog (admin)
+        group.MapGet("/drugs", async ([AsParameters] PaginatedDrugCatalogParams p, IMessageBus bus, CancellationToken ct) =>
         {
-            var results = await bus.InvokeAsync<List<DrugCatalogItemDto>>(
-                new GetAllActiveDrugsQuery(), ct);
-            return Results.Ok(results);
+            var result = await bus.InvokeAsync<Result<PaginatedDrugCatalogResult>>(
+                new PaginatedDrugCatalogQuery(p.Page ?? 1, p.PageSize ?? 20, p.Search), ct);
+            return result.ToHttpResult();
+        });
+
+        // GET /api/pharmacy/drugs/{id}/available-stock -- available stock for OTC inline check
+        group.MapGet("/drugs/{id:guid}/available-stock", async (Guid id, IMessageBus bus, CancellationToken ct) =>
+        {
+            var stock = await bus.InvokeAsync<int>(new GetDrugAvailableStockQuery(id), ct);
+            return Results.Ok(new { availableStock = stock });
         });
 
         // POST /api/pharmacy/drugs -- create drug catalog item (admin)
@@ -198,6 +206,14 @@ public static class PharmacyApiEndpoints
 public class SearchDrugCatalogParams
 {
     public string? Term { get; set; }
+}
+
+/// <summary>Query string binding for paginated drug catalog endpoint.</summary>
+public class PaginatedDrugCatalogParams
+{
+    public int? Page { get; set; }
+    public int? PageSize { get; set; }
+    public string? Search { get; set; }
 }
 
 /// <summary>Query string binding for drug inventory endpoint.</summary>

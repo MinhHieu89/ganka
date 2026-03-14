@@ -4,7 +4,7 @@ import { IconFileText, IconPrinter } from "@tabler/icons-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card"
 import { Button } from "@/shared/components/Button"
 import { Input } from "@/shared/components/Input"
-import { Textarea } from "@/shared/components/Textarea"
+import { AutoResizeTextarea } from "@/shared/components/AutoResizeTextarea"
 import { Label } from "@/shared/components/Label"
 import {
   Dialog,
@@ -77,7 +77,7 @@ export function DocumentActionsSection({ visitId }: DocumentActionsSectionProps)
               </div>
               <div className="space-y-2">
                 <Label>{t("prescription.referralReason")}</Label>
-                <Textarea
+                <AutoResizeTextarea
                   value={referralReason}
                   onChange={(e) => setReferralReason(e.target.value)}
                   rows={3}

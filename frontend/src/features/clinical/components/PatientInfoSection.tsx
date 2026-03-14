@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next"
+import { Link } from "@tanstack/react-router"
 import { IconCalendar, IconUser, IconStethoscope, IconLink, IconProgress } from "@tabler/icons-react"
 import { Badge } from "@/shared/components/Badge"
 import { VisitSection } from "./VisitSection"
@@ -41,7 +42,15 @@ export function PatientInfoSection({ visit }: PatientInfoSectionProps) {
         <div className="flex items-center gap-2">
           <IconUser className="h-4 w-4 text-muted-foreground" />
           <span className="text-muted-foreground">{t("visit.patientName")}:</span>
-          <span className="font-medium">{visit.patientName}</span>
+          <Link
+            to="/patients/$patientId"
+            params={{ patientId: visit.patientId }}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-medium text-primary underline-offset-4 hover:underline"
+          >
+            {visit.patientName}
+          </Link>
         </div>
         <div className="flex items-center gap-2">
           <IconStethoscope className="h-4 w-4 text-muted-foreground" />

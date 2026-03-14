@@ -13,7 +13,7 @@ import {
 } from "@tabler/icons-react"
 import { Button } from "@/shared/components/Button"
 import { Input } from "@/shared/components/Input"
-import { Textarea } from "@/shared/components/Textarea"
+import { AutoResizeTextarea } from "@/shared/components/AutoResizeTextarea"
 import { Field, FieldLabel, FieldError } from "@/shared/components/Field"
 import { DatePicker } from "@/shared/components/DatePicker"
 import {
@@ -283,7 +283,7 @@ export function StockImportForm({ onSuccess }: StockImportFormProps) {
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid || undefined}>
               <FieldLabel htmlFor={field.name}>{t("stockImport.notes")}</FieldLabel>
-              <Textarea
+              <AutoResizeTextarea
                 {...field}
                 id={field.name}
                 rows={2}

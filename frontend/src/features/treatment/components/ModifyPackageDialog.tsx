@@ -14,7 +14,7 @@ import {
 } from "@/shared/components/Dialog"
 import { Input } from "@/shared/components/Input"
 import { Button } from "@/shared/components/Button"
-import { Textarea } from "@/shared/components/Textarea"
+import { AutoResizeTextarea } from "@/shared/components/AutoResizeTextarea"
 import { Field, FieldLabel, FieldError } from "@/shared/components/Field"
 import { Separator } from "@/shared/components/Separator"
 import { handleServerValidationError } from "@/shared/lib/server-validation"
@@ -209,7 +209,7 @@ export function ModifyPackageDialog({
                 <FieldLabel htmlFor="parametersJson">
                   Tham số điều trị (JSON)
                 </FieldLabel>
-                <Textarea
+                <AutoResizeTextarea
                   {...field}
                   id="parametersJson"
                   value={field.value ?? ""}
@@ -230,7 +230,7 @@ export function ModifyPackageDialog({
                 <FieldLabel htmlFor="reason">
                   Lý do thay đổi *
                 </FieldLabel>
-                <Textarea
+                <AutoResizeTextarea
                   {...field}
                   id="reason"
                   rows={2}

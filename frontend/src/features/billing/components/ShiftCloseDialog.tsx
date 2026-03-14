@@ -25,7 +25,7 @@ import {
   AlertDialogTrigger,
 } from "@/shared/components/ui/alert-dialog"
 import { Input } from "@/shared/components/ui/input"
-import { Textarea } from "@/shared/components/ui/textarea"
+import { AutoResizeTextarea } from "@/shared/components/AutoResizeTextarea"
 import { Button } from "@/shared/components/ui/button"
 import { Field, FieldLabel, FieldError } from "@/shared/components/ui/field"
 import { useCloseShift } from "../api/shift-api"
@@ -185,7 +185,7 @@ export function ShiftCloseDialog({
               control={control}
               name="managerNote"
               render={({ field }) => (
-                <Textarea
+                <AutoResizeTextarea
                   className={cn(
                     hasDiscrepancy && "border-yellow-400 bg-yellow-50/50",
                   )}

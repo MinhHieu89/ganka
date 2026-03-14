@@ -21,7 +21,7 @@ import {
 } from "@/shared/components/Card"
 import { Input } from "@/shared/components/Input"
 import { Label } from "@/shared/components/Label"
-import { Textarea } from "@/shared/components/Textarea"
+import { AutoResizeTextarea } from "@/shared/components/AutoResizeTextarea"
 import { Skeleton } from "@/shared/components/Skeleton"
 import {
   useClinicSettings,
@@ -330,7 +330,7 @@ export function ClinicSettingsPage() {
               <Label htmlFor="tagline">
                 {t("clinicSettings.tagline", "Tagline")}
               </Label>
-              <Textarea
+              <AutoResizeTextarea
                 id="tagline"
                 rows={2}
                 {...register("tagline")}
