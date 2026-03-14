@@ -88,6 +88,10 @@ public static class PharmacyApiEndpoints
             if (file is null)
                 return Results.BadRequest("A file named 'file' is required.");
 
+            const long maxFileSizeBytes = 10 * 1024 * 1024;
+            if (file.Length > maxFileSizeBytes)
+                return Results.BadRequest("File size must not exceed 10 MB.");
+
             using var stream = file.OpenReadStream();
             var result = await bus.InvokeAsync<Result<DrugCatalogImportPreview>>(
                 new ImportDrugCatalogFromExcelCommand(stream, file.FileName), ct);

@@ -16,6 +16,12 @@ public class DrugCatalogImportHandlerTests
 
     private static readonly Guid DefaultBranchId = Guid.Parse("00000000-0000-0000-0000-000000000001");
 
+    public DrugCatalogImportHandlerTests()
+    {
+        // Default: no existing catalog items
+        _repository.GetAllActiveAsync(Arg.Any<CancellationToken>()).Returns(new List<DrugCatalogItem>());
+    }
+
     #region ImportDrugCatalogFromExcel Tests
 
     [Fact]
@@ -171,6 +177,53 @@ public class DrugCatalogImportHandlerTests
         result.IsFailure.Should().BeTrue();
     }
 
+    [Fact]
+    public async Task Import_WithFractionalMinStockLevel_ReturnsError()
+    {
+        // Arrange - fractional double should be rejected by TryParseInt
+        var rows = new List<Dictionary<string, object>>
+        {
+            new()
+            {
+                ["Name"] = "TestDrug",
+                ["NameVi"] = "Thuoc",
+                ["GenericName"] = "Generic",
+                ["Form"] = "Tablet",
+                ["Route"] = "Oral",
+                ["Strength"] = "500mg",
+                ["Unit"] = "Vien",
+                ["SellingPrice"] = 10000,
+                ["MinStockLevel"] = 5.7
+            }
+        };
+        var stream = CreateExcelStream(rows);
+        var command = new ImportDrugCatalogFromExcelCommand(stream, "test.xlsx");
+
+        // Act
+        var result = await ImportDrugCatalogFromExcelHandler.Handle(command, CancellationToken.None);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.ValidRows.Should().BeEmpty();
+        result.Value.Errors.Should().ContainSingle(e =>
+            e.ColumnName == "MinStockLevel");
+    }
+
+    [Fact]
+    public async Task Import_WithXlsExtension_ReturnsError()
+    {
+        // Arrange - .xls format should be rejected with clear error
+        var stream = new MemoryStream(new byte[100]);
+        var command = new ImportDrugCatalogFromExcelCommand(stream, "test.xls");
+
+        // Act
+        var result = await ImportDrugCatalogFromExcelHandler.Handle(command, CancellationToken.None);
+
+        // Assert
+        result.IsFailure.Should().BeTrue();
+        result.Error.Description.Should().Contain(".xls");
+    }
+
     #endregion
 
     #region ConfirmDrugCatalogImport Tests
@@ -213,6 +266,158 @@ public class DrugCatalogImportHandlerTests
         // Assert
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().Be(0);
+    }
+
+    [Fact]
+    public async Task Confirm_WithUnrecognizedFormEnum_DefaultsToFirstEnumValue()
+    {
+        // Arrange - "InvalidForm" does not match any DrugForm enum member
+        var validRows = new List<ValidDrugCatalogRow>
+        {
+            new("TestDrug", "Thuoc", "Generic", "InvalidForm", "Topical",
+                "10mg", "Vien", 5000m, 5)
+        };
+        var command = new ConfirmDrugCatalogImportCommand(validRows, DefaultBranchId);
+
+        // Act
+        var result = await ConfirmDrugCatalogImportHandler.Handle(
+            command, _repository, _unitOfWork, CancellationToken.None);
+
+        // Assert - ParseEnum returns default(DrugForm) = EyeDrops (0) for unrecognized values
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().Be(1);
+        _repository.Received(1).Add(Arg.Is<DrugCatalogItem>(item =>
+            item.Form == DrugForm.EyeDrops));
+    }
+
+    [Fact]
+    public async Task Confirm_WithUnrecognizedRouteEnum_DefaultsToFirstEnumValue()
+    {
+        // Arrange - "InvalidRoute" does not match any DrugRoute enum member
+        var validRows = new List<ValidDrugCatalogRow>
+        {
+            new("TestDrug", "Thuoc", "Generic", "Tablet", "InvalidRoute",
+                "10mg", "Vien", 5000m, 5)
+        };
+        var command = new ConfirmDrugCatalogImportCommand(validRows, DefaultBranchId);
+
+        // Act
+        var result = await ConfirmDrugCatalogImportHandler.Handle(
+            command, _repository, _unitOfWork, CancellationToken.None);
+
+        // Assert - ParseEnum returns default(DrugRoute) = Topical (0) for unrecognized values
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().Be(1);
+        _repository.Received(1).Add(Arg.Is<DrugCatalogItem>(item =>
+            item.Route == DrugRoute.Topical));
+    }
+
+    [Fact]
+    public async Task Confirm_WithNegativeMinStockLevel_ReturnsValidationFailure()
+    {
+        // Arrange - negative MinStockLevel caught by server-side re-validation
+        var validRows = new List<ValidDrugCatalogRow>
+        {
+            new("TestDrug", "Thuoc", "Generic", "Tablet", "Oral",
+                "500mg", "Vien", 3000m, -5)
+        };
+        var command = new ConfirmDrugCatalogImportCommand(validRows, DefaultBranchId);
+
+        // Act
+        var result = await ConfirmDrugCatalogImportHandler.Handle(
+            command, _repository, _unitOfWork, CancellationToken.None);
+
+        // Assert
+        result.IsFailure.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task Confirm_WithEmptyName_ReturnsValidationFailure()
+    {
+        // Arrange - server-side re-validation catches empty Name
+        var validRows = new List<ValidDrugCatalogRow>
+        {
+            new("", "Thuoc", "Generic", "Tablet", "Oral",
+                "500mg", "Vien", 3000m, 5)
+        };
+        var command = new ConfirmDrugCatalogImportCommand(validRows, DefaultBranchId);
+
+        // Act
+        var result = await ConfirmDrugCatalogImportHandler.Handle(
+            command, _repository, _unitOfWork, CancellationToken.None);
+
+        // Assert
+        result.IsFailure.Should().BeTrue();
+        result.Error.Description.Should().Contain("Name");
+    }
+
+    [Fact]
+    public async Task Confirm_WithDuplicateNamesInBatch_ReturnsFailure()
+    {
+        // Arrange - duplicate names within the batch should be rejected
+        var validRows = new List<ValidDrugCatalogRow>
+        {
+            new("SameDrug", "Thuoc", "Generic", "Tablet", "Oral",
+                "10mg", "Vien", 5000m, 5),
+            new("SameDrug", "Thuoc2", "Generic2", "Capsule", "Oral",
+                "20mg", "Vien", 3000m, 3)
+        };
+        var command = new ConfirmDrugCatalogImportCommand(validRows, DefaultBranchId);
+
+        // Act
+        var result = await ConfirmDrugCatalogImportHandler.Handle(
+            command, _repository, _unitOfWork, CancellationToken.None);
+
+        // Assert
+        result.IsFailure.Should().BeTrue();
+        result.Error.Description.Should().Contain("SameDrug");
+    }
+
+    [Fact]
+    public async Task Confirm_WithExistingCatalogDuplicate_ReturnsFailure()
+    {
+        // Arrange - name already exists in catalog
+        var validRows = new List<ValidDrugCatalogRow>
+        {
+            new("ExistingDrug", "Thuoc", "Generic", "Tablet", "Oral",
+                "10mg", "Vien", 5000m, 5)
+        };
+        var command = new ConfirmDrugCatalogImportCommand(validRows, DefaultBranchId);
+
+        var existingItems = new List<DrugCatalogItem>
+        {
+            DrugCatalogItem.Create("ExistingDrug", "Thuoc", "Generic",
+                DrugForm.Tablet, "10mg", DrugRoute.Oral, "Vien", null,
+                new BranchId(DefaultBranchId))
+        };
+        _repository.GetAllActiveAsync(Arg.Any<CancellationToken>()).Returns(existingItems);
+
+        // Act
+        var result = await ConfirmDrugCatalogImportHandler.Handle(
+            command, _repository, _unitOfWork, CancellationToken.None);
+
+        // Assert
+        result.IsFailure.Should().BeTrue();
+        result.Error.Description.Should().Contain("ExistingDrug");
+    }
+
+    [Fact]
+    public async Task Confirm_WithNegativeSellingPrice_ReturnsFailure()
+    {
+        // Arrange
+        var validRows = new List<ValidDrugCatalogRow>
+        {
+            new("TestDrug", "Thuoc", "Generic", "Tablet", "Oral",
+                "500mg", "Vien", -100m, 5)
+        };
+        var command = new ConfirmDrugCatalogImportCommand(validRows, DefaultBranchId);
+
+        // Act
+        var result = await ConfirmDrugCatalogImportHandler.Handle(
+            command, _repository, _unitOfWork, CancellationToken.None);
+
+        // Assert
+        result.IsFailure.Should().BeTrue();
     }
 
     #endregion

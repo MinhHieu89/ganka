@@ -19,6 +19,12 @@ public interface IClinicSettingsService
     /// Uses upsert pattern -- if settings exist, updates; otherwise creates.
     /// </summary>
     Task<Result<Guid>> CreateOrUpdateAsync(UpdateClinicSettingsCommand command, CancellationToken ct);
+
+    /// <summary>
+    /// Updates only the logo blob URL for the current branch's clinic settings.
+    /// Creates default settings if none exist yet.
+    /// </summary>
+    Task UpdateLogoUrlAsync(string logoUrl, CancellationToken ct);
 }
 
 /// <summary>

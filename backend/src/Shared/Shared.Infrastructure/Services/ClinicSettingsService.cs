@@ -102,4 +102,38 @@ public sealed class ClinicSettingsService : IClinicSettingsService
 
         return settings.Id;
     }
+
+    /// <inheritdoc />
+    public async Task UpdateLogoUrlAsync(string logoUrl, CancellationToken ct)
+    {
+        var branchId = new BranchId(_branchContext.CurrentBranchId);
+
+        var existing = await _dbContext.ClinicSettings
+            .Where(cs => cs.BranchId == branchId && !cs.IsDeleted)
+            .FirstOrDefaultAsync(ct);
+
+        if (existing is not null)
+        {
+            existing.UpdateLogo(logoUrl);
+            await _dbContext.SaveChangesAsync(ct);
+
+            _logger.LogInformation("Updated logo URL for clinic settings {SettingsId} in branch {BranchId}",
+                existing.Id, branchId);
+        }
+        else
+        {
+            // Create default settings with just the logo URL
+            var settings = ClinicSettings.Create(
+                branchId,
+                clinicName: "Clinic",
+                address: "",
+                logoBlobUrl: logoUrl);
+
+            _dbContext.ClinicSettings.Add(settings);
+            await _dbContext.SaveChangesAsync(ct);
+
+            _logger.LogInformation("Created clinic settings {SettingsId} with logo URL for branch {BranchId}",
+                settings.Id, branchId);
+        }
+    }
 }

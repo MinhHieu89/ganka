@@ -54,7 +54,7 @@ public static class SettingsApiEndpoints
             CancellationToken ct) =>
         {
             using var stream = file.OpenReadStream();
-            var command = new UploadClinicLogoCommand(stream, file.ContentType, file.FileName);
+            var command = new UploadClinicLogoCommand(stream, file.ContentType, file.FileName, file.Length);
             var result = await UploadClinicLogoHandler.Handle(
                 command, blobService, settingsService, branchContext, ct);
             return result.ToHttpResult();

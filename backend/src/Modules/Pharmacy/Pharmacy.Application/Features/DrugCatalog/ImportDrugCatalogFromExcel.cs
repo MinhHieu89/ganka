@@ -82,6 +82,11 @@ public static class ImportDrugCatalogFromExcelHandler
 
             rows = MiniExcel.Query<DrugCatalogExcelRow>(parseStream, hasHeader: true, excelType: excelType).ToList();
         }
+        catch (NotSupportedException ex)
+        {
+            return Result.Failure<DrugCatalogImportPreview>(
+                Error.Validation(ex.Message));
+        }
         catch (Exception ex)
         {
             return Result.Failure<DrugCatalogImportPreview>(
@@ -161,7 +166,12 @@ public static class ImportDrugCatalogFromExcelHandler
         result = 0;
         if (value is int i) { result = i; return true; }
         if (value is long l) { result = (int)l; return true; }
-        if (value is double d) { result = (int)d; return true; }
+        if (value is double d)
+        {
+            if (d != Math.Floor(d)) { result = 0; return false; }
+            result = (int)d;
+            return true;
+        }
         return int.TryParse(value.ToString(), out result);
     }
 
@@ -182,7 +192,7 @@ public static class ImportDrugCatalogFromExcelHandler
         {
             ".csv" => ExcelType.CSV,
             ".xlsx" => ExcelType.XLSX,
-            ".xls" => ExcelType.XLSX,
+            ".xls" => throw new NotSupportedException("Old .xls format is not supported. Please save as .xlsx."),
             _ => ExcelType.XLSX,
         };
     }
