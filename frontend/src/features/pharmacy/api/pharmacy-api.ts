@@ -280,7 +280,9 @@ const API_URL = (import.meta as never as { env: Record<string, string> }).env?.V
 // Drug catalog
 
 async function getDrugCatalogList(): Promise<DrugCatalogItemDto[]> {
-  const { data, error } = await api.GET("/api/pharmacy/drugs" as never)
+  const { data, error } = await api.GET("/api/pharmacy/drugs/search" as never, {
+    params: { query: { term: "" } },
+  } as never)
   if (error) throw new Error("Failed to fetch drug catalog")
   return (data as DrugCatalogItemDto[]) ?? []
 }

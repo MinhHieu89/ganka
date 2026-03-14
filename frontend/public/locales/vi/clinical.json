@@ -227,6 +227,7 @@
     "allOfTime": "Luôn",
     "submit": "Gửi",
     "submitting": "Đang gửi...",
+    "viewDetails": "Xem chi tiết",
     "noOsdiData": "Chưa có dữ liệu OSDI",
     "trendChart": "Xu hướng OSDI",
     "answers": {
@@ -295,6 +296,7 @@
     "printReferral": "In giấy chuyển viện",
     "printConsent": "In phiếu đồng ý",
     "printLabel": "In nhãn dán",
+    "printAllLabels": "In tất cả nhãn dán",
     "referralReason": "Lý do chuyển viện",
     "referralTo": "Chuyển đến",
     "procedureType": "Loại thủ thuật",

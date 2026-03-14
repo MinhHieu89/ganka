@@ -227,6 +227,7 @@
     "allOfTime": "All",
     "submit": "Submit",
     "submitting": "Submitting...",
+    "viewDetails": "View Details",
     "noOsdiData": "No OSDI data recorded yet",
     "trendChart": "OSDI Trend",
     "answers": {
@@ -295,6 +296,7 @@
     "printReferral": "Print Referral Letter",
     "printConsent": "Print Consent Form",
     "printLabel": "Print Label",
+    "printAllLabels": "Print All Labels",
     "referralReason": "Referral Reason",
     "referralTo": "Refer To",
     "procedureType": "Procedure Type",
