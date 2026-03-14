@@ -33,6 +33,7 @@ import {
 import {
   generateDrugPrescriptionPdf,
   generatePharmacyLabelPdf,
+  generateBatchLabelsPdf,
 } from "../api/document-api"
 import { VisitSection } from "./VisitSection"
 import { PrintButton } from "./PrintButton"
@@ -320,6 +321,15 @@ export function DrugPrescriptionSection({
                       size="sm"
                       variant="ghost"
                     />
+                    {rx.items.length > 0 && (
+                      <PrintButton
+                        onClick={() => generateBatchLabelsPdf(rx.id)}
+                        label={t("prescription.printAllLabels")}
+                        icon={<IconTag className="h-3 w-3" />}
+                        size="sm"
+                        variant="ghost"
+                      />
+                    )}
                     <Button
                       type="button"
                       variant="ghost"

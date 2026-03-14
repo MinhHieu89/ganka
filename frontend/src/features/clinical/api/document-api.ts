@@ -56,3 +56,11 @@ export async function generatePharmacyLabelPdf(
     `${API_URL}/api/clinical/prescription-items/${prescriptionItemId}/print/label`,
   )
 }
+
+export async function generateBatchLabelsPdf(
+  prescriptionId: string,
+): Promise<Blob> {
+  return fetchPdf(
+    `${API_URL}/api/clinical/prescriptions/${prescriptionId}/labels/batch`,
+  )
+}

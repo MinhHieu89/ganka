@@ -5,6 +5,7 @@ import { Badge } from "@/shared/components/Badge"
 import { Button } from "@/shared/components/Button"
 import { Skeleton } from "@/shared/components/Skeleton"
 import { useVisitById } from "../api/clinical-api"
+import { useOsdiHub } from "../hooks/use-osdi-hub"
 import { PatientInfoSection } from "./PatientInfoSection"
 import { RefractionSection } from "./RefractionSection"
 import { ExaminationNotesSection } from "./ExaminationNotesSection"
@@ -31,6 +32,9 @@ interface VisitDetailPageProps {
 export function VisitDetailPage({ visitId }: VisitDetailPageProps) {
   const { t } = useTranslation("clinical")
   const { data: visit, isLoading, error } = useVisitById(visitId)
+
+  // Connect to OsdiHub for realtime OSDI score updates via SignalR
+  useOsdiHub(visitId)
 
   if (isLoading) {
     return (
