@@ -186,6 +186,13 @@ public static class ClinicalApiEndpoints
                 new GenerateOsdiLinkCommand(visitId), ct);
             return result.ToHttpResult();
         });
+
+        group.MapGet("/patients/{patientId:guid}/dry-eye/metric-history", async (Guid patientId, string? timeRange, IMessageBus bus, CancellationToken ct) =>
+        {
+            var result = await bus.InvokeAsync<DryEyeMetricHistoryResponse>(
+                new GetDryEyeMetricHistoryQuery(patientId, timeRange ?? "all"), ct);
+            return Results.Ok(result);
+        });
     }
 
     private static void MapMedicalImageEndpoints(RouteGroupBuilder group)
@@ -311,6 +318,19 @@ public static class ClinicalApiEndpoints
         {
             var pdf = await docs.GeneratePharmacyLabelAsync(itemId, ct);
             return Results.File(pdf, "application/pdf", $"label-{itemId}.pdf");
+        });
+
+        group.MapGet("/prescriptions/{prescriptionId:guid}/labels/batch", async (Guid prescriptionId, IDocumentService docs, CancellationToken ct) =>
+        {
+            try
+            {
+                var pdf = await docs.GenerateBatchPharmacyLabelsAsync(prescriptionId, ct);
+                return Results.File(pdf, "application/pdf", $"batch-labels-{prescriptionId}.pdf");
+            }
+            catch (InvalidOperationException)
+            {
+                return Results.NotFound();
+            }
         });
     }
 }

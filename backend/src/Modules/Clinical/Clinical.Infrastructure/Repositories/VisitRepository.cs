@@ -150,6 +150,31 @@ public sealed class VisitRepository : IVisitRepository
         return results.Select(x => (x.Prescription, x.Visit)).ToList();
     }
 
+    public async Task<List<(DryEyeAssessment Assessment, DateTime VisitDate)>> GetMetricHistoryAsync(
+        Guid patientId,
+        DateTime? since,
+        CancellationToken ct = default)
+    {
+        var query = _dbContext.DryEyeAssessments
+            .AsNoTracking()
+            .Join(
+                _dbContext.Visits,
+                d => d.VisitId,
+                v => v.Id,
+                (d, v) => new { Assessment = d, Visit = v })
+            .Where(x => x.Visit.PatientId == patientId && !x.Visit.IsDeleted);
+
+        if (since.HasValue)
+            query = query.Where(x => x.Visit.VisitDate >= since.Value);
+
+        var results = await query
+            .OrderBy(x => x.Visit.VisitDate)
+            .Select(x => new { x.Assessment, x.Visit.VisitDate })
+            .ToListAsync(ct);
+
+        return results.Select(x => (x.Assessment, x.VisitDate)).ToList();
+    }
+
     public async Task<List<OpticalPrescriptionHistoryDto>> GetOpticalPrescriptionsByPatientIdAsync(
         Guid patientId,
         CancellationToken ct = default)

@@ -109,4 +109,14 @@ public interface IVisitRepository
     Task<List<OpticalPrescriptionHistoryDto>> GetOpticalPrescriptionsByPatientIdAsync(
         Guid patientId,
         CancellationToken ct = default);
+
+    /// <summary>
+    /// Gets dry eye assessments with their visit dates for a patient, ordered by visit date ascending.
+    /// Joins DryEyeAssessments with Visits in a single query to avoid N+1.
+    /// Optionally filters to visits on or after the specified cutoff date.
+    /// </summary>
+    Task<List<(DryEyeAssessment Assessment, DateTime VisitDate)>> GetMetricHistoryAsync(
+        Guid patientId,
+        DateTime? since,
+        CancellationToken ct = default);
 }

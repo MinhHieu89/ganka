@@ -191,6 +191,40 @@ public sealed class DocumentService : IDocumentService
         return document.GeneratePdf();
     }
 
+    public async Task<byte[]> GenerateBatchPharmacyLabelsAsync(Guid prescriptionId, CancellationToken ct)
+    {
+        var prescription = await _clinicalDb.DrugPrescriptions
+            .AsNoTracking()
+            .Include(p => p.Items)
+            .FirstOrDefaultAsync(p => p.Id == prescriptionId, ct)
+            ?? throw new InvalidOperationException($"Drug prescription {prescriptionId} not found.");
+
+        var visit = await _clinicalDb.Visits
+            .AsNoTracking()
+            .FirstOrDefaultAsync(v => v.Id == prescription.VisitId, ct)
+            ?? throw new InvalidOperationException($"Visit {prescription.VisitId} not found.");
+
+        var headerData = await GetClinicHeaderDataAsync(ct);
+        var clinicName = headerData.ClinicNameVi ?? headerData.ClinicName;
+
+        var labels = prescription.Items
+            .OrderBy(i => i.SortOrder)
+            .Select(item => new PharmacyLabelData(
+                clinicName,
+                visit.PatientName,
+                item.DrugName,
+                item.Strength,
+                item.Dosage,
+                item.DosageOverride,
+                item.Quantity,
+                item.Unit,
+                prescription.PrescribedAt))
+            .ToList();
+
+        var document = new BatchPharmacyLabelDocument(labels);
+        return document.GeneratePdf();
+    }
+
     public async Task<byte[]> GeneratePharmacyLabelAsync(Guid prescriptionItemId, CancellationToken ct)
     {
         var item = await _clinicalDb.PrescriptionItems
