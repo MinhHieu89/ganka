@@ -1,5 +1,5 @@
 import { format } from "date-fns"
-import { IconHistory } from "@tabler/icons-react"
+import { IconHistory, IconLoader2 } from "@tabler/icons-react"
 import {
   Dialog,
   DialogContent,
@@ -9,25 +9,14 @@ import {
 } from "@/shared/components/Dialog"
 import { Badge } from "@/shared/components/Badge"
 import { Card, CardContent } from "@/shared/components/Card"
-
-// -- Version entry type --
-
-export interface PackageVersionEntry {
-  versionNumber: number
-  changedAt: string
-  changedByName: string
-  reason: string
-  changes: string
-  previousValues?: string | null
-  newValues?: string | null
-}
+import { usePackageVersions } from "@/features/treatment/api/treatment-api"
 
 // -- Props --
 
 interface VersionHistoryDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  versions: PackageVersionEntry[]
+  packageId: string
   packageName?: string
 }
 
@@ -36,11 +25,11 @@ interface VersionHistoryDialogProps {
 export function VersionHistoryDialog({
   open,
   onOpenChange,
-  versions,
+  packageId,
   packageName,
 }: VersionHistoryDialogProps) {
-  const sortedVersions = [...versions].sort(
-    (a, b) => b.versionNumber - a.versionNumber,
+  const { data: versions, isLoading } = usePackageVersions(
+    open ? packageId : undefined,
   )
 
   return (
@@ -49,26 +38,31 @@ export function VersionHistoryDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <IconHistory className="h-5 w-5" />
-            Lịch sử thay đổi
+            Lich su thay doi
           </DialogTitle>
           {packageName && (
             <DialogDescription>{packageName}</DialogDescription>
           )}
         </DialogHeader>
 
-        {sortedVersions.length === 0 ? (
+        {isLoading ? (
+          <div className="flex flex-col items-center gap-2 py-8">
+            <IconLoader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            <p className="text-sm text-muted-foreground">Dang tai...</p>
+          </div>
+        ) : !versions || versions.length === 0 ? (
           <div className="py-8 text-center text-muted-foreground">
-            Chưa có thay đổi nào được ghi nhận
+            Chua co thay doi nao duoc ghi nhan
           </div>
         ) : (
           <div className="space-y-3">
-            {sortedVersions.map((version) => (
+            {versions.map((version) => (
               <Card key={version.versionNumber}>
                 <CardContent className="pt-4 pb-3 space-y-2">
                   {/* Header row */}
                   <div className="flex items-center justify-between">
                     <Badge variant="outline">
-                      Phiên bản {version.versionNumber}
+                      Phien ban {version.versionNumber}
                     </Badge>
                     <span className="text-xs text-muted-foreground">
                       {format(
@@ -78,48 +72,42 @@ export function VersionHistoryDialog({
                     </span>
                   </div>
 
-                  {/* Changed by */}
-                  <div className="text-sm">
-                    <span className="text-muted-foreground">Người thay đổi:</span>{" "}
-                    <span className="font-medium">{version.changedByName}</span>
-                  </div>
-
                   {/* Reason */}
                   <div className="text-sm">
-                    <span className="text-muted-foreground">Lý do:</span>{" "}
+                    <span className="text-muted-foreground">Ly do:</span>{" "}
                     {version.reason}
                   </div>
 
                   {/* Change description */}
                   <div className="text-sm">
-                    <span className="text-muted-foreground">Nội dung thay đổi:</span>{" "}
-                    {version.changes}
+                    <span className="text-muted-foreground">Noi dung thay doi:</span>{" "}
+                    {version.changeDescription}
                   </div>
 
                   {/* Optional JSON diff */}
-                  {(version.previousValues || version.newValues) && (
+                  {(version.previousJson || version.currentJson) && (
                     <details className="text-xs">
                       <summary className="cursor-pointer text-muted-foreground hover:text-foreground transition-colors">
-                        Chi tiết kỹ thuật
+                        Chi tiet ky thuat
                       </summary>
                       <div className="mt-2 grid grid-cols-2 gap-2">
-                        {version.previousValues && (
+                        {version.previousJson && (
                           <div>
                             <div className="font-medium text-muted-foreground mb-1">
-                              Trước
+                              Truoc
                             </div>
                             <pre className="p-2 bg-muted rounded text-xs whitespace-pre-wrap break-all">
-                              {formatJson(version.previousValues)}
+                              {formatJson(version.previousJson)}
                             </pre>
                           </div>
                         )}
-                        {version.newValues && (
+                        {version.currentJson && (
                           <div>
                             <div className="font-medium text-muted-foreground mb-1">
                               Sau
                             </div>
                             <pre className="p-2 bg-muted rounded text-xs whitespace-pre-wrap break-all">
-                              {formatJson(version.newValues)}
+                              {formatJson(version.currentJson)}
                             </pre>
                           </div>
                         )}

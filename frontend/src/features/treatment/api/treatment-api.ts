@@ -91,6 +91,54 @@ async function getTreatmentSessions(
   return (data as TreatmentSessionDto[]) ?? []
 }
 
+// -- OSDI token registration --
+
+export interface RegisterOsdiTokenData {
+  packageId: string
+  sessionNumber?: number
+  token: string
+}
+
+interface RegisterOsdiTokenResponse {
+  token: string
+  expiresAt: string
+}
+
+async function registerOsdiToken(
+  data: RegisterOsdiTokenData,
+): Promise<RegisterOsdiTokenResponse> {
+  const { data: responseData, error, response } = await api.POST(
+    "/api/treatments/osdi-tokens" as never,
+    { body: data } as never,
+  )
+  if (error || !response.ok) {
+    throw new Error("Failed to register OSDI token")
+  }
+  return responseData as RegisterOsdiTokenResponse
+}
+
+// -- Package version history --
+
+export interface ProtocolVersionDto {
+  versionNumber: number
+  changeDescription: string
+  reason: string
+  previousJson: string
+  currentJson: string
+  changedById: string
+  changedAt: string
+}
+
+async function getPackageVersions(
+  packageId: string,
+): Promise<ProtocolVersionDto[]> {
+  const { data, error } = await api.GET(
+    `/api/treatments/packages/${packageId}/versions` as never,
+  )
+  if (error) throw new Error("Failed to fetch package versions")
+  return (data as ProtocolVersionDto[]) ?? []
+}
+
 async function getPendingCancellations(): Promise<TreatmentPackageDto[]> {
   const { data, error } = await api.GET(
     "/api/treatments/cancellations/pending" as never,
@@ -258,7 +306,7 @@ async function rejectCancellation(
 
 export function useProtocolTemplates(type?: TreatmentType) {
   return useQuery({
-    queryKey: treatmentKeys.templates(),
+    queryKey: treatmentKeys.templates(type),
     queryFn: () => getProtocolTemplates(type),
   })
 }
@@ -316,6 +364,20 @@ export function usePendingCancellations() {
   })
 }
 
+export function usePackageVersions(packageId: string | undefined) {
+  return useQuery({
+    queryKey: treatmentKeys.versions(packageId ?? ""),
+    queryFn: () => getPackageVersions(packageId!),
+    enabled: !!packageId,
+  })
+}
+
+export function useRegisterOsdiToken() {
+  return useMutation({
+    mutationFn: (data: RegisterOsdiTokenData) => registerOsdiToken(data),
+  })
+}
+
 // -- Mutation hooks --
 
 export function useCreateProtocolTemplate() {
@@ -324,7 +386,7 @@ export function useCreateProtocolTemplate() {
     mutationFn: (command: CreateProtocolTemplateCommand) =>
       createProtocolTemplate(command),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: treatmentKeys.templates() })
+      queryClient.invalidateQueries({ queryKey: [...treatmentKeys.all, "templates"] })
     },
     onError: (error: Error) => {
       toast.error(error.message)
@@ -341,7 +403,7 @@ export function useUpdateProtocolTemplate() {
     }: { id: string } & Omit<UpdateProtocolTemplateCommand, "id">) =>
       updateProtocolTemplate(id, command),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: treatmentKeys.templates() })
+      queryClient.invalidateQueries({ queryKey: [...treatmentKeys.all, "templates"] })
     },
     onError: (error: Error) => {
       toast.error(error.message)
@@ -499,6 +561,8 @@ export {
   getDueSoonSessions,
   getTreatmentSessions,
   getPendingCancellations,
+  getPackageVersions,
+  registerOsdiToken,
   createProtocolTemplate,
   updateProtocolTemplate,
   createTreatmentPackage,

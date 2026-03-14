@@ -415,7 +415,7 @@ export function TreatmentPackageDetail({
       <VersionHistoryDialog
         open={historyDialogOpen}
         onOpenChange={setHistoryDialogOpen}
-        versions={[]}
+        packageId={pkg.id}
         packageName={pkg.protocolTemplateName}
       />
     </div>

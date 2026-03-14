@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback } from "react"
 import { QRCodeSVG } from "qrcode.react"
-import { IconClipboard } from "@tabler/icons-react"
+import { IconClipboard, IconLoader2 } from "@tabler/icons-react"
 import { toast } from "sonner"
 import { Button } from "@/shared/components/Button"
 import { Badge } from "@/shared/components/Badge"
@@ -8,6 +8,7 @@ import { Input } from "@/shared/components/Input"
 import { Label } from "@/shared/components/Label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/Tabs"
 import { cn } from "@/shared/lib/utils"
+import { useRegisterOsdiToken } from "@/features/treatment/api/treatment-api"
 
 // -- Severity config reused from OsdiQuestionnaire --
 
@@ -31,6 +32,8 @@ type SeverityKey = keyof typeof SEVERITY_CONFIG
 // -- Props --
 
 interface SessionOsdiCaptureProps {
+  packageId: string
+  sessionNumber?: number
   osdiScore: number | null
   onOsdiScoreChange: (score: number | null) => void
   osdiSeverity: string | null
@@ -39,11 +42,14 @@ interface SessionOsdiCaptureProps {
 // -- Component --
 
 export function SessionOsdiCapture({
+  packageId,
+  sessionNumber,
   osdiScore,
   onOsdiScoreChange,
   osdiSeverity,
 }: SessionOsdiCaptureProps) {
   const [qrUrl, setQrUrl] = useState<string | null>(null)
+  const registerToken = useRegisterOsdiToken()
 
   const severityConfig = osdiSeverity
     ? SEVERITY_CONFIG[osdiSeverity as SeverityKey]
@@ -64,13 +70,23 @@ export function SessionOsdiCapture({
   )
 
   const handleGenerateQr = useCallback(() => {
-    // Generate a public OSDI page URL with a token
-    // The token will be linked back to the session on the backend
     const token = crypto.randomUUID()
     const baseUrl = window.location.origin
-    const url = `${baseUrl}/osdi/self-fill?token=${token}`
-    setQrUrl(url)
-  }, [])
+
+    // Register token with backend before displaying QR
+    registerToken.mutate(
+      { packageId, sessionNumber, token },
+      {
+        onSuccess: () => {
+          const url = `${baseUrl}/osdi/${token}`
+          setQrUrl(url)
+        },
+        onError: () => {
+          toast.error("Không thể tạo mã QR. Vui lòng thử lại.")
+        },
+      },
+    )
+  }, [packageId, sessionNumber, registerToken])
 
   const handleCopyLink = useCallback(() => {
     if (qrUrl) {
@@ -126,7 +142,14 @@ export function SessionOsdiCapture({
 
       {/* Patient self-fill mode */}
       <TabsContent value="self-fill" className="space-y-3 mt-3">
-        {!qrUrl ? (
+        {registerToken.isPending ? (
+          <div className="flex flex-col items-center gap-2 py-6">
+            <IconLoader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            <p className="text-sm text-muted-foreground">
+              Đang tạo mã QR...
+            </p>
+          </div>
+        ) : !qrUrl ? (
           <div className="text-center py-4">
             <p className="text-sm text-muted-foreground mb-3">
               Tạo mã QR để bệnh nhân tự điền bảng câu hỏi OSDI

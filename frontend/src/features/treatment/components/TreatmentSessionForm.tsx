@@ -397,6 +397,7 @@ export function TreatmentSessionForm({
           <div className="space-y-3">
             <h4 className="text-sm font-semibold">OSDI</h4>
             <SessionOsdiCapture
+              packageId={packageId}
               osdiScore={osdiScore}
               onOsdiScoreChange={setOsdiScore}
               osdiSeverity={osdiSeverity}
