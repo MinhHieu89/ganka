@@ -316,4 +316,77 @@ public class TreatmentPackageDomainTests
     }
 
     #endregion
+
+    #region ApproveCancellation - Manager Deduction Override
+
+    [Fact]
+    public void ApproveCancellation_WithDeductionOverride_RecalculatesRefundAmount()
+    {
+        // Arrange
+        var package = CreateTestPackage(totalSessions: 4);
+        // Request cancellation with 15% deduction
+        package.RequestCancellation(
+            reason: "Patient request",
+            deductionPercent: 15,
+            requestedById: DefaultUserId);
+
+        var originalDeduction = package.CancellationRequest!.DeductionPercent;
+        originalDeduction.Should().Be(15m);
+
+        // Act - Manager overrides to 12% deduction
+        package.ApproveCancellation(
+            processedById: DefaultUserId,
+            note: "Approved with reduced deduction",
+            deductionPercentOverride: 12m);
+
+        // Assert
+        package.Status.Should().Be(PackageStatus.Cancelled);
+        package.CancellationRequest!.DeductionPercent.Should().Be(12m);
+        package.CancellationRequest.Status.Should().Be(CancellationRequestStatus.Approved);
+    }
+
+    [Fact]
+    public void ApproveCancellation_WithoutOverride_KeepsOriginalDeduction()
+    {
+        // Arrange
+        var package = CreateTestPackage(totalSessions: 4);
+        package.RequestCancellation(
+            reason: "Patient request",
+            deductionPercent: 15,
+            requestedById: DefaultUserId);
+
+        // Act - Approve without overriding deduction
+        package.ApproveCancellation(
+            processedById: DefaultUserId,
+            note: null,
+            deductionPercentOverride: null);
+
+        // Assert
+        package.Status.Should().Be(PackageStatus.Cancelled);
+        package.CancellationRequest!.DeductionPercent.Should().Be(15m);
+    }
+
+    [Fact]
+    public void ApproveCancellation_WithSameDeduction_DoesNotRecalculate()
+    {
+        // Arrange
+        var package = CreateTestPackage(totalSessions: 4);
+        package.RequestCancellation(
+            reason: "Patient request",
+            deductionPercent: 15,
+            requestedById: DefaultUserId);
+
+        var originalRefund = package.CancellationRequest!.RefundAmount;
+
+        // Act - Override with same value
+        package.ApproveCancellation(
+            processedById: DefaultUserId,
+            note: null,
+            deductionPercentOverride: 15m);
+
+        // Assert - Refund unchanged since deduction didn't actually change
+        package.CancellationRequest!.RefundAmount.Should().Be(originalRefund);
+    }
+
+    #endregion
 }

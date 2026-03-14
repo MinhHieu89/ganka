@@ -419,4 +419,64 @@ public class CancellationHandlerTests
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().BeEmpty();
     }
+
+    // ===== RequestCancellation Protocol Not Found =====
+
+    [Fact]
+    public async Task RequestCancellation_ProtocolNotFound_ReturnsNotFoundError()
+    {
+        // Arrange
+        SetupValidRequestValidator();
+        var package = CreateActivePackage();
+        var command = new RequestCancellationCommand(package.Id, "Patient wants to cancel");
+
+        _packageRepository.GetByIdAsync(package.Id, Arg.Any<CancellationToken>()).Returns(package);
+        // Protocol repo returns null -- protocol not found
+        _protocolRepository.GetByIdAsync(package.ProtocolTemplateId, Arg.Any<CancellationToken>())
+            .Returns((TreatmentProtocol?)null);
+
+        // Act
+        var result = await RequestCancellationHandler.Handle(
+            command, _packageRepository, _protocolRepository, _unitOfWork, _requestValidator, _currentUser, CancellationToken.None);
+
+        // Assert -- should return NotFound error, not fallback to default deduction
+        result.IsFailure.Should().BeTrue();
+        result.Error.Code.Should().Be("Error.NotFound");
+    }
+
+    // ===== ApproveCancellation Manager Deduction Override =====
+
+    [Fact]
+    public async Task ApproveCancellation_ManagerOverridesDeduction_RecalculatesRefund()
+    {
+        // Arrange
+        SetupValidApproveValidator();
+        // 4 sessions at 500k each, 0 completed, original 15% deduction
+        var package = CreatePendingCancellationPackage(
+            pricingMode: PricingMode.PerSession,
+            totalSessions: 4,
+            sessionPrice: 500_000m,
+            deductionPercent: 15m);
+
+        var managerId = Guid.NewGuid();
+        // Manager overrides to 12% deduction
+        var command = new ApproveCancellationCommand(package.Id, managerId, "1234", 12m);
+
+        _packageRepository.GetByIdAsync(package.Id, Arg.Any<CancellationToken>()).Returns(package);
+        _messageBus.InvokeAsync<VerifyManagerPinResponse>(
+            Arg.Any<VerifyManagerPinQuery>(), Arg.Any<CancellationToken>())
+            .Returns(new VerifyManagerPinResponse(true));
+
+        // Act
+        var result = await ApproveCancellationHandler.Handle(
+            command, _packageRepository, _unitOfWork, _messageBus, _approveValidator, CancellationToken.None);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        package.Status.Should().Be(PackageStatus.Cancelled);
+        // Manager override: 12% deduction instead of 15%
+        package.CancellationRequest!.DeductionPercent.Should().Be(12m);
+        // Refund = 4 remaining * 500k * (1 - 0.12) = 1,760,000
+        package.CancellationRequest.RefundAmount.Should().Be(1_760_000m);
+    }
 }

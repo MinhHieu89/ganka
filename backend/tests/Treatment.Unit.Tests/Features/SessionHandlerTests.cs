@@ -345,6 +345,39 @@ public class SessionHandlerTests
         sessionEvent.Consumables[0].Quantity.Should().Be(3);
     }
 
+    [Fact]
+    public async Task RecordSession_UsesCurrentUserIdAsPerformedById()
+    {
+        // Arrange
+        SetupValidValidator();
+        var package = CreateActivePackage();
+        _packageRepository.GetByIdAsync(package.Id, Arg.Any<CancellationToken>())
+            .Returns(package);
+
+        // Command specifies a different PerformedById than the current user
+        var differentUserId = Guid.NewGuid();
+        var command = new RecordTreatmentSessionCommand(
+            PackageId: package.Id,
+            ParametersJson: "{\"energy\":15}",
+            OsdiScore: 25.5m,
+            OsdiSeverity: "Moderate",
+            ClinicalNotes: "Test",
+            PerformedById: differentUserId,  // This should be ignored
+            VisitId: null,
+            ScheduledAt: null,
+            IntervalOverrideReason: null,
+            Consumables: []);
+
+        // Act
+        var result = await RecordTreatmentSessionHandler.Handle(
+            command, _packageRepository, _unitOfWork, _validator, _currentUser, CancellationToken.None);
+
+        // Assert -- Handler should use ICurrentUser.UserId, not command.PerformedById
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Session.PerformedById.Should().Be(DefaultUserId);
+        result.Value.Session.PerformedById.Should().NotBe(differentUserId);
+    }
+
     // =========================================================================
     // GetTreatmentSessions Tests
     // =========================================================================
