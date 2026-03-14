@@ -444,6 +444,41 @@ public class CancellationHandlerTests
         result.Error.Code.Should().Be("Error.NotFound");
     }
 
+    // ===== TRT-09: Manager Cancellation Approval Regression Guard =====
+
+    [Fact]
+    public async Task ApproveCancellation_ManagerWithTreatmentManage_ShouldSucceed()
+    {
+        // Arrange — simulates Manager user approving a cancellation
+        // The handler itself has no role check; permission gate is at the endpoint level.
+        // This test serves as a regression guard ensuring the handler logic does not
+        // accidentally add role-specific checks that would block Manager users.
+        SetupValidApproveValidator();
+        var package = CreatePendingCancellationPackage(
+            pricingMode: PricingMode.PerSession,
+            totalSessions: 4,
+            sessionPrice: 500_000m,
+            deductionPercent: 15m);
+
+        var managerId = Guid.NewGuid();
+        var command = new ApproveCancellationCommand(package.Id, managerId, "5678", 15m);
+
+        _packageRepository.GetByIdAsync(package.Id, Arg.Any<CancellationToken>()).Returns(package);
+        _messageBus.InvokeAsync<VerifyManagerPinResponse>(
+            Arg.Any<VerifyManagerPinQuery>(), Arg.Any<CancellationToken>())
+            .Returns(new VerifyManagerPinResponse(true));
+
+        // Act
+        var result = await ApproveCancellationHandler.Handle(
+            command, _packageRepository, _unitOfWork, _messageBus, _approveValidator, CancellationToken.None);
+
+        // Assert — Manager (with Treatment.Manage) can approve cancellations per TRT-09
+        result.IsSuccess.Should().BeTrue();
+        package.Status.Should().Be(PackageStatus.Cancelled);
+        package.CancellationRequest!.Status.Should().Be(CancellationRequestStatus.Approved);
+        package.CancellationRequest.RefundAmount.Should().BeGreaterThan(0);
+    }
+
     // ===== ApproveCancellation Manager Deduction Override =====
 
     [Fact]
