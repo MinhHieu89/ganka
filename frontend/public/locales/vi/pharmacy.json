@@ -184,6 +184,8 @@
     "submitting": "Đang xử lý...",
     "created": "Đã ghi nhận bán hàng thành công",
     "selectDrug": "Tìm và chọn thuốc",
+    "outOfStock": "Hết hàng",
+    "onlyInStock": "Chỉ còn {{count}} trong kho",
     "historyCustomer": "Khách hàng",
     "historyDate": "Ngày bán",
     "historyItems": "Thuốc",

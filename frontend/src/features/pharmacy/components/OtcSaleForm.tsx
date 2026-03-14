@@ -11,6 +11,7 @@ import {
   IconLoader2,
   IconUser,
   IconUserOff,
+  IconAlertTriangle,
 } from "@tabler/icons-react"
 import { Button } from "@/shared/components/Button"
 import { Input } from "@/shared/components/Input"
@@ -33,6 +34,7 @@ import { cn } from "@/shared/lib/utils"
 import {
   useDrugCatalogList,
   useCreateOtcSale,
+  useDrugAvailableStock,
 } from "@/features/pharmacy/api/pharmacy-queries"
 import type { DrugCatalogItemDto } from "@/features/pharmacy/api/pharmacy-api"
 
@@ -141,7 +143,41 @@ function DrugCombobox({ value, onSelect, disabled }: DrugComboboxProps) {
   )
 }
 
-// ---- Line item row ----
+// ---- Stock warning component ----
+
+interface StockWarningProps {
+  drugCatalogItemId: string | undefined
+  quantity: number
+}
+
+function StockWarning({ drugCatalogItemId, quantity }: StockWarningProps) {
+  const { t } = useTranslation("pharmacy")
+  const { data } = useDrugAvailableStock(drugCatalogItemId)
+
+  if (!drugCatalogItemId || data === undefined) return null
+
+  const availableStock = data.availableStock
+
+  if (quantity <= availableStock) return null
+
+  const isOutOfStock = availableStock === 0
+
+  return (
+    <p
+      className={cn(
+        "text-xs flex items-center gap-1 mt-0.5",
+        isOutOfStock ? "text-red-600" : "text-yellow-600",
+      )}
+    >
+      <IconAlertTriangle className="h-3 w-3 shrink-0" />
+      {isOutOfStock
+        ? t("otcSale.outOfStock")
+        : t("otcSale.onlyInStock", { count: availableStock })}
+    </p>
+  )
+}
+
+// ---- Line item row with stock check ----
 
 interface LineItemRowProps {
   index: number
@@ -160,81 +196,105 @@ function LineItemRow({
   canRemove,
   getError,
 }: LineItemRowProps) {
-  const { t } = useTranslation("pharmacy")
   const { t: tCommon } = useTranslation("common")
 
+  // Watch this line's drug and quantity for stock check
+  const drugCatalogItemId = useWatch({ control, name: `lines.${index}.drugCatalogItemId` })
+  const quantity = useWatch({ control, name: `lines.${index}.quantity` })
+
   return (
-    <div className="grid grid-cols-[1fr_90px_130px_40px] gap-2 items-start">
-      {/* Drug selector */}
-      <Controller
-        name={`lines.${index}.drugCatalogItemId`}
-        control={control}
-        render={({ field: f, fieldState }) => (
-          <Field data-invalid={fieldState.invalid || undefined}>
-            <DrugCombobox
-              value={f.value}
-              onSelect={(drug) => onDrugSelect(drug, index)}
-            />
-            {fieldState.error && (
-              <FieldError className="text-xs">{getError(fieldState.error)}</FieldError>
-            )}
-          </Field>
-        )}
-      />
+    <div>
+      <div className="grid grid-cols-[1fr_90px_130px_40px] gap-2 items-start">
+        {/* Drug selector */}
+        <Controller
+          name={`lines.${index}.drugCatalogItemId`}
+          control={control}
+          render={({ field: f, fieldState }) => (
+            <Field data-invalid={fieldState.invalid || undefined}>
+              <DrugCombobox
+                value={f.value}
+                onSelect={(drug) => onDrugSelect(drug, index)}
+              />
+              {fieldState.error && (
+                <FieldError className="text-xs">{getError(fieldState.error)}</FieldError>
+              )}
+            </Field>
+          )}
+        />
 
-      {/* Quantity */}
-      <Controller
-        name={`lines.${index}.quantity`}
-        control={control}
-        render={({ field: f, fieldState }) => (
-          <Field data-invalid={fieldState.invalid || undefined}>
-            <Input
-              {...f}
-              type="number"
-              min={1}
-              aria-invalid={fieldState.invalid || undefined}
-            />
-            {fieldState.error && (
-              <FieldError className="text-xs">{getError(fieldState.error)}</FieldError>
-            )}
-          </Field>
-        )}
-      />
+        {/* Quantity */}
+        <Controller
+          name={`lines.${index}.quantity`}
+          control={control}
+          render={({ field: f, fieldState }) => (
+            <Field data-invalid={fieldState.invalid || undefined}>
+              <Input
+                {...f}
+                type="number"
+                min={1}
+                aria-invalid={fieldState.invalid || undefined}
+              />
+              {fieldState.error && (
+                <FieldError className="text-xs">{getError(fieldState.error)}</FieldError>
+              )}
+            </Field>
+          )}
+        />
 
-      {/* Unit price */}
-      <Controller
-        name={`lines.${index}.unitPrice`}
-        control={control}
-        render={({ field: f, fieldState }) => (
-          <Field data-invalid={fieldState.invalid || undefined}>
-            <Input
-              {...f}
-              type="number"
-              min={0}
-              step={100}
-              aria-invalid={fieldState.invalid || undefined}
-            />
-            {fieldState.error && (
-              <FieldError className="text-xs">{getError(fieldState.error)}</FieldError>
-            )}
-          </Field>
-        )}
-      />
+        {/* Unit price */}
+        <Controller
+          name={`lines.${index}.unitPrice`}
+          control={control}
+          render={({ field: f, fieldState }) => (
+            <Field data-invalid={fieldState.invalid || undefined}>
+              <Input
+                {...f}
+                type="number"
+                min={0}
+                step={100}
+                aria-invalid={fieldState.invalid || undefined}
+              />
+              {fieldState.error && (
+                <FieldError className="text-xs">{getError(fieldState.error)}</FieldError>
+              )}
+            </Field>
+          )}
+        />
 
-      {/* Remove */}
-      <Button
-        type="button"
-        variant="ghost"
-        size="sm"
-        className="mt-0.5 h-9 w-9 p-0 text-destructive hover:text-destructive"
-        onClick={onRemove}
-        disabled={!canRemove}
-        title={tCommon("buttons.remove")}
-      >
-        <IconTrash className="h-4 w-4" />
-      </Button>
+        {/* Remove */}
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          className="mt-0.5 h-9 w-9 p-0 text-destructive hover:text-destructive"
+          onClick={onRemove}
+          disabled={!canRemove}
+          title={tCommon("buttons.remove")}
+        >
+          <IconTrash className="h-4 w-4" />
+        </Button>
+      </div>
+
+      {/* Inline stock warning */}
+      <StockWarning
+        drugCatalogItemId={drugCatalogItemId || undefined}
+        quantity={Number(quantity) || 0}
+      />
     </div>
   )
+}
+
+// ---- Stock exceeded check for all lines ----
+
+function useHasStockExceeded(control: ReturnType<typeof useForm<OtcSaleValues>>["control"]) {
+  const lines = useWatch({ control, name: "lines" })
+  // Each line's stock is checked individually via StockWarning component.
+  // For submit button disabling, we need to aggregate. We do this by
+  // rendering a hidden component per line that reports stock status.
+  // Instead, we'll use a simpler approach: track exceeded state via context.
+  // Actually, the simplest approach that works with hooks rules is to
+  // have the parent track stock state in a map.
+  return lines
 }
 
 // ---- Total display ----
@@ -255,6 +315,32 @@ function TotalDisplay({ control }: { control: ReturnType<typeof useForm<OtcSaleV
       <span className="text-lg font-bold">{total.toLocaleString("vi-VN")} ₫</span>
     </div>
   )
+}
+
+// ---- Stock checker per line (for submit button) ----
+
+interface StockCheckerProps {
+  drugCatalogItemId: string | undefined
+  quantity: number
+  onStockStatus: (exceeded: boolean) => void
+}
+
+function StockChecker({ drugCatalogItemId, quantity, onStockStatus }: StockCheckerProps) {
+  const { data } = useDrugAvailableStock(drugCatalogItemId)
+
+  useEffect(() => {
+    if (!drugCatalogItemId) {
+      onStockStatus(false)
+      return
+    }
+    if (data === undefined) {
+      onStockStatus(false)
+      return
+    }
+    onStockStatus(quantity > data.availableStock)
+  }, [drugCatalogItemId, quantity, data, onStockStatus])
+
+  return null
 }
 
 // ---- Main form ----
@@ -291,6 +377,19 @@ export function OtcSaleForm({ onSuccess }: OtcSaleFormProps) {
   })
 
   const isAnonymous = useWatch({ control: form.control, name: "isAnonymous" })
+  const watchedLines = useWatch({ control: form.control, name: "lines" })
+
+  // Track stock exceeded status per line
+  const [stockExceeded, setStockExceeded] = useState<Record<number, boolean>>({})
+
+  const handleStockStatus = useCallback((index: number, exceeded: boolean) => {
+    setStockExceeded((prev) => {
+      if (prev[index] === exceeded) return prev
+      return { ...prev, [index]: exceeded }
+    })
+  }, [])
+
+  const anyStockExceeded = Object.values(stockExceeded).some(Boolean)
 
   // Reset customer name when toggling to anonymous
   useEffect(() => {
@@ -298,6 +397,17 @@ export function OtcSaleForm({ onSuccess }: OtcSaleFormProps) {
       form.setValue("customerName", "")
     }
   }, [isAnonymous, form])
+
+  // Clean up stock exceeded entries when lines are removed
+  useEffect(() => {
+    setStockExceeded((prev) => {
+      const cleaned: Record<number, boolean> = {}
+      for (let i = 0; i < fields.length; i++) {
+        if (i in prev) cleaned[i] = prev[i]
+      }
+      return cleaned
+    })
+  }, [fields.length])
 
   const addLine = useCallback(() => {
     append({
@@ -331,6 +441,7 @@ export function OtcSaleForm({ onSuccess }: OtcSaleFormProps) {
       })
       toast.success(t("otcSale.created"))
       form.reset()
+      setStockExceeded({})
       onSuccess?.()
     } catch {
       // onError in mutation handles toast
@@ -347,6 +458,16 @@ export function OtcSaleForm({ onSuccess }: OtcSaleFormProps) {
 
   return (
     <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-5">
+
+      {/* Hidden stock checkers for submit button disabling */}
+      {watchedLines.map((line, index) => (
+        <StockChecker
+          key={`stock-${index}-${line.drugCatalogItemId}`}
+          drugCatalogItemId={line.drugCatalogItemId || undefined}
+          quantity={Number(line.quantity) || 0}
+          onStockStatus={(exceeded) => handleStockStatus(index, exceeded)}
+        />
+      ))}
 
       {/* Customer section */}
       <div className="space-y-3">
@@ -459,7 +580,11 @@ export function OtcSaleForm({ onSuccess }: OtcSaleFormProps) {
 
       {/* Submit */}
       <div className="flex justify-end">
-        <Button type="submit" disabled={createOtcSale.isPending} className="min-w-36">
+        <Button
+          type="submit"
+          disabled={createOtcSale.isPending || anyStockExceeded}
+          className="min-w-36"
+        >
           {createOtcSale.isPending && (
             <IconLoader2 className="h-4 w-4 mr-2 animate-spin" />
           )}

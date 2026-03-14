@@ -184,6 +184,8 @@
     "submitting": "Processing...",
     "created": "OTC sale recorded successfully",
     "selectDrug": "Search and select drug",
+    "outOfStock": "Out of stock",
+    "onlyInStock": "Only {{count}} in stock",
     "historyCustomer": "Customer",
     "historyDate": "Date",
     "historyItems": "Items",
