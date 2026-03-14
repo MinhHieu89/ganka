@@ -127,7 +127,7 @@ export function DrugCombobox({
       <PopoverContent
         className="w-[420px] p-0"
         align="start"
-        onOpenAutoFocus={(e) => e.preventDefault()}
+
       >
         {offCatalogMode ? (
           <div className="p-4 space-y-3">
