@@ -266,6 +266,43 @@ export const MAX_IMAGE_SIZE = 50 * 1024 * 1024 // 50MB
 export const MAX_VIDEO_SIZE = 200 * 1024 * 1024 // 200MB
 export const MAX_FILES_PER_BATCH = 20
 
+// -- Dry Eye Metric History types --
+
+export interface MetricDataPoint {
+  visitDate: string
+  odValue: number | null
+  osValue: number | null
+}
+
+export interface MetricTimeSeries {
+  metricName: string
+  dataPoints: MetricDataPoint[]
+}
+
+export interface DryEyeMetricHistoryResponse {
+  metrics: MetricTimeSeries[]
+}
+
+// -- OSDI Answers types --
+
+export interface OsdiQuestionAnswer {
+  questionNumber: number
+  textEn: string
+  textVi: string
+  score: number | null
+}
+
+export interface OsdiAnswerGroup {
+  category: string
+  questions: OsdiQuestionAnswer[]
+}
+
+export interface OsdiAnswersResponse {
+  groups: OsdiAnswerGroup[]
+  totalScore: number
+  severity: string
+}
+
 export const clinicalKeys = {
   all: ["clinical"] as const,
   visits: () => [...clinicalKeys.all, "visits"] as const,
@@ -282,6 +319,10 @@ export const clinicalKeys = {
     [...clinicalKeys.all, "visit-images", visitId] as const,
   imageComparison: (patientId: string, visitId1: string, visitId2: string, imageType: number) =>
     [...clinicalKeys.all, "image-comparison", patientId, visitId1, visitId2, imageType] as const,
+  dryEyeMetricHistory: (patientId: string, timeRange: string) =>
+    [...clinicalKeys.all, "dry-eye-metric-history", patientId, timeRange] as const,
+  osdiAnswers: (visitId: string) =>
+    [...clinicalKeys.all, "osdi-answers", visitId] as const,
 }
 
 // -- API functions --
@@ -1029,5 +1070,53 @@ export function useImageComparison(
       getImageComparison(patientId!, visitId1!, visitId2!, imageType!),
     enabled: !!patientId && !!visitId1 && !!visitId2 && imageType != null,
     staleTime: 1000 * 60 * 30,
+  })
+}
+
+// -- Dry Eye Metric History API --
+
+async function getDryEyeMetricHistory(
+  patientId: string,
+  timeRange: string,
+): Promise<DryEyeMetricHistoryResponse> {
+  const { data, error } = await api.GET(
+    `/api/clinical/patients/${patientId}/dry-eye/metric-history` as never,
+    {
+      params: { query: { timeRange } },
+    } as never,
+  )
+  if (error) throw new Error("Failed to fetch dry eye metric history")
+  return data as DryEyeMetricHistoryResponse
+}
+
+export function useDryEyeMetricHistory(
+  patientId: string | undefined,
+  timeRange: string,
+) {
+  return useQuery({
+    queryKey: clinicalKeys.dryEyeMetricHistory(patientId ?? "", timeRange),
+    queryFn: () => getDryEyeMetricHistory(patientId!, timeRange),
+    enabled: !!patientId,
+  })
+}
+
+// -- OSDI Answers API --
+
+async function getOsdiAnswers(
+  visitId: string,
+): Promise<OsdiAnswersResponse | null> {
+  const { data, error, response } = await api.GET(
+    `/api/clinical/visits/${visitId}/osdi-answers` as never,
+  )
+  if (response.status === 404) return null
+  if (error) throw new Error("Failed to fetch OSDI answers")
+  return data as OsdiAnswersResponse
+}
+
+export function useOsdiAnswers(visitId: string | undefined) {
+  return useQuery({
+    queryKey: clinicalKeys.osdiAnswers(visitId ?? ""),
+    queryFn: () => getOsdiAnswers(visitId!),
+    enabled: !!visitId,
   })
 }

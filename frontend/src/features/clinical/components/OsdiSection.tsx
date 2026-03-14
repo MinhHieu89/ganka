@@ -14,6 +14,7 @@ import { cn } from "@/shared/lib/utils"
 import { useGenerateOsdiLink, useSubmitOsdiInline } from "../api/clinical-api"
 import type { DryEyeAssessmentDto, OsdiLinkResponse } from "../api/clinical-api"
 import { OsdiQuestionnaire, SEVERITY_CONFIG } from "./OsdiQuestionnaire"
+import { OsdiAnswersSection } from "./OsdiAnswersSection"
 
 type SeverityKey = keyof typeof SEVERITY_CONFIG
 
@@ -137,6 +138,11 @@ export function OsdiSection({ visitId, patientId, assessment, disabled }: OsdiSe
         <div className="text-sm text-muted-foreground p-3 rounded-lg border border-dashed">
           {t("osdi.noScore")}
         </div>
+      )}
+
+      {/* OSDI Answers detail */}
+      {osdiScore !== null && osdiScore !== undefined && (
+        <OsdiAnswersSection visitId={visitId} />
       )}
 
       {/* QR Code section */}
