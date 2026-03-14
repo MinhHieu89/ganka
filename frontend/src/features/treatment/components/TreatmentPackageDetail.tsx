@@ -1,4 +1,4 @@
-import { useMemo } from "react"
+import { useState, useMemo } from "react"
 import { Link, useNavigate } from "@tanstack/react-router"
 import { format } from "date-fns"
 import {
@@ -17,6 +17,12 @@ import { useTreatmentPackage } from "../api/treatment-api"
 import type { TreatmentPackageDto } from "../api/treatment-types"
 import { TreatmentSessionCard } from "./TreatmentSessionCard"
 import { OsdiTrendChart } from "./OsdiTrendChart"
+import { TreatmentSessionForm } from "./TreatmentSessionForm"
+import { ModifyPackageDialog } from "./ModifyPackageDialog"
+import { CancellationRequestDialog } from "./CancellationRequestDialog"
+import { SwitchTreatmentDialog } from "./SwitchTreatmentDialog"
+import { VersionHistoryDialog } from "./VersionHistoryDialog"
+import type { TreatmentType } from "../api/treatment-types"
 
 // -- Status badge styling --
 
@@ -153,7 +159,14 @@ export function TreatmentPackageDetail({
   const navigate = useNavigate()
   const { data: pkg, isLoading, error } = useTreatmentPackage(packageId)
 
-  const goBack = () => navigate({ to: "/dashboard" })
+  // Dialog state
+  const [sessionFormOpen, setSessionFormOpen] = useState(false)
+  const [modifyDialogOpen, setModifyDialogOpen] = useState(false)
+  const [cancelDialogOpen, setCancelDialogOpen] = useState(false)
+  const [switchDialogOpen, setSwitchDialogOpen] = useState(false)
+  const [historyDialogOpen, setHistoryDialogOpen] = useState(false)
+
+  const goBack = () => navigate({ to: "/treatments" })
 
   const sortedSessions = useMemo(() => {
     if (!pkg?.sessions) return []
@@ -193,6 +206,10 @@ export function TreatmentPackageDetail({
   const isActive = pkg.status === "Active"
   const isPaused = pkg.status === "Paused"
   const canModify = isActive || isPaused
+  const isTerminal =
+    pkg.status === "Completed" ||
+    pkg.status === "Cancelled" ||
+    pkg.status === "Switched"
   const showCancellation =
     pkg.status === "PendingCancellation" || pkg.status === "Cancelled"
 
@@ -281,13 +298,17 @@ export function TreatmentPackageDetail({
           {/* Action buttons */}
           <div className="flex flex-wrap gap-2 pt-2 border-t">
             {isActive && (
-              <Button size="sm">
+              <Button size="sm" onClick={() => setSessionFormOpen(true)}>
                 Record Session
               </Button>
             )}
             {canModify && (
               <>
-                <Button variant="outline" size="sm">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setModifyDialogOpen(true)}
+                >
                   Modify
                 </Button>
                 <Button variant="outline" size="sm">
@@ -303,18 +324,33 @@ export function TreatmentPackageDetail({
                     </>
                   )}
                 </Button>
-                <Button variant="outline" size="sm">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setSwitchDialogOpen(true)}
+                >
                   Switch Type
                 </Button>
-                <Button variant="outline" size="sm" className="text-red-600">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-red-600"
+                  onClick={() => setCancelDialogOpen(true)}
+                >
                   Request Cancellation
                 </Button>
               </>
             )}
-            <Button variant="ghost" size="sm">
-              <IconHistory className="h-4 w-4 mr-1" />
-              View History
-            </Button>
+            {!isTerminal && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setHistoryDialogOpen(true)}
+              >
+                <IconHistory className="h-4 w-4 mr-1" />
+                View History
+              </Button>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -348,6 +384,40 @@ export function TreatmentPackageDetail({
           </CardContent>
         </Card>
       )}
+
+      {/* Dialogs */}
+      <TreatmentSessionForm
+        open={sessionFormOpen}
+        onOpenChange={setSessionFormOpen}
+        packageId={packageId}
+        treatmentType={pkg.treatmentType as TreatmentType}
+        defaultParametersJson={pkg.parametersJson}
+      />
+
+      <ModifyPackageDialog
+        open={modifyDialogOpen}
+        onOpenChange={setModifyDialogOpen}
+        package_={pkg}
+      />
+
+      <CancellationRequestDialog
+        open={cancelDialogOpen}
+        onOpenChange={setCancelDialogOpen}
+        package={pkg}
+      />
+
+      <SwitchTreatmentDialog
+        open={switchDialogOpen}
+        onOpenChange={setSwitchDialogOpen}
+        currentPackage={pkg}
+      />
+
+      <VersionHistoryDialog
+        open={historyDialogOpen}
+        onOpenChange={setHistoryDialogOpen}
+        versions={[]}
+        packageName={pkg.protocolTemplateName}
+      />
     </div>
   )
 }
