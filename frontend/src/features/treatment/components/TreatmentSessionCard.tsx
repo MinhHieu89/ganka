@@ -73,10 +73,10 @@ function IplParams({ params }: { params: ParsedParams }) {
           <span className="font-medium">{String(params.energy)} J/cm²</span>
         </div>
       )}
-      {params.pulses != null && (
+      {params.pulseCount != null && (
         <div>
           <span className="text-muted-foreground">Pulses:</span>{" "}
-          <span className="font-medium">{String(params.pulses)}</span>
+          <span className="font-medium">{String(params.pulseCount)}</span>
         </div>
       )}
       {params.spotSize != null && (
@@ -85,10 +85,14 @@ function IplParams({ params }: { params: ParsedParams }) {
           <span className="font-medium">{String(params.spotSize)} mm</span>
         </div>
       )}
-      {params.zones != null && (
+      {params.treatmentZones != null && (
         <div>
           <span className="text-muted-foreground">Zones:</span>{" "}
-          <span className="font-medium">{String(params.zones)}</span>
+          <span className="font-medium">
+            {Array.isArray(params.treatmentZones)
+              ? (params.treatmentZones as string[]).join(", ")
+              : String(params.treatmentZones)}
+          </span>
         </div>
       )}
     </div>
@@ -116,10 +120,10 @@ function LlltParams({ params }: { params: ParsedParams }) {
           <span className="font-medium">{String(params.duration)} min</span>
         </div>
       )}
-      {params.area != null && (
+      {params.treatmentArea != null && (
         <div>
           <span className="text-muted-foreground">Area:</span>{" "}
-          <span className="font-medium">{String(params.area)}</span>
+          <span className="font-medium">{String(params.treatmentArea)}</span>
         </div>
       )}
     </div>

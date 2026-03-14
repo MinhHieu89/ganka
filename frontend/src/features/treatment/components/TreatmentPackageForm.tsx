@@ -63,6 +63,8 @@ interface TreatmentPackageFormProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   visitId?: string
+  patientId?: string
+  patientName?: string
 }
 
 // -- Component --
@@ -71,6 +73,8 @@ export function TreatmentPackageForm({
   open,
   onOpenChange,
   visitId,
+  patientId: presetPatientId,
+  patientName: presetPatientName,
 }: TreatmentPackageFormProps) {
   const { data: templates = [] } = useProtocolTemplates()
   const createMutation = useCreateTreatmentPackage()
@@ -95,8 +99,8 @@ export function TreatmentPackageForm({
     resolver: zodResolver(packageFormSchema),
     defaultValues: {
       protocolTemplateId: "",
-      patientId: "",
-      patientName: "",
+      patientId: presetPatientId ?? "",
+      patientName: presetPatientName ?? "",
       totalSessions: null,
       pricingMode: null,
       packagePrice: null,
@@ -112,8 +116,8 @@ export function TreatmentPackageForm({
     if (open) {
       form.reset({
         protocolTemplateId: "",
-        patientId: "",
-        patientName: "",
+        patientId: presetPatientId ?? "",
+        patientName: presetPatientName ?? "",
         totalSessions: null,
         pricingMode: null,
         packagePrice: null,
@@ -123,10 +127,19 @@ export function TreatmentPackageForm({
         visitId: visitId ?? null,
       })
       setSelectedTemplate(null)
-      setSelectedPatientDisplay(null)
+      if (presetPatientId && presetPatientName) {
+        setSelectedPatientDisplay({
+          id: presetPatientId,
+          name: presetPatientName,
+          phone: "",
+          code: "",
+        })
+      } else {
+        setSelectedPatientDisplay(null)
+      }
       setPatientSearchTerm("")
     }
-  }, [open, visitId, form])
+  }, [open, visitId, presetPatientId, presetPatientName, form])
 
   // Handle template selection - pre-populate form
   const handleTemplateSelect = (templateId: string) => {

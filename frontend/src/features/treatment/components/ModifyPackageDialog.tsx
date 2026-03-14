@@ -23,14 +23,26 @@ import type { TreatmentPackageDto } from "@/features/treatment/api/treatment-typ
 
 // -- Schema --
 
-const modifyPackageSchema = z.object({
-  totalSessions: z.coerce.number().int().min(1).max(6).nullable().optional(),
-  parametersJson: z.string().nullable().optional(),
-  minIntervalDays: z.coerce.number().int().min(1).nullable().optional(),
-  reason: z.string().min(1, "Lý do thay đổi là bắt buộc"),
-})
+function createModifyPackageSchema(sessionsCompleted: number) {
+  return z.object({
+    totalSessions: z.coerce
+      .number()
+      .int()
+      .min(1)
+      .max(6)
+      .nullable()
+      .optional()
+      .refine(
+        (val) => val == null || val >= sessionsCompleted,
+        `Không thể giảm dưới số phiên đã hoàn thành (${sessionsCompleted})`,
+      ),
+    parametersJson: z.string().nullable().optional(),
+    minIntervalDays: z.coerce.number().int().min(1).nullable().optional(),
+    reason: z.string().min(1, "Lý do thay đổi là bắt buộc"),
+  })
+}
 
-type ModifyPackageFormValues = z.infer<typeof modifyPackageSchema>
+type ModifyPackageFormValues = z.infer<ReturnType<typeof createModifyPackageSchema>>
 
 // -- Props --
 
@@ -48,9 +60,10 @@ export function ModifyPackageDialog({
   package_,
 }: ModifyPackageDialogProps) {
   const modifyMutation = useModifyPackage(package_.id)
+  const schema = createModifyPackageSchema(package_.sessionsCompleted)
 
   const form = useForm<ModifyPackageFormValues>({
-    resolver: zodResolver(modifyPackageSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
       totalSessions: package_.totalSessions,
       parametersJson: package_.parametersJson || null,

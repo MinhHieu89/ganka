@@ -62,6 +62,7 @@ const TREATMENT_TYPE_STYLES: Record<string, string> = {
 
 interface PatientTreatmentsTabProps {
   patientId: string
+  patientName?: string
 }
 
 // -- Package card --
@@ -210,6 +211,7 @@ function PackageSkeleton() {
 
 export function PatientTreatmentsTab({
   patientId,
+  patientName,
 }: PatientTreatmentsTabProps) {
   const { data: packages = [], isLoading, isError } = usePatientTreatments(patientId)
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
@@ -303,6 +305,8 @@ export function PatientTreatmentsTab({
       <TreatmentPackageForm
         open={createDialogOpen}
         onOpenChange={setCreateDialogOpen}
+        patientId={patientId}
+        patientName={patientName}
       />
     </div>
   )

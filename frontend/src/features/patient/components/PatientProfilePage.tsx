@@ -156,7 +156,7 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
         </TabsContent>
 
         <TabsContent value="treatments" className="mt-4">
-          <PatientTreatmentsTab patientId={patient.id} />
+          <PatientTreatmentsTab patientId={patient.id} patientName={patient.fullName} />
         </TabsContent>
       </Tabs>
     </div>
