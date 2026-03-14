@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 09.1-01-PLAN.md
-last_updated: "2026-03-14T03:19:46.171Z"
+stopped_at: Completed 09.1-03-PLAN.md
+last_updated: "2026-03-14T03:24:40.239Z"
 last_activity: "2026-03-13 - Completed quick task 2: Add Serilog with file output for development"
 progress:
   total_phases: 17
   completed_phases: 14
   total_plans: 255
-  completed_plans: 249
+  completed_plans: 250
   percent: 98
 ---
 
@@ -801,6 +801,7 @@ Progress: [█████████░] 96%
 | Phase 07.1 P04 | 4min | 2 tasks | 6 files |
 | Phase 07.2 P01 | 20min | 2 tasks | 7 files |
 | Phase 09.1 P01 | 15min | 2 tasks | 12 files |
+| Phase 09.1 P03 | 2min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -1266,6 +1267,7 @@ Recent decisions affecting current work:
 - [Phase 07.2]: SQL SEQUENCE is global (not year-scoped) for invoice numbering; year prefix handles display
 - [Phase 09.1]: Added UpdateDeduction to CancellationRequest entity for manager override at approval time
 - [Phase 09.1]: Used ScheduledAt as primary date for interval checks, falling back to CompletedAt then CreatedAt
+- [Phase 09.1]: Consolidated AddEntityBaseToSessionEntities + old InitialTreatment into single clean migration
 
 ### Roadmap Evolution
 
@@ -1296,6 +1298,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-14T03:19:46.165Z
-Stopped at: Completed 09.1-01-PLAN.md
+Last session: 2026-03-14T03:24:40.234Z
+Stopped at: Completed 09.1-03-PLAN.md
 Resume file: None
