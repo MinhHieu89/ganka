@@ -471,7 +471,7 @@ Plans:
   5. Frontend routes have permission guards, all UI strings use i18n, and all validators match backend constraints
   6. Test coverage reaches 80%+ with sentinel file exclusions removed, validator tests added, and TRT-10 authorization tested
 
-**Plans**: 7 plans in 3 waves
+**Plans**: 8 plans in 3 waves
 
 Plans:
 - [ ] 09.1-01-PLAN.md -- Domain fixes: interval enforcement, session numbering, Modify() auto-complete, deduction validation, Entity inheritance, dead enum removal, change detection
@@ -481,6 +481,7 @@ Plans:
 - [ ] 09.1-05-PLAN.md -- Frontend fixes (Part 2): permission guards on treatment routes, i18n translations for CancellationApprovalQueue, CancellationRequestDialog, ProtocolTemplateList
 - [ ] 09.1-06-PLAN.md -- QR OSDI token flow: backend token registration endpoint + version history API endpoint + frontend QR URL fix + VersionHistoryDialog wiring
 - [ ] 09.1-07-PLAN.md -- Test fixes: remove sentinel file exclusions, fix existing tests for updated domain/handler signatures, add 12+ new tests for interval, numbering, auto-completion, deduction, ICurrentUser
+- [ ] 09.1-08-PLAN.md -- [GAP] Grant Manager role Treatment.Manage permission for cancellation approval (TRT-09)
 
 ## Progress
 
@@ -507,4 +508,4 @@ Note: Phase 4 and Phase 5 both depend only on Phase 3 and can potentially run in
 | 7.2 Fix Phase 07.1 Code Review Issues | 0/5 | Not started | - |
 | 8. Optical Center | 39/39 | Complete   | 2026-03-08 |
 | 9. Treatment Protocols | 25/29 | In Progress|  |
-| 9.1 Fix Phase 09 Code Review Issues | 0/7 | Not started | - |
+| 9.1 Fix Phase 09 Code Review Issues | 0/8 | Not started | - |
