@@ -12,7 +12,7 @@ using Treatment.Infrastructure;
 namespace Treatment.Infrastructure.Migrations
 {
     [DbContext(typeof(TreatmentDbContext))]
-    [Migration("20260308073048_InitialTreatment")]
+    [Migration("20260314032257_InitialTreatment")]
     partial class InitialTreatment
     {
         /// <inheritdoc />
@@ -21,7 +21,7 @@ namespace Treatment.Infrastructure.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("treatment")
-                .HasAnnotation("ProductVersion", "10.0.3")
+                .HasAnnotation("ProductVersion", "10.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -135,11 +135,20 @@ namespace Treatment.Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
                     b.Property<Guid>("TreatmentSessionId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -311,6 +320,9 @@ namespace Treatment.Infrastructure.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<decimal?>("OsdiScore")
                         .HasColumnType("decimal(5,2)");
 
@@ -337,6 +349,9 @@ namespace Treatment.Infrastructure.Migrations
 
                     b.Property<Guid>("TreatmentPackageId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid?>("VisitId")
                         .HasColumnType("uniqueidentifier");

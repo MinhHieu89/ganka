@@ -147,8 +147,10 @@ namespace Treatment.Infrastructure.Migrations
                     VisitId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     ScheduledAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CompletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IntervalOverrideReason = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IntervalOverrideReason = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true)
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -171,7 +173,10 @@ namespace Treatment.Infrastructure.Migrations
                     TreatmentSessionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ConsumableItemId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ConsumableName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Quantity = table.Column<int>(type: "int", nullable: false)
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
