@@ -226,6 +226,7 @@ export interface BatchOverride {
 export interface CreateOtcSaleInput {
   patientId?: string | null
   customerName?: string | null
+  notes?: string | null
   lines: OtcSaleLineInput[]
 }
 

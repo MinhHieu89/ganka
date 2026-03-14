@@ -332,7 +332,7 @@ export function StockImportForm({ onSuccess }: StockImportFormProps) {
                   <DrugCombobox
                     value={f.value}
                     onSelect={(id, name) => {
-                      form.setValue(`lines.${index}.drugCatalogItemId`, id)
+                      form.setValue(`lines.${index}.drugCatalogItemId`, id, { shouldValidate: true, shouldDirty: true })
                       form.setValue(`lines.${index}.drugName`, name)
                     }}
                   />

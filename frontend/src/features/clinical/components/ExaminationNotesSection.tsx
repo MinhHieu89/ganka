@@ -67,7 +67,7 @@ export function ExaminationNotesSection({
   return (
     <VisitSection title={t("visit.examinationNotes")}>
       <AutoResizeTextarea
-        className="min-h-[120px] resize-y"
+        className="min-h-[120px] resize-none"
         rows={4}
         value={notes}
         disabled={disabled}

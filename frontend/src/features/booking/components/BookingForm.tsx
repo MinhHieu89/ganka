@@ -249,8 +249,16 @@ export function BookingForm({ onSubmit, isSubmitting, error }: BookingFormProps)
       {/* Notes */}
       <Field>
         <FieldLabel>{t("notes")}</FieldLabel>
-        <AutoResizeTextarea
-          {...form.register("notes")}
+        <Controller
+          name="notes"
+          control={form.control}
+          render={({ field }) => (
+            <AutoResizeTextarea
+              value={field.value ?? ""}
+              onChange={field.onChange}
+              onBlur={field.onBlur}
+            />
+          )}
         />
       </Field>
 

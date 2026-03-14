@@ -284,19 +284,6 @@ function LineItemRow({
   )
 }
 
-// ---- Stock exceeded check for all lines ----
-
-function useHasStockExceeded(control: ReturnType<typeof useForm<OtcSaleValues>>["control"]) {
-  const lines = useWatch({ control, name: "lines" })
-  // Each line's stock is checked individually via StockWarning component.
-  // For submit button disabling, we need to aggregate. We do this by
-  // rendering a hidden component per line that reports stock status.
-  // Instead, we'll use a simpler approach: track exceeded state via context.
-  // Actually, the simplest approach that works with hooks rules is to
-  // have the parent track stock state in a map.
-  return lines
-}
-
 // ---- Total display ----
 
 function TotalDisplay({ control }: { control: ReturnType<typeof useForm<OtcSaleValues>>["control"] }) {
@@ -432,6 +419,7 @@ export function OtcSaleForm({ onSuccess }: OtcSaleFormProps) {
       await createOtcSale.mutateAsync({
         patientId: null,
         customerName: data.isAnonymous ? null : (data.customerName?.trim() || null),
+        notes: data.notes?.trim() || null,
         lines: data.lines.map((line) => ({
           drugCatalogItemId: line.drugCatalogItemId,
           drugName: line.drugName,

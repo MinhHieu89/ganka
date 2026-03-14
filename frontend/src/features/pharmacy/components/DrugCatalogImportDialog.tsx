@@ -80,8 +80,7 @@ export function DrugCatalogImportDialog({ open, onOpenChange }: DrugCatalogImpor
 
       const rows: PreviewRow[] = []
 
-      // Add valid rows (backend returns them without row numbers)
-      // We track valid row indices to reconstruct display order
+      // Group errors by row number
       const errorsByRow = new Map<number, DrugCatalogImportErrorDto[]>()
       for (const err of result.errors) {
         const existing = errorsByRow.get(err.rowNumber) ?? []
@@ -89,60 +88,32 @@ export function DrugCatalogImportDialog({ open, onOpenChange }: DrugCatalogImpor
         errorsByRow.set(err.rowNumber, existing)
       }
 
-      // Collect all error row numbers
-      const errorRowNumbers = new Set(errorsByRow.keys())
-
-      // Assign valid rows their row numbers (rows not in error set)
-      // Data starts at row 2 (row 1 = header)
-      let dataRowNum = 2
-      let validIdx = 0
-      const totalRows = result.validRows.length + errorRowNumbers.size
-
-      for (let i = 0; i < totalRows; i++) {
-        const currentRow = dataRowNum + i
-        if (errorRowNumbers.has(currentRow)) {
-          // This is an error row
-          const errs = errorsByRow.get(currentRow)!
-          rows.push({
-            rowNumber: currentRow,
-            name: "",
-            nameVi: "",
-            genericName: "",
-            form: "",
-            route: "",
-            strength: null,
-            unit: "",
-            sellingPrice: 0,
-            minStockLevel: 0,
-            isValid: false,
-            errors: errs,
-          })
-        } else if (validIdx < result.validRows.length) {
-          // This is a valid row
-          const vr = result.validRows[validIdx]
-          rows.push({
-            rowNumber: currentRow,
-            name: vr.name,
-            nameVi: vr.nameVi,
-            genericName: vr.genericName,
-            form: vr.form,
-            route: vr.route,
-            strength: vr.strength,
-            unit: vr.unit,
-            sellingPrice: vr.sellingPrice,
-            minStockLevel: vr.minStockLevel,
-            isValid: true,
-            errors: [],
-          })
-          validIdx++
-        }
+      // Add error rows first (these have accurate row numbers from backend)
+      for (const [rowNumber, errs] of errorsByRow) {
+        rows.push({
+          rowNumber,
+          name: "",
+          nameVi: "",
+          genericName: "",
+          form: "",
+          route: "",
+          strength: null,
+          unit: "",
+          sellingPrice: 0,
+          minStockLevel: 0,
+          isValid: false,
+          errors: errs,
+        })
       }
 
-      // If there are remaining valid rows (in case row number computation didn't align)
-      while (validIdx < result.validRows.length) {
-        const vr = result.validRows[validIdx]
+      // Valid rows: backend does not return original row numbers, so we
+      // display a sequential index (1-based) rather than guessing Excel rows.
+      // The # column for valid rows represents display order, not the
+      // original Excel row number.
+      for (let i = 0; i < result.validRows.length; i++) {
+        const vr = result.validRows[i]
         rows.push({
-          rowNumber: dataRowNum + rows.length,
+          rowNumber: i + 1,
           name: vr.name,
           nameVi: vr.nameVi,
           genericName: vr.genericName,
@@ -155,10 +126,13 @@ export function DrugCatalogImportDialog({ open, onOpenChange }: DrugCatalogImpor
           isValid: true,
           errors: [],
         })
-        validIdx++
       }
 
-      rows.sort((a, b) => a.rowNumber - b.rowNumber)
+      // Sort: error rows first (by Excel row number), then valid rows
+      rows.sort((a, b) => {
+        if (a.isValid !== b.isValid) return a.isValid ? 1 : -1
+        return a.rowNumber - b.rowNumber
+      })
       setPreviewRows(rows)
       setValidRows(result.validRows)
     } catch {
@@ -270,8 +244,8 @@ export function DrugCatalogImportDialog({ open, onOpenChange }: DrugCatalogImpor
                             : "bg-red-50 dark:bg-red-950/20"
                         }
                       >
-                        <TableCell className="text-xs text-muted-foreground">
-                          {row.rowNumber}
+                        <TableCell className="text-xs text-muted-foreground" title={row.isValid ? `#${row.rowNumber}` : `Excel row ${row.rowNumber}`}>
+                          {row.isValid ? `#${row.rowNumber}` : `R${row.rowNumber}`}
                         </TableCell>
                         <TableCell>
                           {row.isValid ? (

@@ -105,8 +105,8 @@ export function OpticalPrescriptionSection({
   return (
     <VisitSection
       title={t("prescription.opticalRx")}
-      defaultOpen={true}
-      {...(sectionOpen ? { open: true, onOpenChange: setSectionOpen } : {})}
+      open={sectionOpen}
+      onOpenChange={setSectionOpen}
       headerExtra={
         <div className="flex items-center gap-2">
           {!disabled && !hasPrescriptions && !showForm && (
