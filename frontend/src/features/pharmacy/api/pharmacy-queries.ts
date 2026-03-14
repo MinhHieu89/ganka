@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query"
 import { toast } from "sonner"
 import {
   getSuppliers,
@@ -23,6 +23,10 @@ import {
   searchDrugCatalog,
   createDrugCatalogItem,
   updateDrugCatalogItem,
+  searchDrugCatalogPaginated,
+  importDrugCatalogPreview,
+  confirmDrugCatalogImport,
+  getDrugAvailableStock,
 } from "./pharmacy-api"
 import type {
   CreateSupplierInput,
@@ -33,6 +37,7 @@ import type {
   DispenseDrugsInput,
   CreateOtcSaleInput,
   DrugCatalogItemDto,
+  ValidDrugCatalogRow,
 } from "./pharmacy-api"
 
 // -- Query key factory --
@@ -40,7 +45,11 @@ import type {
 export const pharmacyKeys = {
   all: ["pharmacy"] as const,
   drugs: () => [...pharmacyKeys.all, "drugs"] as const,
+  drugsPaginated: (page: number, pageSize: number, search?: string) =>
+    [...pharmacyKeys.all, "drugs", "paginated", page, pageSize, search ?? ""] as const,
   drugSearch: (term: string) => [...pharmacyKeys.all, "drugs", "search", term] as const,
+  drugAvailableStock: (drugCatalogItemId: string) =>
+    [...pharmacyKeys.all, "drugs", "available-stock", drugCatalogItemId] as const,
   suppliers: {
     all: () => [...pharmacyKeys.all, "suppliers"] as const,
   },
@@ -82,6 +91,22 @@ export function useDrugCatalogSearch(term: string) {
     queryKey: pharmacyKeys.drugSearch(term),
     queryFn: () => searchDrugCatalog(term),
     enabled: term.length >= 2,
+  })
+}
+
+export function useSearchDrugCatalog(page: number, pageSize: number, search?: string) {
+  return useQuery({
+    queryKey: pharmacyKeys.drugsPaginated(page, pageSize, search),
+    queryFn: () => searchDrugCatalogPaginated({ page, pageSize, search }),
+    placeholderData: keepPreviousData,
+  })
+}
+
+export function useDrugAvailableStock(drugCatalogItemId: string | undefined) {
+  return useQuery({
+    queryKey: pharmacyKeys.drugAvailableStock(drugCatalogItemId ?? ""),
+    queryFn: () => getDrugAvailableStock(drugCatalogItemId!),
+    enabled: !!drugCatalogItemId,
   })
 }
 
@@ -302,6 +327,29 @@ export function useCreateOtcSale() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: pharmacyKeys.inventory.all() })
       queryClient.invalidateQueries({ queryKey: [...pharmacyKeys.all, "otc-sales"] })
+    },
+    onError: (error: Error) => {
+      toast.error(error.message)
+    },
+  })
+}
+
+export function useImportDrugCatalogPreview() {
+  return useMutation({
+    mutationFn: (file: File) => importDrugCatalogPreview(file),
+    onError: (error: Error) => {
+      toast.error(error.message)
+    },
+  })
+}
+
+export function useConfirmDrugCatalogImport() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (validRows: ValidDrugCatalogRow[]) => confirmDrugCatalogImport(validRows),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: pharmacyKeys.drugs() })
+      queryClient.invalidateQueries({ queryKey: [...pharmacyKeys.all, "drugs", "paginated"] })
     },
     onError: (error: Error) => {
       toast.error(error.message)

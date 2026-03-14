@@ -16,7 +16,17 @@
     "inactive": "Ngừng hoạt động",
     "empty": "Danh mục thuốc trống",
     "created": "Thêm thuốc thành công",
-    "updated": "Cập nhật thuốc thành công"
+    "updated": "Cập nhật thuốc thành công",
+    "importExcel": "Nhập từ Excel",
+    "downloadTemplate": "Tải mẫu Excel",
+    "importExcelTitle": "Nhập danh mục thuốc từ Excel",
+    "importExcelDesc": "Tải lên file Excel để nhập thuốc vào danh mục. Dòng hợp lệ sẽ được đánh dấu xanh, dòng lỗi sẽ được đánh dấu đỏ.",
+    "selectFile": "Chọn file",
+    "validRows": "hợp lệ",
+    "invalidRows": "lỗi",
+    "importValidRows": "Nhập {{count}} dòng hợp lệ",
+    "importSuccess": "Nhập danh mục thuốc thành công",
+    "cancel": "Hủy"
   },
   "inventory": {
     "title": "Quản lý kho thuốc",

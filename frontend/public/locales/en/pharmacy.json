@@ -16,7 +16,17 @@
     "inactive": "Inactive",
     "empty": "No drugs in catalog",
     "created": "Drug added successfully",
-    "updated": "Drug updated successfully"
+    "updated": "Drug updated successfully",
+    "importExcel": "Import from Excel",
+    "downloadTemplate": "Download Template",
+    "importExcelTitle": "Import Drug Catalog from Excel",
+    "importExcelDesc": "Upload an Excel file to import drugs into the catalog. Valid rows will be highlighted green, invalid rows red.",
+    "selectFile": "Select File",
+    "validRows": "valid",
+    "invalidRows": "invalid",
+    "importValidRows": "Import {{count}} Valid Rows",
+    "importSuccess": "Drug catalog imported successfully",
+    "cancel": "Cancel"
   },
   "inventory": {
     "title": "Drug Inventory",

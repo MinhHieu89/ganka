@@ -543,6 +543,119 @@ export async function getOtcSales(
   return (result as OtcSaleDto[]) ?? []
 }
 
+// -- Drug catalog paginated + import --
+
+export interface PaginatedDrugCatalogResult {
+  items: DrugCatalogItemDto[]
+  totalCount: number
+  page: number
+  pageSize: number
+  totalPages: number
+}
+
+export interface DrugCatalogImportErrorDto {
+  rowNumber: number
+  columnName: string
+  message: string
+}
+
+export interface ValidDrugCatalogRow {
+  name: string
+  nameVi: string
+  genericName: string
+  form: string
+  route: string
+  strength: string | null
+  unit: string
+  sellingPrice: number
+  minStockLevel: number
+}
+
+export interface DrugCatalogImportPreviewDto {
+  validRows: ValidDrugCatalogRow[]
+  errors: DrugCatalogImportErrorDto[]
+}
+
+export async function searchDrugCatalogPaginated(params: {
+  page: number
+  pageSize: number
+  search?: string
+}): Promise<PaginatedDrugCatalogResult> {
+  const queryParams: Record<string, unknown> = {
+    page: params.page,
+    pageSize: params.pageSize,
+  }
+  if (params.search) queryParams.search = params.search
+
+  const { data, error } = await api.GET("/api/pharmacy/drugs" as never, {
+    params: { query: queryParams },
+  } as never)
+  if (error) throw new Error("Failed to fetch drug catalog")
+  return data as PaginatedDrugCatalogResult
+}
+
+export async function importDrugCatalogPreview(
+  file: File,
+): Promise<DrugCatalogImportPreviewDto> {
+  const formData = new FormData()
+  formData.append("file", file)
+
+  const token = (await import("@/shared/stores/authStore")).useAuthStore.getState().accessToken
+  const res = await fetch(`${API_URL}/api/pharmacy/drugs/import/preview`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+    credentials: "include",
+  })
+  if (!res.ok) {
+    const body = await res.json().catch(() => null)
+    throw new Error(body?.detail || body?.title || "Failed to import drug catalog from Excel")
+  }
+  return res.json()
+}
+
+export async function confirmDrugCatalogImport(
+  validRows: ValidDrugCatalogRow[],
+): Promise<{ count: number }> {
+  const { data, error, response } = await api.POST(
+    "/api/pharmacy/drugs/import/confirm" as never,
+    {
+      body: { validRows, branchId: "00000000-0000-0000-0000-000000000000" },
+    } as never,
+  )
+  if (error || !response.ok) {
+    const err = error as Record<string, unknown> | undefined
+    if (err?.errors) throw new Error(JSON.stringify(err))
+    throw new Error("Failed to confirm drug catalog import")
+  }
+  return data as { count: number }
+}
+
+export async function getDrugCatalogTemplate(): Promise<Blob> {
+  const token = (await import("@/shared/stores/authStore")).useAuthStore.getState().accessToken
+  const res = await fetch(`${API_URL}/api/pharmacy/drugs/import/template`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    credentials: "include",
+  })
+  if (!res.ok) throw new Error("Failed to download template")
+  return res.blob()
+}
+
+export async function getDrugAvailableStock(
+  drugCatalogItemId: string,
+): Promise<{ availableStock: number }> {
+  const { data, error } = await api.GET(
+    `/api/pharmacy/drugs/${drugCatalogItemId}/available-stock` as never,
+  )
+  if (error) throw new Error("Failed to fetch available stock")
+  return data as { availableStock: number }
+}
+
 // Re-export drug catalog functions for backward compatibility
 export {
   getDrugCatalogList,

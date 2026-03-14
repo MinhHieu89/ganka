@@ -1,16 +1,13 @@
-import { useMemo, useState } from "react"
+import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import {
   createColumnHelper,
   getCoreRowModel,
-  getSortedRowModel,
-  getFilteredRowModel,
   useReactTable,
-  type SortingState,
+  type PaginationState,
 } from "@tanstack/react-table"
 import { IconEdit } from "@tabler/icons-react"
 import { Button } from "@/shared/components/Button"
-import { Input } from "@/shared/components/Input"
 import { Badge } from "@/shared/components/Badge"
 import { DataTable } from "@/shared/components/DataTable"
 import {
@@ -22,15 +19,22 @@ import {
 interface DrugCatalogTableProps {
   drugs: DrugCatalogItemDto[]
   onEdit: (drug: DrugCatalogItemDto) => void
+  pagination: PaginationState
+  onPaginationChange: (pagination: PaginationState) => void
+  pageCount: number
 }
 
 const columnHelper = createColumnHelper<DrugCatalogItemDto>()
 
-export function DrugCatalogTable({ drugs, onEdit }: DrugCatalogTableProps) {
+export function DrugCatalogTable({
+  drugs,
+  onEdit,
+  pagination,
+  onPaginationChange,
+  pageCount,
+}: DrugCatalogTableProps) {
   const { t } = useTranslation("pharmacy")
   const { t: tCommon } = useTranslation("common")
-  const [sorting, setSorting] = useState<SortingState>([])
-  const [globalFilter, setGlobalFilter] = useState("")
 
   const columns = useMemo(
     () => [
@@ -39,12 +43,12 @@ export function DrugCatalogTable({ drugs, onEdit }: DrugCatalogTableProps) {
         cell: (info) => (
           <span className="font-medium">{info.getValue()}</span>
         ),
-        enableSorting: true,
+        enableSorting: false,
       }),
       columnHelper.accessor("genericName", {
         header: () => t("catalog.genericName"),
         cell: (info) => info.getValue(),
-        enableSorting: true,
+        enableSorting: false,
       }),
       columnHelper.accessor("form", {
         header: () => t("catalog.form"),
@@ -106,37 +110,22 @@ export function DrugCatalogTable({ drugs, onEdit }: DrugCatalogTableProps) {
   const table = useReactTable({
     data: drugs,
     columns,
-    state: { sorting, globalFilter },
-    onSortingChange: setSorting,
-    onGlobalFilterChange: setGlobalFilter,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    globalFilterFn: (row, _columnId, filterValue: string) => {
-      const search = filterValue.toLowerCase()
-      const drug = row.original
-      return (
-        drug.name.toLowerCase().includes(search) ||
-        drug.nameVi.toLowerCase().includes(search) ||
-        drug.genericName.toLowerCase().includes(search) ||
-        (drug.strength?.toLowerCase().includes(search) ?? false)
-      )
+    state: { pagination },
+    onPaginationChange: (updater) => {
+      const next =
+        typeof updater === "function" ? updater(pagination) : updater
+      onPaginationChange(next)
     },
+    manualPagination: true,
+    pageCount,
+    getCoreRowModel: getCoreRowModel(),
   })
 
   return (
-    <div className="space-y-4">
-      <Input
-        value={globalFilter}
-        onChange={(e) => setGlobalFilter(e.target.value)}
-        placeholder={t("catalog.search")}
-        className="max-w-sm"
-      />
-      <DataTable
-        table={table}
-        columns={columns}
-        emptyMessage={t("catalog.empty")}
-      />
-    </div>
+    <DataTable
+      table={table}
+      columns={columns}
+      emptyMessage={t("catalog.empty")}
+    />
   )
 }
