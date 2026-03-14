@@ -25,6 +25,7 @@ import {
 import { DataTable } from "@/shared/components/DataTable"
 import { Skeleton } from "@/shared/components/Skeleton"
 import { formatVND } from "@/shared/lib/format-vnd"
+import { useAuthStore } from "@/shared/stores/authStore"
 import { useActiveTreatments } from "@/features/treatment/api/treatment-api"
 import type { TreatmentPackageDto } from "@/features/treatment/api/treatment-types"
 import { DueSoonSection } from "./DueSoonSection"
@@ -92,6 +93,9 @@ export function TreatmentsPage() {
   const { data: packages = [], isLoading, isError } = useActiveTreatments()
   const navigate = useNavigate()
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
+  const canCreate = useAuthStore(
+    (s) => s.user?.permissions?.includes("Treatment.Create") || s.user?.permissions?.includes("Admin"),
+  )
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 
@@ -306,10 +310,12 @@ export function TreatmentsPage() {
             Quản lý phác đồ điều trị cho bệnh nhân
           </p>
         </div>
-        <Button onClick={() => setCreateDialogOpen(true)}>
-          <IconPlus className="h-4 w-4 mr-2" />
-          Tạo phác đồ
-        </Button>
+        {canCreate && (
+          <Button onClick={() => setCreateDialogOpen(true)}>
+            <IconPlus className="h-4 w-4 mr-2" />
+            Tạo phác đồ
+          </Button>
+        )}
       </div>
 
       {/* Due Soon section */}

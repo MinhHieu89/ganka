@@ -375,6 +375,9 @@ function RejectDialog({ open, onOpenChange, pkg }: RejectDialogProps) {
 
 export function CancellationApprovalQueue() {
   const { data: packages = [], isLoading, isError } = usePendingCancellations()
+  const canManage = useAuthStore(
+    (s) => s.user?.permissions?.includes("Treatment.Manage") || s.user?.permissions?.includes("Admin"),
+  )
   const [sorting, setSorting] = useState<SortingState>([])
   const [approveTarget, setApproveTarget] = useState<TreatmentPackageDto | null>(null)
   const [rejectTarget, setRejectTarget] = useState<TreatmentPackageDto | null>(null)
@@ -465,40 +468,44 @@ export function CancellationApprovalQueue() {
           )
         },
       }),
-      columnHelper.display({
-        id: "actions",
-        header: "",
-        cell: ({ row }) => (
-          <div className="flex items-center gap-1">
-            <Button
-              size="sm"
-              variant="outline"
-              className="h-8 text-green-600 hover:text-green-700 hover:bg-green-50"
-              onClick={(e) => {
-                e.stopPropagation()
-                setApproveTarget(row.original)
-              }}
-            >
-              <IconCheck className="h-4 w-4 mr-1" />
-              Duyet
-            </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              className="h-8 text-red-600 hover:text-red-700 hover:bg-red-50"
-              onClick={(e) => {
-                e.stopPropagation()
-                setRejectTarget(row.original)
-              }}
-            >
-              <IconX className="h-4 w-4 mr-1" />
-              Tu choi
-            </Button>
-          </div>
-        ),
-      }),
+      ...(canManage
+        ? [
+            columnHelper.display({
+              id: "actions",
+              header: "",
+              cell: ({ row }) => (
+                <div className="flex items-center gap-1">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="h-8 text-green-600 hover:text-green-700 hover:bg-green-50"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setApproveTarget(row.original)
+                    }}
+                  >
+                    <IconCheck className="h-4 w-4 mr-1" />
+                    Duyet
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="h-8 text-red-600 hover:text-red-700 hover:bg-red-50"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setRejectTarget(row.original)
+                    }}
+                  >
+                    <IconX className="h-4 w-4 mr-1" />
+                    Tu choi
+                  </Button>
+                </div>
+              ),
+            }),
+          ]
+        : []),
     ],
-    [],
+    [canManage],
   )
 
   const table = useReactTable({

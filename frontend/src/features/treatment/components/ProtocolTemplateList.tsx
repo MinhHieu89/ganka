@@ -22,6 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/components/Select"
+import { useAuthStore } from "@/shared/stores/authStore"
 import { useProtocolTemplates } from "@/features/treatment/api/treatment-api"
 import type { TreatmentProtocolDto } from "@/features/treatment/api/treatment-types"
 import { ProtocolTemplateForm } from "./ProtocolTemplateForm"
@@ -51,6 +52,12 @@ function formatVnd(amount: number): string {
 
 export function ProtocolTemplateList() {
   const { data: templates, isLoading, isError } = useProtocolTemplates()
+  const canCreate = useAuthStore(
+    (s) => s.user?.permissions?.includes("Treatment.Create") || s.user?.permissions?.includes("Admin"),
+  )
+  const canManage = useAuthStore(
+    (s) => s.user?.permissions?.includes("Treatment.Manage") || s.user?.permissions?.includes("Admin"),
+  )
   const [sorting, setSorting] = useState<SortingState>([])
   const [globalFilter, setGlobalFilter] = useState("")
   const [typeFilter, setTypeFilter] = useState<string>(ALL_VALUE)
@@ -143,25 +150,29 @@ export function ProtocolTemplateList() {
         ),
         enableSorting: false,
       }),
-      columnHelper.display({
-        id: "actions",
-        header: "Actions",
-        cell: ({ row }) => (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={(e) => {
-              e.stopPropagation()
-              openEditDialog(row.original)
-            }}
-            title="Edit template"
-          >
-            <IconEdit className="h-4 w-4" />
-          </Button>
-        ),
-      }),
+      ...(canManage
+        ? [
+            columnHelper.display({
+              id: "actions",
+              header: "Actions",
+              cell: ({ row }) => (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    openEditDialog(row.original)
+                  }}
+                  title="Edit template"
+                >
+                  <IconEdit className="h-4 w-4" />
+                </Button>
+              ),
+            }),
+          ]
+        : []),
     ],
-    [],
+    [canManage],
   )
 
   const table = useReactTable({
@@ -204,10 +215,12 @@ export function ProtocolTemplateList() {
             Manage treatment protocol templates for IPL, LLLT, and Lid Care
           </p>
         </div>
-        <Button onClick={openCreateDialog}>
-          <IconPlus className="h-4 w-4 mr-2" />
-          Create Template
-        </Button>
+        {canCreate && (
+          <Button onClick={openCreateDialog}>
+            <IconPlus className="h-4 w-4 mr-2" />
+            Create Template
+          </Button>
+        )}
       </div>
 
       {/* Filters */}
