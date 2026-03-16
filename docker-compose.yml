@@ -1,0 +1,49 @@
+services:
+  backend:
+    image: harbor.labs.local/ganka/backend:${IMAGE_TAG:-latest}
+    container_name: ganka-backend
+    restart: unless-stopped
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=${DB_CONNECTION_STRING}
+      - Jwt__Key=${JWT_KEY}
+      - Jwt__Issuer=${JWT_ISSUER:-Ganka28}
+      - Jwt__Audience=${JWT_AUDIENCE:-Ganka28App}
+      - AzureStorage__ConnectionString=DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://azurite:10000/devstoreaccount1
+      - Cors__AllowedOrigins__0=${CORS_ORIGIN:-}
+      - Serilog__WriteTo__0__Name=Console
+    ports:
+      - "${BACKEND_PORT:-5255}:5255"
+    depends_on:
+      azurite:
+        condition: service_started
+    networks:
+      - ganka-network
+
+  frontend:
+    image: harbor.labs.local/ganka/frontend:${IMAGE_TAG:-latest}
+    container_name: ganka-frontend
+    restart: unless-stopped
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    depends_on:
+      - backend
+    networks:
+      - ganka-network
+
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite
+    container_name: ganka-azurite
+    restart: unless-stopped
+    command: "azurite-blob --blobHost 0.0.0.0 --blobPort 10000"
+    volumes:
+      - azurite-data:/data
+    networks:
+      - ganka-network
+
+volumes:
+  azurite-data:
+
+networks:
+  ganka-network:
+    driver: bridge
