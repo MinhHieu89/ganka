@@ -94,7 +94,10 @@
     "unitPrice": "Unit Price",
     "total": "Total",
     "sectionTotal": "Subtotal",
-    "grandTotal": "Grand Total"
+    "grandTotal": "Grand Total",
+    "remove": "Remove",
+    "removeTitle": "Remove Line Item",
+    "removeConfirm": "Remove \"{{name}}\" from this invoice? This cannot be undone."
   },
   "noPayments": "No payments yet",
   "noDiscounts": "No discounts",

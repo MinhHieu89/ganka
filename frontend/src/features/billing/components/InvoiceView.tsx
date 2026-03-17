@@ -191,7 +191,11 @@ export function InvoiceView({ invoiceId }: InvoiceViewProps) {
           <CardTitle>{t("invoices")}</CardTitle>
         </CardHeader>
         <CardContent>
-          <InvoiceLineItemsTable lineItems={invoice.lineItems} />
+          <InvoiceLineItemsTable
+            lineItems={invoice.lineItems}
+            invoiceId={invoiceId}
+            isDraft={isDraft}
+          />
         </CardContent>
       </Card>
 

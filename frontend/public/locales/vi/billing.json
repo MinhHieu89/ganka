@@ -94,7 +94,10 @@
     "unitPrice": "Đơn giá",
     "total": "Thành tiền",
     "sectionTotal": "Cộng",
-    "grandTotal": "Tổng cộng"
+    "grandTotal": "Tổng cộng",
+    "remove": "Xóa",
+    "removeTitle": "Xóa mục",
+    "removeConfirm": "Xóa \"{{name}}\" khỏi hóa đơn? Thao tác không thể hoàn tác."
   },
   "noPayments": "Chưa có thanh toán",
   "noDiscounts": "Không có giảm giá",

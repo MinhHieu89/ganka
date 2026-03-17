@@ -1,5 +1,6 @@
 import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
+import { IconTrash, IconLoader2 } from "@tabler/icons-react"
 import {
   Table,
   TableBody,
@@ -9,11 +10,26 @@ import {
   TableHeader,
   TableRow,
 } from "@/shared/components/Table"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/shared/components/AlertDialog"
+import { Button } from "@/shared/components/Button"
 import { formatVND } from "@/shared/lib/format-vnd"
 import type { InvoiceLineItemDto } from "@/features/billing/api/billing-api"
+import { useRemoveLineItem } from "@/features/billing/api/billing-api"
 
 interface InvoiceLineItemsTableProps {
   lineItems: InvoiceLineItemDto[]
+  invoiceId: string
+  isDraft: boolean
 }
 
 interface DepartmentGroup {
@@ -31,8 +47,9 @@ const DEPARTMENT_LABEL_KEYS: Record<number, string> = {
   3: "departments.treatment",
 }
 
-export function InvoiceLineItemsTable({ lineItems }: InvoiceLineItemsTableProps) {
+export function InvoiceLineItemsTable({ lineItems, invoiceId, isDraft }: InvoiceLineItemsTableProps) {
   const { t } = useTranslation("billing")
+  const removeLineItem = useRemoveLineItem()
 
   const groups = useMemo<DepartmentGroup[]>(() => {
     const grouped = new Map<number, InvoiceLineItemDto[]>()
@@ -77,6 +94,7 @@ export function InvoiceLineItemsTable({ lineItems }: InvoiceLineItemsTableProps)
           <TableHead className="w-16 text-right">{t("lineItems.quantity")}</TableHead>
           <TableHead className="w-32 text-right">{t("lineItems.unitPrice")}</TableHead>
           <TableHead className="w-36 text-right">{t("lineItems.total")}</TableHead>
+          {isDraft && <TableHead className="w-12"></TableHead>}
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -85,6 +103,9 @@ export function InvoiceLineItemsTable({ lineItems }: InvoiceLineItemsTableProps)
             key={group.department}
             group={group}
             t={t}
+            isDraft={isDraft}
+            invoiceId={invoiceId}
+            removeLineItem={removeLineItem}
             startIndex={(() => {
               const idx = runningIndex
               runningIndex += group.items.length
@@ -95,7 +116,7 @@ export function InvoiceLineItemsTable({ lineItems }: InvoiceLineItemsTableProps)
       </TableBody>
       <TableFooter>
         <TableRow className="font-bold">
-          <TableCell colSpan={4} className="text-right">
+          <TableCell colSpan={isDraft ? 5 : 4} className="text-right">
             {t("lineItems.grandTotal")}
           </TableCell>
           <TableCell className="text-right">{formatVND(grandTotal)}</TableCell>
@@ -108,17 +129,23 @@ export function InvoiceLineItemsTable({ lineItems }: InvoiceLineItemsTableProps)
 function DepartmentSection({
   group,
   t,
+  isDraft,
+  invoiceId,
+  removeLineItem,
   startIndex,
 }: {
   group: DepartmentGroup
-  t: (key: string) => string
+  t: (key: string, options?: Record<string, unknown>) => string
+  isDraft: boolean
+  invoiceId: string
+  removeLineItem: ReturnType<typeof useRemoveLineItem>
   startIndex: number
 }) {
   return (
     <>
       {/* Department header row */}
       <TableRow className="bg-muted/50">
-        <TableCell colSpan={5} className="font-semibold text-sm uppercase tracking-wide">
+        <TableCell colSpan={isDraft ? 6 : 5} className="font-semibold text-sm uppercase tracking-wide">
           {t(group.labelKey)}
         </TableCell>
       </TableRow>
@@ -131,12 +158,45 @@ function DepartmentSection({
           <TableCell className="text-right">{item.quantity}</TableCell>
           <TableCell className="text-right">{formatVND(item.unitPrice)}</TableCell>
           <TableCell className="text-right">{formatVND(item.lineTotal)}</TableCell>
+          {isDraft && (
+            <TableCell>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive">
+                    <IconTrash className="h-4 w-4" />
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>{t("lineItems.removeTitle")}</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      {t("lineItems.removeConfirm", { name: item.descriptionVi ?? item.description })}
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>{t("buttons.cancel", { ns: "common" })}</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={() => removeLineItem.mutate({ invoiceId, lineItemId: item.id })}
+                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    >
+                      {removeLineItem.isPending ? (
+                        <IconLoader2 className="h-4 w-4 animate-spin mr-2" />
+                      ) : (
+                        <IconTrash className="h-4 w-4 mr-2" />
+                      )}
+                      {t("lineItems.remove")}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </TableCell>
+          )}
         </TableRow>
       ))}
 
       {/* Section subtotal */}
       <TableRow className="border-b-2">
-        <TableCell colSpan={4} className="text-right font-medium text-sm">
+        <TableCell colSpan={isDraft ? 5 : 4} className="text-right font-medium text-sm">
           {t("lineItems.sectionTotal")}
         </TableCell>
         <TableCell className="text-right font-medium">{formatVND(group.subtotal)}</TableCell>
