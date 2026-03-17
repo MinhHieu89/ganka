@@ -10,6 +10,8 @@ namespace Billing.Application.Features;
 /// <summary>
 /// Wolverine handler for DrugDispensedIntegrationEvent.
 /// Adds per-drug line items to the visit invoice using get-or-create pattern.
+/// Idempotent with prescription-created items: skips drugs already billed from prescriptions.
+/// If a prescription item has zero price, updates it with the actual dispensing price.
 /// Sends SignalR notification after adding line items.
 /// </summary>
 public static class HandleDrugDispensedHandler
@@ -35,9 +37,10 @@ public static class HandleDrugDispensedHandler
             invoiceRepository.Add(invoice);
         }
 
-        // Idempotency: skip items already billed from this dispensing event
+        // Idempotency: check BOTH dispensing and prescription source types
         var existingDescriptions = invoice.LineItems
-            .Where(li => li.SourceType == "Dispensing" && li.SourceId == @event.VisitId)
+            .Where(li => (li.SourceType == "Dispensing" || li.SourceType == "Prescription")
+                         && li.SourceId == @event.VisitId)
             .Select(li => li.Description)
             .ToHashSet();
 
@@ -46,6 +49,22 @@ public static class HandleDrugDispensedHandler
             if (item.UnitPrice <= 0)
             {
                 logger.LogWarning("Skipping zero-price dispensing item {DrugName} on invoice {InvoiceId}", item.DrugName, invoice.Id);
+                continue;
+            }
+
+            // If item exists from prescription with zero price, update it with actual dispensing price
+            var existingPrescriptionItem = invoice.LineItems
+                .FirstOrDefault(li => li.SourceType == "Prescription"
+                                      && li.Description == item.DrugName
+                                      && li.UnitPrice == 0
+                                      && li.SourceId == @event.VisitId);
+            if (existingPrescriptionItem != null)
+            {
+                existingPrescriptionItem.UpdatePrice(item.UnitPrice);
+                existingPrescriptionItem.UpdateSourceType("Dispensing");
+                logger.LogInformation(
+                    "Updated zero-price prescription item {DrugName} with dispensing price {Price} on invoice {InvoiceId}",
+                    item.DrugName, item.UnitPrice, invoice.Id);
                 continue;
             }
 

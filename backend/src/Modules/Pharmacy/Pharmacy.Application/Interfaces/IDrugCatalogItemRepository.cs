@@ -48,4 +48,10 @@ public interface IDrugCatalogItemRepository
     /// Used for the pharmacy inventory management list view.
     /// </summary>
     Task<List<DrugInventoryDto>> GetAllWithInventoryAsync(int expiryAlertDays, CancellationToken ct);
+
+    /// <summary>
+    /// Gets selling prices and Vietnamese names for the specified catalog item IDs.
+    /// Used by the Billing module to look up pricing when creating line items from prescriptions.
+    /// </summary>
+    Task<List<DrugCatalogPriceDto>> GetPricesByIdsAsync(List<Guid> catalogItemIds, CancellationToken ct);
 }

@@ -7,9 +7,11 @@ using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using Optical.Contracts.IntegrationEvents;
+using Pharmacy.Contracts.Dtos;
 using Pharmacy.Contracts.IntegrationEvents;
 using Shared.Domain;
 using Treatment.Contracts.IntegrationEvents;
+using Wolverine;
 
 namespace Billing.Unit.Tests.Features;
 
@@ -25,6 +27,8 @@ public class IntegrationEventHandlerTests
     private readonly ILogger _drugLogger = Substitute.For<ILogger>();
     private readonly ILogger _otcLogger = Substitute.For<ILogger>();
     private readonly ILogger _glassesLogger = Substitute.For<ILogger>();
+    private readonly ILogger _prescriptionLogger = Substitute.For<ILogger>();
+    private readonly IMessageBus _messageBus = Substitute.For<IMessageBus>();
 
     private static readonly Guid DefaultBranchId = Guid.Parse("00000000-0000-0000-0000-000000000001");
 
@@ -570,6 +574,228 @@ public class IntegrationEventHandlerTests
 
         // Assert
         invoice.LineItems[0].Description.Should().Contain("IPL");
+    }
+
+    #endregion
+
+    #region HandleDrugPrescriptionAdded Tests
+
+    [Fact]
+    public async Task HandleDrugPrescriptionAdded_NoExistingInvoice_CreatesInvoiceWithLineItems()
+    {
+        // Arrange
+        var visitId = Guid.NewGuid();
+        var patientId = Guid.NewGuid();
+        var catalogItemId = Guid.NewGuid();
+        _invoiceRepository.GetByVisitIdAsync(visitId, Arg.Any<CancellationToken>())
+            .Returns((Invoice?)null);
+
+        _messageBus.InvokeAsync<List<DrugCatalogPriceDto>>(
+            Arg.Any<GetDrugCatalogPricesQuery>(), Arg.Any<CancellationToken>(), Arg.Any<TimeSpan?>())
+            .Returns([new DrugCatalogPriceDto(catalogItemId, 50000m, "Amoxicillin VN")]);
+
+        var items = new List<DrugPrescriptionAddedIntegrationEvent.PrescribedDrugDto>
+        {
+            new("Amoxicillin", catalogItemId, 6)
+        };
+        var @event = new DrugPrescriptionAddedIntegrationEvent(visitId, patientId, "Patient", DefaultBranchId, items);
+
+        // Act
+        await HandleDrugPrescriptionAddedHandler.Handle(
+            @event, _invoiceRepository, _messageBus, _notificationService, _unitOfWork,
+            _prescriptionLogger, CancellationToken.None);
+
+        // Assert
+        _invoiceRepository.Received(1).Add(Arg.Is<Invoice>(inv =>
+            inv.VisitId == visitId &&
+            inv.PatientId == patientId &&
+            inv.LineItems.Count == 1 &&
+            inv.LineItems[0].Department == Department.Pharmacy &&
+            inv.LineItems[0].SourceType == "Prescription" &&
+            inv.LineItems[0].UnitPrice == 50000m &&
+            inv.LineItems[0].Quantity == 6));
+        await _unitOfWork.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task HandleDrugPrescriptionAdded_ExistingInvoice_AddsLineItems()
+    {
+        // Arrange
+        var visitId = Guid.NewGuid();
+        var catalogItemId = Guid.NewGuid();
+        var invoice = CreateTestInvoice(visitId);
+        _invoiceRepository.GetByVisitIdAsync(visitId, Arg.Any<CancellationToken>())
+            .Returns(invoice);
+
+        _messageBus.InvokeAsync<List<DrugCatalogPriceDto>>(
+            Arg.Any<GetDrugCatalogPricesQuery>(), Arg.Any<CancellationToken>(), Arg.Any<TimeSpan?>())
+            .Returns([new DrugCatalogPriceDto(catalogItemId, 75000m, "Ibuprofen VN")]);
+
+        var items = new List<DrugPrescriptionAddedIntegrationEvent.PrescribedDrugDto>
+        {
+            new("Ibuprofen", catalogItemId, 2)
+        };
+        var @event = new DrugPrescriptionAddedIntegrationEvent(visitId, Guid.NewGuid(), "Patient", DefaultBranchId, items);
+
+        // Act
+        await HandleDrugPrescriptionAddedHandler.Handle(
+            @event, _invoiceRepository, _messageBus, _notificationService, _unitOfWork,
+            _prescriptionLogger, CancellationToken.None);
+
+        // Assert
+        invoice.LineItems.Should().HaveCount(1);
+        invoice.LineItems[0].Description.Should().Be("Ibuprofen");
+        invoice.LineItems[0].DescriptionVi.Should().Be("Ibuprofen VN");
+        invoice.LineItems[0].UnitPrice.Should().Be(75000m);
+        invoice.LineItems[0].Quantity.Should().Be(2);
+        invoice.LineItems[0].Department.Should().Be(Department.Pharmacy);
+        invoice.LineItems[0].SourceType.Should().Be("Prescription");
+    }
+
+    [Fact]
+    public async Task HandleDrugPrescriptionAdded_DuplicateEvent_DoesNotAddDuplicateItems()
+    {
+        // Arrange
+        var visitId = Guid.NewGuid();
+        var invoice = CreateTestInvoice(visitId);
+        invoice.AddLineItem("Amoxicillin", "Amoxicillin VN", 50000m, 6, Department.Pharmacy, visitId, "Prescription");
+        _invoiceRepository.GetByVisitIdAsync(visitId, Arg.Any<CancellationToken>())
+            .Returns(invoice);
+
+        _messageBus.InvokeAsync<List<DrugCatalogPriceDto>>(
+            Arg.Any<GetDrugCatalogPricesQuery>(), Arg.Any<CancellationToken>(), Arg.Any<TimeSpan?>())
+            .Returns([]);
+
+        var items = new List<DrugPrescriptionAddedIntegrationEvent.PrescribedDrugDto>
+        {
+            new("Amoxicillin", Guid.NewGuid(), 6)
+        };
+        var @event = new DrugPrescriptionAddedIntegrationEvent(visitId, Guid.NewGuid(), "Patient", DefaultBranchId, items);
+
+        // Act
+        await HandleDrugPrescriptionAddedHandler.Handle(
+            @event, _invoiceRepository, _messageBus, _notificationService, _unitOfWork,
+            _prescriptionLogger, CancellationToken.None);
+
+        // Assert - should still have exactly 1 line item, not 2
+        invoice.LineItems.Should().HaveCount(1);
+    }
+
+    [Fact]
+    public async Task HandleDrugPrescriptionAdded_OffCatalogItem_UsesZeroPrice()
+    {
+        // Arrange
+        var visitId = Guid.NewGuid();
+        var invoice = CreateTestInvoice(visitId);
+        _invoiceRepository.GetByVisitIdAsync(visitId, Arg.Any<CancellationToken>())
+            .Returns(invoice);
+
+        _messageBus.InvokeAsync<List<DrugCatalogPriceDto>>(
+            Arg.Any<GetDrugCatalogPricesQuery>(), Arg.Any<CancellationToken>(), Arg.Any<TimeSpan?>())
+            .Returns([]);
+
+        var items = new List<DrugPrescriptionAddedIntegrationEvent.PrescribedDrugDto>
+        {
+            new("Custom Eye Drops", null, 1) // off-catalog, no DrugCatalogItemId
+        };
+        var @event = new DrugPrescriptionAddedIntegrationEvent(visitId, Guid.NewGuid(), "Patient", DefaultBranchId, items);
+
+        // Act
+        await HandleDrugPrescriptionAddedHandler.Handle(
+            @event, _invoiceRepository, _messageBus, _notificationService, _unitOfWork,
+            _prescriptionLogger, CancellationToken.None);
+
+        // Assert - off-catalog items get price 0 (cashier adjusts manually)
+        invoice.LineItems.Should().HaveCount(1);
+        invoice.LineItems[0].UnitPrice.Should().Be(0m);
+        invoice.LineItems[0].Description.Should().Be("Custom Eye Drops");
+    }
+
+    [Fact]
+    public async Task HandleDrugPrescriptionAdded_SendsSignalRNotification()
+    {
+        // Arrange
+        var visitId = Guid.NewGuid();
+        var catalogItemId = Guid.NewGuid();
+        var invoice = CreateTestInvoice(visitId);
+        _invoiceRepository.GetByVisitIdAsync(visitId, Arg.Any<CancellationToken>())
+            .Returns(invoice);
+
+        _messageBus.InvokeAsync<List<DrugCatalogPriceDto>>(
+            Arg.Any<GetDrugCatalogPricesQuery>(), Arg.Any<CancellationToken>(), Arg.Any<TimeSpan?>())
+            .Returns([new DrugCatalogPriceDto(catalogItemId, 50000m, null)]);
+
+        var items = new List<DrugPrescriptionAddedIntegrationEvent.PrescribedDrugDto>
+        {
+            new("Amoxicillin", catalogItemId, 6)
+        };
+        var @event = new DrugPrescriptionAddedIntegrationEvent(visitId, Guid.NewGuid(), "Patient", DefaultBranchId, items);
+
+        // Act
+        await HandleDrugPrescriptionAddedHandler.Handle(
+            @event, _invoiceRepository, _messageBus, _notificationService, _unitOfWork,
+            _prescriptionLogger, CancellationToken.None);
+
+        // Assert
+        await _notificationService.Received(1).NotifyLineItemAddedAsync(
+            Arg.Any<Guid>(), Arg.Any<string>(), "Amoxicillin", Arg.Any<decimal>(), "Pharmacy", Arg.Any<CancellationToken>());
+    }
+
+    #endregion
+
+    #region HandleDrugDispensed Idempotency with Prescription Tests
+
+    [Fact]
+    public async Task HandleDrugDispensed_ItemAlreadyBilledFromPrescription_SkipsItem()
+    {
+        // Arrange
+        var visitId = Guid.NewGuid();
+        var invoice = CreateTestInvoice(visitId);
+        // Pre-add line items from prescription
+        invoice.AddLineItem("Amoxicillin", "Amoxicillin VN", 50000m, 6, Department.Pharmacy, visitId, "Prescription");
+        _invoiceRepository.GetByVisitIdAsync(visitId, Arg.Any<CancellationToken>())
+            .Returns(invoice);
+
+        var items = new List<DrugDispensedIntegrationEvent.DrugLineDto>
+        {
+            new("Amoxicillin", "Amoxicillin VN", 6, 50000m)
+        };
+        var @event = new DrugDispensedIntegrationEvent(visitId, Guid.NewGuid(), "Patient", items, DefaultBranchId);
+
+        // Act
+        await HandleDrugDispensedHandler.Handle(
+            @event, _invoiceRepository, _notificationService, _unitOfWork, _drugLogger, CancellationToken.None);
+
+        // Assert - should still have exactly 1 line item (from prescription), not 2
+        invoice.LineItems.Should().HaveCount(1);
+        invoice.LineItems[0].SourceType.Should().Be("Prescription");
+    }
+
+    [Fact]
+    public async Task HandleDrugDispensed_PrescriptionItemWithZeroPrice_UpdatesPrice()
+    {
+        // Arrange
+        var visitId = Guid.NewGuid();
+        var invoice = CreateTestInvoice(visitId);
+        // Pre-add line item from prescription with zero price (off-catalog or unknown price)
+        invoice.AddLineItem("Custom Drug", null, 0m, 2, Department.Pharmacy, visitId, "Prescription");
+        _invoiceRepository.GetByVisitIdAsync(visitId, Arg.Any<CancellationToken>())
+            .Returns(invoice);
+
+        var items = new List<DrugDispensedIntegrationEvent.DrugLineDto>
+        {
+            new("Custom Drug", "Thuoc tu che", 2, 35000m)
+        };
+        var @event = new DrugDispensedIntegrationEvent(visitId, Guid.NewGuid(), "Patient", items, DefaultBranchId);
+
+        // Act
+        await HandleDrugDispensedHandler.Handle(
+            @event, _invoiceRepository, _notificationService, _unitOfWork, _drugLogger, CancellationToken.None);
+
+        // Assert - should still have 1 line item but with updated price and source type
+        invoice.LineItems.Should().HaveCount(1);
+        invoice.LineItems[0].UnitPrice.Should().Be(35000m);
+        invoice.LineItems[0].SourceType.Should().Be("Dispensing");
     }
 
     #endregion

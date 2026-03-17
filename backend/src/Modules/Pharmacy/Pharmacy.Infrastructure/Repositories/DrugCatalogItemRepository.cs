@@ -173,4 +173,17 @@ public sealed class DrugCatalogItemRepository : IDrugCatalogItemRepository
                 hasExpiryAlert);
         }).ToList();
     }
+
+    /// <inheritdoc />
+    public async Task<List<DrugCatalogPriceDto>> GetPricesByIdsAsync(List<Guid> catalogItemIds, CancellationToken ct)
+    {
+        return await _dbContext.DrugCatalogItems
+            .AsNoTracking()
+            .Where(d => catalogItemIds.Contains(d.Id))
+            .Select(d => new DrugCatalogPriceDto(
+                d.Id,
+                d.SellingPrice ?? 0m,
+                d.NameVi))
+            .ToListAsync(ct);
+    }
 }

@@ -41,6 +41,27 @@ public class InvoiceLineItem : Entity
     private InvoiceLineItem() { }
 
     /// <summary>
+    /// Updates the unit price and recalculates the line total.
+    /// Used when dispensing provides actual pricing for prescription-created line items.
+    /// </summary>
+    public void UpdatePrice(decimal newUnitPrice)
+    {
+        if (newUnitPrice < 0)
+            throw new ArgumentException("Unit price cannot be negative.", nameof(newUnitPrice));
+
+        UnitPrice = newUnitPrice;
+        LineTotal = newUnitPrice * Quantity;
+    }
+
+    /// <summary>
+    /// Updates the source type. Used when dispensing confirms a prescription-created line item.
+    /// </summary>
+    public void UpdateSourceType(string sourceType)
+    {
+        SourceType = sourceType;
+    }
+
+    /// <summary>
     /// Factory method for creating a new invoice line item.
     /// </summary>
     public static InvoiceLineItem Create(
