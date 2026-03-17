@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next"
-import { useRouterState } from "@tanstack/react-router"
+import { Link, useRouterState } from "@tanstack/react-router"
 import { SidebarTrigger } from "@/shared/components/Sidebar"
 import { Separator } from "@/shared/components/Separator"
 import {
@@ -44,7 +44,7 @@ const segmentToI18nKey: Record<string, string> = {
   stocktaking: "sidebar.opticalStocktaking",
   billing: "sidebar.billing",
   shifts: "sidebar.billingShifts",
-  invoices: "sidebar.billing",
+  invoices: "sidebar.billingInvoices",
   treatments: "sidebar.treatment",
   approvals: "sidebar.treatment",
   templates: "sidebar.treatment",
@@ -85,7 +85,7 @@ export function SiteHeader() {
     const isLast = index === segments.length - 1
     let path = "/" + segments.slice(0, index + 1).join("/")
     // Redirect intermediate segments that have no standalone route to their parent
-    const noStandaloneRoute = ["invoices", "approvals", "templates"]
+    const noStandaloneRoute = ["approvals", "templates"]
     if (noStandaloneRoute.includes(segment) && !isLast) {
       path = "/" + segments.slice(0, index).join("/")
     }
@@ -105,7 +105,7 @@ export function SiteHeader() {
                 {crumb.isLast ? (
                   <BreadcrumbPage className="font-medium">{crumb.label}</BreadcrumbPage>
                 ) : (
-                  <BreadcrumbLink href={crumb.path}>{crumb.label}</BreadcrumbLink>
+                  <BreadcrumbLink asChild><Link to={crumb.path}>{crumb.label}</Link></BreadcrumbLink>
                 )}
               </BreadcrumbItem>
             </span>

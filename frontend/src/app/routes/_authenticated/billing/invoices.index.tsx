@@ -2,14 +2,6 @@ import { createFileRoute, Link } from "@tanstack/react-router"
 import { useTranslation } from "react-i18next"
 import { IconArrowLeft } from "@tabler/icons-react"
 import { Button } from "@/shared/components/Button"
-import {
-  Breadcrumb,
-  BreadcrumbList,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/shared/components/Breadcrumb"
 import { InvoiceHistoryPage } from "@/features/billing/components/InvoiceHistoryPage"
 
 export const Route = createFileRoute("/_authenticated/billing/invoices/")({
@@ -21,21 +13,6 @@ function InvoiceHistoryRoute() {
 
   return (
     <div className="space-y-4">
-      {/* Breadcrumb */}
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link to="/billing">{t("title")}</Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>{t("allInvoices")}</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
-
       {/* Back button */}
       <Button variant="ghost" size="sm" asChild>
         <Link to="/billing">

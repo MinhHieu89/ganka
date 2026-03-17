@@ -28,6 +28,7 @@
     "opticalStocktaking": "Stocktaking",
     "billing": "Billing",
     "billingDashboard": "Dashboard",
+    "billingInvoices": "Invoices",
     "billingShifts": "Shifts",
     "serviceCatalog": "Service Catalog",
     "treatment": "Treatment",
