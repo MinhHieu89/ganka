@@ -743,6 +743,102 @@ public class IntegrationEventHandlerTests
 
     #endregion
 
+    #region HandleDrugPrescriptionRemoved Tests
+
+    [Fact]
+    public async Task HandleDrugPrescriptionRemoved_RemovesPrescriptionLineItems()
+    {
+        // Arrange
+        var visitId = Guid.NewGuid();
+        var invoice = CreateTestInvoice(visitId);
+        invoice.AddLineItem("Amoxicillin", "Amoxicillin VN", 50000m, 6, Department.Pharmacy, visitId, "Prescription");
+        invoice.AddLineItem("Ibuprofen", "Ibuprofen VN", 30000m, 2, Department.Pharmacy, visitId, "Prescription");
+        invoice.AddLineItem("Consultation", "Kham benh", 150000m, 1, Department.Medical, visitId, "Visit");
+        _invoiceRepository.GetByVisitIdAsync(visitId, Arg.Any<CancellationToken>())
+            .Returns(invoice);
+
+        var @event = new DrugPrescriptionRemovedIntegrationEvent(visitId, DefaultBranchId, ["Amoxicillin", "Ibuprofen"]);
+
+        // Act
+        await HandleDrugPrescriptionRemovedHandler.Handle(
+            @event, _invoiceRepository, _notificationService, _unitOfWork,
+            _prescriptionLogger, CancellationToken.None);
+
+        // Assert
+        invoice.LineItems.Should().HaveCount(1);
+        invoice.LineItems[0].Description.Should().Be("Consultation");
+        await _unitOfWork.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task HandleDrugPrescriptionRemoved_NoInvoice_DoesNothing()
+    {
+        // Arrange
+        var visitId = Guid.NewGuid();
+        _invoiceRepository.GetByVisitIdAsync(visitId, Arg.Any<CancellationToken>())
+            .Returns((Invoice?)null);
+
+        var @event = new DrugPrescriptionRemovedIntegrationEvent(visitId, DefaultBranchId, ["Amoxicillin"]);
+
+        // Act
+        await HandleDrugPrescriptionRemovedHandler.Handle(
+            @event, _invoiceRepository, _notificationService, _unitOfWork,
+            _prescriptionLogger, CancellationToken.None);
+
+        // Assert
+        await _unitOfWork.DidNotReceive().SaveChangesAsync(Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task HandleDrugPrescriptionRemoved_NoMatchingItems_DoesNothing()
+    {
+        // Arrange
+        var visitId = Guid.NewGuid();
+        var invoice = CreateTestInvoice(visitId);
+        invoice.AddLineItem("Consultation", "Kham benh", 150000m, 1, Department.Medical, visitId, "Visit");
+        _invoiceRepository.GetByVisitIdAsync(visitId, Arg.Any<CancellationToken>())
+            .Returns(invoice);
+
+        var @event = new DrugPrescriptionRemovedIntegrationEvent(visitId, DefaultBranchId, ["Amoxicillin"]);
+
+        // Act
+        await HandleDrugPrescriptionRemovedHandler.Handle(
+            @event, _invoiceRepository, _notificationService, _unitOfWork,
+            _prescriptionLogger, CancellationToken.None);
+
+        // Assert
+        invoice.LineItems.Should().HaveCount(1);
+        // SaveChanges may or may not be called depending on implementation, but no items removed
+    }
+
+    [Fact]
+    public async Task RemoveInvoiceLineItem_PrescriptionSourced_ReturnsError()
+    {
+        // Arrange
+        var invoice = CreateTestInvoice(Guid.NewGuid());
+        invoice.AddLineItem("Amoxicillin", "Amoxicillin VN", 50000m, 6, Department.Pharmacy, Guid.NewGuid(), "Prescription");
+        var lineItemId = invoice.LineItems[0].Id;
+
+        _invoiceRepository.GetByIdAsync(invoice.Id, Arg.Any<CancellationToken>())
+            .Returns(invoice);
+
+        var validator = Substitute.For<IValidator<RemoveInvoiceLineItemCommand>>();
+        validator.ValidateAsync(Arg.Any<RemoveInvoiceLineItemCommand>(), Arg.Any<CancellationToken>())
+            .Returns(new FluentValidation.Results.ValidationResult());
+
+        var command = new RemoveInvoiceLineItemCommand(invoice.Id, lineItemId);
+
+        // Act
+        var result = await RemoveInvoiceLineItemHandler.Handle(
+            command, _invoiceRepository, _unitOfWork, validator, CancellationToken.None);
+
+        // Assert
+        result.IsFailure.Should().BeTrue();
+        result.Error.Description.Should().Contain("prescription");
+    }
+
+    #endregion
+
     #region HandleDrugDispensed Idempotency with Prescription Tests
 
     [Fact]

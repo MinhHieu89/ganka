@@ -198,6 +198,70 @@ public class DrugPrescriptionAddedEventTests
 
     #endregion
 
+    #region Visit.RemoveDrugPrescription Domain Event Tests
+
+    [Fact]
+    public void RemoveDrugPrescription_RaisesDrugPrescriptionRemovedEvent()
+    {
+        // Arrange
+        var visit = CreateTestVisit();
+        var rx = CreateTestPrescription(visit.Id);
+        visit.AddDrugPrescription(rx);
+        visit.ClearDomainEvents();
+
+        // Act
+        visit.RemoveDrugPrescription(rx.Id);
+
+        // Assert
+        visit.DomainEvents.Should().ContainSingle()
+            .Which.Should().BeOfType<DrugPrescriptionRemovedEvent>();
+    }
+
+    [Fact]
+    public void RemoveDrugPrescription_Event_HasCorrectVisitIdAndDrugNames()
+    {
+        // Arrange
+        var visit = CreateTestVisit();
+        var rx = CreateTestPrescription(visit.Id);
+        visit.AddDrugPrescription(rx);
+        visit.ClearDomainEvents();
+
+        // Act
+        visit.RemoveDrugPrescription(rx.Id);
+
+        // Assert
+        var domainEvent = visit.DomainEvents.OfType<DrugPrescriptionRemovedEvent>().Single();
+        domainEvent.VisitId.Should().Be(visit.Id);
+        domainEvent.BranchId.Should().Be(DefaultBranchId);
+        domainEvent.DrugNames.Should().HaveCount(2);
+        domainEvent.DrugNames.Should().Contain("Amoxicillin");
+        domainEvent.DrugNames.Should().Contain("Eye Drops Custom");
+    }
+
+    #endregion
+
+    #region PublishDrugPrescriptionRemovedIntegrationEvent Tests
+
+    [Fact]
+    public void PublishDrugPrescriptionRemovedIntegrationEvent_ProducesCorrectEvent()
+    {
+        // Arrange
+        var visitId = Guid.NewGuid();
+        var drugNames = new List<string> { "Amoxicillin", "Eye Drops" };
+        var domainEvent = new DrugPrescriptionRemovedEvent(visitId, DefaultBranchId, drugNames);
+
+        // Act
+        var integrationEvent = PublishDrugPrescriptionRemovedIntegrationEventHandler.Handle(domainEvent);
+
+        // Assert
+        integrationEvent.Should().NotBeNull();
+        integrationEvent.VisitId.Should().Be(visitId);
+        integrationEvent.BranchId.Should().Be(DefaultBranchId);
+        integrationEvent.DrugNames.Should().BeEquivalentTo(drugNames);
+    }
+
+    #endregion
+
     #region Cascading Handler Tests
 
     [Fact]

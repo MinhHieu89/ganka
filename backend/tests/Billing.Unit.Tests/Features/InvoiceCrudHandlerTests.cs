@@ -439,6 +439,94 @@ public class InvoiceCrudHandlerTests
 
     #endregion
 
+    #region RemoveLineItem Guard Tests
+
+    [Fact]
+    public void RemoveLineItem_WithPrescriptionSource_ThrowsInvalidOperationException()
+    {
+        // Arrange
+        var invoice = Invoice.Create("HD-2026-00001", Guid.NewGuid(), "Test", Guid.NewGuid(),
+            new BranchId(DefaultBranchId));
+        invoice.AddLineItem("Amoxicillin", "Amoxicillin VN", 50000m, 6, Department.Pharmacy, Guid.NewGuid(), "Prescription");
+        var lineItemId = invoice.LineItems[0].Id;
+
+        // Act & Assert
+        var act = () => invoice.RemoveLineItem(lineItemId);
+        act.Should().Throw<InvalidOperationException>()
+            .WithMessage("*prescription*");
+    }
+
+    [Fact]
+    public void RemoveLineItem_WithNullSource_Succeeds()
+    {
+        // Arrange
+        var invoice = Invoice.Create("HD-2026-00001", Guid.NewGuid(), "Test", Guid.NewGuid(),
+            new BranchId(DefaultBranchId));
+        invoice.AddLineItem("Eye Exam", "Kham mat", 200000m, 1, Department.Medical);
+        var lineItemId = invoice.LineItems[0].Id;
+
+        // Act
+        invoice.RemoveLineItem(lineItemId);
+
+        // Assert
+        invoice.LineItems.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void RemoveLineItem_WithDispensingSource_Succeeds()
+    {
+        // Arrange
+        var invoice = Invoice.Create("HD-2026-00001", Guid.NewGuid(), "Test", Guid.NewGuid(),
+            new BranchId(DefaultBranchId));
+        invoice.AddLineItem("Amoxicillin", "Amoxicillin VN", 50000m, 2, Department.Pharmacy, Guid.NewGuid(), "Dispensing");
+        var lineItemId = invoice.LineItems[0].Id;
+
+        // Act
+        invoice.RemoveLineItem(lineItemId);
+
+        // Assert
+        invoice.LineItems.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void RemoveLineItemsBySource_RemovesMatchingItems_And_RecalculatesTotals()
+    {
+        // Arrange
+        var visitId = Guid.NewGuid();
+        var invoice = Invoice.Create("HD-2026-00001", Guid.NewGuid(), "Test", Guid.NewGuid(),
+            new BranchId(DefaultBranchId));
+        invoice.AddLineItem("Amoxicillin", null, 50000m, 6, Department.Pharmacy, visitId, "Prescription");
+        invoice.AddLineItem("Ibuprofen", null, 30000m, 2, Department.Pharmacy, visitId, "Prescription");
+        invoice.AddLineItem("Consultation", null, 150000m, 1, Department.Medical, visitId, "Visit");
+
+        // Act
+        invoice.RemoveLineItemsBySource(visitId, "Prescription");
+
+        // Assert
+        invoice.LineItems.Should().HaveCount(1);
+        invoice.LineItems[0].Description.Should().Be("Consultation");
+        invoice.SubTotal.Should().Be(150000m);
+    }
+
+    [Fact]
+    public void RemoveLineItemsBySource_NoMatching_NoChanges()
+    {
+        // Arrange
+        var visitId = Guid.NewGuid();
+        var invoice = Invoice.Create("HD-2026-00001", Guid.NewGuid(), "Test", Guid.NewGuid(),
+            new BranchId(DefaultBranchId));
+        invoice.AddLineItem("Consultation", null, 150000m, 1, Department.Medical, visitId, "Visit");
+
+        // Act
+        invoice.RemoveLineItemsBySource(Guid.NewGuid(), "Prescription");
+
+        // Assert
+        invoice.LineItems.Should().HaveCount(1);
+        invoice.SubTotal.Should().Be(150000m);
+    }
+
+    #endregion
+
     #region Helper Methods
 
     /// <summary>
