@@ -323,6 +323,122 @@ public class InvoiceCrudHandlerTests
 
     #endregion
 
+    #region GetAllInvoices Tests
+
+    [Fact]
+    public async Task GetAllInvoices_NoFilter_ReturnsAllInvoices()
+    {
+        // Arrange
+        var invoice1 = Invoice.Create("HD-2026-00001", Guid.NewGuid(), "Patient A", Guid.NewGuid(),
+            new BranchId(DefaultBranchId));
+        var invoice2 = CreateFinalizedInvoice();
+
+        _invoiceRepository.GetAllAsync(null, null, 1, 20, Arg.Any<CancellationToken>())
+            .Returns((new List<Invoice> { invoice1, invoice2 }, 2));
+
+        var query = new GetAllInvoicesQuery(null, null, 1, 20);
+
+        // Act
+        var result = await GetAllInvoicesHandler.Handle(query, _invoiceRepository, CancellationToken.None);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Items.Should().HaveCount(2);
+        result.Value.TotalCount.Should().Be(2);
+        result.Value.Page.Should().Be(1);
+        result.Value.PageSize.Should().Be(20);
+    }
+
+    [Fact]
+    public async Task GetAllInvoices_FilterByStatus_ReturnsFilteredInvoices()
+    {
+        // Arrange - filter for Draft (0) only
+        var draftInvoice = Invoice.Create("HD-2026-00001", Guid.NewGuid(), "Patient A", Guid.NewGuid(),
+            new BranchId(DefaultBranchId));
+
+        _invoiceRepository.GetAllAsync(0, null, 1, 20, Arg.Any<CancellationToken>())
+            .Returns((new List<Invoice> { draftInvoice }, 1));
+
+        var query = new GetAllInvoicesQuery(0, null, 1, 20);
+
+        // Act
+        var result = await GetAllInvoicesHandler.Handle(query, _invoiceRepository, CancellationToken.None);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Items.Should().HaveCount(1);
+        result.Value.Items[0].Status.Should().Be((int)InvoiceStatus.Draft);
+    }
+
+    [Fact]
+    public async Task GetAllInvoices_SearchByPatientName_ReturnsMatchingInvoices()
+    {
+        // Arrange
+        var invoice = Invoice.Create("HD-2026-00001", Guid.NewGuid(), "Nguyen Van A", Guid.NewGuid(),
+            new BranchId(DefaultBranchId));
+
+        _invoiceRepository.GetAllAsync(null, "Nguyen", 1, 20, Arg.Any<CancellationToken>())
+            .Returns((new List<Invoice> { invoice }, 1));
+
+        var query = new GetAllInvoicesQuery(null, "Nguyen", 1, 20);
+
+        // Act
+        var result = await GetAllInvoicesHandler.Handle(query, _invoiceRepository, CancellationToken.None);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Items.Should().HaveCount(1);
+        result.Value.Items[0].PatientName.Should().Be("Nguyen Van A");
+    }
+
+    [Fact]
+    public async Task GetAllInvoices_SearchByInvoiceNumber_ReturnsMatchingInvoices()
+    {
+        // Arrange
+        var invoice = Invoice.Create("HD-2026-00001", Guid.NewGuid(), "Patient A", Guid.NewGuid(),
+            new BranchId(DefaultBranchId));
+
+        _invoiceRepository.GetAllAsync(null, "HD-2026-00001", 1, 20, Arg.Any<CancellationToken>())
+            .Returns((new List<Invoice> { invoice }, 1));
+
+        var query = new GetAllInvoicesQuery(null, "HD-2026-00001", 1, 20);
+
+        // Act
+        var result = await GetAllInvoicesHandler.Handle(query, _invoiceRepository, CancellationToken.None);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Items.Should().HaveCount(1);
+        result.Value.Items[0].InvoiceNumber.Should().Be("HD-2026-00001");
+    }
+
+    [Fact]
+    public async Task GetAllInvoices_Pagination_ReturnsCorrectPageInfo()
+    {
+        // Arrange - 25 total items, requesting page 2 with page size 10
+        var invoices = Enumerable.Range(1, 10)
+            .Select(i => Invoice.Create($"HD-2026-{i:D5}", Guid.NewGuid(), $"Patient {i}", Guid.NewGuid(),
+                new BranchId(DefaultBranchId)))
+            .ToList();
+
+        _invoiceRepository.GetAllAsync(null, null, 2, 10, Arg.Any<CancellationToken>())
+            .Returns((invoices, 25));
+
+        var query = new GetAllInvoicesQuery(null, null, 2, 10);
+
+        // Act
+        var result = await GetAllInvoicesHandler.Handle(query, _invoiceRepository, CancellationToken.None);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Items.Should().HaveCount(10);
+        result.Value.TotalCount.Should().Be(25);
+        result.Value.Page.Should().Be(2);
+        result.Value.PageSize.Should().Be(10);
+    }
+
+    #endregion
+
     #region Helper Methods
 
     /// <summary>
