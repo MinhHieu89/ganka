@@ -1,7 +1,8 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
+import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
 import { IconLoader2 } from "@tabler/icons-react"
 import {
@@ -35,60 +36,60 @@ import {
   getCardType,
 } from "./PaymentMethodSelector"
 
-// -- Zod schema for payment form --
+// -- Zod schema for payment form (uses i18n keys as defaults, overridden at render) --
 
-const paymentFormSchema = z
-  .object({
-    method: z.number({ required_error: "Payment method is required" }).min(0),
-    amount: z.coerce
-      .number({ required_error: "Amount is required" })
-      .positive("Amount must be greater than 0"),
-    referenceNumber: z.string().optional().nullable(),
-    cardLast4: z.string().optional().nullable(),
-    notes: z.string().max(500).optional().nullable(),
-    treatmentPackageId: z.string().optional().nullable(),
-    isSplitPayment: z.boolean().default(false),
-    splitSequence: z.coerce.number().optional().nullable(),
-  })
-  .superRefine((data, ctx) => {
-    // Reference number required for bank transfer and QR methods
-    if (
-      methodRequiresReference(data.method) &&
-      (!data.referenceNumber || data.referenceNumber.trim() === "")
-    ) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Reference number is required for this payment method",
-        path: ["referenceNumber"],
-      })
-    }
-    // Card last 4 required for card methods
-    if (methodIsCard(data.method)) {
-      if (!data.cardLast4 || data.cardLast4.trim() === "") {
+function createPaymentFormSchema(t: (key: string) => string, maxAmount: number) {
+  return z
+    .object({
+      method: z.number({ required_error: t("validation.paymentMethodRequired") }).min(0),
+      amount: z.coerce
+        .number({ required_error: t("validation.required") })
+        .positive(t("validation.mustBePositive"))
+        .max(maxAmount, t("amountExceedsBalance")),
+      referenceNumber: z.string().optional().nullable(),
+      cardLast4: z.string().optional().nullable(),
+      notes: z.string().max(500).optional().nullable(),
+      treatmentPackageId: z.string().optional().nullable(),
+      isSplitPayment: z.boolean().default(false),
+      splitSequence: z.coerce.number().optional().nullable(),
+    })
+    .superRefine((data, ctx) => {
+      if (
+        methodRequiresReference(data.method) &&
+        (!data.referenceNumber || data.referenceNumber.trim() === "")
+      ) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Card last 4 digits are required",
-          path: ["cardLast4"],
-        })
-      } else if (!/^\d{4}$/.test(data.cardLast4.trim())) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Must be exactly 4 digits",
-          path: ["cardLast4"],
+          message: t("validation.refNumberRequired"),
+          path: ["referenceNumber"],
         })
       }
-    }
-    // Split payment requires split sequence
-    if (data.isSplitPayment && (data.splitSequence == null || data.splitSequence < 1)) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Split sequence is required for split payments",
-        path: ["splitSequence"],
-      })
-    }
-  })
+      if (methodIsCard(data.method)) {
+        if (!data.cardLast4 || data.cardLast4.trim() === "") {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: t("validation.cardLast4Required"),
+            path: ["cardLast4"],
+          })
+        } else if (!/^\d{4}$/.test(data.cardLast4.trim())) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: t("validation.cardLast4Format"),
+            path: ["cardLast4"],
+          })
+        }
+      }
+      if (data.isSplitPayment && (data.splitSequence == null || data.splitSequence < 1)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: t("validation.splitSequenceRequired"),
+          path: ["splitSequence"],
+        })
+      }
+    })
+}
 
-type PaymentFormValues = z.infer<typeof paymentFormSchema>
+type PaymentFormValues = z.infer<ReturnType<typeof createPaymentFormSchema>>
 
 interface PaymentFormProps {
   invoiceId: string
@@ -108,6 +109,8 @@ export function PaymentForm({
   onOpenChange,
   treatmentPackageId,
 }: PaymentFormProps) {
+  const { t } = useTranslation("billing")
+  const { t: tCommon } = useTranslation("common")
   const recordPayment = useRecordPayment()
   const [showTreatmentFields, setShowTreatmentFields] = useState(
     !!treatmentPackageId,
@@ -120,7 +123,7 @@ export function PaymentForm({
     reset,
     formState: { errors, isSubmitting },
   } = useForm<PaymentFormValues>({
-    resolver: zodResolver(paymentFormSchema),
+    resolver: zodResolver(createPaymentFormSchema(t, balanceDue)),
     defaultValues: {
       method: undefined as unknown as number,
       amount: balanceDue,
@@ -133,6 +136,22 @@ export function PaymentForm({
     },
   })
 
+  // Reset form with updated balanceDue when dialog opens
+  useEffect(() => {
+    if (open) {
+      reset({
+        method: undefined as unknown as number,
+        amount: balanceDue,
+        referenceNumber: null,
+        cardLast4: null,
+        notes: null,
+        treatmentPackageId: treatmentPackageId ?? null,
+        isSplitPayment: false,
+        splitSequence: null,
+      })
+    }
+  }, [open, balanceDue, reset, treatmentPackageId])
+
   const selectedMethod = watch("method")
   const enteredAmount = watch("amount")
   const isSplitPayment = watch("isSplitPayment")
@@ -141,11 +160,6 @@ export function PaymentForm({
     typeof enteredAmount === "number" ? balanceDue - enteredAmount : balanceDue
 
   const onSubmit = async (values: PaymentFormValues) => {
-    if (values.amount > balanceDue) {
-      toast.error("Amount cannot exceed balance due")
-      return
-    }
-
     const input: RecordPaymentInput = {
       invoiceId,
       method: values.method,
@@ -171,7 +185,7 @@ export function PaymentForm({
 
     try {
       await recordPayment.mutateAsync(input)
-      toast.success("Thanh toan thanh cong")
+      toast.success(t("paymentSuccessful"))
       reset()
       onOpenChange(false)
       onSuccess?.()
@@ -189,16 +203,16 @@ export function PaymentForm({
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Thu tien</DialogTitle>
+          <DialogTitle>{t("collectPayment")}</DialogTitle>
           <DialogDescription>
-            So tien can thanh toan: {formatVND(balanceDue)}
+            {t("amountToPay")}: {formatVND(balanceDue)}
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
           {/* Payment Method Selector */}
           <Field>
-            <FieldLabel>Phuong thuc thanh toan *</FieldLabel>
+            <FieldLabel>{t("paymentMethod")} *</FieldLabel>
             <Controller
               name="method"
               control={control}
@@ -217,7 +231,7 @@ export function PaymentForm({
 
           {/* Amount */}
           <Field>
-            <FieldLabel>So tien (VND) *</FieldLabel>
+            <FieldLabel>{t("amountVnd")} *</FieldLabel>
             <Controller
               name="amount"
               control={control}
@@ -225,7 +239,6 @@ export function PaymentForm({
                 <Input
                   type="number"
                   min={0}
-                  max={balanceDue}
                   step={1000}
                   disabled={isSubmitting}
                   {...field}
@@ -238,7 +251,7 @@ export function PaymentForm({
             )}
             {typeof enteredAmount === "number" && enteredAmount > 0 && (
               <p className="text-xs text-muted-foreground">
-                Con lai sau thanh toan:{" "}
+                {t("remainingAfterPayment")}:{" "}
                 <span
                   className={
                     remainingAfterPayment <= 0
@@ -255,7 +268,7 @@ export function PaymentForm({
           {/* Reference Number -- shown for BankTransfer, QR methods */}
           {selectedMethod != null && methodRequiresReference(selectedMethod) && (
             <Field>
-              <FieldLabel>Ma giao dich *</FieldLabel>
+              <FieldLabel>{t("referenceNumber")} *</FieldLabel>
               <Controller
                 name="referenceNumber"
                 control={control}
@@ -277,7 +290,7 @@ export function PaymentForm({
           {selectedMethod != null && methodIsCard(selectedMethod) && (
             <>
               <Field>
-                <FieldLabel>4 so cuoi the *</FieldLabel>
+                <FieldLabel>{t("cardLast4Label")} *</FieldLabel>
                 <Controller
                   name="cardLast4"
                   control={control}
@@ -297,7 +310,7 @@ export function PaymentForm({
                 )}
               </Field>
               <Field>
-                <FieldLabel>Loai the</FieldLabel>
+                <FieldLabel>{t("cardType")}</FieldLabel>
                 <Input
                   value={getCardType(selectedMethod) ?? ""}
                   disabled
@@ -309,7 +322,7 @@ export function PaymentForm({
 
           {/* Notes */}
           <Field>
-            <FieldLabel>Ghi chu</FieldLabel>
+            <FieldLabel>{t("notes")}</FieldLabel>
             <Controller
               name="notes"
               control={control}
@@ -340,14 +353,14 @@ export function PaymentForm({
               disabled={isSubmitting}
             />
             <Label htmlFor="showTreatmentFields" className="text-sm">
-              Thanh toan goi dieu tri
+              {t("treatmentPackagePayment")}
             </Label>
           </div>
 
           {showTreatmentFields && (
             <div className="flex flex-col gap-3 rounded-md border p-3">
               <Field>
-                <FieldLabel>Ma goi dieu tri</FieldLabel>
+                <FieldLabel>{t("treatmentPackageId")}</FieldLabel>
                 <Controller
                   name="treatmentPackageId"
                   control={control}
@@ -377,13 +390,13 @@ export function PaymentForm({
                   )}
                 />
                 <Label htmlFor="isSplitPayment" className="text-sm">
-                  Chia thanh toan (50/50)
+                  {t("splitPayment")}
                 </Label>
               </div>
 
               {isSplitPayment && (
                 <Field>
-                  <FieldLabel>Lan thanh toan *</FieldLabel>
+                  <FieldLabel>{t("splitSequence")} *</FieldLabel>
                   <Controller
                     name="splitSequence"
                     control={control}
@@ -396,7 +409,7 @@ export function PaymentForm({
                           onClick={() => field.onChange(1)}
                           disabled={isSubmitting}
                         >
-                          Lan 1
+                          {t("splitTime1")}
                         </Button>
                         <Button
                           type="button"
@@ -405,7 +418,7 @@ export function PaymentForm({
                           onClick={() => field.onChange(2)}
                           disabled={isSubmitting}
                         >
-                          Lan 2
+                          {t("splitTime2")}
                         </Button>
                       </div>
                     )}
@@ -425,13 +438,13 @@ export function PaymentForm({
               onClick={handleClose}
               disabled={isSubmitting}
             >
-              Huy
+              {tCommon("buttons.cancel")}
             </Button>
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting && (
                 <IconLoader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
-              Xac nhan thanh toan
+              {t("confirmPayment")}
             </Button>
           </DialogFooter>
         </form>

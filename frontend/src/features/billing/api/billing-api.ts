@@ -131,12 +131,14 @@ export interface RecordPaymentInput {
 export interface ApplyDiscountInput {
   invoiceId: string
   invoiceLineItemId?: string | null
-  type: number
+  discountType: number
   value: number
   reason: string
 }
 
 export interface ApproveDiscountInput {
+  invoiceId: string
+  managerId: string
   managerPin: string
 }
 
@@ -237,8 +239,7 @@ async function getInvoiceByVisit(visitId: string): Promise<InvoiceDto | null> {
 
 async function getPendingInvoices(): Promise<InvoiceSummaryDto[]> {
   const { data, error } = await api.GET(
-    "/api/billing/invoices" as never,
-    { params: { query: { status: 0 } } } as never,
+    "/api/billing/invoices/pending" as never,
   )
   if (error) throw new Error("Failed to fetch pending invoices")
   return (data as InvoiceSummaryDto[]) ?? []
@@ -298,8 +299,10 @@ async function finalizeInvoice(
   )
   if (error || !response.ok) {
     const err = error as Record<string, unknown> | undefined
-    if (err?.errors) throw new Error(JSON.stringify(err))
-    throw new Error("Failed to finalize invoice")
+    const detail = (err?.detail as string) ?? ""
+    if (detail.toLowerCase().includes("no line items") || detail.toLowerCase().includes("at least one"))
+      throw new Error("NO_LINE_ITEMS")
+    throw new Error("FINALIZE_FAILED")
   }
 }
 
@@ -628,9 +631,6 @@ export function useFinalizeInvoice() {
       queryClient.invalidateQueries({ queryKey: billingKeys.invoices() })
       // Refresh shift data since finalization links invoice to shift
       queryClient.invalidateQueries({ queryKey: shiftKeys.all })
-    },
-    onError: (error: Error) => {
-      toast.error(error.message)
     },
   })
 }

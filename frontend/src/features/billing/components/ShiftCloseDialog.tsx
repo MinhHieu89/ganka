@@ -32,14 +32,16 @@ import { useCloseShift } from "../api/shift-api"
 import { formatVND } from "@/shared/lib/format-vnd"
 import { cn } from "@/shared/lib/utils"
 
-const closeShiftSchema = z.object({
-  actualCashCount: z.coerce
-    .number({ invalid_type_error: "Vui long nhap so" })
-    .min(0, "So tien phai >= 0"),
-  managerNote: z.string().optional(),
-})
+function createCloseShiftSchema(t: (key: string) => string) {
+  return z.object({
+    actualCashCount: z.coerce
+      .number({ invalid_type_error: t("validation.enterNumber") })
+      .min(0, t("validation.amountMinZero")),
+    managerNote: z.string().optional(),
+  })
+}
 
-type CloseShiftFormValues = z.infer<typeof closeShiftSchema>
+type CloseShiftFormValues = z.infer<ReturnType<typeof createCloseShiftSchema>>
 
 interface ShiftCloseDialogProps {
   shiftId: string
@@ -65,7 +67,7 @@ export function ShiftCloseDialog({
     reset,
     formState: { errors },
   } = useForm<CloseShiftFormValues>({
-    resolver: zodResolver(closeShiftSchema),
+    resolver: zodResolver(createCloseShiftSchema(t)),
     defaultValues: {
       actualCashCount: 0,
       managerNote: "",

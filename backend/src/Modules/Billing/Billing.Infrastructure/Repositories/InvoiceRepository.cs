@@ -2,6 +2,7 @@ using Billing.Application.Interfaces;
 using Billing.Domain.Entities;
 using Billing.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Billing.Infrastructure.Repositories;
 
@@ -81,13 +82,20 @@ public sealed class InvoiceRepository(BillingDbContext context) : IInvoiceReposi
 
     /// <summary>
     /// Generates the next invoice number using a SQL SEQUENCE for atomic, race-condition-free numbering.
-    /// The sequence is global (not year-scoped); the year prefix handles display only.
+    /// Uses raw ADO.NET to avoid EF Core wrapping NEXT VALUE FOR in a subquery.
     /// </summary>
     public async Task<string> GetNextInvoiceNumberAsync(int year, CancellationToken ct)
     {
-        var nextVal = await context.Database
-            .SqlQueryRaw<long>("SELECT NEXT VALUE FOR billing.InvoiceNumberSeq AS Value")
-            .FirstAsync(ct);
+        var connection = context.Database.GetDbConnection();
+        if (connection.State != System.Data.ConnectionState.Open)
+            await connection.OpenAsync(ct);
+
+        await using var command = connection.CreateCommand();
+        command.CommandText = "SELECT NEXT VALUE FOR billing.InvoiceNumberSeq";
+        command.Transaction = context.Database.CurrentTransaction?.GetDbTransaction();
+
+        var result = await command.ExecuteScalarAsync(ct);
+        var nextVal = Convert.ToInt64(result);
 
         return $"HD-{year}-{nextVal:D5}";
     }

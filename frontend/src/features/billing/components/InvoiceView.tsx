@@ -52,9 +52,13 @@ interface InvoiceViewProps {
 }
 
 const STATUS_VARIANT: Record<number, "default" | "secondary" | "destructive" | "outline"> = {
-  0: "secondary",  // Draft = yellow-ish
-  1: "default",    // Finalized = green
+  0: "secondary",  // Draft
+  1: "outline",    // Finalized (styled green via className)
   2: "destructive", // Voided = red
+}
+
+const STATUS_CLASS: Record<number, string> = {
+  1: "border-green-600 bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-400",
 }
 
 const PAYMENT_METHOD_ICON: Record<number, React.ComponentType<{ className?: string }>> = {
@@ -106,7 +110,7 @@ export function InvoiceView({ invoiceId }: InvoiceViewProps) {
       window.open(url, "_blank")
       setTimeout(() => URL.revokeObjectURL(url), 30000)
     } catch {
-      toast.error("Failed to print invoice")
+      toast.error(t("printError"))
     } finally {
       setIsPrinting(false)
     }
@@ -122,6 +126,13 @@ export function InvoiceView({ invoiceId }: InvoiceViewProps) {
       {
         onSuccess: () => {
           toast.success(t("invoiceFinalized"))
+        },
+        onError: (error: Error) => {
+          if (error.message === "NO_LINE_ITEMS") {
+            toast.error(t("errors.finalizeNoLineItems"))
+          } else {
+            toast.error(t("errors.finalizeFailed"))
+          }
         },
       },
     )
@@ -140,7 +151,10 @@ export function InvoiceView({ invoiceId }: InvoiceViewProps) {
             </p>
           </div>
         </div>
-        <Badge variant={STATUS_VARIANT[invoice.status] ?? "outline"}>
+        <Badge
+          variant={STATUS_VARIANT[invoice.status] ?? "outline"}
+          className={STATUS_CLASS[invoice.status] ?? ""}
+        >
           {t(`status.${statusKey}`)}
         </Badge>
       </div>

@@ -82,8 +82,13 @@ export function SiteHeader() {
     } else {
       label = segment.charAt(0).toUpperCase() + segment.slice(1)
     }
-    const path = "/" + segments.slice(0, index + 1).join("/")
     const isLast = index === segments.length - 1
+    let path = "/" + segments.slice(0, index + 1).join("/")
+    // Redirect intermediate segments that have no standalone route to their parent
+    const noStandaloneRoute = ["invoices", "approvals", "templates"]
+    if (noStandaloneRoute.includes(segment) && !isLast) {
+      path = "/" + segments.slice(0, index).join("/")
+    }
     return { label, path, isLast }
   })
 

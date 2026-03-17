@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { IconLoader2 } from "@tabler/icons-react"
 import {
   Dialog,
@@ -31,6 +32,8 @@ export function ApprovalPinDialog({
   isPending = false,
   error = null,
 }: ApprovalPinDialogProps) {
+  const { t } = useTranslation("billing")
+  const { t: tCommon } = useTranslation("common")
   const [pin, setPin] = useState("")
   const [localError, setLocalError] = useState<string | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -57,12 +60,12 @@ export function ApprovalPinDialog({
     setLocalError(null)
 
     if (!pin || pin.length < 4 || pin.length > 6) {
-      setLocalError("PIN phai co 4-6 ky tu so")
+      setLocalError(t("pinLength"))
       return
     }
 
     if (!/^\d+$/.test(pin)) {
-      setLocalError("PIN chi chua ky tu so")
+      setLocalError(t("pinDigitsOnly"))
       return
     }
 
@@ -79,7 +82,7 @@ export function ApprovalPinDialog({
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <Field data-invalid={localError ? true : undefined}>
-            <FieldLabel htmlFor="approval-pin">PIN quan ly</FieldLabel>
+            <FieldLabel htmlFor="approval-pin">{t("managerPin")}</FieldLabel>
             <Input
               ref={inputRef}
               id="approval-pin"
@@ -106,13 +109,13 @@ export function ApprovalPinDialog({
               onClick={() => onOpenChange(false)}
               disabled={isPending}
             >
-              Huy
+              {tCommon("buttons.cancel")}
             </Button>
             <Button type="submit" disabled={isPending || !pin}>
               {isPending && (
                 <IconLoader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
-              Xac nhan
+              {t("confirm")}
             </Button>
           </DialogFooter>
         </form>

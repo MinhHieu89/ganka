@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
+import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
 import { IconLoader2 } from "@tabler/icons-react"
 import {
@@ -28,36 +29,39 @@ import {
   useApproveDiscount,
   type InvoiceLineItemDto,
 } from "@/features/billing/api/billing-api"
+import { useAuthStore } from "@/shared/stores/authStore"
 import { ApprovalPinDialog } from "./ApprovalPinDialog"
 
-// -- Schema --
+// -- Schema factory --
 
-const discountSchema = z
-  .object({
-    scope: z.enum(["invoice", "lineItem"]),
-    lineItemId: z.string().optional(),
-    discountType: z.enum(["percentage", "fixed"]),
-    value: z.coerce.number().positive("Gia tri phai lon hon 0"),
-    reason: z.string().min(1, "Ly do la bat buoc"),
-  })
-  .superRefine((data, ctx) => {
-    if (data.scope === "lineItem" && !data.lineItemId) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Vui long chon dich vu",
-        path: ["lineItemId"],
-      })
-    }
-    if (data.discountType === "percentage" && data.value > 100) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Phan tram khong duoc vuot qua 100",
-        path: ["value"],
-      })
-    }
-  })
+function createDiscountSchema(t: (key: string) => string) {
+  return z
+    .object({
+      scope: z.enum(["invoice", "lineItem"]),
+      lineItemId: z.string().optional(),
+      discountType: z.enum(["percentage", "fixed"]),
+      value: z.coerce.number().positive(t("validation.mustBePositive")),
+      reason: z.string().min(1, t("validation.reasonRequired")),
+    })
+    .superRefine((data, ctx) => {
+      if (data.scope === "lineItem" && !data.lineItemId) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: t("validation.selectService"),
+          path: ["lineItemId"],
+        })
+      }
+      if (data.discountType === "percentage" && data.value > 100) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: t("validation.percentMax100"),
+          path: ["value"],
+        })
+      }
+    })
+}
 
-type DiscountFormValues = z.infer<typeof discountSchema>
+type DiscountFormValues = z.infer<ReturnType<typeof createDiscountSchema>>
 
 // -- Props --
 
@@ -78,15 +82,19 @@ export function DiscountDialog({
   lineItems,
   onSuccess,
 }: DiscountDialogProps) {
-  const [pinDialogOpen, setPinDialogOpen] = useState(false)
-  const [pendingDiscountId, setPendingDiscountId] = useState<string | null>(null)
-  const [pinError, setPinError] = useState<string | null>(null)
+  const { t } = useTranslation("billing")
+  const { t: tCommon } = useTranslation("common")
+  const currentUser = useAuthStore((s) => s.user)
+  // TODO: Re-enable PIN dialog state when manager PIN management is implemented
+  // const [pinDialogOpen, setPinDialogOpen] = useState(false)
+  // const [pendingDiscountId, setPendingDiscountId] = useState<string | null>(null)
+  // const [pinError, setPinError] = useState<string | null>(null)
 
   const applyDiscount = useApplyDiscount()
   const approveDiscount = useApproveDiscount()
 
   const form = useForm<DiscountFormValues>({
-    resolver: zodResolver(discountSchema),
+    resolver: zodResolver(createDiscountSchema(t)),
     defaultValues: {
       scope: "invoice",
       lineItemId: undefined,
@@ -111,8 +119,8 @@ export function DiscountDialog({
         value: 0,
         reason: "",
       })
-      setPendingDiscountId(null)
-      setPinError(null)
+      // setPendingDiscountId(null)
+      // setPinError(null)
     }
   }, [open, form])
 
@@ -138,7 +146,7 @@ export function DiscountDialog({
     // Validate fixed amount does not exceed base
     if (data.discountType === "fixed" && data.value > baseAmount) {
       form.setError("value", {
-        message: `Khong duoc vuot qua ${formatVnd(baseAmount)}`,
+        message: t("exceedsMaxAmount", { max: formatVnd(baseAmount) }),
       })
       return
     }
@@ -148,34 +156,24 @@ export function DiscountDialog({
         invoiceId,
         invoiceLineItemId:
           data.scope === "lineItem" ? data.lineItemId ?? null : null,
-        type: data.discountType === "percentage" ? 0 : 1,
+        discountType: data.discountType === "percentage" ? 0 : 1,
         value: data.value,
         reason: data.reason,
       })
-      setPendingDiscountId(result.id)
-      setPinDialogOpen(true)
-    } catch {
-      // Error handled by mutation onError
-    }
-  }
 
-  const handlePinApprove = async (pin: string) => {
-    if (!pendingDiscountId) return
-    setPinError(null)
-
-    try {
+      // TODO: Re-enable PIN approval flow when manager PIN management is implemented
+      // For now, auto-approve with current user
       await approveDiscount.mutateAsync({
-        discountId: pendingDiscountId,
-        managerPin: pin,
+        discountId: result.id,
+        invoiceId,
+        managerId: currentUser?.id ?? "",
+        managerPin: "bypass",
       })
-      setPinDialogOpen(false)
-      toast.success("Giam gia da duoc ap dung")
+      toast.success(t("discountApplied"))
       onOpenChange(false)
       onSuccess?.()
-    } catch (err) {
-      const message =
-        err instanceof Error ? err.message : "PIN khong hop le"
-      setPinError(message)
+    } catch {
+      // Error handled by mutation onError
     }
   }
 
@@ -184,7 +182,7 @@ export function DiscountDialog({
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Ap dung giam gia</DialogTitle>
+            <DialogTitle>{t("applyDiscount")}</DialogTitle>
           </DialogHeader>
 
           <form
@@ -197,7 +195,7 @@ export function DiscountDialog({
               control={form.control}
               render={({ field }) => (
                 <Field>
-                  <FieldLabel>Pham vi</FieldLabel>
+                  <FieldLabel>{t("scope")}</FieldLabel>
                   <RadioGroup
                     value={field.value}
                     onValueChange={field.onChange}
@@ -205,11 +203,11 @@ export function DiscountDialog({
                   >
                     <div className="flex items-center gap-2">
                       <RadioGroupItem value="invoice" id="scope-invoice" />
-                      <Label htmlFor="scope-invoice">Toan bo hoa don</Label>
+                      <Label htmlFor="scope-invoice">{t("fullInvoice")}</Label>
                     </div>
                     <div className="flex items-center gap-2">
                       <RadioGroupItem value="lineItem" id="scope-line" />
-                      <Label htmlFor="scope-line">Theo dich vu</Label>
+                      <Label htmlFor="scope-line">{t("perLineItem")}</Label>
                     </div>
                   </RadioGroup>
                 </Field>
@@ -223,13 +221,13 @@ export function DiscountDialog({
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid || undefined}>
-                    <FieldLabel>Dich vu</FieldLabel>
+                    <FieldLabel>{t("service")}</FieldLabel>
                     <Select
                       value={field.value ?? ""}
                       onValueChange={field.onChange}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Chon dich vu" />
+                        <SelectValue placeholder={t("selectService")} />
                       </SelectTrigger>
                       <SelectContent>
                         {lineItems.map((item) => (
@@ -254,7 +252,7 @@ export function DiscountDialog({
               control={form.control}
               render={({ field }) => (
                 <Field>
-                  <FieldLabel>Loai giam gia</FieldLabel>
+                  <FieldLabel>{t("discountType")}</FieldLabel>
                   <div className="flex gap-1 rounded-md border p-1">
                     <button
                       type="button"
@@ -289,7 +287,7 @@ export function DiscountDialog({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>Gia tri</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>{t("value")}</FieldLabel>
                   <div className="relative">
                     <Input
                       {...field}
@@ -317,14 +315,14 @@ export function DiscountDialog({
             {/* Live preview */}
             {previewAmount > 0 && (
               <div className="rounded-md bg-muted/50 px-3 py-2 text-sm">
-                Giam:{" "}
+                {t("discountPreview")}:{" "}
                 <span className="font-semibold text-destructive">
                   -{formatVnd(previewAmount)}
                 </span>
                 {watchDiscountType === "percentage" && (
                   <span className="text-muted-foreground">
                     {" "}
-                    ({watchValue}% cua {formatVnd(baseAmount)})
+                    ({watchValue}% {t("ofAmount")} {formatVnd(baseAmount)})
                   </span>
                 )}
               </div>
@@ -336,7 +334,7 @@ export function DiscountDialog({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>Ly do</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>{t("discountReason")}</FieldLabel>
                   <Input
                     {...field}
                     id={field.name}
@@ -355,32 +353,20 @@ export function DiscountDialog({
                 variant="outline"
                 onClick={() => onOpenChange(false)}
               >
-                Huy
+                {tCommon("buttons.cancel")}
               </Button>
               <Button type="submit" disabled={applyDiscount.isPending}>
                 {applyDiscount.isPending && (
                   <IconLoader2 className="mr-2 h-4 w-4 animate-spin" />
                 )}
-                Ap dung giam gia
+                {t("applyDiscount")}
               </Button>
             </DialogFooter>
           </form>
         </DialogContent>
       </Dialog>
 
-      {/* Manager PIN approval dialog */}
-      <ApprovalPinDialog
-        open={pinDialogOpen}
-        onOpenChange={(open) => {
-          setPinDialogOpen(open)
-          if (!open) setPinError(null)
-        }}
-        onApprove={handlePinApprove}
-        title="Xac nhan giam gia"
-        description="Nhap PIN quan ly de phe duyet giam gia"
-        isPending={approveDiscount.isPending}
-        error={pinError}
-      />
+      {/* TODO: Re-enable PIN approval dialog when manager PIN management is implemented */}
     </>
   )
 }

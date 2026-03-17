@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
+import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
 import { IconLoader2 } from "@tabler/icons-react"
 import {
@@ -31,26 +32,28 @@ import {
 } from "@/features/billing/api/billing-api"
 import { ApprovalPinDialog } from "./ApprovalPinDialog"
 
-// -- Schema --
+// -- Schema factory --
 
-const refundSchema = z
-  .object({
-    scope: z.enum(["full", "partial"]),
-    lineItemId: z.string().optional(),
-    amount: z.coerce.number().positive("So tien phai lon hon 0"),
-    reason: z.string().min(1, "Ly do la bat buoc"),
-  })
-  .superRefine((data, ctx) => {
-    if (data.scope === "partial" && !data.lineItemId) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Vui long chon dich vu",
-        path: ["lineItemId"],
-      })
-    }
-  })
+function createRefundSchema(t: (key: string) => string) {
+  return z
+    .object({
+      scope: z.enum(["full", "partial"]),
+      lineItemId: z.string().optional(),
+      amount: z.coerce.number().positive(t("validation.mustBePositive")),
+      reason: z.string().min(1, t("validation.reasonRequired")),
+    })
+    .superRefine((data, ctx) => {
+      if (data.scope === "partial" && !data.lineItemId) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: t("validation.selectService"),
+          path: ["lineItemId"],
+        })
+      }
+    })
+}
 
-type RefundFormValues = z.infer<typeof refundSchema>
+type RefundFormValues = z.infer<ReturnType<typeof createRefundSchema>>
 
 // -- Props --
 
@@ -71,6 +74,8 @@ export function RefundDialog({
   lineItems,
   onSuccess,
 }: RefundDialogProps) {
+  const { t } = useTranslation("billing")
+  const { t: tCommon } = useTranslation("common")
   const [pinDialogOpen, setPinDialogOpen] = useState(false)
   const [pendingRefundId, setPendingRefundId] = useState<string | null>(null)
   const [pinError, setPinError] = useState<string | null>(null)
@@ -80,7 +85,7 @@ export function RefundDialog({
   const processRefundMutation = useProcessRefund()
 
   const form = useForm<RefundFormValues>({
-    resolver: zodResolver(refundSchema),
+    resolver: zodResolver(createRefundSchema(t)),
     defaultValues: {
       scope: "full",
       lineItemId: undefined,
@@ -123,7 +128,7 @@ export function RefundDialog({
   const handleSubmit = async (data: RefundFormValues) => {
     if (data.amount > maxAmount) {
       form.setError("amount", {
-        message: `Khong duoc vuot qua ${formatVnd(maxAmount)}`,
+        message: t("exceedsMaxAmount", { max: formatVnd(maxAmount) }),
       })
       return
     }
@@ -160,12 +165,12 @@ export function RefundDialog({
       })
 
       setPinDialogOpen(false)
-      toast.success("Hoan tien da duoc xu ly")
+      toast.success(t("refundProcessed"))
       onOpenChange(false)
       onSuccess?.()
     } catch (err) {
       const message =
-        err instanceof Error ? err.message : "PIN khong hop le"
+        err instanceof Error ? err.message : t("invalidPin")
       setPinError(message)
     }
   }
@@ -180,7 +185,7 @@ export function RefundDialog({
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Yeu cau hoan tien</DialogTitle>
+            <DialogTitle>{t("requestRefund")}</DialogTitle>
           </DialogHeader>
 
           <form
@@ -193,7 +198,7 @@ export function RefundDialog({
               control={form.control}
               render={({ field }) => (
                 <Field>
-                  <FieldLabel>Pham vi</FieldLabel>
+                  <FieldLabel>{t("scope")}</FieldLabel>
                   <RadioGroup
                     value={field.value}
                     onValueChange={field.onChange}
@@ -201,11 +206,11 @@ export function RefundDialog({
                   >
                     <div className="flex items-center gap-2">
                       <RadioGroupItem value="full" id="refund-full" />
-                      <Label htmlFor="refund-full">Toan bo</Label>
+                      <Label htmlFor="refund-full">{t("fullRefund")}</Label>
                     </div>
                     <div className="flex items-center gap-2">
                       <RadioGroupItem value="partial" id="refund-partial" />
-                      <Label htmlFor="refund-partial">Mot phan</Label>
+                      <Label htmlFor="refund-partial">{t("partialRefund")}</Label>
                     </div>
                   </RadioGroup>
                 </Field>
@@ -219,13 +224,13 @@ export function RefundDialog({
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid || undefined}>
-                    <FieldLabel>Dich vu</FieldLabel>
+                    <FieldLabel>{t("service")}</FieldLabel>
                     <Select
                       value={field.value ?? ""}
                       onValueChange={field.onChange}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Chon dich vu" />
+                        <SelectValue placeholder={t("selectService")} />
                       </SelectTrigger>
                       <SelectContent>
                         {lineItems.map((item) => (
@@ -250,7 +255,7 @@ export function RefundDialog({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>So tien hoan</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>{t("refundAmount")}</FieldLabel>
                   <div className="relative">
                     <Input
                       {...field}
@@ -279,7 +284,7 @@ export function RefundDialog({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>Ly do</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>{t("refundReason")}</FieldLabel>
                   <Input
                     {...field}
                     id={field.name}
@@ -298,7 +303,7 @@ export function RefundDialog({
                 variant="outline"
                 onClick={() => onOpenChange(false)}
               >
-                Huy
+                {tCommon("buttons.cancel")}
               </Button>
               <Button
                 type="submit"
@@ -308,7 +313,7 @@ export function RefundDialog({
                 {requestRefundMutation.isPending && (
                   <IconLoader2 className="mr-2 h-4 w-4 animate-spin" />
                 )}
-                Yeu cau hoan tien
+                {t("requestRefund")}
               </Button>
             </DialogFooter>
           </form>
@@ -323,8 +328,8 @@ export function RefundDialog({
           if (!open) setPinError(null)
         }}
         onApprove={handlePinApprove}
-        title="Xac nhan hoan tien"
-        description="Nhap PIN quan ly de phe duyet hoan tien"
+        title={t("confirmRefund")}
+        description={t("enterPinForRefund")}
         isPending={isPending}
         error={pinError}
       />

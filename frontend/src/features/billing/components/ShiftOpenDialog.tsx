@@ -25,14 +25,16 @@ import { Button } from "@/shared/components/ui/button"
 import { Field, FieldLabel, FieldError } from "@/shared/components/ui/field"
 import { useOpenShift, useShiftTemplates } from "../api/shift-api"
 
-const openShiftSchema = z.object({
-  shiftTemplateId: z.string().nullable().optional(),
-  openingBalance: z.coerce
-    .number({ invalid_type_error: "Vui long nhap so" })
-    .min(0, "So du phai >= 0"),
-})
+function createOpenShiftSchema(t: (key: string) => string) {
+  return z.object({
+    shiftTemplateId: z.string().nullable().optional(),
+    openingBalance: z.coerce
+      .number({ invalid_type_error: t("validation.enterNumber") })
+      .min(0, t("validation.balanceMinZero")),
+  })
+}
 
-type OpenShiftFormValues = z.infer<typeof openShiftSchema>
+type OpenShiftFormValues = z.infer<ReturnType<typeof createOpenShiftSchema>>
 
 interface ShiftOpenDialogProps {
   onSuccess?: () => void
@@ -56,7 +58,7 @@ export function ShiftOpenDialog({
     reset,
     formState: { errors },
   } = useForm<OpenShiftFormValues>({
-    resolver: zodResolver(openShiftSchema),
+    resolver: zodResolver(createOpenShiftSchema(t)),
     defaultValues: {
       shiftTemplateId: null,
       openingBalance: lastClosingBalance ?? 0,

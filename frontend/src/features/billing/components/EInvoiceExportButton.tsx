@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import {
   IconFileTypePdf,
   IconFileTypeXml,
@@ -31,6 +32,7 @@ export function EInvoiceExportButton({
   invoiceId,
   invoiceNumber,
 }: EInvoiceExportButtonProps) {
+  const { t } = useTranslation("billing")
   const [isExporting, setIsExporting] = useState(false)
 
   const handleExportPdf = async () => {
@@ -42,7 +44,7 @@ export function EInvoiceExportButton({
       // Clean up blob URL after a short delay to allow the tab to load
       setTimeout(() => URL.revokeObjectURL(url), 5000)
     } catch {
-      toast.error("Khong the xuat hoa don dien tu PDF")
+      toast.error(t("exportErrorPdf"))
     } finally {
       setIsExporting(false)
     }
@@ -57,7 +59,7 @@ export function EInvoiceExportButton({
         `e-invoice-${invoiceNumber || invoiceId}.json`,
       )
     } catch {
-      toast.error("Khong the xuat hoa don dien tu JSON")
+      toast.error(t("exportErrorJson"))
     } finally {
       setIsExporting(false)
     }
@@ -72,7 +74,7 @@ export function EInvoiceExportButton({
         `e-invoice-${invoiceNumber || invoiceId}.xml`,
       )
     } catch {
-      toast.error("Khong the xuat hoa don dien tu XML")
+      toast.error(t("exportErrorXml"))
     } finally {
       setIsExporting(false)
     }
@@ -87,7 +89,7 @@ export function EInvoiceExportButton({
           ) : (
             <IconFileInvoice className="mr-2 h-4 w-4" />
           )}
-          Xuat hoa don dien tu
+          {t("exportEInvoice")}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
