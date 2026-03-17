@@ -176,21 +176,19 @@ async function fetchPdf(url: string): Promise<Blob> {
 }
 
 export async function getInvoicePdf(invoiceId: string): Promise<Blob> {
-  return fetchPdf(`${API_URL}/api/billing/invoices/${invoiceId}/print`)
+  return fetchPdf(`${API_URL}/api/billing/print/${invoiceId}/invoice`)
 }
 
-export async function getReceiptPdf(paymentId: string): Promise<Blob> {
-  return fetchPdf(`${API_URL}/api/billing/payments/${paymentId}/print/receipt`)
+export async function getReceiptPdf(invoiceId: string): Promise<Blob> {
+  return fetchPdf(`${API_URL}/api/billing/print/${invoiceId}/receipt`)
 }
 
 export async function getEInvoicePdf(invoiceId: string): Promise<Blob> {
-  return fetchPdf(
-    `${API_URL}/api/billing/invoices/${invoiceId}/print/e-invoice`,
-  )
+  return fetchPdf(`${API_URL}/api/billing/print/${invoiceId}/e-invoice`)
 }
 
 export async function getShiftReportPdf(shiftId: string): Promise<Blob> {
-  return fetchPdf(`${API_URL}/api/billing/shifts/${shiftId}/print/report`)
+  return fetchPdf(`${API_URL}/api/billing/shifts/${shiftId}/report/pdf`)
 }
 
 // -- E-Invoice export functions (JSON/XML for MISA import) --

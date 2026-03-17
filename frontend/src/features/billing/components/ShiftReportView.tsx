@@ -227,13 +227,26 @@ function ReconciliationRow({
 
 // -- Helper functions --
 
+// Map backend enum string names (case-insensitive) to i18n keys
+const METHOD_NAME_TO_I18N: Record<string, string> = {
+  cash: "paymentMethods.cash",
+  banktransfer: "paymentMethods.bankTransfer",
+  qrvnpay: "paymentMethods.qrVnpay",
+  qrmomo: "paymentMethods.qrMomo",
+  qrzalopay: "paymentMethods.qrZalopay",
+  cardvisa: "paymentMethods.cardVisa",
+  cardmastercard: "paymentMethods.cardMc",
+}
+
 function getMethodDisplayName(method: string, t: (key: string) => string): string {
   // Try numeric key first (when backend sends numeric keys)
   const numKey = parseInt(method, 10)
   if (!isNaN(numKey) && PAYMENT_METHOD_I18N_KEY[numKey]) {
     return t(PAYMENT_METHOD_I18N_KEY[numKey])
   }
-  // Otherwise use the string directly (when backend sends method names)
+  // Try string name mapping (case-insensitive)
+  const key = METHOD_NAME_TO_I18N[method.toLowerCase()]
+  if (key) return t(key)
   return method
 }
 

@@ -38,6 +38,12 @@ public interface ICashierShiftRepository
     Task<List<ShiftTemplate>> GetActiveShiftTemplatesAsync(BranchId branchId, CancellationToken ct);
 
     /// <summary>
+    /// Gets closed shifts for a branch with pagination, ordered by most recent first.
+    /// Used for shift history UI.
+    /// </summary>
+    Task<(List<CashierShift> Items, int TotalCount)> GetClosedAsync(BranchId branchId, int page, int pageSize, CancellationToken ct);
+
+    /// <summary>
     /// Adds a new cashier shift to the change tracker.
     /// </summary>
     void Add(CashierShift shift);

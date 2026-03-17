@@ -49,6 +49,21 @@ public sealed class CashierShiftRepository(BillingDbContext context) : ICashierS
             .ToListAsync(ct);
     }
 
+    public async Task<(List<CashierShift> Items, int TotalCount)> GetClosedAsync(BranchId branchId, int page, int pageSize, CancellationToken ct)
+    {
+        var query = context.CashierShifts
+            .Where(cs => cs.BranchId == branchId && cs.Status == ShiftStatus.Closed)
+            .OrderByDescending(cs => cs.ClosedAt);
+
+        var totalCount = await query.CountAsync(ct);
+        var items = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(ct);
+
+        return (items, totalCount);
+    }
+
     public void Add(CashierShift shift)
     {
         context.CashierShifts.Add(shift);

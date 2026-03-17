@@ -223,6 +223,14 @@ public static class BillingApiEndpoints
             return result.ToHttpResult();
         });
 
+        // GET /api/billing/shifts -- get closed shift history with pagination
+        group.MapGet("/shifts", async (int? page, int? pageSize, IMessageBus bus, CancellationToken ct) =>
+        {
+            var result = await bus.InvokeAsync<Result<ShiftHistoryResult>>(
+                new GetShiftHistoryQuery(page ?? 1, pageSize ?? 20), ct);
+            return result.ToHttpResult();
+        });
+
         // GET /api/billing/shifts/templates -- get active shift templates for current branch
         group.MapGet("/shifts/templates", async (IMessageBus bus, CancellationToken ct) =>
         {

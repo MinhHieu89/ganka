@@ -9,10 +9,10 @@ updated: 2026-03-17T14:10:00Z
 ## Current Test
 <!-- OVERWRITE each test - shows where we are -->
 
-number: 25
-name: Request Refund on Finalized Invoice
+number: 30
+name: Print Invoice PDF
 expected: |
-  Clicking "Request Refund" on finalized invoice opens dialog with amount picker and reason field. Submitting creates refund in Requested status. Cannot refund draft invoice (button hidden or disabled).
+  Clicking "Print Invoice" generates A4 PDF with clinic header, department-grouped line items, VND formatting with dot-thousands, signatures area. Opens in new browser tab.
 awaiting: user response
 
 ## Tests
@@ -124,23 +124,24 @@ reason: PIN approval bypassed — stubbed until PIN management is implemented
 
 ### 25. Request Refund on Finalized Invoice
 expected: Clicking "Request Refund" on finalized invoice opens dialog with amount picker and reason field. Submitting creates refund in Requested status. Cannot refund draft invoice (button hidden or disabled).
-result: [pending]
+result: pass (fixed: refund max amount capped at totalAmount after discounts, PIN bypass, process command body)
 
 ### 26. Approve and Process Refund
 expected: Manager approves refund with PIN. Refund status changes to Approved then auto-processes to Processed. If cash refund, shift cash balance adjusts. Payment marked as refunded.
-result: [pending]
+result: skipped
+reason: PIN approval bypassed — auto-approves and processes in one step
 
 ### 27. Close Shift with Cash Count
 expected: Closing shift opens dialog with actual cash count input. As user types, discrepancy calculates live (actual - expected). Color-coded: green=match, red=deficit, blue=surplus. Submitting changes shift to Closed.
-result: [pending]
+result: pass
 
 ### 28. Shift Report
 expected: After closing shift, report shows revenue breakdown by payment method (Cash, Bank, QR, Card) with counts and amounts. Cash reconciliation table with opening balance, expected cash, actual cash, and discrepancy.
-result: [pending]
+result: pass (fixed: added shift history endpoint, fixed payment method i18n mapping)
 
 ### 29. Shift History
 expected: Shifts page shows DataTable of past shifts with date, opening balance, final balance, discrepancy, status. Clicking row expands inline to show full shift report. Supports pagination.
-result: [pending]
+result: pass (fixed: added GET /api/billing/shifts endpoint with pagination)
 
 ### 30. Print Invoice PDF
 expected: Clicking "Print Invoice" generates A4 PDF with clinic header, department-grouped line items, VND formatting with dot-thousands, signatures area. Opens in new browser tab.
@@ -173,10 +174,10 @@ result: [pending]
 ## Summary
 
 total: 36
-passed: 18
+passed: 22
 issues: 3
-pending: 12
-skipped: 3
+pending: 7
+skipped: 4
 
 ## Gaps
 
