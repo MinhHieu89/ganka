@@ -207,12 +207,19 @@ public class Visit : AggregateRoot, IAuditable
 
     /// <summary>
     /// Adds a drug prescription to the visit. Requires the visit to be editable.
+    /// Raises DrugPrescriptionAddedEvent for billing integration (prescribe -> pay -> dispense flow).
     /// </summary>
     public void AddDrugPrescription(DrugPrescription prescription)
     {
         EnsureEditable();
         _drugPrescriptions.Add(prescription);
         SetUpdatedAt();
+
+        AddDomainEvent(new DrugPrescriptionAddedEvent(
+            Id, PatientId, PatientName, BranchId.Value,
+            prescription.Items.Select(i =>
+                new DrugPrescriptionAddedEvent.PrescribedDrugDto(
+                    i.DrugName, i.DrugCatalogItemId, i.Quantity)).ToList()));
     }
 
     /// <summary>
