@@ -46,6 +46,7 @@ import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminRolesRouteImport } from './routes/_authenticated/admin/roles'
 import { Route as AuthenticatedAdminClinicSettingsRouteImport } from './routes/_authenticated/admin/clinic-settings'
 import { Route as AuthenticatedAdminAuditLogsRouteImport } from './routes/_authenticated/admin/audit-logs'
+import { Route as AuthenticatedBillingInvoicesIndexRouteImport } from './routes/_authenticated/billing/invoices.index'
 import { Route as AuthenticatedOpticalOrdersOrderIdRouteImport } from './routes/_authenticated/optical/orders.$orderId'
 import { Route as AuthenticatedBillingInvoicesInvoiceIdRouteImport } from './routes/_authenticated/billing/invoices.$invoiceId'
 
@@ -261,6 +262,12 @@ const AuthenticatedAdminAuditLogsRoute =
     path: '/admin/audit-logs',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedBillingInvoicesIndexRoute =
+  AuthenticatedBillingInvoicesIndexRouteImport.update({
+    id: '/billing/invoices/',
+    path: '/billing/invoices/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedOpticalOrdersOrderIdRoute =
   AuthenticatedOpticalOrdersOrderIdRouteImport.update({
     id: '/$orderId',
@@ -313,6 +320,7 @@ export interface FileRoutesByFullPath {
   '/treatments/': typeof AuthenticatedTreatmentsIndexRoute
   '/billing/invoices/$invoiceId': typeof AuthenticatedBillingInvoicesInvoiceIdRoute
   '/optical/orders/$orderId': typeof AuthenticatedOpticalOrdersOrderIdRoute
+  '/billing/invoices/': typeof AuthenticatedBillingInvoicesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -353,6 +361,7 @@ export interface FileRoutesByTo {
   '/treatments': typeof AuthenticatedTreatmentsIndexRoute
   '/billing/invoices/$invoiceId': typeof AuthenticatedBillingInvoicesInvoiceIdRoute
   '/optical/orders/$orderId': typeof AuthenticatedOpticalOrdersOrderIdRoute
+  '/billing/invoices': typeof AuthenticatedBillingInvoicesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -395,6 +404,7 @@ export interface FileRoutesById {
   '/_authenticated/treatments/': typeof AuthenticatedTreatmentsIndexRoute
   '/_authenticated/billing/invoices/$invoiceId': typeof AuthenticatedBillingInvoicesInvoiceIdRoute
   '/_authenticated/optical/orders/$orderId': typeof AuthenticatedOpticalOrdersOrderIdRoute
+  '/_authenticated/billing/invoices/': typeof AuthenticatedBillingInvoicesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -437,6 +447,7 @@ export interface FileRouteTypes {
     | '/treatments/'
     | '/billing/invoices/$invoiceId'
     | '/optical/orders/$orderId'
+    | '/billing/invoices/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -477,6 +488,7 @@ export interface FileRouteTypes {
     | '/treatments'
     | '/billing/invoices/$invoiceId'
     | '/optical/orders/$orderId'
+    | '/billing/invoices'
   id:
     | '__root__'
     | '/'
@@ -518,6 +530,7 @@ export interface FileRouteTypes {
     | '/_authenticated/treatments/'
     | '/_authenticated/billing/invoices/$invoiceId'
     | '/_authenticated/optical/orders/$orderId'
+    | '/_authenticated/billing/invoices/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -790,6 +803,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminAuditLogsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/billing/invoices/': {
+      id: '/_authenticated/billing/invoices/'
+      path: '/billing/invoices'
+      fullPath: '/billing/invoices/'
+      preLoaderRoute: typeof AuthenticatedBillingInvoicesIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/optical/orders/$orderId': {
       id: '/_authenticated/optical/orders/$orderId'
       path: '/$orderId'
@@ -855,6 +875,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedPharmacyIndexRoute: typeof AuthenticatedPharmacyIndexRoute
   AuthenticatedTreatmentsIndexRoute: typeof AuthenticatedTreatmentsIndexRoute
   AuthenticatedBillingInvoicesInvoiceIdRoute: typeof AuthenticatedBillingInvoicesInvoiceIdRoute
+  AuthenticatedBillingInvoicesIndexRoute: typeof AuthenticatedBillingInvoicesIndexRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
@@ -893,6 +914,8 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedTreatmentsIndexRoute: AuthenticatedTreatmentsIndexRoute,
   AuthenticatedBillingInvoicesInvoiceIdRoute:
     AuthenticatedBillingInvoicesInvoiceIdRoute,
+  AuthenticatedBillingInvoicesIndexRoute:
+    AuthenticatedBillingInvoicesIndexRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
