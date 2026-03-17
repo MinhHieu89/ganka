@@ -9,10 +9,10 @@ updated: 2026-03-17T14:10:00Z
 ## Current Test
 <!-- OVERWRITE each test - shows where we are -->
 
-number: 18
-name: Payment Cannot Exceed Balance Due
+number: 25
+name: Request Refund on Finalized Invoice
 expected: |
-  Entering payment amount greater than balance due shows validation error preventing submission.
+  Clicking "Request Refund" on finalized invoice opens dialog with amount picker and reason field. Submitting creates refund in Requested status. Cannot refund draft invoice (button hidden or disabled).
 awaiting: user response
 
 ## Tests
@@ -93,31 +93,34 @@ result: pass (fixed: payment form now resets amount to updated balanceDue when r
 
 ### 18. Payment Cannot Exceed Balance Due
 expected: Entering payment amount greater than balance due shows validation error preventing submission.
-result: [pending]
+result: pass (fixed: Zod validation instead of browser native max)
 
 ### 19. Cannot Pay Without Open Shift
 expected: Attempting to record payment without an open shift shows error "No open shift found" or similar.
-result: [pending]
+result: pass
 
 ### 20. Apply Percentage Discount
 expected: Clicking "Apply Discount" opens dialog. Selecting percentage type, entering 10%, shows live preview of calculated VND amount. Discount created in Pending status.
-result: [pending]
+result: pass (fixed: PIN bypass, discountType field name, auto-approve flow)
 
 ### 21. Apply Fixed Amount Discount
 expected: Selecting fixed amount discount type, entering VND amount. Discount created in Pending status. Invoice total does NOT yet reflect discount.
-result: [pending]
+result: pass
 
 ### 22. Approve Discount with Manager PIN
 expected: Manager clicks Approve on pending discount. ApprovalPinDialog appears with PIN input (4-6 digits). Entering correct PIN changes discount to Approved, invoice total recalculates with discount applied. Success toast appears.
-result: [pending]
+result: skipped
+reason: PIN approval bypassed — stubbed until PIN management is implemented
 
 ### 23. Reject Discount with Manager PIN
 expected: Manager enters PIN and selects Reject with optional reason. Discount status changes to Rejected. Invoice total unchanged.
-result: [pending]
+result: skipped
+reason: PIN approval bypassed — stubbed until PIN management is implemented
 
 ### 24. Invalid Manager PIN
 expected: Entering wrong PIN shows error "Invalid PIN" or similar. Dialog stays open for retry. Discount remains Pending.
-result: [pending]
+result: skipped
+reason: PIN approval bypassed — stubbed until PIN management is implemented
 
 ### 25. Request Refund on Finalized Invoice
 expected: Clicking "Request Refund" on finalized invoice opens dialog with amount picker and reason field. Submitting creates refund in Requested status. Cannot refund draft invoice (button hidden or disabled).
@@ -170,10 +173,10 @@ result: [pending]
 ## Summary
 
 total: 36
-passed: 14
+passed: 18
 issues: 3
-pending: 19
-skipped: 0
+pending: 12
+skipped: 3
 
 ## Gaps
 

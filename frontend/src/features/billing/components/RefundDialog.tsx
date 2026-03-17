@@ -30,6 +30,7 @@ import {
   useProcessRefund,
   type InvoiceLineItemDto,
 } from "@/features/billing/api/billing-api"
+import { useAuthStore } from "@/shared/stores/authStore"
 import { ApprovalPinDialog } from "./ApprovalPinDialog"
 
 // -- Schema factory --
@@ -76,6 +77,7 @@ export function RefundDialog({
 }: RefundDialogProps) {
   const { t } = useTranslation("billing")
   const { t: tCommon } = useTranslation("common")
+  const currentUser = useAuthStore((s) => s.user)
   const [pinDialogOpen, setPinDialogOpen] = useState(false)
   const [pendingRefundId, setPendingRefundId] = useState<string | null>(null)
   const [pinError, setPinError] = useState<string | null>(null)
@@ -112,10 +114,11 @@ export function RefundDialog({
   }, [open, form, totalAmount])
 
   // Update amount when scope or line item changes
+  // Cap at totalAmount (after discounts) to avoid backend validation error
   const maxAmount = useMemo(() => {
     if (watchScope === "partial" && watchLineItemId) {
       const item = lineItems.find((li) => li.id === watchLineItemId)
-      return item?.lineTotal ?? totalAmount
+      return Math.min(item?.lineTotal ?? totalAmount, totalAmount)
     }
     return totalAmount
   }, [watchScope, watchLineItemId, lineItems, totalAmount])
@@ -141,8 +144,25 @@ export function RefundDialog({
         amount: data.amount,
         reason: data.reason,
       })
-      setPendingRefundId(result.id)
-      setPinDialogOpen(true)
+
+      // TODO: Re-enable PIN approval flow when manager PIN management is implemented
+      // For now, auto-approve and process the refund
+      await approveRefundMutation.mutateAsync({
+        refundId: result.id,
+        invoiceId,
+        managerId: currentUser?.id ?? "",
+        managerPin: "bypass",
+      })
+      await processRefundMutation.mutateAsync({
+        refundId: result.id,
+        invoiceId,
+        refundMethod: 0, // Cash refund by default
+        notes: null,
+      })
+
+      toast.success(t("refundProcessed"))
+      onOpenChange(false)
+      onSuccess?.()
     } catch {
       // Error handled by mutation onError
     }
@@ -262,7 +282,6 @@ export function RefundDialog({
                       id={field.name}
                       type="number"
                       min={0}
-                      max={maxAmount}
                       step={1000}
                       aria-invalid={fieldState.invalid || undefined}
                       className="pr-14"

@@ -150,7 +150,15 @@ export interface RequestRefundInput {
 }
 
 export interface ApproveRefundInput {
+  invoiceId: string
+  managerId: string
   managerPin: string
+}
+
+export interface ProcessRefundInput {
+  invoiceId: string
+  refundMethod: number
+  notes?: string | null
 }
 
 export interface FinalizeInvoiceInput {
@@ -383,9 +391,10 @@ async function approveRefund(
   }
 }
 
-async function processRefund(refundId: string): Promise<void> {
+async function processRefund(refundId: string, command: ProcessRefundInput): Promise<void> {
   const { error, response } = await api.POST(
     `/api/billing/refunds/${refundId}/process` as never,
+    { body: command } as never,
     {} as never,
   )
   if (error || !response.ok) {
@@ -605,8 +614,11 @@ export function useApproveRefund() {
 export function useProcessRefund() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: ({ refundId }: { refundId: string }) =>
-      processRefund(refundId),
+    mutationFn: ({
+      refundId,
+      ...command
+    }: { refundId: string } & ProcessRefundInput) =>
+      processRefund(refundId, command),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: billingKeys.all })
     },
