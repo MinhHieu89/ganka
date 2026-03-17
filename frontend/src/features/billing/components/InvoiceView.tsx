@@ -31,6 +31,7 @@ import {
   AlertDialogTrigger,
 } from "@/shared/components/AlertDialog"
 import { formatVND } from "@/shared/lib/format-vnd"
+import { useBillingHub } from "@/features/billing/hooks/use-billing-hub"
 import {
   useInvoice,
   useFinalizeInvoice,
@@ -73,6 +74,7 @@ const PAYMENT_METHOD_ICON: Record<number, React.ComponentType<{ className?: stri
 
 export function InvoiceView({ invoiceId }: InvoiceViewProps) {
   const { t } = useTranslation("billing")
+  useBillingHub() // Real-time updates when prescription items are added
   const { data: invoice, isLoading } = useInvoice(invoiceId)
   const { data: currentShift } = useCurrentShift()
   const finalizeInvoice = useFinalizeInvoice()
