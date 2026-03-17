@@ -23,6 +23,12 @@ public interface IBillingNotificationService
         string department,
         CancellationToken ct);
 
+    Task NotifyLineItemRemovedAsync(
+        Guid invoiceId,
+        string invoiceNumber,
+        int removedCount,
+        CancellationToken ct);
+
     Task NotifyInvoiceVoidedAsync(
         Guid invoiceId,
         string invoiceNumber,

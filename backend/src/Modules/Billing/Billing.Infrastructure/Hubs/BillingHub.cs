@@ -6,7 +6,7 @@ namespace Billing.Infrastructure.Hubs;
 /// <summary>
 /// SignalR hub for real-time cashier dashboard updates.
 /// Authenticated users can join/leave the "cashier-dashboard" group to receive
-/// InvoiceCreated, LineItemAdded, and InvoiceVoided notifications.
+/// InvoiceCreated, LineItemAdded, LineItemRemoved, and InvoiceVoided notifications.
 /// </summary>
 [Authorize]
 public class BillingHub : Hub

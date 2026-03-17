@@ -137,9 +137,31 @@ public class Invoice : AggregateRoot, IAuditable
         var lineItem = _lineItems.FirstOrDefault(li => li.Id == lineItemId)
             ?? throw new InvalidOperationException($"Line item with ID {lineItemId} not found.");
 
+        if (lineItem.SourceType == "Prescription")
+            throw new InvalidOperationException(
+                "Cannot manually remove prescription-linked line items. Prescription items are managed by the doctor's prescription.");
+
         _lineItems.Remove(lineItem);
         RecalculateTotals();
         SetUpdatedAt();
+    }
+
+    /// <summary>
+    /// Removes all line items matching a given SourceId and SourceType.
+    /// Used by event handlers to remove prescription items when doctor removes a prescription.
+    /// Only allowed when invoice is in Draft status.
+    /// </summary>
+    public void RemoveLineItemsBySource(Guid sourceId, string sourceType)
+    {
+        EnsureDraft();
+        var matching = _lineItems.Where(li => li.SourceId == sourceId && li.SourceType == sourceType).ToList();
+        foreach (var item in matching)
+            _lineItems.Remove(item);
+        if (matching.Count > 0)
+        {
+            RecalculateTotals();
+            SetUpdatedAt();
+        }
     }
 
     /// <summary>

@@ -230,8 +230,12 @@ public class Visit : AggregateRoot, IAuditable
         EnsureEditable();
         var rx = _drugPrescriptions.FirstOrDefault(p => p.Id == prescriptionId)
             ?? throw new InvalidOperationException($"Drug prescription {prescriptionId} not found.");
+
+        var drugNames = rx.Items.Select(i => i.DrugName).ToList();
         _drugPrescriptions.Remove(rx);
         SetUpdatedAt();
+
+        AddDomainEvent(new DrugPrescriptionRemovedEvent(Id, BranchId.Value, drugNames));
     }
 
     /// <summary>

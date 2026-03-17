@@ -68,6 +68,28 @@ public sealed class BillingNotificationService(
         }
     }
 
+    public async Task NotifyLineItemRemovedAsync(
+        Guid invoiceId,
+        string invoiceNumber,
+        int removedCount,
+        CancellationToken ct)
+    {
+        try
+        {
+            await hubContext.Clients.Group(CashierDashboardGroup)
+                .SendAsync("LineItemRemoved", new
+                {
+                    InvoiceId = invoiceId,
+                    InvoiceNumber = invoiceNumber,
+                    RemovedCount = removedCount
+                }, ct);
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning(ex, "Failed to send LineItemRemoved notification for invoice {InvoiceId}", invoiceId);
+        }
+    }
+
     public async Task NotifyInvoiceVoidedAsync(
         Guid invoiceId,
         string invoiceNumber,

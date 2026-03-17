@@ -4,6 +4,8 @@ using Billing.Domain.Entities;
 using Billing.Domain.Enums;
 using Clinical.Contracts.IntegrationEvents;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using Optical.Contracts.IntegrationEvents;
