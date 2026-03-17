@@ -97,7 +97,8 @@
     "grandTotal": "Tổng cộng",
     "remove": "Xóa",
     "removeTitle": "Xóa mục",
-    "removeConfirm": "Xóa \"{{name}}\" khỏi hóa đơn? Thao tác không thể hoàn tác."
+    "removeConfirm": "Xóa \"{{name}}\" khỏi hóa đơn? Thao tác không thể hoàn tác.",
+    "prescriptionLocked": "Được quản lý bởi đơn thuốc của bác sĩ"
   },
   "noPayments": "Chưa có thanh toán",
   "noDiscounts": "Không có giảm giá",

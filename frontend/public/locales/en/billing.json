@@ -97,7 +97,8 @@
     "grandTotal": "Grand Total",
     "remove": "Remove",
     "removeTitle": "Remove Line Item",
-    "removeConfirm": "Remove \"{{name}}\" from this invoice? This cannot be undone."
+    "removeConfirm": "Remove \"{{name}}\" from this invoice? This cannot be undone.",
+    "prescriptionLocked": "Managed by doctor's prescription"
   },
   "noPayments": "No payments yet",
   "noDiscounts": "No discounts",

@@ -1,6 +1,6 @@
 import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
-import { IconTrash, IconLoader2 } from "@tabler/icons-react"
+import { IconTrash, IconLoader2, IconLock } from "@tabler/icons-react"
 import {
   Table,
   TableBody,
@@ -160,35 +160,39 @@ function DepartmentSection({
           <TableCell className="text-right">{formatVND(item.lineTotal)}</TableCell>
           {isDraft && (
             <TableCell>
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive">
-                    <IconTrash className="h-4 w-4" />
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>{t("lineItems.removeTitle")}</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      {t("lineItems.removeConfirm", { name: item.descriptionVi ?? item.description })}
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>{t("buttons.cancel", { ns: "common" })}</AlertDialogCancel>
-                    <AlertDialogAction
-                      onClick={() => removeLineItem.mutate({ invoiceId, lineItemId: item.id })}
-                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                    >
-                      {removeLineItem.isPending ? (
-                        <IconLoader2 className="h-4 w-4 animate-spin mr-2" />
-                      ) : (
-                        <IconTrash className="h-4 w-4 mr-2" />
-                      )}
-                      {t("lineItems.remove")}
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+              {item.sourceType === "Prescription" ? (
+                <IconLock className="h-4 w-4 text-muted-foreground" title={t("lineItems.prescriptionLocked")} />
+              ) : (
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive">
+                      <IconTrash className="h-4 w-4" />
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>{t("lineItems.removeTitle")}</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        {t("lineItems.removeConfirm", { name: item.descriptionVi ?? item.description })}
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>{t("buttons.cancel", { ns: "common" })}</AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={() => removeLineItem.mutate({ invoiceId, lineItemId: item.id })}
+                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                      >
+                        {removeLineItem.isPending ? (
+                          <IconLoader2 className="h-4 w-4 animate-spin mr-2" />
+                        ) : (
+                          <IconTrash className="h-4 w-4 mr-2" />
+                        )}
+                        {t("lineItems.remove")}
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              )}
             </TableCell>
           )}
         </TableRow>

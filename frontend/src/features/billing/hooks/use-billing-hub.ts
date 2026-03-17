@@ -54,6 +54,11 @@ export function useBillingHub(): ConnectionStatus {
       queryClientRef.current.invalidateQueries({ queryKey: billingKeys.pendingInvoices() })
     })
 
+    connection.on("LineItemRemoved", (notification: { invoiceId: string }) => {
+      queryClientRef.current.invalidateQueries({ queryKey: billingKeys.invoice(notification.invoiceId) })
+      queryClientRef.current.invalidateQueries({ queryKey: billingKeys.pendingInvoices() })
+    })
+
     connection.on("InvoiceVoided", () => {
       queryClientRef.current.invalidateQueries({ queryKey: billingKeys.pendingInvoices() })
     })
