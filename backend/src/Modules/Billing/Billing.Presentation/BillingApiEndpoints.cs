@@ -43,6 +43,15 @@ public static class BillingApiEndpoints
             return result.ToCreatedHttpResult("/api/billing/invoices");
         });
 
+        // GET /api/billing/invoices -- get all invoices with optional filters
+        group.MapGet("/invoices", async (int? status, string? search, int? page, int? pageSize,
+            IMessageBus bus, CancellationToken ct) =>
+        {
+            var result = await bus.InvokeAsync<Result<PaginatedInvoicesResult>>(
+                new GetAllInvoicesQuery(status, search, page ?? 1, pageSize ?? 20), ct);
+            return result.ToHttpResult();
+        });
+
         // GET /api/billing/invoices/{invoiceId} -- get invoice by ID with full details
         group.MapGet("/invoices/{invoiceId:guid}",
             async (Guid invoiceId, IMessageBus bus, CancellationToken ct) =>

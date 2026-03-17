@@ -65,6 +65,38 @@ public sealed class InvoiceRepository(BillingDbContext context) : IInvoiceReposi
             .ToListAsync(ct);
     }
 
+    public async Task<(List<Invoice> Items, int TotalCount)> GetAllAsync(
+        int? status, string? search, int page, int pageSize, CancellationToken ct)
+    {
+        var query = context.Invoices
+            .Include(i => i.LineItems)
+            .Include(i => i.Payments)
+            .Include(i => i.Discounts)
+            .Include(i => i.Refunds)
+            .AsQueryable();
+
+        if (status.HasValue)
+            query = query.Where(i => (int)i.Status == status.Value);
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var searchLower = search.ToLower();
+            query = query.Where(i =>
+                i.PatientName.ToLower().Contains(searchLower) ||
+                i.InvoiceNumber.ToLower().Contains(searchLower));
+        }
+
+        var totalCount = await query.CountAsync(ct);
+
+        var items = await query
+            .OrderByDescending(i => i.CreatedAt)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(ct);
+
+        return (items, totalCount);
+    }
+
     public async Task<List<Invoice>> GetPendingAsync(Guid? cashierShiftId, CancellationToken ct)
     {
         var query = context.Invoices

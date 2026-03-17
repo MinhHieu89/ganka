@@ -54,6 +54,13 @@ public interface IInvoiceRepository
     Task<List<Invoice>> GetPendingAsync(Guid? cashierShiftId, CancellationToken ct);
 
     /// <summary>
+    /// Gets all invoices with optional status filter, search, and pagination.
+    /// Returns matching invoices and total count for pagination.
+    /// </summary>
+    Task<(List<Invoice> Items, int TotalCount)> GetAllAsync(
+        int? status, string? search, int page, int pageSize, CancellationToken ct);
+
+    /// <summary>
     /// Adds a new invoice to the change tracker.
     /// </summary>
     void Add(Invoice invoice);
