@@ -75,11 +75,14 @@ function BillingDashboard() {
         {/* Left panel: Pending invoices (2/3 width) */}
         <div className="lg:col-span-2">
           <Card>
-            <CardHeader>
+            <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="flex items-center gap-2">
                 <IconReceipt className="h-5 w-5" />
                 {t("pendingInvoices")}
               </CardTitle>
+              <Button variant="outline" size="sm" asChild>
+                <Link to="/billing/invoices">{t("viewAllInvoices")}</Link>
+              </Button>
             </CardHeader>
             <CardContent>
               {invoicesLoading ? (

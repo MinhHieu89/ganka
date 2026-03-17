@@ -205,5 +205,19 @@
   "confirm": "Xác nhận",
   "exportErrorPdf": "Không thể xuất hóa đơn điện tử PDF",
   "exportErrorJson": "Không thể xuất hóa đơn điện tử JSON",
-  "exportErrorXml": "Không thể xuất hóa đơn điện tử XML"
+  "exportErrorXml": "Không thể xuất hóa đơn điện tử XML",
+  "allInvoices": "Tất cả hóa đơn",
+  "invoiceHistory": "Lịch sử hóa đơn",
+  "searchInvoices": "Tìm hóa đơn...",
+  "viewAllInvoices": "Xem tất cả",
+  "noInvoices": "Không tìm thấy hóa đơn",
+  "pageOf": "Trang {{page}} / {{total}}",
+  "previous": "Trước",
+  "next": "Sau",
+  "statusFilter": {
+    "all": "Tất cả",
+    "draft": "Nháp",
+    "finalized": "Hoàn thành",
+    "voided": "Đã hủy"
+  }
 }

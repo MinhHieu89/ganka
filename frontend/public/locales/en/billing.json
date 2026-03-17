@@ -205,5 +205,19 @@
   "confirm": "Confirm",
   "exportErrorPdf": "Failed to export e-invoice PDF",
   "exportErrorJson": "Failed to export e-invoice JSON",
-  "exportErrorXml": "Failed to export e-invoice XML"
+  "exportErrorXml": "Failed to export e-invoice XML",
+  "allInvoices": "All Invoices",
+  "invoiceHistory": "Invoice History",
+  "searchInvoices": "Search invoices...",
+  "viewAllInvoices": "View All",
+  "noInvoices": "No invoices found",
+  "pageOf": "Page {{page}} of {{total}}",
+  "previous": "Previous",
+  "next": "Next",
+  "statusFilter": {
+    "all": "All",
+    "draft": "Draft",
+    "finalized": "Finalized",
+    "voided": "Voided"
+  }
 }

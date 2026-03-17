@@ -217,9 +217,25 @@ export const REFUND_STATUS_I18N_KEY: Record<number, string> = {
 
 // -- Query key factory --
 
+export interface PaginatedInvoicesResult {
+  items: InvoiceSummaryDto[]
+  totalCount: number
+  page: number
+  pageSize: number
+}
+
+export interface AllInvoicesParams {
+  status?: number
+  search?: string
+  page?: number
+  pageSize?: number
+}
+
 export const billingKeys = {
   all: ["billing"] as const,
   invoices: () => [...billingKeys.all, "invoices"] as const,
+  allInvoices: (params: AllInvoicesParams) =>
+    [...billingKeys.all, "invoices", "all", params] as const,
   pendingInvoices: () => [...billingKeys.all, "invoices", "pending"] as const,
   invoice: (id: string) => [...billingKeys.all, "invoice", id] as const,
   visitInvoice: (visitId: string) => [...billingKeys.all, "visit", visitId] as const,
@@ -251,6 +267,21 @@ async function getPendingInvoices(): Promise<InvoiceSummaryDto[]> {
   )
   if (error) throw new Error("Failed to fetch pending invoices")
   return (data as InvoiceSummaryDto[]) ?? []
+}
+
+async function getAllInvoices(
+  params: AllInvoicesParams,
+): Promise<PaginatedInvoicesResult> {
+  const searchParams = new URLSearchParams()
+  if (params.status !== undefined) searchParams.set("status", String(params.status))
+  if (params.search) searchParams.set("search", params.search)
+  if (params.page) searchParams.set("page", String(params.page))
+  if (params.pageSize) searchParams.set("pageSize", String(params.pageSize))
+  const qs = searchParams.toString()
+  const url = `/api/billing/invoices${qs ? `?${qs}` : ""}`
+  const { data, error } = await api.GET(url as never)
+  if (error) throw new Error("Failed to fetch invoices")
+  return data as PaginatedInvoicesResult
 }
 
 async function createInvoice(command: CreateInvoiceInput): Promise<{ id: string }> {
@@ -443,6 +474,13 @@ export function usePendingInvoices() {
     queryFn: getPendingInvoices,
     refetchInterval: 30_000,
     refetchIntervalInBackground: false,
+  })
+}
+
+export function useAllInvoices(params: AllInvoicesParams) {
+  return useQuery({
+    queryKey: billingKeys.allInvoices(params),
+    queryFn: () => getAllInvoices(params),
   })
 }
 
@@ -652,6 +690,7 @@ export {
   getInvoiceById,
   getInvoiceByVisit,
   getPendingInvoices,
+  getAllInvoices,
   createInvoice,
   addLineItem,
   removeLineItem,
