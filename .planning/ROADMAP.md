@@ -297,7 +297,7 @@ Plans:
   3. System generates e-invoice (hoa don dien tu) compliant with Vietnamese tax law for MISA export
   4. System supports treatment package payments (full upfront or 50/50 split) and enforces the rule that the 2nd payment must be received before the mid-course session
   5. Manual discounts require manager approval, refunds require manager/owner approval with full audit trail, and all price changes are logged with who/when/old/new values
-**Plans**: 28 plans (26 original + 2 UAT gap closure)
+**Plans**: 31 plans (26 original + 2 UAT gap closure + 3 UAT gap closure)
 
 Plans:
 - [ ] 07-01-PLAN.md -- Invoice aggregate + InvoiceLineItem domain entities, enums, domain event (includes _payments/_discounts backing fields + RecordPayment/ApplyDiscount stubs)
@@ -328,6 +328,9 @@ Plans:
 - [ ] 07-26-PLAN.md -- Supplementary discount/refund handlers: RejectDiscount, ApproveRefund, ProcessRefund
 - [ ] 07-27-PLAN.md -- [UAT GAP] Fix DbUpdateConcurrencyException (remove redundant Update calls) + auto-populate RequestedById from ICurrentUser
 - [ ] 07-28-PLAN.md -- [UAT GAP] Add finalize-empty-invoice validation guards + create GetPendingInvoices handler
+- [ ] 07-29-PLAN.md -- [UAT GAP] Invoice history page: browse all invoices (Draft, Finalized, Voided) with filtering and search
+- [ ] 07-30-PLAN.md -- [UAT GAP] Prescription-to-billing integration: create pharmacy line items when prescription is added (not on dispensing)
+- [ ] 07-31-PLAN.md -- [UAT GAP] Wire line item delete button to frontend on draft invoices
 
 ### Phase 07.2: Fix Phase 07.1 Code Review Issues (INSERTED)
 
