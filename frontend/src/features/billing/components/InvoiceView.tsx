@@ -40,7 +40,7 @@ import {
   DISCOUNT_TYPE_I18N_KEY,
 } from "@/features/billing/api/billing-api"
 import type { PaymentDto, DiscountDto } from "@/features/billing/api/billing-api"
-import { useCurrentShift, getInvoicePdf } from "@/features/billing/api/shift-api"
+import { useCurrentShift, getInvoicePdf, getReceiptPdf } from "@/features/billing/api/shift-api"
 import { InvoiceLineItemsTable } from "./InvoiceLineItemsTable"
 import { PaymentForm } from "./PaymentForm"
 import { DiscountDialog } from "./DiscountDialog"
@@ -106,6 +106,20 @@ export function InvoiceView({ invoiceId }: InvoiceViewProps) {
     setIsPrinting(true)
     try {
       const blob = await getInvoicePdf(invoiceId)
+      const url = URL.createObjectURL(blob)
+      window.open(url, "_blank")
+      setTimeout(() => URL.revokeObjectURL(url), 30000)
+    } catch {
+      toast.error(t("printError"))
+    } finally {
+      setIsPrinting(false)
+    }
+  }
+
+  const handlePrintReceipt = async () => {
+    setIsPrinting(true)
+    try {
+      const blob = await getReceiptPdf(invoiceId)
       const url = URL.createObjectURL(blob)
       window.open(url, "_blank")
       setTimeout(() => URL.revokeObjectURL(url), 30000)
@@ -337,7 +351,7 @@ export function InvoiceView({ invoiceId }: InvoiceViewProps) {
 
         {/* Print Receipt -- visible when at least one payment exists */}
         {hasPayments && (
-          <Button variant="outline" onClick={handlePrintInvoice}>
+          <Button variant="outline" onClick={handlePrintReceipt} disabled={isPrinting}>
             <IconReceipt className="mr-2 h-4 w-4" />
             {t("printReceipt")}
           </Button>

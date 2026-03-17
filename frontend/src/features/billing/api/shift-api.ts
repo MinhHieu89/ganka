@@ -207,13 +207,13 @@ async function fetchExport(url: string): Promise<Blob> {
 
 export async function exportEInvoiceJson(invoiceId: string): Promise<Blob> {
   return fetchExport(
-    `${API_URL}/api/billing/invoices/${invoiceId}/export/e-invoice.json`,
+    `${API_URL}/api/billing/export/${invoiceId}/e-invoice/json`,
   )
 }
 
 export async function exportEInvoiceXml(invoiceId: string): Promise<Blob> {
   return fetchExport(
-    `${API_URL}/api/billing/invoices/${invoiceId}/export/e-invoice.xml`,
+    `${API_URL}/api/billing/export/${invoiceId}/e-invoice/xml`,
   )
 }
 

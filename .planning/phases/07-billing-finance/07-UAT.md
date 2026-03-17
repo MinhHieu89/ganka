@@ -1,5 +1,5 @@
 ---
-status: testing
+status: complete
 phase: 07-billing-finance
 source: 07-01-SUMMARY.md through 07-28-SUMMARY.md
 started: 2026-03-17T14:00:00Z
@@ -9,11 +9,7 @@ updated: 2026-03-17T14:10:00Z
 ## Current Test
 <!-- OVERWRITE each test - shows where we are -->
 
-number: 30
-name: Print Invoice PDF
-expected: |
-  Clicking "Print Invoice" generates A4 PDF with clinic header, department-grouped line items, VND formatting with dot-thousands, signatures area. Opens in new browser tab.
-awaiting: user response
+[testing complete]
 
 ## Tests
 
@@ -145,38 +141,38 @@ result: pass (fixed: added GET /api/billing/shifts endpoint with pagination)
 
 ### 30. Print Invoice PDF
 expected: Clicking "Print Invoice" generates A4 PDF with clinic header, department-grouped line items, VND formatting with dot-thousands, signatures area. Opens in new browser tab.
-result: [pending]
+result: pass (fixed: print URL to /api/billing/print/{id}/invoice)
 
 ### 31. Print Receipt PDF
 expected: Clicking "Print Receipt" generates compact A5 receipt PDF with payment methods and amounts. Opens in new tab.
-result: [pending]
+result: pass (fixed: receipt button was calling invoice handler, added separate handlePrintReceipt)
 
 ### 32. E-Invoice PDF (Vietnamese Decree 123/2020)
 expected: E-invoice PDF includes seller/buyer tax codes, invoice template/symbol, tax breakdown (8% GTGT), amount in Vietnamese words (e.g., "Một triệu năm trăm nghìn đồng").
-result: [pending]
+result: pass
 
 ### 33. E-Invoice Export JSON
 expected: Clicking "Export JSON" downloads JSON file with all mandatory Decree 123/2020 e-invoice fields, Vietnamese Unicode preserved, MISA-compatible format.
-result: [pending]
+result: pass (fixed: export URL to /api/billing/export/{id}/e-invoice/json)
 
 ### 34. E-Invoice Export XML
 expected: Clicking "Export XML" downloads XML file with all mandatory e-invoice fields, MISA-compatible format.
-result: [pending]
+result: pass
 
 ### 35. Print Shift Report PDF
 expected: Generates PDF with revenue-by-method table, cash reconciliation, highlighted discrepancy if non-zero. Opens in new tab.
-result: [pending]
+result: pass
 
 ### 36. VND Currency Formatting
 expected: All monetary values throughout billing UI formatted as Vietnamese currency (e.g., "1.234.567đ" with dot-thousands separator). No raw numbers or wrong formatting visible.
-result: [pending]
+result: pass
 
 ## Summary
 
 total: 36
-passed: 22
+passed: 29
 issues: 3
-pending: 7
+pending: 0
 skipped: 4
 
 ## Gaps
