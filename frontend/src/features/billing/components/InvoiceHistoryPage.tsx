@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react"
-import { Link } from "@tanstack/react-router"
+import { Link, useNavigate } from "@tanstack/react-router"
 import { useTranslation } from "react-i18next"
 import { format } from "date-fns"
 import { IconReceipt, IconSearch } from "@tabler/icons-react"
@@ -37,6 +37,7 @@ const PAGE_SIZE = 20
 
 export function InvoiceHistoryPage() {
   const { t } = useTranslation("billing")
+  const navigate = useNavigate()
   const [statusTab, setStatusTab] = useState<string>("all")
   const [searchInput, setSearchInput] = useState("")
   const [page, setPage] = useState(1)
@@ -115,7 +116,11 @@ export function InvoiceHistoryPage() {
                 {data.items.map((invoice) => {
                   const statusI18nKey = INVOICE_STATUS_I18N_KEY[invoice.status]
                   return (
-                    <TableRow key={invoice.id} className="cursor-pointer hover:bg-muted/50">
+                    <TableRow
+                      key={invoice.id}
+                      className="cursor-pointer hover:bg-muted/50"
+                      onClick={() => navigate({ to: "/billing/invoices/$invoiceId", params: { invoiceId: invoice.id } })}
+                    >
                       <TableCell>
                         <Link
                           to="/billing/invoices/$invoiceId"
