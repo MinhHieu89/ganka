@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 08-40-PLAN.md
-last_updated: "2026-03-18T15:43:27.202Z"
+stopped_at: Completed 08-41-PLAN.md
+last_updated: "2026-03-18T16:03:07.347Z"
 last_activity: "2026-03-13 - Completed quick task 2: Add Serilog with file output for development"
 progress:
   total_phases: 18
   completed_phases: 16
-  total_plans: 272
-  completed_plans: 270
+  total_plans: 273
+  completed_plans: 271
 ---
 
 ---
@@ -851,6 +851,7 @@ Progress: [█████████░] 96%
 | Phase 07 P32 | 2min | 2 tasks | 2 files |
 | Phase 07 P33 | 9min | 2 tasks | 14 files |
 | Phase 08 P40 | 3min | 1 tasks | 1 files |
+| Phase 08 P41 | 2min | 1 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -1344,6 +1345,7 @@ Recent decisions affecting current work:
 - [Phase 07]: RemoveLineItemsBySource allows event handlers to bypass prescription guard for system-initiated removal
 - [Phase 07]: DrugPrescriptionRemovedEvent carries drug names only, no pricing needed for removal
 - [Phase 08]: Extracted updateItemPriceAndDescription helper to DRY up frame/lens price combination logic
+- [Phase 08]: NumberInput onChange receives number directly, not event object - removed e.target.value patterns
 
 ### Roadmap Evolution
 
@@ -1374,6 +1376,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-18T15:43:27.197Z
-Stopped at: Completed 08-40-PLAN.md
+Last session: 2026-03-18T16:03:07.341Z
+Stopped at: Completed 08-41-PLAN.md
 Resume file: None
