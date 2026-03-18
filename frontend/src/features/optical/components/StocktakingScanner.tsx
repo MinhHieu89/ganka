@@ -144,7 +144,7 @@ export function StocktakingScanner({ sessionId, onItemRecorded }: StocktakingSca
                 ref={physicalCountRef}
                 min={0}
                 value={physicalCount}
-                onChange={(e) => setPhysicalCount(parseInt(e.target.value, 10) || 0)}
+                onChange={(value) => setPhysicalCount(value || 0)}
                 onKeyDown={handleKeyDown}
                 className="w-full"
               />

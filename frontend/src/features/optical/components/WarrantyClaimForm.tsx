@@ -317,10 +317,7 @@ export function WarrantyClaimForm({ open, onOpenChange }: WarrantyClaimFormProps
                     min={0}
                     step={1000}
                     value={field.value ?? ""}
-                    onChange={(e) => {
-                      const val = e.target.value
-                      field.onChange(val === "" ? null : Number(val))
-                    }}
+                    onChange={(value) => field.onChange(value)}
                     aria-invalid={fieldState.invalid || undefined}
                   />
                   {fieldState.error && (

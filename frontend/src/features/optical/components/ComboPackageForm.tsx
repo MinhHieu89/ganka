@@ -357,9 +357,7 @@ export function ComboPackageForm({
                     min={0}
                     step={1000}
                     value={field.value ?? ""}
-                    onChange={(e) =>
-                      field.onChange(e.target.value === "" ? undefined : Number(e.target.value))
-                    }
+                    onChange={(value) => field.onChange(value)}
                     aria-invalid={fieldState.invalid || undefined}
                   />
                   {fieldState.error && (
