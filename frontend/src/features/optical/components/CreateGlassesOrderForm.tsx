@@ -134,6 +134,29 @@ export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrde
     }, 0)
   }, [watchedItems])
 
+  // Helper: compute combined price and description for a line item
+  const updateItemPriceAndDescription = (index: number, frameId: string | null, lensId: string | null) => {
+    const frame = frameId ? frames.find((fr) => fr.id === frameId) : null
+    const lens = lensId ? lenses?.find((l) => l.id === lensId) : null
+
+    let description = ""
+    let unitPrice = 0
+
+    if (frame && lens) {
+      description = `${frame.brand} ${frame.model} ${frame.color} + ${lens.brand} ${lens.name}`
+      unitPrice = frame.sellingPrice + lens.sellingPrice
+    } else if (frame) {
+      description = `${frame.brand} ${frame.model} ${frame.color}`
+      unitPrice = frame.sellingPrice
+    } else if (lens) {
+      description = `${lens.brand} ${lens.name}`
+      unitPrice = lens.sellingPrice
+    }
+
+    form.setValue(`items.${index}.description`, description)
+    form.setValue(`items.${index}.unitPrice`, unitPrice)
+  }
+
   // Reset form when dialog closes
   useEffect(() => {
     if (!open) {
@@ -446,16 +469,8 @@ export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrde
                           onValueChange={(val) => {
                             const frameId = val === "none" ? null : val
                             f.onChange(frameId)
-                            if (frameId) {
-                              const frame = frames.find((fr) => fr.id === frameId)
-                              if (frame) {
-                                form.setValue(
-                                  `items.${index}.description`,
-                                  `${frame.brand} ${frame.model} ${frame.color}`,
-                                )
-                                form.setValue(`items.${index}.unitPrice`, frame.sellingPrice)
-                              }
-                            }
+                            const currentLensId = form.getValues(`items.${index}.lensCatalogItemId`) ?? null
+                            updateItemPriceAndDescription(index, frameId, currentLensId)
                           }}
                         >
                           <SelectTrigger>
@@ -492,16 +507,8 @@ export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrde
                           onValueChange={(val) => {
                             const lensId = val === "none" ? null : val
                             f.onChange(lensId)
-                            if (lensId) {
-                              const lens = lenses?.find((l) => l.id === lensId)
-                              if (lens) {
-                                form.setValue(
-                                  `items.${index}.description`,
-                                  `${lens.brand} ${lens.name}`,
-                                )
-                                form.setValue(`items.${index}.unitPrice`, lens.sellingPrice)
-                              }
-                            }
+                            const currentFrameId = form.getValues(`items.${index}.frameId`) ?? null
+                            updateItemPriceAndDescription(index, currentFrameId, lensId)
                           }}
                         >
                           <SelectTrigger>
