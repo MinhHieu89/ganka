@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Optical.Application.Interfaces;
 using Optical.Domain.Entities;
 using Optical.Domain.Enums;
@@ -71,11 +72,19 @@ public sealed class FrameRepository : IFrameRepository
     /// <inheritdoc />
     public async Task<long> GetNextSequenceNumberAsync(CancellationToken ct)
     {
-        // Uses SQL SEQUENCE for concurrency-safe barcode generation.
-        // Prevents duplicate barcodes under concurrent frame creation (same pattern as Billing CR-02).
-        return await _context.Database
-            .SqlQueryRaw<long>("SELECT NEXT VALUE FOR optical.FrameBarcodeSeq AS Value")
-            .FirstAsync(ct);
+        // Uses raw ADO.NET to avoid EF Core wrapping NEXT VALUE FOR in a subquery,
+        // which SQL Server rejects with error 11719.
+        // Same pattern as Billing InvoiceRepository.GetNextInvoiceNumberAsync.
+        var connection = _context.Database.GetDbConnection();
+        if (connection.State != System.Data.ConnectionState.Open)
+            await connection.OpenAsync(ct);
+
+        await using var command = connection.CreateCommand();
+        command.CommandText = "SELECT NEXT VALUE FOR optical.FrameBarcodeSeq";
+        command.Transaction = _context.Database.CurrentTransaction?.GetDbTransaction();
+
+        var result = await command.ExecuteScalarAsync(ct);
+        return Convert.ToInt64(result);
     }
 
     /// <inheritdoc />

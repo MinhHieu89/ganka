@@ -74,7 +74,14 @@
     "lowStockAlert": "Cảnh báo sắp hết hàng",
     "totalStock": "Tổng tồn kho",
     "adjustStock": "Điều chỉnh tồn kho",
-    "stockAdjusted": "Điều chỉnh tồn kho thành công"
+    "lowStockCount": "{{count}} loại sắp hết",
+    "stockOk": "Đủ hàng",
+    "stockAdjusted": "Điều chỉnh tồn kho thành công",
+    "stockAdjustHint": "thêm hoặc điều chỉnh tồn kho theo độ kính",
+    "quantityChange": "Thay đổi số lượng",
+    "quantityChangeHint": "Nhập số dương để tăng, số âm để giảm",
+    "currentQty": "Hiện tại",
+    "afterAdjust": "Sau điều chỉnh"
   },
   "orders": {
     "title": "Đơn đặt kính",
@@ -118,7 +125,21 @@
     "selectLens": "Chọn tròng kính",
     "lensOrder": "Đơn tròng kính",
     "supplier": "Nhà cung cấp",
-    "lensOrderStatus": "Trạng thái đơn tròng"
+    "lensOrderStatus": "Trạng thái đơn tròng",
+    "searchPatient": "Tìm theo tên hoặc mã...",
+    "selectVisit": "Chọn lần khám...",
+    "noActiveVisits": "Không có lần khám",
+    "enterPrescription": "Nhập mã toa kính từ lần khám",
+    "selectDate": "Chọn ngày...",
+    "noCombo": "Không chọn combo",
+    "noFrame": "Không chọn gọng",
+    "noLens": "Không chọn tròng",
+    "subtotal": "Thành tiền",
+    "itemsSection": "Đơn đặt kính",
+    "currentStatus": "Trạng thái hiện tại",
+    "billingNote": "Vui lòng xác nhận thanh toán tại mô-đun thu ngân trước khi chuyển sang gia công.",
+    "noItems": "Không có chi tiết mục hàng",
+    "orderNotFound": "Không tìm thấy đơn hàng"
   },
   "combos": {
     "title": "Gói combo",
@@ -142,7 +163,11 @@
     "deleted": "Xóa gói combo thành công",
     "selectFrame": "Chọn gọng kính",
     "selectLens": "Chọn tròng kính",
-    "youSave": "Tiết kiệm {{amount}}"
+    "youSave": "Tiết kiệm {{amount}}",
+    "namePlaceholder": "VD: Rayban Classic + Essilor Crizal SV",
+    "descriptionPlaceholder": "Chi tiết về nội dung gói combo...",
+    "anyFrame": "Tùy chọn gọng",
+    "anyLens": "Tùy chọn tròng"
   },
   "warranty": {
     "title": "Yêu cầu bảo hành",
@@ -233,7 +258,14 @@
     "barcode": "Mã vạch",
     "counted": "Đã đếm",
     "discrepancyReport": "Báo cáo chênh lệch",
-    "exportReport": "Xuất báo cáo"
+    "exportReport": "Xuất báo cáo",
+    "cameraScanner": "Quét bằng camera",
+    "cameraHintActive": "Hướng camera vào mã vạch",
+    "cameraHintInactive": "Sử dụng camera để quét mã vạch",
+    "startCamera": "Bật camera",
+    "stopCamera": "Dừng",
+    "cameraOff": "Camera đang tắt. Bấm \"Bật camera\" để bắt đầu quét.",
+    "resume": "Tiếp tục"
   },
   "common": {
     "active": "Đang hoạt động",

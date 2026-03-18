@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
@@ -15,7 +16,7 @@ import {
 import { Button } from "@/shared/components/Button"
 import { Field, FieldLabel, FieldError } from "@/shared/components/Field"
 import { AutoResizeTextarea } from "@/shared/components/AutoResizeTextarea"
-import { Input } from "@/shared/components/Input"
+import { NumberInput } from "@/shared/components/NumberInput"
 import {
   Select,
   SelectContent,
@@ -33,22 +34,10 @@ const EMPTY_ORDERS: DeliveredOrderSummaryDto[] = []
 
 type ResolutionType = "Replace" | "Repair" | "Discount"
 
-const RESOLUTION_TYPES: { value: ResolutionType; label: string; description: string }[] = [
-  {
-    value: "Replace",
-    label: "Replace",
-    description: "Replace the defective product with a new one",
-  },
-  {
-    value: "Repair",
-    label: "Repair",
-    description: "Repair the defective product",
-  },
-  {
-    value: "Discount",
-    label: "Discount",
-    description: "Provide a discount on future purchase or refund",
-  },
+const RESOLUTION_TYPE_KEYS: { value: ResolutionType; labelKey: string }[] = [
+  { value: "Replace", labelKey: "enums.warrantyResolution.replace" },
+  { value: "Repair", labelKey: "enums.warrantyResolution.repair" },
+  { value: "Discount", labelKey: "enums.warrantyResolution.discount" },
 ]
 
 const RESOLUTION_TYPE_MAP: Record<ResolutionType, number> = {
@@ -92,6 +81,7 @@ function WarrantyInfoPanel({
 }: {
   order: DeliveredOrderSummaryDto | undefined
 }) {
+  const { t } = useTranslation("optical")
   if (!order) return null
 
   const deliveredAt = order.deliveredAt ? new Date(order.deliveredAt) : null
@@ -115,16 +105,16 @@ function WarrantyInfoPanel({
           <IconAlertTriangle className="h-4 w-4 text-red-600" />
         )}
         <span className={order.isUnderWarranty ? "text-blue-800" : "text-red-800"}>
-          {order.isUnderWarranty ? "Under Warranty" : "Warranty Expired"}
+          {order.isUnderWarranty ? t("warranty.withinWarranty") : t("warranty.warrantyExpired")}
         </span>
       </div>
       <div className="grid grid-cols-2 gap-3 text-xs">
         <div>
-          <span className="text-muted-foreground">Delivery Date:</span>
+          <span className="text-muted-foreground">{t("orders.deliveredAt")}:</span>
           <div className="font-medium">{format(deliveredAt, "dd/MM/yyyy")}</div>
         </div>
         <div>
-          <span className="text-muted-foreground">Warranty Expires:</span>
+          <span className="text-muted-foreground">{t("warranty.warrantyExpiry")}:</span>
           <div className="font-medium">{format(warrantyExpiresAt, "dd/MM/yyyy")}</div>
         </div>
       </div>
@@ -144,6 +134,7 @@ function WarrantyInfoPanel({
 }
 
 export function WarrantyClaimForm({ open, onOpenChange }: WarrantyClaimFormProps) {
+  const { t } = useTranslation("optical")
   const { data: deliveredOrders = EMPTY_ORDERS, isLoading: ordersLoading } = useDeliveredOrders()
   const createMutation = useCreateWarrantyClaim()
 
@@ -186,10 +177,11 @@ export function WarrantyClaimForm({ open, onOpenChange }: WarrantyClaimFormProps
     try {
       await createMutation.mutateAsync({
         glassesOrderId: data.glassesOrderId,
-        resolutionType: RESOLUTION_TYPE_MAP[data.resolutionType],
-        notes: data.assessmentNotes,
+        resolution: RESOLUTION_TYPE_MAP[data.resolutionType],
+        assessmentNotes: data.assessmentNotes,
+        discountAmount: data.resolutionType === "Discount" ? data.discountAmount : null,
       })
-      toast.success("Warranty claim filed successfully.")
+      toast.success(t("warranty.created"))
       onOpenChange(false)
     } catch {
       // error handled by mutation onError
@@ -206,7 +198,7 @@ export function WarrantyClaimForm({ open, onOpenChange }: WarrantyClaimFormProps
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>File Warranty Claim</DialogTitle>
+          <DialogTitle>{t("warranty.addClaim")}</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
@@ -216,7 +208,7 @@ export function WarrantyClaimForm({ open, onOpenChange }: WarrantyClaimFormProps
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
-                <FieldLabel>Glasses Order</FieldLabel>
+                <FieldLabel>{t("warranty.order")}</FieldLabel>
                 <Select
                   value={field.value}
                   onValueChange={field.onChange}
@@ -274,13 +266,13 @@ export function WarrantyClaimForm({ open, onOpenChange }: WarrantyClaimFormProps
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
-                <FieldLabel>Resolution Type</FieldLabel>
+                <FieldLabel>{t("warranty.resolution")}</FieldLabel>
                 <RadioGroup
                   value={field.value}
                   onValueChange={field.onChange}
                   className="space-y-2"
                 >
-                  {RESOLUTION_TYPES.map((type) => (
+                  {RESOLUTION_TYPE_KEYS.map((type) => (
                     <div key={type.value} className="flex items-start gap-3">
                       <RadioGroupItem
                         value={type.value}
@@ -291,10 +283,7 @@ export function WarrantyClaimForm({ open, onOpenChange }: WarrantyClaimFormProps
                         htmlFor={`resolution-${type.value}`}
                         className="cursor-pointer leading-none"
                       >
-                        <span className="font-medium">{type.label}</span>
-                        <span className="block text-xs text-muted-foreground mt-0.5">
-                          {type.description}
-                        </span>
+                        <span className="font-medium">{t(type.labelKey)}</span>
                       </Label>
                     </div>
                   ))}
@@ -311,8 +300,7 @@ export function WarrantyClaimForm({ open, onOpenChange }: WarrantyClaimFormProps
             <div className="flex items-start gap-2 rounded-lg border border-blue-200 bg-blue-50 p-3 text-sm text-blue-800">
               <IconInfoCircle className="h-4 w-4 mt-0.5 shrink-0" />
               <span>
-                <strong>Requires manager approval.</strong> Replacement claims must be reviewed
-                and approved by a manager before proceeding.
+                {t("warranty.requiresManagerApproval")}
               </span>
             </div>
           )}
@@ -324,9 +312,8 @@ export function WarrantyClaimForm({ open, onOpenChange }: WarrantyClaimFormProps
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel>Discount Amount (VND)</FieldLabel>
-                  <Input
-                    type="number"
+                  <FieldLabel>{t("enums.warrantyResolution.discount")} (VND)</FieldLabel>
+                  <NumberInput
                     min={0}
                     step={1000}
                     value={field.value ?? ""}
@@ -350,7 +337,7 @@ export function WarrantyClaimForm({ open, onOpenChange }: WarrantyClaimFormProps
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
-                <FieldLabel>Assessment Notes</FieldLabel>
+                <FieldLabel>{t("warranty.assessmentNotes")}</FieldLabel>
                 <AutoResizeTextarea
                   {...field}
                   rows={4}
@@ -369,13 +356,13 @@ export function WarrantyClaimForm({ open, onOpenChange }: WarrantyClaimFormProps
               variant="outline"
               onClick={() => onOpenChange(false)}
             >
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button type="submit" disabled={!canSubmit}>
               {isSubmitting && (
                 <IconLoader2 className="h-4 w-4 mr-2 animate-spin" />
               )}
-              File Claim
+              {t("warranty.addClaim")}
             </Button>
           </DialogFooter>
         </form>

@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react"
+import { useTranslation } from "react-i18next"
 import { useForm, Controller, useFieldArray } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
@@ -16,6 +17,7 @@ import {
   DialogTitle,
 } from "@/shared/components/Dialog"
 import { Input } from "@/shared/components/Input"
+import { NumberInput } from "@/shared/components/NumberInput"
 import { AutoResizeTextarea } from "@/shared/components/AutoResizeTextarea"
 import { Button } from "@/shared/components/Button"
 import { Field, FieldLabel, FieldError } from "@/shared/components/Field"
@@ -62,6 +64,7 @@ interface CreateGlassesOrderFormProps {
 }
 
 export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrderFormProps) {
+  const { t } = useTranslation("optical")
   const [patientSearch, setPatientSearch] = useState("")
   const [frameSearch, setFrameSearch] = useState("")
   const [selectedPatientId, setSelectedPatientId] = useState<string | undefined>()
@@ -207,7 +210,7 @@ export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrde
         totalPrice,
         notes: values.notes || null,
       })
-      toast.success("Glasses order created successfully")
+      toast.success(t("orders.created"))
       onOpenChange(false)
     } catch (error) {
       // Error handled by mutation onError
@@ -218,19 +221,19 @@ export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrde
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Create Glasses Order</DialogTitle>
+          <DialogTitle>{t("orders.addOrder")}</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           {/* Patient selection */}
           <div className="grid grid-cols-2 gap-4">
             <Field>
-              <FieldLabel>Patient *</FieldLabel>
+              <FieldLabel>{t("orders.patient")} *</FieldLabel>
               <div className="space-y-2">
                 <Input
                   value={patientSearch}
                   onChange={(e) => setPatientSearch(e.target.value)}
-                  placeholder="Search by name or code..."
+                  placeholder={t("orders.searchPatient")}
                 />
                 {patients.length > 0 && patientSearch.length >= 2 && (
                   <div className="border rounded-md max-h-40 overflow-y-auto">
@@ -259,7 +262,7 @@ export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrde
             </Field>
 
             <Field>
-              <FieldLabel>Visit *</FieldLabel>
+              <FieldLabel>{t("orders.visitId")} *</FieldLabel>
               <Controller
                 control={form.control}
                 name="visitId"
@@ -273,12 +276,12 @@ export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrde
                     disabled={!selectedPatientId}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select visit..." />
+                      <SelectValue placeholder={t("orders.selectVisit")} />
                     </SelectTrigger>
                     <SelectContent>
                       {patientVisits.length === 0 ? (
                         <SelectItem value="_none" disabled>
-                          No active visits
+                          {t("orders.noActiveVisits")}
                         </SelectItem>
                       ) : (
                         patientVisits.map((v) => (
@@ -300,14 +303,14 @@ export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrde
 
           {/* Optical Prescription */}
           <Field>
-            <FieldLabel>Optical Prescription ID *</FieldLabel>
+            <FieldLabel>{t("orders.prescription")} *</FieldLabel>
             <Controller
               control={form.control}
               name="opticalPrescriptionId"
               render={({ field }) => (
                 <Input
                   {...field}
-                  placeholder="Enter optical prescription ID from visit"
+                  placeholder={t("orders.enterPrescription")}
                   disabled={!selectedVisitId}
                 />
               )}
@@ -327,7 +330,7 @@ export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrde
 
           {/* Processing type */}
           <Field>
-            <FieldLabel>Processing Type *</FieldLabel>
+            <FieldLabel>{t("orders.processingType")} *</FieldLabel>
             <Controller
               control={form.control}
               name="processingType"
@@ -339,11 +342,11 @@ export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrde
                 >
                   <div className="flex items-center gap-2">
                     <RadioGroupItem value="0" id="inhouse" />
-                    <Label htmlFor="inhouse">In-House</Label>
+                    <Label htmlFor="inhouse">{t("enums.processingType.inHouse")}</Label>
                   </div>
                   <div className="flex items-center gap-2">
                     <RadioGroupItem value="1" id="outsourced" />
-                    <Label htmlFor="outsourced">Outsourced</Label>
+                    <Label htmlFor="outsourced">{t("enums.processingType.outsourced")}</Label>
                   </div>
                 </RadioGroup>
               )}
@@ -353,7 +356,7 @@ export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrde
           {/* Estimated delivery date */}
           <div className="grid grid-cols-2 gap-4">
             <Field>
-              <FieldLabel>Estimated Delivery Date</FieldLabel>
+              <FieldLabel>{t("orders.estimatedDelivery")}</FieldLabel>
               <Controller
                 control={form.control}
                 name="estimatedDeliveryDate"
@@ -361,7 +364,7 @@ export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrde
                   <DatePicker
                     value={field.value ?? undefined}
                     onChange={field.onChange}
-                    placeholder="Select date..."
+                    placeholder={t("orders.selectDate")}
                     fromDate={new Date()}
                     toDate={new Date(Date.now() + 365 * 24 * 60 * 60 * 1000)}
                   />
@@ -370,7 +373,7 @@ export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrde
             </Field>
 
             <Field>
-              <FieldLabel>Combo Package (optional)</FieldLabel>
+              <FieldLabel>{t("orders.comboPackage")}</FieldLabel>
               <Controller
                 control={form.control}
                 name="comboPackageId"
@@ -383,10 +386,10 @@ export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrde
                     }}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select combo..." />
+                      <SelectValue placeholder={t("orders.comboPackage")} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="none">No combo</SelectItem>
+                      <SelectItem value="none">{t("orders.noCombo")}</SelectItem>
                       {(combos ?? [])
                         .filter((c) => c.isActive)
                         .map((c) => (
@@ -406,7 +409,7 @@ export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrde
           {/* Order items */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <h3 className="font-semibold text-sm">Order Items</h3>
+              <h3 className="font-semibold text-sm">{t("orders.title")}</h3>
               <Button
                 type="button"
                 variant="outline"
@@ -422,7 +425,7 @@ export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrde
                 }
               >
                 <IconPlus className="h-3.5 w-3.5 mr-1" />
-                Add Item
+                {t("common.add")}
               </Button>
             </div>
 
@@ -433,7 +436,7 @@ export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrde
               >
                 <div className="grid grid-cols-2 gap-3">
                   <Field>
-                    <FieldLabel>Frame (optional)</FieldLabel>
+                    <FieldLabel>{t("orders.frame")}</FieldLabel>
                     <Controller
                       control={form.control}
                       name={`items.${index}.frameId`}
@@ -456,10 +459,10 @@ export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrde
                           }}
                         >
                           <SelectTrigger>
-                            <SelectValue placeholder="Select frame..." />
+                            <SelectValue placeholder={t("orders.selectFrame")} />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="none">No frame</SelectItem>
+                            <SelectItem value="none">{t("orders.noFrame")}</SelectItem>
                             {frames
                               .filter((fr) => fr.isActive && fr.stockQuantity > 0)
                               .filter(
@@ -479,7 +482,7 @@ export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrde
                   </Field>
 
                   <Field>
-                    <FieldLabel>Lens (optional)</FieldLabel>
+                    <FieldLabel>{t("orders.lens")}</FieldLabel>
                     <Controller
                       control={form.control}
                       name={`items.${index}.lensCatalogItemId`}
@@ -492,21 +495,20 @@ export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrde
                             if (lensId) {
                               const lens = lenses?.find((l) => l.id === lensId)
                               if (lens) {
-                                if (!form.getValues(`items.${index}.description`)) {
-                                  form.setValue(`items.${index}.description`, lens.name)
-                                }
-                                if (!form.getValues(`items.${index}.unitPrice`)) {
-                                  form.setValue(`items.${index}.unitPrice`, lens.sellingPrice)
-                                }
+                                form.setValue(
+                                  `items.${index}.description`,
+                                  `${lens.brand} ${lens.name}`,
+                                )
+                                form.setValue(`items.${index}.unitPrice`, lens.sellingPrice)
                               }
                             }
                           }}
                         >
                           <SelectTrigger>
-                            <SelectValue placeholder="Select lens..." />
+                            <SelectValue placeholder={t("orders.selectLens")} />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="none">No lens</SelectItem>
+                            <SelectItem value="none">{t("orders.noLens")}</SelectItem>
                             {(lenses ?? [])
                               .filter((l) => l.isActive)
                               .map((l) => (
@@ -522,7 +524,7 @@ export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrde
                 </div>
 
                 <Field>
-                  <FieldLabel>Description *</FieldLabel>
+                  <FieldLabel>{t("combos.description")} *</FieldLabel>
                   <Controller
                     control={form.control}
                     name={`items.${index}.description`}
@@ -537,14 +539,13 @@ export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrde
 
                 <div className="grid grid-cols-3 gap-3 items-end">
                   <Field>
-                    <FieldLabel>Unit Price (VND) *</FieldLabel>
+                    <FieldLabel>{t("common.price")} (VND) *</FieldLabel>
                     <Controller
                       control={form.control}
                       name={`items.${index}.unitPrice`}
                       render={({ field: f }) => (
-                        <Input
+                        <NumberInput
                           {...f}
-                          type="number"
                           min={0}
                           step={1000}
                         />
@@ -553,19 +554,19 @@ export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrde
                   </Field>
 
                   <Field>
-                    <FieldLabel>Quantity *</FieldLabel>
+                    <FieldLabel>{t("common.quantity")} *</FieldLabel>
                     <Controller
                       control={form.control}
                       name={`items.${index}.quantity`}
                       render={({ field: f }) => (
-                        <Input {...f} type="number" min={1} />
+                        <NumberInput {...f} min={1} />
                       )}
                     />
                   </Field>
 
                   <div className="flex items-end gap-2">
                     <div className="text-sm text-muted-foreground pb-2">
-                      Subtotal:{" "}
+                      {t("orders.subtotal")}:{" "}
                       <span className="font-semibold text-foreground">
                         {formatVND(
                           (Number(form.watch(`items.${index}.unitPrice`)) || 0) *
@@ -596,7 +597,7 @@ export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrde
             {/* Total price */}
             <div className="flex justify-end pt-2">
               <div className="text-right">
-                <span className="text-sm text-muted-foreground">Total Price:</span>
+                <span className="text-sm text-muted-foreground">{t("orders.totalPrice")}:</span>
                 <div className="text-xl font-bold">{formatVND(totalPrice)}</div>
               </div>
             </div>
@@ -606,7 +607,7 @@ export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrde
 
           {/* Notes */}
           <Field>
-            <FieldLabel>Notes (optional)</FieldLabel>
+            <FieldLabel>{t("orders.notes")}</FieldLabel>
             <Controller
               control={form.control}
               name="notes"
@@ -627,13 +628,13 @@ export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrde
               onClick={() => onOpenChange(false)}
               disabled={createMutation.isPending}
             >
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button type="submit" disabled={createMutation.isPending}>
               {createMutation.isPending && (
                 <IconLoader2 className="h-4 w-4 mr-2 animate-spin" />
               )}
-              Create Order
+              {t("orders.addOrder")}
             </Button>
           </DialogFooter>
         </form>

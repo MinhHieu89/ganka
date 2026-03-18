@@ -122,7 +122,8 @@ public static class CreateFrameHandler
             command.SellingPrice,
             command.CostPrice,
             command.Barcode,
-            new BranchId(currentUser.BranchId));
+            new BranchId(currentUser.BranchId),
+            command.StockQuantity);
 
         repository.Add(frame);
         await unitOfWork.SaveChangesAsync(ct);

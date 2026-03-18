@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import {
   IconArrowLeft,
   IconShieldCheck,
@@ -34,21 +35,21 @@ import {
   TableRow,
 } from "@/shared/components/Table"
 
-// Status timeline step definitions
-const STATUS_STEPS = [
-  { status: 0, label: "Ordered" },
-  { status: 1, label: "Processing" },
-  { status: 2, label: "Received" },
-  { status: 3, label: "Ready for Pickup" },
-  { status: 4, label: "Delivered" },
+// Status timeline step key mappings
+const STATUS_STEP_KEYS = [
+  { status: 0, key: "enums.orderStatus.ordered" },
+  { status: 1, key: "enums.orderStatus.processing" },
+  { status: 2, key: "enums.orderStatus.received" },
+  { status: 3, key: "enums.orderStatus.ready" },
+  { status: 4, key: "enums.orderStatus.delivered" },
 ]
 
 // Next status transitions per current status
-const NEXT_STATUS: Record<number, { status: number; label: string }> = {
-  0: { status: 1, label: "Advance to Processing" },
-  1: { status: 2, label: "Mark as Received" },
-  2: { status: 3, label: "Mark as Ready for Pickup" },
-  3: { status: 4, label: "Mark as Delivered" },
+const NEXT_STATUS_KEYS: Record<number, { status: number; key: string }> = {
+  0: { status: 1, key: "orders.startProcessing" },
+  1: { status: 2, key: "orders.markReceived" },
+  2: { status: 3, key: "orders.markReady" },
+  3: { status: 4, key: "orders.markDelivered" },
 }
 
 interface GlassesOrderDetailPageProps {
@@ -56,6 +57,7 @@ interface GlassesOrderDetailPageProps {
 }
 
 export function GlassesOrderDetailPage({ orderId }: GlassesOrderDetailPageProps) {
+  const { t } = useTranslation("optical")
   const router = useRouter()
   const { data: order, isLoading, error } = useGlassesOrderById(orderId)
   const updateStatus = useUpdateOrderStatus()
@@ -73,15 +75,16 @@ export function GlassesOrderDetailPage({ orderId }: GlassesOrderDetailPageProps)
     return (
       <div className="flex flex-col items-center justify-center py-20 gap-4">
         <IconAlertTriangle className="h-12 w-12 text-destructive" />
-        <p className="text-lg font-medium text-destructive">Failed to load order</p>
+        <p className="text-lg font-medium text-destructive">{t("common.noData")}</p>
         <p className="text-sm text-muted-foreground">
-          {error?.message ?? "Order not found"}
+          {error?.message ?? t("orders.orderNotFound")}
         </p>
       </div>
     )
   }
 
-  const nextStep = NEXT_STATUS[order.status]
+  const nextStepDef = NEXT_STATUS_KEYS[order.status]
+  const nextStep = nextStepDef ? { status: nextStepDef.status, label: t(nextStepDef.key) } : undefined
   const isPaymentGateBlocked =
     order.status === 0 && !order.isPaymentConfirmed && nextStep?.status === 1
 
@@ -101,7 +104,7 @@ export function GlassesOrderDetailPage({ orderId }: GlassesOrderDetailPageProps)
   const orderItems: OrderItem[] = []
   if (order.frameBrand && order.frameModel) {
     orderItems.push({
-      description: `Frame: ${order.frameBrand} ${order.frameModel}`,
+      description: `${t("orders.frame")}: ${order.frameBrand} ${order.frameModel}`,
       unitPrice: 0,
       quantity: 1,
       lineTotal: 0,
@@ -109,7 +112,7 @@ export function GlassesOrderDetailPage({ orderId }: GlassesOrderDetailPageProps)
   }
   if (order.lensName) {
     orderItems.push({
-      description: `Lens: ${order.lensName}`,
+      description: `${t("orders.lens")}: ${order.lensName}`,
       unitPrice: 0,
       quantity: 1,
       lineTotal: 0,
@@ -117,7 +120,7 @@ export function GlassesOrderDetailPage({ orderId }: GlassesOrderDetailPageProps)
   }
   if (order.comboPackageName) {
     orderItems.push({
-      description: `Package: ${order.comboPackageName}`,
+      description: `${t("orders.comboPackage")}: ${order.comboPackageName}`,
       unitPrice: order.totalPrice,
       quantity: 1,
       lineTotal: order.totalPrice,
@@ -153,7 +156,7 @@ export function GlassesOrderDetailPage({ orderId }: GlassesOrderDetailPageProps)
             />
           </div>
           <p className="text-muted-foreground text-sm mt-0.5">
-            Patient: <span className="font-medium text-foreground">{order.patientName}</span>
+            {t("orders.patient")}: <span className="font-medium text-foreground">{order.patientName}</span>
           </p>
         </div>
       </div>
@@ -168,7 +171,7 @@ export function GlassesOrderDetailPage({ orderId }: GlassesOrderDetailPageProps)
         <div className="flex items-center gap-2 p-3 rounded-lg bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800">
           <IconShieldCheck className="h-5 w-5 text-green-600 dark:text-green-400" />
           <span className="text-green-700 dark:text-green-300 text-sm font-medium">
-            Under Warranty
+            {t("warranty.withinWarranty")}
           </span>
           <span className="text-green-600 dark:text-green-400 text-sm">
             &mdash; Expires{" "}
@@ -184,14 +187,14 @@ export function GlassesOrderDetailPage({ orderId }: GlassesOrderDetailPageProps)
       {/* Status Timeline */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Order Progress</CardTitle>
+          <CardTitle className="text-base">{t("orders.status")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-center gap-0">
-            {STATUS_STEPS.map((step, index) => {
+            {STATUS_STEP_KEYS.map((step, index) => {
               const isCompleted = order.status > step.status
               const isCurrent = order.status === step.status
-              const isLast = index === STATUS_STEPS.length - 1
+              const isLast = index === STATUS_STEP_KEYS.length - 1
 
               return (
                 <div key={step.status} className="flex items-center flex-1">
@@ -224,7 +227,7 @@ export function GlassesOrderDetailPage({ orderId }: GlassesOrderDetailPageProps)
                             : "text-muted-foreground",
                       )}
                     >
-                      {step.label}
+                      {t(step.key)}
                     </span>
                   </div>
 
@@ -247,11 +250,11 @@ export function GlassesOrderDetailPage({ orderId }: GlassesOrderDetailPageProps)
       {nextStep && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Advance Order Status</CardTitle>
+            <CardTitle className="text-base">{t("orders.status")}</CardTitle>
             <CardDescription>
-              Current status:{" "}
+              {t("orders.currentStatus")}:{" "}
               <span className="font-medium">
-                {GLASSES_ORDER_STATUS_MAP[order.status] ?? `Status ${order.status}`}
+                {t(GLASSES_ORDER_STATUS_MAP[order.status] ?? `Status ${order.status}`)}
               </span>
             </CardDescription>
           </CardHeader>
@@ -259,10 +262,9 @@ export function GlassesOrderDetailPage({ orderId }: GlassesOrderDetailPageProps)
             {isPaymentGateBlocked && (
               <Alert variant="destructive">
                 <IconAlertTriangle className="h-4 w-4" />
-                <AlertTitle>Payment Required</AlertTitle>
+                <AlertTitle>{t("orders.paymentStatus")}</AlertTitle>
                 <AlertDescription>
-                  Payment must be completed before advancing to Processing. Please confirm payment
-                  in the billing module first.
+                  {t("orders.paymentRequired")}
                 </AlertDescription>
               </Alert>
             )}
@@ -281,7 +283,7 @@ export function GlassesOrderDetailPage({ orderId }: GlassesOrderDetailPageProps)
               {isPaymentGateBlocked && (
                 <span className="text-sm text-muted-foreground flex items-center gap-1.5">
                   <IconAlertTriangle className="h-4 w-4 text-destructive" />
-                  Payment must be completed before processing
+                  {t("orders.paymentRequired")}
                 </span>
               )}
             </div>
@@ -293,20 +295,20 @@ export function GlassesOrderDetailPage({ orderId }: GlassesOrderDetailPageProps)
         {/* Order Details */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Order Details</CardTitle>
+            <CardTitle className="text-base">{t("common.details")}</CardTitle>
           </CardHeader>
           <CardContent>
             <dl className="space-y-3">
               <div className="flex justify-between items-center">
-                <dt className="text-sm text-muted-foreground">Processing Type</dt>
+                <dt className="text-sm text-muted-foreground">{t("orders.processingType")}</dt>
                 <dd className="text-sm font-medium">
-                  {PROCESSING_TYPE_MAP[order.processingType] ??
-                    `Type ${order.processingType}`}
+                  {t(PROCESSING_TYPE_MAP[order.processingType] ??
+                    `Type ${order.processingType}`)}
                 </dd>
               </div>
               <Separator />
               <div className="flex justify-between items-center">
-                <dt className="text-sm text-muted-foreground">Estimated Delivery</dt>
+                <dt className="text-sm text-muted-foreground">{t("orders.estimatedDelivery")}</dt>
                 <dd className="text-sm font-medium">
                   {order.estimatedDeliveryDate ? (
                     <span
@@ -319,13 +321,13 @@ export function GlassesOrderDetailPage({ orderId }: GlassesOrderDetailPageProps)
                       {new Date(order.estimatedDeliveryDate).toLocaleDateString("vi-VN")}
                     </span>
                   ) : (
-                    <span className="text-muted-foreground">Not set</span>
+                    <span className="text-muted-foreground">—</span>
                   )}
                 </dd>
               </div>
               <Separator />
               <div className="flex justify-between items-center">
-                <dt className="text-sm text-muted-foreground">Created Date</dt>
+                <dt className="text-sm text-muted-foreground">{t("orders.createdAt")}</dt>
                 <dd className="text-sm font-medium">
                   {new Date(order.createdAt).toLocaleDateString("vi-VN")}
                 </dd>
@@ -334,7 +336,7 @@ export function GlassesOrderDetailPage({ orderId }: GlassesOrderDetailPageProps)
                 <>
                   <Separator />
                   <div className="flex justify-between items-center">
-                    <dt className="text-sm text-muted-foreground">Delivered Date</dt>
+                    <dt className="text-sm text-muted-foreground">{t("orders.deliveredAt")}</dt>
                     <dd className="text-sm font-medium">
                       {new Date(order.deliveredAt).toLocaleDateString("vi-VN")}
                     </dd>
@@ -343,7 +345,7 @@ export function GlassesOrderDetailPage({ orderId }: GlassesOrderDetailPageProps)
               )}
               <Separator />
               <div className="flex justify-between items-center">
-                <dt className="text-sm text-muted-foreground">Total Price</dt>
+                <dt className="text-sm text-muted-foreground">{t("orders.totalPrice")}</dt>
                 <dd className="text-sm font-bold tabular-nums">{formatVND(order.totalPrice)}</dd>
               </div>
             </dl>
@@ -353,7 +355,7 @@ export function GlassesOrderDetailPage({ orderId }: GlassesOrderDetailPageProps)
         {/* Payment Status */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Payment Status</CardTitle>
+            <CardTitle className="text-base">{t("orders.paymentStatus")}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center gap-3">
@@ -364,10 +366,10 @@ export function GlassesOrderDetailPage({ orderId }: GlassesOrderDetailPageProps)
                   </div>
                   <div>
                     <p className="font-medium text-green-700 dark:text-green-400">
-                      Payment Confirmed
+                      {t("enums.warrantyApproval.approved")}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      Order processing can proceed
+                      {t("orders.processingStarted")}
                     </p>
                   </div>
                 </>
@@ -378,10 +380,10 @@ export function GlassesOrderDetailPage({ orderId }: GlassesOrderDetailPageProps)
                   </div>
                   <div>
                     <p className="font-medium text-orange-700 dark:text-orange-400">
-                      Payment Pending
+                      {t("enums.warrantyApproval.pending")}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      Confirm payment before processing
+                      {t("orders.paymentRequired")}
                     </p>
                   </div>
                 </>
@@ -391,8 +393,7 @@ export function GlassesOrderDetailPage({ orderId }: GlassesOrderDetailPageProps)
             {!order.isPaymentConfirmed && (
               <Alert className="mt-4">
                 <AlertDescription className="text-sm">
-                  Visit the billing module to confirm payment for this order before it can be
-                  advanced to Processing.
+                  {t("orders.billingNote")}
                 </AlertDescription>
               </Alert>
             )}
@@ -403,17 +404,17 @@ export function GlassesOrderDetailPage({ orderId }: GlassesOrderDetailPageProps)
       {/* Items Table */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Order Items</CardTitle>
+          <CardTitle className="text-base">{t("orders.title")}</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           {orderItems.length > 0 ? (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Description</TableHead>
-                  <TableHead className="text-right">Unit Price</TableHead>
-                  <TableHead className="text-right">Qty</TableHead>
-                  <TableHead className="text-right">Line Total</TableHead>
+                  <TableHead>{t("combos.description")}</TableHead>
+                  <TableHead className="text-right">{t("common.price")}</TableHead>
+                  <TableHead className="text-right">{t("common.quantity")}</TableHead>
+                  <TableHead className="text-right">{t("orders.totalPrice")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -431,7 +432,7 @@ export function GlassesOrderDetailPage({ orderId }: GlassesOrderDetailPageProps)
                 ))}
                 <TableRow className="bg-muted/30">
                   <TableCell colSpan={3} className="font-semibold text-right">
-                    Total
+                    {t("orders.totalPrice")}
                   </TableCell>
                   <TableCell className="text-right tabular-nums font-bold">
                     {formatVND(order.totalPrice)}
@@ -441,8 +442,7 @@ export function GlassesOrderDetailPage({ orderId }: GlassesOrderDetailPageProps)
             </Table>
           ) : (
             <div className="px-6 py-8 text-center text-muted-foreground text-sm">
-              No item details available. Frame: {order.frameBrand ?? "None"} {order.frameModel ?? ""}{" "}
-              | Lens: {order.lensName ?? "None"}
+              {t("orders.noItems")}
             </div>
           )}
         </CardContent>
@@ -452,7 +452,7 @@ export function GlassesOrderDetailPage({ orderId }: GlassesOrderDetailPageProps)
       {order.notes && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Notes</CardTitle>
+            <CardTitle className="text-base">{t("orders.notes")}</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground whitespace-pre-wrap">{order.notes}</p>
@@ -466,17 +466,17 @@ export function GlassesOrderDetailPage({ orderId }: GlassesOrderDetailPageProps)
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
               <IconShieldCheck className="h-4 w-4" />
-              Warranty Information
+              {t("warranty.title")}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <dl className="space-y-2">
               <div className="flex justify-between">
-                <dt className="text-sm text-muted-foreground">Warranty Period</dt>
+                <dt className="text-sm text-muted-foreground">{t("warranty.warrantyExpiry")}</dt>
                 <dd className="text-sm font-medium">12 months from delivery</dd>
               </div>
               <div className="flex justify-between">
-                <dt className="text-sm text-muted-foreground">Expires</dt>
+                <dt className="text-sm text-muted-foreground">{t("warranty.warrantyExpiry")}</dt>
                 <dd className="text-sm font-medium">
                   {new Date(warrantyExpiryDate).toLocaleDateString("vi-VN", {
                     year: "numeric",
@@ -486,14 +486,14 @@ export function GlassesOrderDetailPage({ orderId }: GlassesOrderDetailPageProps)
                 </dd>
               </div>
               <div className="flex justify-between">
-                <dt className="text-sm text-muted-foreground">Status</dt>
+                <dt className="text-sm text-muted-foreground">{t("orders.status")}</dt>
                 <dd>
                   {order.isUnderWarranty ? (
                     <Badge className="bg-green-100 text-green-800 border-green-200 dark:bg-green-950/40 dark:text-green-300">
                       Active
                     </Badge>
                   ) : (
-                    <Badge variant="secondary">Expired</Badge>
+                    <Badge variant="secondary">{t("warranty.warrantyExpired")}</Badge>
                   )}
                 </dd>
               </div>

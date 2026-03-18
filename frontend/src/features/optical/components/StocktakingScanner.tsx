@@ -1,7 +1,8 @@
 import { useRef, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { IconBarcode, IconCheck, IconX } from "@tabler/icons-react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/Tabs"
-import { Input } from "@/shared/components/Input"
+import { NumberInput } from "@/shared/components/NumberInput"
 import { Button } from "@/shared/components/Button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card"
 import { Badge } from "@/shared/components/Badge"
@@ -27,6 +28,7 @@ interface ScannedItem {
 }
 
 export function StocktakingScanner({ sessionId, onItemRecorded }: StocktakingScannerProps) {
+  const { t } = useTranslation("optical")
   const [scannedBarcode, setScannedBarcode] = useState("")
   const [physicalCount, setPhysicalCount] = useState<number>(1)
   const [recentItems, setRecentItems] = useState<ScannedItem[]>([])
@@ -100,19 +102,19 @@ export function StocktakingScanner({ sessionId, onItemRecorded }: StocktakingSca
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-base">
             <IconBarcode className="h-5 w-5" />
-            Scan Item
+            {t("stocktaking.scanBarcode")}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <Tabs defaultValue="usb">
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="usb">USB Scanner</TabsTrigger>
-              <TabsTrigger value="camera">Camera Scanner</TabsTrigger>
+              <TabsTrigger value="usb">USB</TabsTrigger>
+              <TabsTrigger value="camera">Camera</TabsTrigger>
             </TabsList>
 
             <TabsContent value="usb" className="space-y-3 pt-3">
               <div>
-                <label className="mb-1.5 block text-sm font-medium">Barcode</label>
+                <label className="mb-1.5 block text-sm font-medium">{t("stocktaking.barcode")}</label>
                 <BarcodeScannerInput
                   onScan={handleBarcodeScanned}
                   autoFocus
@@ -137,10 +139,9 @@ export function StocktakingScanner({ sessionId, onItemRecorded }: StocktakingSca
 
           <div className="flex gap-3">
             <div className="flex-1">
-              <label className="mb-1.5 block text-sm font-medium">Physical Count</label>
-              <Input
+              <label className="mb-1.5 block text-sm font-medium">{t("stocktaking.physicalCount")}</label>
+              <NumberInput
                 ref={physicalCountRef}
-                type="number"
                 min={0}
                 value={physicalCount}
                 onChange={(e) => setPhysicalCount(parseInt(e.target.value, 10) || 0)}
@@ -155,7 +156,7 @@ export function StocktakingScanner({ sessionId, onItemRecorded }: StocktakingSca
                 className="shrink-0"
               >
                 <IconCheck className="mr-1.5 h-4 w-4" />
-                Record
+                {t("stocktaking.counted")}
               </Button>
             </div>
           </div>
@@ -213,7 +214,7 @@ export function StocktakingScanner({ sessionId, onItemRecorded }: StocktakingSca
       {recentItems.length === 0 && (
         <div className="text-muted-foreground flex flex-col items-center justify-center py-8 text-sm">
           <IconX className="mb-2 h-8 w-8 opacity-20" />
-          No items scanned yet. Scan a barcode to begin.
+          {t("stocktaking.empty")}
         </div>
       )}
     </div>

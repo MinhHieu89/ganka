@@ -1,4 +1,5 @@
 import { useEffect } from "react"
+import { useTranslation } from "react-i18next"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
@@ -12,6 +13,7 @@ import {
   DialogTitle,
 } from "@/shared/components/Dialog"
 import { Input } from "@/shared/components/Input"
+import { NumberInput } from "@/shared/components/NumberInput"
 import { Button } from "@/shared/components/Button"
 import { Field, FieldLabel, FieldError } from "@/shared/components/Field"
 import {
@@ -30,7 +32,9 @@ import {
 import {
   useCreateFrame,
   useUpdateFrame,
+  opticalKeys,
 } from "@/features/optical/api/optical-queries"
+import { useQueryClient } from "@tanstack/react-query"
 
 const frameFormSchema = z.object({
   brand: z.string().min(1, "required").max(100),
@@ -83,6 +87,8 @@ export function FrameFormDialog({
   open,
   onOpenChange,
 }: FrameFormDialogProps) {
+  const queryClient = useQueryClient()
+  const { t } = useTranslation("optical")
   const createMutation = useCreateFrame()
   const updateMutation = useUpdateFrame()
 
@@ -163,11 +169,12 @@ export function FrameFormDialog({
     try {
       if (mode === "create") {
         await createMutation.mutateAsync(command)
-        toast.success("Frame created successfully")
+        toast.success(t("frames.created"))
       } else if (frame) {
-        await updateMutation.mutateAsync({ id: frame.id, ...command })
-        toast.success("Frame updated successfully")
+        await updateMutation.mutateAsync({ id: frame.id, ...command, stockQuantity: data.stockQuantity ?? frame.stockQuantity, isActive: frame.isActive })
+        toast.success(t("frames.updated"))
       }
+      await queryClient.invalidateQueries({ queryKey: opticalKeys.frames.all() })
       onOpenChange(false)
     } catch {
       // onError callback in mutation handles toast
@@ -187,7 +194,7 @@ export function FrameFormDialog({
       <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
-            {mode === "create" ? "Add Frame" : "Edit Frame"}
+            {mode === "create" ? t("frames.addFrame") : t("frames.editFrame")}
           </DialogTitle>
         </DialogHeader>
 
@@ -199,7 +206,7 @@ export function FrameFormDialog({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>Brand</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>{t("frames.brand")}</FieldLabel>
                   <Input
                     {...field}
                     id={field.name}
@@ -217,7 +224,7 @@ export function FrameFormDialog({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>Model</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>{t("frames.model")}</FieldLabel>
                   <Input
                     {...field}
                     id={field.name}
@@ -237,7 +244,7 @@ export function FrameFormDialog({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
-                <FieldLabel htmlFor={field.name}>Color</FieldLabel>
+                <FieldLabel htmlFor={field.name}>{t("frames.color")}</FieldLabel>
                 <Input
                   {...field}
                   id={field.name}
@@ -252,21 +259,19 @@ export function FrameFormDialog({
 
           {/* Size fields */}
           <div className="space-y-1">
-            <p className="text-sm font-medium">Size (Lens Width - Bridge Width - Temple Length)</p>
+            <p className="text-sm font-medium">{t("frames.size")}</p>
             <div className="grid grid-cols-3 gap-4">
               <Controller
                 name="lensWidth"
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid || undefined}>
-                    <FieldLabel htmlFor={field.name}>Lens Width (40-65)</FieldLabel>
-                    <Input
+                    <FieldLabel htmlFor={field.name}>{t("frames.lensWidth")}</FieldLabel>
+                    <NumberInput
                       {...field}
                       id={field.name}
-                      type="number"
                       min={40}
                       max={65}
-                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
                       aria-invalid={fieldState.invalid || undefined}
                     />
                     {fieldState.error && (
@@ -281,14 +286,12 @@ export function FrameFormDialog({
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid || undefined}>
-                    <FieldLabel htmlFor={field.name}>Bridge Width (12-24)</FieldLabel>
-                    <Input
+                    <FieldLabel htmlFor={field.name}>{t("frames.bridgeWidth")}</FieldLabel>
+                    <NumberInput
                       {...field}
                       id={field.name}
-                      type="number"
                       min={12}
                       max={24}
-                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
                       aria-invalid={fieldState.invalid || undefined}
                     />
                     {fieldState.error && (
@@ -303,14 +306,12 @@ export function FrameFormDialog({
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid || undefined}>
-                    <FieldLabel htmlFor={field.name}>Temple Length (120-155)</FieldLabel>
-                    <Input
+                    <FieldLabel htmlFor={field.name}>{t("frames.templeLength")}</FieldLabel>
+                    <NumberInput
                       {...field}
                       id={field.name}
-                      type="number"
                       min={120}
                       max={155}
-                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
                       aria-invalid={fieldState.invalid || undefined}
                     />
                     {fieldState.error && (
@@ -329,7 +330,7 @@ export function FrameFormDialog({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel>Material</FieldLabel>
+                  <FieldLabel>{t("frames.material")}</FieldLabel>
                   <Select
                     value={String(field.value)}
                     onValueChange={(v) => field.onChange(Number(v))}
@@ -340,7 +341,7 @@ export function FrameFormDialog({
                     <SelectContent>
                       {Object.entries(FRAME_MATERIAL_MAP).map(([value, label]) => (
                         <SelectItem key={value} value={value}>
-                          {label}
+                          {t(label)}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -357,7 +358,7 @@ export function FrameFormDialog({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel>Frame Type</FieldLabel>
+                  <FieldLabel>{t("frames.frameType")}</FieldLabel>
                   <Select
                     value={String(field.value)}
                     onValueChange={(v) => field.onChange(Number(v))}
@@ -368,7 +369,7 @@ export function FrameFormDialog({
                     <SelectContent>
                       {Object.entries(FRAME_TYPE_MAP).map(([value, label]) => (
                         <SelectItem key={value} value={value}>
-                          {label}
+                          {t(label)}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -385,7 +386,7 @@ export function FrameFormDialog({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel>Gender</FieldLabel>
+                  <FieldLabel>{t("frames.gender")}</FieldLabel>
                   <Select
                     value={String(field.value)}
                     onValueChange={(v) => field.onChange(Number(v))}
@@ -396,7 +397,7 @@ export function FrameFormDialog({
                     <SelectContent>
                       {Object.entries(FRAME_GENDER_MAP).map(([value, label]) => (
                         <SelectItem key={value} value={value}>
-                          {label}
+                          {t(label)}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -416,13 +417,11 @@ export function FrameFormDialog({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>Selling Price (VND)</FieldLabel>
-                  <Input
+                  <FieldLabel htmlFor={field.name}>{t("frames.sellingPrice")} (VND)</FieldLabel>
+                  <NumberInput
                     {...field}
                     id={field.name}
-                    type="number"
                     min={0}
-                    onChange={(e) => field.onChange(e.target.valueAsNumber)}
                     aria-invalid={fieldState.invalid || undefined}
                   />
                   {fieldState.error && (
@@ -437,13 +436,11 @@ export function FrameFormDialog({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>Cost Price (VND)</FieldLabel>
-                  <Input
+                  <FieldLabel htmlFor={field.name}>{t("frames.costPrice")} (VND)</FieldLabel>
+                  <NumberInput
                     {...field}
                     id={field.name}
-                    type="number"
                     min={0}
-                    onChange={(e) => field.onChange(e.target.valueAsNumber)}
                     aria-invalid={fieldState.invalid || undefined}
                   />
                   {fieldState.error && (
@@ -462,7 +459,7 @@ export function FrameFormDialog({
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
                   <FieldLabel htmlFor={field.name}>
-                    Barcode (EAN-13, optional)
+                    {t("frames.barcode")} (EAN-13)
                   </FieldLabel>
                   <Input
                     {...field}
@@ -483,13 +480,11 @@ export function FrameFormDialog({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>Stock Quantity</FieldLabel>
-                  <Input
+                  <FieldLabel htmlFor={field.name}>{t("frames.stock")}</FieldLabel>
+                  <NumberInput
                     {...field}
                     id={field.name}
-                    type="number"
                     min={0}
-                    onChange={(e) => field.onChange(e.target.valueAsNumber)}
                     aria-invalid={fieldState.invalid || undefined}
                   />
                   {fieldState.error && (
@@ -506,13 +501,13 @@ export function FrameFormDialog({
               variant="outline"
               onClick={() => onOpenChange(false)}
             >
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting && (
                 <IconLoader2 className="h-4 w-4 mr-2 animate-spin" />
               )}
-              Save
+              {t("common.save")}
             </Button>
           </DialogFooter>
         </form>

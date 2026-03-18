@@ -1,5 +1,6 @@
 using Optical.Application.Interfaces;
 using Optical.Contracts.Dtos;
+using Shared.Domain;
 
 namespace Optical.Application.Features.Combos;
 
@@ -14,7 +15,7 @@ public sealed record GetComboPackagesQuery(bool IncludeInactive = false);
 /// </summary>
 public static class GetComboPackagesHandler
 {
-    public static async Task<List<ComboPackageDto>> Handle(
+    public static async Task<Result<List<ComboPackageDto>>> Handle(
         GetComboPackagesQuery query,
         IComboPackageRepository repository,
         IFrameRepository frameRepository,

@@ -1,10 +1,13 @@
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import {
   useReactTable,
   getCoreRowModel,
+  getExpandedRowModel,
   type ColumnDef,
+  type ExpandedState,
 } from "@tanstack/react-table"
-import { IconPlus, IconCheck, IconX, IconLoader2, IconChevronDown, IconChevronRight } from "@tabler/icons-react"
+import { IconPlus, IconCheck, IconX, IconLoader2, IconChevronDown, IconChevronRight, IconDots } from "@tabler/icons-react"
 import { toast } from "sonner"
 import { Button } from "@/shared/components/Button"
 import { Badge } from "@/shared/components/Badge"
@@ -21,6 +24,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/shared/components/AlertDialog"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/shared/components/DropdownMenu"
 import { useWarrantyClaims, useApproveWarrantyClaim } from "@/features/optical/api/optical-queries"
 import type { WarrantyClaimDto } from "@/features/optical/api/optical-api"
 import { WARRANTY_RESOLUTION_MAP, WARRANTY_APPROVAL_STATUS_MAP } from "@/features/optical/api/optical-api"
@@ -37,34 +46,28 @@ const APPROVAL_FILTER_STATUS: Record<ApprovalFilter, number | undefined> = {
   Rejected: 2,
 }
 
-function getResolutionLabel(resolutionType: number): string {
-  return WARRANTY_RESOLUTION_MAP[resolutionType] ?? "Unknown"
-}
-
-function getApprovalLabel(approvalStatus: number): string {
-  return WARRANTY_APPROVAL_STATUS_MAP[approvalStatus] ?? "Unknown"
-}
-
-function ResolutionBadge({ resolutionType }: { resolutionType: number }) {
-  const label = getResolutionLabel(resolutionType)
-  const variantMap: Record<string, "default" | "secondary" | "outline"> = {
-    Replace: "default",
-    Repair: "secondary",
-    Discount: "outline",
+function ResolutionBadge({ resolution }: { resolution: number }) {
+  const { t } = useTranslation("optical")
+  const label = t(WARRANTY_RESOLUTION_MAP[resolution] ?? "Unknown")
+  const variantMap: Record<number, "default" | "secondary" | "outline"> = {
+    0: "default",   // Replace
+    1: "secondary",  // Repair
+    2: "outline",    // Discount
   }
-  return <Badge variant={variantMap[label] ?? "outline"}>{label}</Badge>
+  return <Badge variant={variantMap[resolution] ?? "outline"}>{label}</Badge>
 }
 
 function ApprovalStatusBadge({ approvalStatus }: { approvalStatus: number }) {
-  const label = getApprovalLabel(approvalStatus)
-  if (label === "Approved") {
+  const { t } = useTranslation("optical")
+  const label = t(WARRANTY_APPROVAL_STATUS_MAP[approvalStatus] ?? "Unknown")
+  if (approvalStatus === 1) {
     return (
       <Badge className="bg-green-100 text-green-800 border-green-200 hover:bg-green-100">
         {label}
       </Badge>
     )
   }
-  if (label === "Rejected") {
+  if (approvalStatus === 2) {
     return (
       <Badge className="bg-red-100 text-red-800 border-red-200 hover:bg-red-100">
         {label}
@@ -84,23 +87,24 @@ interface ApprovalDialogState {
 }
 
 function ClaimDetailsSubRow({ claim }: { claim: WarrantyClaimDto }) {
+  const { t } = useTranslation("optical")
   return (
     <div className="bg-muted/30 px-6 py-4 space-y-3 border-t">
       <div className="grid grid-cols-2 gap-4 text-sm">
         <div>
-          <span className="text-muted-foreground font-medium">Assessment Notes:</span>
-          <p className="mt-1">{claim.notes ?? "—"}</p>
+          <span className="text-muted-foreground font-medium">{t("warranty.assessmentNotes")}:</span>
+          <p className="mt-1">{claim.assessmentNotes ?? "—"}</p>
         </div>
         {claim.approvalNotes && (
           <div>
-            <span className="text-muted-foreground font-medium">Approval Notes:</span>
+            <span className="text-muted-foreground font-medium">{t("warranty.approvedBy")}:</span>
             <p className="mt-1">{claim.approvalNotes}</p>
           </div>
         )}
       </div>
-      {claim.documentUrls.length > 0 && (
+      {(claim.documentUrls?.length ?? 0) > 0 && (
         <div>
-          <span className="text-muted-foreground font-medium text-sm">Supporting Documents:</span>
+          <span className="text-muted-foreground font-medium text-sm">{t("warranty.documents")}:</span>
           <WarrantyDocumentUpload
             claimId={claim.id}
             existingDocuments={claim.documentUrls}
@@ -113,11 +117,12 @@ function ClaimDetailsSubRow({ claim }: { claim: WarrantyClaimDto }) {
 }
 
 export function WarrantyClaimsPage() {
+  const { t } = useTranslation("optical")
   const [activeFilter, setActiveFilter] = useState<ApprovalFilter>("All")
   const [page] = useState(1)
   const [formOpen, setFormOpen] = useState(false)
   const [approvalDialog, setApprovalDialog] = useState<ApprovalDialogState | null>(null)
-  const [expandedClaimId, setExpandedClaimId] = useState<string | null>(null)
+  const [expanded, setExpanded] = useState<ExpandedState>({})
 
   const approvalStatusFilter = APPROVAL_FILTER_STATUS[activeFilter]
   const { data, isLoading } = useWarrantyClaims({
@@ -138,7 +143,7 @@ export function WarrantyClaimsPage() {
         approve: approvalDialog.approve,
       })
       toast.success(
-        approvalDialog.approve ? "Warranty claim approved." : "Warranty claim rejected.",
+        approvalDialog.approve ? t("warranty.approved") : t("warranty.rejected"),
       )
     } catch {
       // error handled in mutation
@@ -151,30 +156,27 @@ export function WarrantyClaimsPage() {
     {
       id: "expand",
       size: 40,
-      cell: ({ row }) => {
-        const isExpanded = expandedClaimId === row.original.id
-        return (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-7 w-7"
-            onClick={(e) => {
-              e.stopPropagation()
-              setExpandedClaimId(isExpanded ? null : row.original.id)
-            }}
-          >
-            {isExpanded ? (
-              <IconChevronDown className="h-4 w-4" />
-            ) : (
-              <IconChevronRight className="h-4 w-4" />
-            )}
-          </Button>
-        )
-      },
+      cell: ({ row }) => (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-7 w-7"
+          onClick={(e) => {
+            e.stopPropagation()
+            row.toggleExpanded()
+          }}
+        >
+          {row.getIsExpanded() ? (
+            <IconChevronDown className="h-4 w-4" />
+          ) : (
+            <IconChevronRight className="h-4 w-4" />
+          )}
+        </Button>
+      ),
     },
     {
       accessorKey: "claimDate",
-      header: "Claim Date",
+      header: t("warranty.claimDate"),
       cell: ({ row }) => {
         try {
           return format(new Date(row.original.claimDate), "dd/MM/yyyy")
@@ -185,74 +187,81 @@ export function WarrantyClaimsPage() {
     },
     {
       accessorKey: "patientName",
-      header: "Patient",
+      header: t("warranty.patient"),
     },
     {
       accessorKey: "glassesOrderId",
-      header: "Order",
+      header: t("warranty.order"),
       cell: ({ row }) => (
         <span className="font-mono text-sm">{row.original.glassesOrderId.slice(0, 8)}</span>
       ),
     },
     {
-      accessorKey: "resolutionType",
-      header: "Resolution",
-      cell: ({ row }) => <ResolutionBadge resolutionType={row.original.resolutionType} />,
+      accessorKey: "resolution",
+      header: t("warranty.resolution"),
+      cell: ({ row }) => <ResolutionBadge resolution={row.original.resolution} />,
     },
     {
       accessorKey: "approvalStatus",
-      header: "Approval Status",
+      header: t("warranty.approvalStatus"),
       cell: ({ row }) => <ApprovalStatusBadge approvalStatus={row.original.approvalStatus} />,
     },
     {
       accessorKey: "documentUrls",
-      header: "Documents",
+      header: t("warranty.documents"),
       cell: ({ row }) => (
         <span className="text-muted-foreground text-sm">
-          {row.original.documentUrls.length} file
-          {row.original.documentUrls.length !== 1 ? "s" : ""}
+          {row.original.documentUrls?.length ?? 0} file
+          {(row.original.documentUrls?.length ?? 0) !== 1 ? "s" : ""}
         </span>
       ),
     },
     {
       id: "actions",
-      header: "Actions",
+      header: t("common.actions"),
       cell: ({ row }) => {
         const claim = row.original
-        // Replace claims (resolutionType=0) that are Pending (approvalStatus=0) show approve/reject
-        const isReplace = claim.resolutionType === 0
+        // Replace claims (resolution=0) that are Pending (approvalStatus=0) show approve/reject
+        const isReplace = claim.resolution === 0
         const isPending = claim.approvalStatus === 0
 
         if (isReplace && isPending) {
           return (
-            <div className="flex items-center gap-1">
-              <Button
-                variant="outline"
-                size="sm"
-                className="h-7 text-green-700 border-green-300 hover:bg-green-50"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setApprovalDialog({ claimId: claim.id, approve: true })
-                }}
-                disabled={approveMutation.isPending}
-              >
-                <IconCheck className="h-3 w-3 mr-1" />
-                Approve
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="h-7 text-red-700 border-red-300 hover:bg-red-50"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setApprovalDialog({ claimId: claim.id, approve: false })
-                }}
-                disabled={approveMutation.isPending}
-              >
-                <IconX className="h-3 w-3 mr-1" />
-                Reject
-              </Button>
-            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={(e) => e.stopPropagation()}
+                  disabled={approveMutation.isPending}
+                >
+                  <IconDots className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem
+                  className="text-green-700 focus:text-green-700"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setApprovalDialog({ claimId: claim.id, approve: true })
+                  }}
+                >
+                  <IconCheck className="h-4 w-4 mr-2" />
+                  {t("enums.warrantyApproval.approved")}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="text-red-700 focus:text-red-700"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setApprovalDialog({ claimId: claim.id, approve: false })
+                  }}
+                >
+                  <IconX className="h-4 w-4 mr-2" />
+                  {t("enums.warrantyApproval.rejected")}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           )
         }
         return null
@@ -263,7 +272,10 @@ export function WarrantyClaimsPage() {
   const table = useReactTable({
     data: claims,
     columns,
+    state: { expanded },
+    onExpandedChange: setExpanded,
     getCoreRowModel: getCoreRowModel(),
+    getExpandedRowModel: getExpandedRowModel(),
   })
 
   return (
@@ -271,14 +283,14 @@ export function WarrantyClaimsPage() {
       {/* Page header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Warranty Claims</h1>
+          <h1 className="text-2xl font-bold">{t("warranty.title")}</h1>
           <p className="text-sm text-muted-foreground mt-0.5">
-            Manage warranty claims and approvals for delivered glasses orders.
+            {t("warranty.subtitle")}
           </p>
         </div>
         <Button onClick={() => setFormOpen(true)}>
           <IconPlus className="h-4 w-4 mr-2" />
-          File Claim
+          {t("warranty.addClaim")}
         </Button>
       </div>
 
@@ -288,10 +300,10 @@ export function WarrantyClaimsPage() {
         onValueChange={(v) => setActiveFilter(v as ApprovalFilter)}
       >
         <TabsList>
-          <TabsTrigger value="All">All</TabsTrigger>
-          <TabsTrigger value="Pending">Pending Approval</TabsTrigger>
-          <TabsTrigger value="Approved">Approved</TabsTrigger>
-          <TabsTrigger value="Rejected">Rejected</TabsTrigger>
+          <TabsTrigger value="All">{t("common.all")}</TabsTrigger>
+          <TabsTrigger value="Pending">{t("warranty.pendingApproval")}</TabsTrigger>
+          <TabsTrigger value="Approved">{t("enums.warrantyApproval.approved")}</TabsTrigger>
+          <TabsTrigger value="Rejected">{t("enums.warrantyApproval.rejected")}</TabsTrigger>
         </TabsList>
       </Tabs>
 
@@ -306,10 +318,8 @@ export function WarrantyClaimsPage() {
         <DataTable
           table={table}
           columns={columns}
-          emptyMessage="No warranty claims found."
-          renderSubRow={(claim) =>
-            expandedClaimId === claim.id ? <ClaimDetailsSubRow claim={claim} /> : null
-          }
+          emptyMessage={t("warranty.empty")}
+          renderSubRow={(claim) => <ClaimDetailsSubRow claim={claim} />}
         />
       )}
 
@@ -327,17 +337,17 @@ export function WarrantyClaimsPage() {
           <AlertDialogHeader>
             <AlertDialogTitle>
               {approvalDialog?.approve
-                ? "Approve Warranty Claim"
-                : "Reject Warranty Claim"}
+                ? t("warranty.approved")
+                : t("warranty.rejected")}
             </AlertDialogTitle>
             <AlertDialogDescription>
               {approvalDialog?.approve
-                ? "Are you sure you want to approve this replacement warranty claim? This action will authorize the replacement."
-                : "Are you sure you want to reject this replacement warranty claim? This action cannot be undone."}
+                ? t("warranty.requiresManagerApproval")
+                : t("warranty.rejectedReason")}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleApprovalConfirm}
               className={
@@ -350,7 +360,7 @@ export function WarrantyClaimsPage() {
               {approveMutation.isPending && (
                 <IconLoader2 className="h-4 w-4 mr-2 animate-spin" />
               )}
-              {approvalDialog?.approve ? "Approve" : "Reject"}
+              {approvalDialog?.approve ? t("enums.warrantyApproval.approved") : t("enums.warrantyApproval.rejected")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

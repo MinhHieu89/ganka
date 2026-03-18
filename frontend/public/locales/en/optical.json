@@ -74,7 +74,14 @@
     "lowStockAlert": "Low stock alert",
     "totalStock": "Total Stock",
     "adjustStock": "Adjust Stock",
-    "stockAdjusted": "Stock adjusted successfully"
+    "lowStockCount": "{{count}} entry low",
+    "stockOk": "All adequate",
+    "stockAdjusted": "Stock adjusted successfully",
+    "stockAdjustHint": "add or adjust stock for a power combination",
+    "quantityChange": "Quantity Change",
+    "quantityChangeHint": "Enter positive to add, negative to remove",
+    "currentQty": "Current",
+    "afterAdjust": "After adjustment"
   },
   "orders": {
     "title": "Glasses Orders",
@@ -118,7 +125,21 @@
     "selectLens": "Select Lens",
     "lensOrder": "Lens Order",
     "supplier": "Supplier",
-    "lensOrderStatus": "Lens Order Status"
+    "lensOrderStatus": "Lens Order Status",
+    "searchPatient": "Search by name or code...",
+    "selectVisit": "Select visit...",
+    "noActiveVisits": "No active visits",
+    "enterPrescription": "Enter optical prescription ID from visit",
+    "selectDate": "Select date...",
+    "noCombo": "No combo",
+    "noFrame": "No frame",
+    "noLens": "No lens",
+    "subtotal": "Subtotal",
+    "itemsSection": "Order Items",
+    "currentStatus": "Current status",
+    "billingNote": "Visit the billing module to confirm payment for this order before it can be advanced to Processing.",
+    "noItems": "No item details available",
+    "orderNotFound": "Order not found"
   },
   "combos": {
     "title": "Combo Packages",
@@ -142,7 +163,11 @@
     "deleted": "Combo package deleted successfully",
     "selectFrame": "Select Frame",
     "selectLens": "Select Lens",
-    "youSave": "You save {{amount}}"
+    "youSave": "You save {{amount}}",
+    "namePlaceholder": "e.g. Rayban Classic + Essilor Crizal SV",
+    "descriptionPlaceholder": "Optional details about the combo contents...",
+    "anyFrame": "Any frame",
+    "anyLens": "Any lens"
   },
   "warranty": {
     "title": "Warranty Claims",
@@ -233,7 +258,14 @@
     "barcode": "Barcode",
     "counted": "Counted",
     "discrepancyReport": "Discrepancy Report",
-    "exportReport": "Export Report"
+    "exportReport": "Export Report",
+    "cameraScanner": "Camera Scanner",
+    "cameraHintActive": "Point camera at barcode",
+    "cameraHintInactive": "Use camera to scan barcodes",
+    "startCamera": "Start Camera",
+    "stopCamera": "Stop",
+    "cameraOff": "Camera is off. Click \"Start Camera\" to begin scanning.",
+    "resume": "Resume"
   },
   "common": {
     "active": "Active",

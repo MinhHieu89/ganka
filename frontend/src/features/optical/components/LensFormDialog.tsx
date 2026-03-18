@@ -1,4 +1,5 @@
-import { useEffect } from "react"
+import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
@@ -12,6 +13,7 @@ import {
   DialogTitle,
 } from "@/shared/components/Dialog"
 import { Input } from "@/shared/components/Input"
+import { NumberInput } from "@/shared/components/NumberInput"
 import { Button } from "@/shared/components/Button"
 import { Checkbox } from "@/shared/components/Checkbox"
 import { Field, FieldLabel, FieldError } from "@/shared/components/Field"
@@ -106,48 +108,34 @@ function CatalogItemForm({
   lens?: LensCatalogItemDto
   onClose: () => void
 }) {
+  const { t } = useTranslation("optical")
   const createMutation = useCreateLensCatalogItem()
   const updateMutation = useUpdateLensCatalogItem()
 
   const form = useForm<CatalogFormValues>({
     resolver: zodResolver(catalogSchema),
-    defaultValues: {
-      brand: "",
-      name: "",
-      lensType: "single_vision",
-      material: 0,
-      availableCoatings: 0,
-      sellingPrice: 0,
-      costPrice: 0,
-      preferredSupplierId: null,
-    },
+    defaultValues: lens
+      ? {
+          brand: lens.brand,
+          name: lens.name,
+          lensType: lens.lensType,
+          material: lens.material,
+          availableCoatings: lens.availableCoatings,
+          sellingPrice: lens.sellingPrice,
+          costPrice: lens.costPrice,
+          preferredSupplierId: lens.preferredSupplierId,
+        }
+      : {
+          brand: "",
+          name: "",
+          lensType: "single_vision",
+          material: 0,
+          availableCoatings: 0,
+          sellingPrice: 0,
+          costPrice: 0,
+          preferredSupplierId: null,
+        },
   })
-
-  useEffect(() => {
-    if (!lens) {
-      form.reset({
-        brand: "",
-        name: "",
-        lensType: "single_vision",
-        material: 0,
-        availableCoatings: 0,
-        sellingPrice: 0,
-        costPrice: 0,
-        preferredSupplierId: null,
-      })
-    } else {
-      form.reset({
-        brand: lens.brand,
-        name: lens.name,
-        lensType: lens.lensType,
-        material: lens.material,
-        availableCoatings: lens.availableCoatings,
-        sellingPrice: lens.sellingPrice,
-        costPrice: lens.costPrice,
-        preferredSupplierId: lens.preferredSupplierId,
-      })
-    }
-  }, [lens, form])
 
   const isSubmitting = createMutation.isPending || updateMutation.isPending
 
@@ -164,7 +152,7 @@ function CatalogItemForm({
           costPrice: data.costPrice,
           preferredSupplierId: data.preferredSupplierId ?? null,
         })
-        toast.success("Lens catalog item created")
+        toast.success(t("lenses.created"))
       } else if (lens) {
         await updateMutation.mutateAsync({
           id: lens.id,
@@ -178,7 +166,7 @@ function CatalogItemForm({
           preferredSupplierId: data.preferredSupplierId ?? null,
           isActive: lens.isActive,
         })
-        toast.success("Lens catalog item updated")
+        toast.success(t("lenses.updated"))
       }
       onClose()
     } catch {
@@ -204,7 +192,7 @@ function CatalogItemForm({
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid || undefined}>
-              <FieldLabel htmlFor={field.name}>Brand</FieldLabel>
+              <FieldLabel htmlFor={field.name}>{t("lenses.brand")}</FieldLabel>
               <Input {...field} id={field.name} aria-invalid={fieldState.invalid || undefined} />
               {fieldState.error && (
                 <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
@@ -218,7 +206,7 @@ function CatalogItemForm({
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid || undefined}>
-              <FieldLabel htmlFor={field.name}>Name</FieldLabel>
+              <FieldLabel htmlFor={field.name}>{t("lenses.name")}</FieldLabel>
               <Input {...field} id={field.name} aria-invalid={fieldState.invalid || undefined} />
               {fieldState.error && (
                 <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
@@ -234,7 +222,7 @@ function CatalogItemForm({
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid || undefined}>
-              <FieldLabel>Lens Type</FieldLabel>
+              <FieldLabel>{t("lenses.lensType")}</FieldLabel>
               <Select value={field.value} onValueChange={field.onChange}>
                 <SelectTrigger>
                   <SelectValue />
@@ -242,7 +230,7 @@ function CatalogItemForm({
                 <SelectContent>
                   {LENS_TYPE_OPTIONS.map((opt) => (
                     <SelectItem key={opt.value} value={opt.value}>
-                      {opt.label}
+                      {t(opt.label)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -259,7 +247,7 @@ function CatalogItemForm({
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid || undefined}>
-              <FieldLabel>Material</FieldLabel>
+              <FieldLabel>{t("lenses.material")}</FieldLabel>
               <Select
                 value={String(field.value)}
                 onValueChange={(v) => field.onChange(Number(v))}
@@ -270,7 +258,7 @@ function CatalogItemForm({
                 <SelectContent>
                   {Object.entries(LENS_MATERIAL_MAP).map(([value, label]) => (
                     <SelectItem key={value} value={value}>
-                      {label}
+                      {t(label)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -284,7 +272,7 @@ function CatalogItemForm({
       </div>
 
       <div>
-        <FieldLabel className="mb-2 block">Available Coatings</FieldLabel>
+        <FieldLabel className="mb-2 block">{t("lenses.coatings")}</FieldLabel>
         <div className="grid grid-cols-2 gap-2">
           {LENS_COATING_BITS.map((bit) => (
             <label
@@ -295,7 +283,7 @@ function CatalogItemForm({
                 checked={currentCoatings.includes(bit)}
                 onCheckedChange={() => toggleCoating(bit)}
               />
-              {LENS_COATING_MAP[bit]}
+              {t(LENS_COATING_MAP[bit])}
             </label>
           ))}
         </div>
@@ -307,14 +295,12 @@ function CatalogItemForm({
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid || undefined}>
-              <FieldLabel htmlFor={field.name}>Selling Price</FieldLabel>
-              <Input
+              <FieldLabel htmlFor={field.name}>{t("lenses.sellingPrice")}</FieldLabel>
+              <NumberInput
                 {...field}
                 id={field.name}
-                type="number"
                 min={0}
                 step={1000}
-                onChange={(e) => field.onChange(Number(e.target.value))}
                 aria-invalid={fieldState.invalid || undefined}
               />
               {fieldState.error && (
@@ -329,14 +315,12 @@ function CatalogItemForm({
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid || undefined}>
-              <FieldLabel htmlFor={field.name}>Cost Price</FieldLabel>
-              <Input
+              <FieldLabel htmlFor={field.name}>{t("lenses.costPrice")}</FieldLabel>
+              <NumberInput
                 {...field}
                 id={field.name}
-                type="number"
                 min={0}
                 step={1000}
-                onChange={(e) => field.onChange(Number(e.target.value))}
                 aria-invalid={fieldState.invalid || undefined}
               />
               {fieldState.error && (
@@ -349,14 +333,87 @@ function CatalogItemForm({
 
       <DialogFooter>
         <Button type="button" variant="outline" onClick={onClose}>
-          Cancel
+          {t("common.cancel")}
         </Button>
         <Button type="submit" disabled={isSubmitting}>
           {isSubmitting && <IconLoader2 className="h-4 w-4 mr-2 animate-spin" />}
-          Save
+          {t("common.save")}
         </Button>
       </DialogFooter>
     </form>
+  )
+}
+
+// ---- Diopter Input (handles negative typing) ----
+
+function DioptrField({
+  name,
+  label,
+  control,
+  min,
+  max,
+  optional,
+}: {
+  name: "sph" | "cyl" | "add"
+  label: string
+  control: ReturnType<typeof useForm<StockFormValues>>["control"]
+  min: number
+  max: number
+  optional?: boolean
+}) {
+  return (
+    <Controller
+      name={name}
+      control={control}
+      render={({ field, fieldState }) => {
+        const [raw, setRaw] = useState(
+          field.value == null ? "" : String(field.value),
+        )
+        return (
+          <Field data-invalid={fieldState.invalid || undefined}>
+            <FieldLabel htmlFor={field.name}>
+              {label}
+              {optional && " (optional)"}
+            </FieldLabel>
+            <Input
+              id={field.name}
+              inputMode="decimal"
+              value={raw}
+              onChange={(e) => {
+                const v = e.target.value
+                setRaw(v)
+                if (v === "" || v === "-" || v === "-0" || v === "-0.") return
+                const num = parseFloat(v)
+                if (!Number.isNaN(num)) {
+                  field.onChange(optional && v === "" ? null : num)
+                }
+              }}
+              onBlur={() => {
+                field.onBlur()
+                if (raw === "" && optional) {
+                  field.onChange(null)
+                  return
+                }
+                const num = parseFloat(raw)
+                if (Number.isNaN(num)) {
+                  setRaw("0")
+                  field.onChange(optional ? null : 0)
+                } else {
+                  const clamped = Math.max(min, Math.min(max, num))
+                  const stepped = Math.round(clamped * 4) / 4
+                  setRaw(String(stepped))
+                  field.onChange(stepped)
+                }
+              }}
+              aria-invalid={fieldState.invalid || undefined}
+            />
+            {fieldState.error && (
+              <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+            )}
+          </Field>
+        )
+      }}
+    />
   )
 }
 
@@ -369,6 +426,7 @@ function StockAdjustmentForm({
   lens: LensCatalogItemDto
   onClose: () => void
 }) {
+  const { t } = useTranslation("optical")
   const adjustMutation = useAdjustLensStock()
 
   const form = useForm<StockFormValues>({
@@ -392,12 +450,10 @@ function StockAdjustmentForm({
         cyl: data.cyl,
         add: data.add ?? null,
         quantityChange: data.quantityChange,
+        reason: "Manual stock adjustment",
+        minStockLevel: data.minStockLevel,
       })
-      toast.success(
-        data.quantityChange > 0
-          ? `Added ${data.quantityChange} unit(s) to stock`
-          : `Removed ${Math.abs(data.quantityChange)} unit(s) from stock`,
-      )
+      toast.success(t("lenses.stockAdjusted"))
       onClose()
     } catch {
       // onError in mutation handles toast
@@ -408,80 +464,13 @@ function StockAdjustmentForm({
     <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
       <div className="rounded-md bg-muted/50 px-3 py-2 text-sm">
         <span className="font-medium">{lens.brand} {lens.name}</span>
-        <span className="text-muted-foreground ml-2">— add or adjust stock for a power combination</span>
+        <span className="text-muted-foreground ml-2">— {t("lenses.stockAdjustHint")}</span>
       </div>
 
       <div className="grid grid-cols-3 gap-4">
-        <Controller
-          name="sph"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid || undefined}>
-              <FieldLabel htmlFor={field.name}>SPH</FieldLabel>
-              <Input
-                {...field}
-                id={field.name}
-                type="number"
-                step={0.25}
-                min={-20}
-                max={20}
-                onChange={(e) => field.onChange(Number(e.target.value))}
-                aria-invalid={fieldState.invalid || undefined}
-              />
-              {fieldState.error && (
-                <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
-              )}
-            </Field>
-          )}
-        />
-
-        <Controller
-          name="cyl"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid || undefined}>
-              <FieldLabel htmlFor={field.name}>CYL</FieldLabel>
-              <Input
-                {...field}
-                id={field.name}
-                type="number"
-                step={0.25}
-                min={-10}
-                max={0}
-                onChange={(e) => field.onChange(Number(e.target.value))}
-                aria-invalid={fieldState.invalid || undefined}
-              />
-              {fieldState.error && (
-                <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
-              )}
-            </Field>
-          )}
-        />
-
-        <Controller
-          name="add"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid || undefined}>
-              <FieldLabel htmlFor={field.name}>ADD (optional)</FieldLabel>
-              <Input
-                id={field.name}
-                type="number"
-                step={0.25}
-                min={0}
-                max={4}
-                value={field.value ?? ""}
-                onChange={(e) =>
-                  field.onChange(e.target.value === "" ? null : Number(e.target.value))
-                }
-                aria-invalid={fieldState.invalid || undefined}
-              />
-              {fieldState.error && (
-                <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
-              )}
-            </Field>
-          )}
-        />
+        <DioptrField name="sph" label="SPH" control={form.control} min={-20} max={20} />
+        <DioptrField name="cyl" label="CYL" control={form.control} min={-10} max={0} />
+        <DioptrField name="add" label="ADD" control={form.control} min={0} max={4} optional />
       </div>
 
       <div className="grid grid-cols-2 gap-4">
@@ -491,15 +480,13 @@ function StockAdjustmentForm({
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid || undefined}>
               <FieldLabel htmlFor={field.name}>
-                Quantity Change
-                <span className="text-xs text-muted-foreground ml-1">(+ to add, − to remove)</span>
+                {t("lenses.quantityChange")}
+                <span className="text-xs text-muted-foreground ml-1">({t("lenses.quantityChangeHint")})</span>
               </FieldLabel>
-              <Input
+              <NumberInput
                 {...field}
                 id={field.name}
-                type="number"
                 step={1}
-                onChange={(e) => field.onChange(Number(e.target.value))}
                 aria-invalid={fieldState.invalid || undefined}
               />
               {fieldState.error && (
@@ -514,14 +501,12 @@ function StockAdjustmentForm({
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid || undefined}>
-              <FieldLabel htmlFor={field.name}>Min Stock Level</FieldLabel>
-              <Input
+              <FieldLabel htmlFor={field.name}>{t("lenses.minStock")}</FieldLabel>
+              <NumberInput
                 {...field}
                 id={field.name}
-                type="number"
                 step={1}
                 min={0}
-                onChange={(e) => field.onChange(Number(e.target.value))}
                 aria-invalid={fieldState.invalid || undefined}
               />
               {fieldState.error && (
@@ -534,11 +519,11 @@ function StockAdjustmentForm({
 
       <DialogFooter>
         <Button type="button" variant="outline" onClick={onClose}>
-          Cancel
+          {t("common.cancel")}
         </Button>
         <Button type="submit" disabled={isSubmitting}>
           {isSubmitting && <IconLoader2 className="h-4 w-4 mr-2 animate-spin" />}
-          Adjust Stock
+          {t("lenses.adjustStock")}
         </Button>
       </DialogFooter>
     </form>
@@ -548,14 +533,15 @@ function StockAdjustmentForm({
 // ---- Main Dialog ----
 
 export function LensFormDialog({ mode, lens, open, onOpenChange }: LensFormDialogProps) {
+  const { t } = useTranslation("optical")
   const handleClose = () => onOpenChange(false)
 
   const title =
     mode === "create"
-      ? "Add Lens"
+      ? t("lenses.addLens")
       : mode === "edit"
-        ? "Edit Lens"
-        : `Adjust Stock — ${lens?.brand ?? ""} ${lens?.name ?? ""}`
+        ? t("lenses.editLens")
+        : `${t("lenses.adjustStock")} — ${lens?.brand ?? ""} ${lens?.name ?? ""}`
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -567,7 +553,7 @@ export function LensFormDialog({ mode, lens, open, onOpenChange }: LensFormDialo
         {mode === "stock" && lens ? (
           <StockAdjustmentForm lens={lens} onClose={handleClose} />
         ) : (
-          <CatalogItemForm mode={mode === "create" ? "create" : "edit"} lens={lens} onClose={handleClose} />
+          <CatalogItemForm key={lens?.id ?? "create"} mode={mode === "create" ? "create" : "edit"} lens={lens} onClose={handleClose} />
         )}
       </DialogContent>
     </Dialog>

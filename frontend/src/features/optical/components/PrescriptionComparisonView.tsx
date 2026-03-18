@@ -107,7 +107,7 @@ interface ComparisonTableProps {
 
 function ComparisonTable({ comparison }: ComparisonTableProps) {
   const { t } = useTranslation("optical")
-  const { prescription1: older, prescription2: newer } = comparison
+  const { older, newer } = comparison
 
   type ComparisonRow = {
     label: string
@@ -120,58 +120,58 @@ function ComparisonTable({ comparison }: ComparisonTableProps) {
   const rows: ComparisonRow[] = [
     {
       label: `${t("prescriptions.sph")} OD`,
-      olderValue: older.rightSph,
-      newerValue: newer.rightSph,
+      olderValue: older.sphOd,
+      newerValue: newer.sphOd,
       directionFn: sphChangeDirection,
     },
     {
       label: `${t("prescriptions.cyl")} OD`,
-      olderValue: older.rightCyl,
-      newerValue: newer.rightCyl,
+      olderValue: older.cylOd,
+      newerValue: newer.cylOd,
       directionFn: cylChangeDirection,
     },
     {
       label: `${t("prescriptions.axis")} OD`,
-      olderValue: older.rightAxis,
-      newerValue: newer.rightAxis,
+      olderValue: older.axisOd,
+      newerValue: newer.axisOd,
       decimals: 0,
       directionFn: neutralChangeDirection,
     },
     {
       label: `${t("prescriptions.add")} OD`,
-      olderValue: older.rightAdd,
-      newerValue: newer.rightAdd,
+      olderValue: older.addOd,
+      newerValue: newer.addOd,
       directionFn: neutralChangeDirection,
     },
     {
       label: `${t("prescriptions.sph")} OS`,
-      olderValue: older.leftSph,
-      newerValue: newer.leftSph,
+      olderValue: older.sphOs,
+      newerValue: newer.sphOs,
       directionFn: sphChangeDirection,
     },
     {
       label: `${t("prescriptions.cyl")} OS`,
-      olderValue: older.leftCyl,
-      newerValue: newer.leftCyl,
+      olderValue: older.cylOs,
+      newerValue: newer.cylOs,
       directionFn: cylChangeDirection,
     },
     {
       label: `${t("prescriptions.axis")} OS`,
-      olderValue: older.leftAxis,
-      newerValue: newer.leftAxis,
+      olderValue: older.axisOs,
+      newerValue: newer.axisOs,
       decimals: 0,
       directionFn: neutralChangeDirection,
     },
     {
       label: `${t("prescriptions.add")} OS`,
-      olderValue: older.leftAdd,
-      newerValue: newer.leftAdd,
+      olderValue: older.addOs,
+      newerValue: newer.addOs,
       directionFn: neutralChangeDirection,
     },
     {
       label: t("prescriptions.pd"),
-      olderValue: older.pupillaryDistance,
-      newerValue: newer.pupillaryDistance,
+      olderValue: older.pd,
+      newerValue: newer.pd,
       directionFn: neutralChangeDirection,
     },
   ]
@@ -180,12 +180,12 @@ function ComparisonTable({ comparison }: ComparisonTableProps) {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="w-28">Field</TableHead>
+          <TableHead className="w-28"></TableHead>
           <TableHead>
             <div className="text-sm">
               <div className="font-semibold">{t("prescriptions.previousPrescription")}</div>
               <div className="text-xs font-normal text-muted-foreground">
-                {format(new Date(older.prescribedAt), "PP")}
+                {format(new Date(older.visitDate), "PP")}
               </div>
             </div>
           </TableHead>
@@ -193,7 +193,7 @@ function ComparisonTable({ comparison }: ComparisonTableProps) {
             <div className="text-sm">
               <div className="font-semibold">{t("prescriptions.currentPrescription")}</div>
               <div className="text-xs font-normal text-muted-foreground">
-                {format(new Date(newer.prescribedAt), "PP")}
+                {format(new Date(newer.visitDate), "PP")}
               </div>
             </div>
           </TableHead>
@@ -225,19 +225,19 @@ function ComparisonSummary({ comparison }: ComparisonTableProps) {
   const summaryItems: Array<{ label: string; direction: ChangeDirection }> = [
     {
       label: `SPH OD`,
-      direction: sphChangeDirection(comparison.prescription1.rightSph, comparison.prescription2.rightSph),
+      direction: sphChangeDirection(comparison.older.sphOd, comparison.newer.sphOd),
     },
     {
       label: `CYL OD`,
-      direction: cylChangeDirection(comparison.prescription1.rightCyl, comparison.prescription2.rightCyl),
+      direction: cylChangeDirection(comparison.older.cylOd, comparison.newer.cylOd),
     },
     {
       label: `SPH OS`,
-      direction: sphChangeDirection(comparison.prescription1.leftSph, comparison.prescription2.leftSph),
+      direction: sphChangeDirection(comparison.older.sphOs, comparison.newer.sphOs),
     },
     {
       label: `CYL OS`,
-      direction: cylChangeDirection(comparison.prescription1.leftCyl, comparison.prescription2.leftCyl),
+      direction: cylChangeDirection(comparison.older.cylOs, comparison.newer.cylOs),
     },
   ].filter((item) => item.direction !== "unchanged")
 
@@ -314,7 +314,7 @@ export function PrescriptionComparisonView({
         {/* Summary badges */}
         <div>
           <p className="mb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            Overall Change
+            {t("prescriptions.changeDirection")}
           </p>
           <ComparisonSummary comparison={comparison} />
         </div>

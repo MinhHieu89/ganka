@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { format } from "date-fns"
 import {
   IconClipboardList,
@@ -57,6 +58,7 @@ const STATUS_COMPLETED = 1
 type PageMode = "list" | "active" | "report"
 
 export function StocktakingPage() {
+  const { t } = useTranslation("optical")
   const [mode, setMode] = useState<PageMode>("list")
   const [activeSessionId, setActiveSessionId] = useState<string | null>(null)
   const [reportSessionId, setReportSessionId] = useState<string | null>(null)
@@ -94,7 +96,7 @@ export function StocktakingPage() {
 
   const handleResumeSession = (session: StocktakingSessionDto) => {
     setActiveSessionId(session.id)
-    setScannedCount(session.itemCount ?? 0)
+    setScannedCount(session.totalItemsScanned ?? 0)
     setDiscrepancyCount(0)
     setMode("active")
   }
@@ -149,9 +151,9 @@ export function StocktakingPage() {
       <div className="space-y-4">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h1 className="text-xl font-bold">{session?.name ?? "Active Stocktaking"}</h1>
+            <h1 className="text-xl font-bold">{session?.name ?? t("stocktaking.title")}</h1>
             <p className="text-muted-foreground mt-0.5 text-sm">
-              {scannedCount} items scanned
+              {scannedCount} {t("stocktaking.itemsScanned")}
               {discrepancyCount > 0 && (
                 <span className="ml-2 text-yellow-600">
                   <IconAlertTriangle className="inline h-3.5 w-3.5" /> {discrepancyCount} discrepancies
@@ -166,7 +168,7 @@ export function StocktakingPage() {
               onClick={handleBackToList}
             >
               <IconX className="mr-1.5 h-4 w-4" />
-              Cancel
+              {t("stocktaking.cancelSession")}
             </Button>
             <Button
               size="sm"
@@ -174,7 +176,7 @@ export function StocktakingPage() {
               disabled={scannedCount === 0}
             >
               <IconCheck className="mr-1.5 h-4 w-4" />
-              Complete
+              {t("stocktaking.completeSession")}
             </Button>
           </div>
         </div>
@@ -188,20 +190,18 @@ export function StocktakingPage() {
         <AlertDialog open={completeDialogOpen} onOpenChange={setCompleteDialogOpen}>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Complete Stocktaking Session?</AlertDialogTitle>
+              <AlertDialogTitle>{t("stocktaking.completeSession")}?</AlertDialogTitle>
               <AlertDialogDescription>
-                This will finalize the stocktaking session and generate a discrepancy report.
-                You have scanned {scannedCount} items with {discrepancyCount} discrepancies.
-                This action cannot be undone.
+                {scannedCount} {t("stocktaking.itemsScanned")} — {discrepancyCount} {t("stocktaking.discrepancy")}
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Continue Scanning</AlertDialogCancel>
+              <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleCompleteSession}
                 disabled={completeSession.isPending}
               >
-                {completeSession.isPending ? "Completing..." : "Complete Session"}
+                {completeSession.isPending ? t("common.loading") : t("stocktaking.completeSession")}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -218,7 +218,7 @@ export function StocktakingPage() {
       <div className="space-y-4">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <h1 className="text-xl font-bold">Discrepancy Report</h1>
+            <h1 className="text-xl font-bold">{t("stocktaking.discrepancyReport")}</h1>
             {session && (
               <p className="text-muted-foreground mt-0.5 text-sm">
                 {session.name}
@@ -231,7 +231,7 @@ export function StocktakingPage() {
             )}
           </div>
           <Button variant="outline" size="sm" onClick={handleBackToList}>
-            Back to Sessions
+            {t("common.backToList")}
           </Button>
         </div>
 
@@ -245,9 +245,9 @@ export function StocktakingPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold">Stocktaking</h1>
+          <h1 className="text-2xl font-bold">{t("stocktaking.title")}</h1>
           <p className="text-muted-foreground mt-0.5 text-sm">
-            Barcode-based physical inventory count
+            {t("stocktaking.subtitle")}
           </p>
         </div>
         <Button
@@ -256,7 +256,7 @@ export function StocktakingPage() {
           title={inProgressSession ? "A session is already in progress" : undefined}
         >
           <IconPlus className="mr-1.5 h-4 w-4" />
-          Start New Stocktaking
+          {t("stocktaking.newSession")}
         </Button>
       </div>
 
@@ -268,12 +268,12 @@ export function StocktakingPage() {
               <IconAlertTriangle className="h-5 w-5 text-yellow-600" />
               <div>
                 <p className="font-medium text-yellow-800 dark:text-yellow-200">
-                  Session in progress: {inProgressSession.name}
+                  {inProgressSession.name}
                 </p>
                 <p className="text-xs text-yellow-700 dark:text-yellow-300">
-                  Started {format(new Date(inProgressSession.startedAt), "dd/MM/yyyy HH:mm")}
+                  {format(new Date(inProgressSession.createdAt), "dd/MM/yyyy HH:mm")}
                   {" — "}
-                  {inProgressSession.itemCount} items scanned
+                  {inProgressSession.totalItemsScanned} {t("stocktaking.itemsScanned")}
                 </p>
               </div>
             </div>
@@ -283,7 +283,7 @@ export function StocktakingPage() {
               className="border-yellow-400 text-yellow-800 hover:bg-yellow-100 dark:text-yellow-200"
               onClick={() => handleResumeSession(inProgressSession)}
             >
-              Resume
+              {t("stocktaking.resume")}
             </Button>
           </CardContent>
         </Card>
@@ -294,7 +294,7 @@ export function StocktakingPage() {
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-base">
             <IconClipboardList className="h-5 w-5" />
-            Sessions History
+            {t("stocktaking.title")}
           </CardTitle>
         </CardHeader>
         <CardContent className="p-0">
@@ -307,19 +307,19 @@ export function StocktakingPage() {
           ) : sessions.length === 0 ? (
             <div className="text-muted-foreground py-12 text-center text-sm">
               <IconClipboardList className="mx-auto mb-3 h-10 w-10 opacity-20" />
-              No stocktaking sessions yet. Start a new session to begin counting inventory.
+              {t("stocktaking.empty")}
             </div>
           ) : (
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Session Name</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Started By</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead className="text-right">Items</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+                    <TableHead>{t("stocktaking.sessionName")}</TableHead>
+                    <TableHead>{t("stocktaking.status")}</TableHead>
+                    <TableHead>{t("common.createdBy")}</TableHead>
+                    <TableHead>{t("stocktaking.startDate")}</TableHead>
+                    <TableHead className="text-right">{t("stocktaking.totalItems")}</TableHead>
+                    <TableHead className="text-right">{t("common.actions")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -328,17 +328,17 @@ export function StocktakingPage() {
                       <TableCell className="font-medium">{session.name}</TableCell>
                       <TableCell>
                         <Badge variant={getStatusBadgeVariant(session.status)}>
-                          {STOCKTAKING_STATUS_MAP[session.status] ?? "Unknown"}
+                          {t(STOCKTAKING_STATUS_MAP[session.status] ?? "Unknown")}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-muted-foreground text-sm">
                         {"—"}
                       </TableCell>
                       <TableCell className="text-sm">
-                        {format(new Date(session.startedAt), "dd/MM/yyyy HH:mm")}
+                        {format(new Date(session.createdAt), "dd/MM/yyyy HH:mm")}
                       </TableCell>
                       <TableCell className="text-right text-sm">
-                        {session.itemCount ?? 0}
+                        {session.totalItemsScanned ?? 0}
                       </TableCell>
                       <TableCell className="text-right">
                         {session.status === STATUS_IN_PROGRESS ? (
@@ -347,7 +347,7 @@ export function StocktakingPage() {
                             variant="outline"
                             onClick={() => handleResumeSession(session)}
                           >
-                            Resume
+                            {t("stocktaking.startSession")}
                           </Button>
                         ) : session.status === STATUS_COMPLETED ? (
                           <Button
@@ -356,7 +356,7 @@ export function StocktakingPage() {
                             onClick={() => handleViewReport(session)}
                           >
                             <IconEye className="mr-1 h-4 w-4" />
-                            View Report
+                            {t("stocktaking.generateReport")}
                           </Button>
                         ) : null}
                       </TableCell>
@@ -373,14 +373,13 @@ export function StocktakingPage() {
       <Dialog open={startDialogOpen} onOpenChange={setStartDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Start New Stocktaking Session</DialogTitle>
+            <DialogTitle>{t("stocktaking.newSession")}</DialogTitle>
             <DialogDescription>
-              Enter a name for this stocktaking session. Once started, you can scan barcodes to
-              record physical inventory counts.
+              {t("stocktaking.subtitle")}
             </DialogDescription>
           </DialogHeader>
           <div className="py-2">
-            <label className="mb-1.5 block text-sm font-medium">Session Name</label>
+            <label className="mb-1.5 block text-sm font-medium">{t("stocktaking.sessionName")}</label>
             <Input
               value={newSessionName}
               onChange={(e) => setNewSessionName(e.target.value)}
@@ -392,13 +391,13 @@ export function StocktakingPage() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setStartDialogOpen(false)}>
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button
               onClick={handleStartSession}
               disabled={!newSessionName.trim() || startSession.isPending}
             >
-              {startSession.isPending ? "Starting..." : "Start Session"}
+              {startSession.isPending ? t("common.loading") : t("stocktaking.startSession")}
             </Button>
           </DialogFooter>
         </DialogContent>

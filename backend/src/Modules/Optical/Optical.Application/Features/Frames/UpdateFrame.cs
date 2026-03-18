@@ -22,6 +22,7 @@ public sealed record UpdateFrameCommand(
     decimal SellingPrice,
     decimal CostPrice,
     string? Barcode,
+    int? StockQuantity,
     bool IsActive);
 
 /// <summary>
@@ -125,7 +126,8 @@ public static class UpdateFrameHandler
             (FrameGender)command.Gender,
             command.SellingPrice,
             command.CostPrice,
-            command.Barcode);
+            command.Barcode,
+            command.StockQuantity);
 
         if (command.IsActive && !frame.IsActive)
             frame.Activate();

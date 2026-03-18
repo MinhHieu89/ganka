@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { IconBarcode } from "@tabler/icons-react"
 import { Input } from "@/shared/components/Input"
 import { cn } from "@/shared/lib/utils"
@@ -14,6 +15,7 @@ export function BarcodeScannerInput({
   autoFocus = false,
   className,
 }: BarcodeScannerInputProps) {
+  const { t } = useTranslation("optical")
   const inputRef = useRef<HTMLInputElement>(null)
   const [error, setError] = useState<string | null>(null)
 
@@ -48,7 +50,7 @@ export function BarcodeScannerInput({
       <Input
         ref={inputRef}
         onKeyDown={handleKeyDown}
-        placeholder="Scan barcode..."
+        placeholder={t("stocktaking.enterBarcode")}
         className={cn("pl-9", error && "border-red-500")}
         inputMode="numeric"
         autoComplete="off"

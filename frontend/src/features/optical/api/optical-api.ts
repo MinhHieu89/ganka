@@ -3,76 +3,76 @@ import { api } from "@/shared/lib/api-client"
 // -- Enums matching backend --
 
 export const FRAME_MATERIAL_MAP: Record<number, string> = {
-  0: "Metal",
-  1: "Plastic",
-  2: "Titanium",
+  0: "enums.material.metal",
+  1: "enums.material.plastic",
+  2: "enums.material.titanium",
 }
 
 export const FRAME_TYPE_MAP: Record<number, string> = {
-  0: "FullRim",
-  1: "SemiRimless",
-  2: "Rimless",
+  0: "enums.frameType.fullRim",
+  1: "enums.frameType.semiRimless",
+  2: "enums.frameType.rimless",
 }
 
 export const FRAME_GENDER_MAP: Record<number, string> = {
-  0: "Male",
-  1: "Female",
-  2: "Unisex",
+  0: "enums.gender.male",
+  1: "enums.gender.female",
+  2: "enums.gender.unisex",
 }
 
 export const GLASSES_ORDER_STATUS_MAP: Record<number, string> = {
-  0: "Ordered",
-  1: "Processing",
-  2: "Received",
-  3: "Ready",
-  4: "Delivered",
+  0: "enums.orderStatus.ordered",
+  1: "enums.orderStatus.processing",
+  2: "enums.orderStatus.received",
+  3: "enums.orderStatus.ready",
+  4: "enums.orderStatus.delivered",
 }
 
 export const PROCESSING_TYPE_MAP: Record<number, string> = {
-  0: "InHouse",
-  1: "Outsourced",
+  0: "enums.processingType.inHouse",
+  1: "enums.processingType.outsourced",
 }
 
 export const WARRANTY_RESOLUTION_MAP: Record<number, string> = {
-  0: "Replace",
-  1: "Repair",
-  2: "Discount",
+  0: "enums.warrantyResolution.replace",
+  1: "enums.warrantyResolution.repair",
+  2: "enums.warrantyResolution.discount",
 }
 
 export const WARRANTY_APPROVAL_STATUS_MAP: Record<number, string> = {
-  0: "Pending",
-  1: "Approved",
-  2: "Rejected",
+  0: "enums.warrantyApproval.pending",
+  1: "enums.warrantyApproval.approved",
+  2: "enums.warrantyApproval.rejected",
 }
 
 export const STOCKTAKING_STATUS_MAP: Record<number, string> = {
-  0: "InProgress",
-  1: "Completed",
+  0: "enums.stocktakingStatus.inProgress",
+  1: "enums.stocktakingStatus.completed",
   2: "Cancelled",
 }
 
 export const LENS_MATERIAL_MAP: Record<number, string> = {
-  0: "CR-39",
-  1: "Polycarbonate",
-  2: "Hi-Index",
-  3: "Trivex",
+  0: "enums.lensMaterial.cr39",
+  1: "enums.lensMaterial.polycarbonate",
+  2: "enums.lensMaterial.hiIndex",
+  3: "enums.lensMaterial.trivex",
 }
 
 export const LENS_COATING_MAP: Record<number, string> = {
-  1: "Anti-Reflective",
-  2: "Blue Cut",
-  4: "Photochromic",
-  8: "Scratch-Resistant",
-  16: "UV Protection",
+  1: "enums.coatings.antiReflective",
+  2: "enums.coatings.blueCut",
+  4: "enums.coatings.photochromic",
+  8: "enums.coatings.scratchResistant",
+  16: "enums.coatings.uvProtection",
 }
 
 export const LENS_COATING_BITS = [1, 2, 4, 8, 16] as const
 
 export const LENS_TYPE_OPTIONS = [
-  { value: "single_vision", label: "Single Vision" },
-  { value: "bifocal", label: "Bifocal" },
-  { value: "progressive", label: "Progressive" },
-  { value: "reading", label: "Reading" },
+  { value: "single_vision", label: "enums.lensType.singleVision" },
+  { value: "bifocal", label: "enums.lensType.bifocal" },
+  { value: "progressive", label: "enums.lensType.progressive" },
+  { value: "reading", label: "enums.lensType.reading" },
 ]
 
 /** Decode flags bitfield into array of coating bit values */
@@ -136,11 +136,11 @@ export interface LensStockEntryDto {
 export interface LowLensStockAlertDto {
   lensCatalogItemId: string
   brand: string
-  name: string
+  lensName: string
   sph: number
   cyl: number
   add: number | null
-  quantity: number
+  currentStock: number
   minStockLevel: number
 }
 
@@ -190,9 +190,10 @@ export interface WarrantyClaimDto {
   glassesOrderId: string
   patientName: string
   claimDate: string
-  resolutionType: number
+  resolution: number
   approvalStatus: number
-  notes: string | null
+  requiresApproval: boolean
+  assessmentNotes: string | null
   approvalNotes: string | null
   approvedAt: string | null
   documentUrls: string[]
@@ -205,9 +206,9 @@ export interface StocktakingSessionDto {
   status: number
   startedById: string
   startedByName: string | null
-  startedAt: string
+  createdAt: string
   completedAt: string | null
-  itemCount: number
+  totalItemsScanned: number
   discrepancyCount: number
   notes: string | null
 }
@@ -237,30 +238,32 @@ export interface DiscrepancyReportDto {
 }
 
 export interface OpticalPrescriptionHistoryDto {
-  prescriptionId: string
+  id: string
   visitId: string
-  prescribedAt: string
-  rightSph: number | null
-  rightCyl: number | null
-  rightAxis: number | null
-  rightAdd: number | null
-  rightVa: string | null
-  leftSph: number | null
-  leftCyl: number | null
-  leftAxis: number | null
-  leftAdd: number | null
-  leftVa: string | null
-  pupillaryDistance: number | null
+  visitDate: string
+  sphOd: number | null
+  cylOd: number | null
+  axisOd: number | null
+  addOd: number | null
+  sphOs: number | null
+  cylOs: number | null
+  axisOs: number | null
+  addOs: number | null
+  pd: number | null
   notes: string | null
 }
 
+export interface FieldChangeDto {
+  fieldName: string
+  oldValue: string | null
+  newValue: string | null
+  direction: string
+}
+
 export interface PrescriptionComparisonDto {
-  prescription1: OpticalPrescriptionHistoryDto
-  prescription2: OpticalPrescriptionHistoryDto
-  rightSphChange: number | null
-  rightCylChange: number | null
-  leftSphChange: number | null
-  leftCylChange: number | null
+  older: OpticalPrescriptionHistoryDto
+  newer: OpticalPrescriptionHistoryDto
+  changes: FieldChangeDto[]
 }
 
 export interface PagedResult<T> {
@@ -364,6 +367,8 @@ export interface AdjustLensStockInput {
   cyl: number
   add?: number | null
   quantityChange: number
+  reason: string
+  minStockLevel?: number
 }
 
 export interface GetGlassesOrdersParams {
@@ -416,8 +421,9 @@ export interface GetWarrantyClaimsParams {
 
 export interface CreateWarrantyClaimInput {
   glassesOrderId: string
-  resolutionType: number
-  notes?: string | null
+  resolution: number
+  assessmentNotes: string
+  discountAmount?: number | null
 }
 
 export interface ApproveWarrantyClaimInput {
@@ -522,7 +528,7 @@ export async function updateLensCatalogItem(id: string, data: UpdateLensCatalogI
 }
 
 export async function adjustLensStock(data: AdjustLensStockInput): Promise<void> {
-  const { error, response } = await api.POST("/api/optical/lenses/stock/adjust" as never, {
+  const { error, response } = await api.POST("/api/optical/lenses/stock-adjust" as never, {
     body: data,
   } as never)
   if (error || !response.ok) {
@@ -533,7 +539,7 @@ export async function adjustLensStock(data: AdjustLensStockInput): Promise<void>
 }
 
 export async function getLowLensStockAlerts(): Promise<LowLensStockAlertDto[]> {
-  const { data, error } = await api.GET("/api/optical/lenses/alerts/low-stock" as never)
+  const { data, error } = await api.GET("/api/optical/lenses/alerts" as never)
   if (error) throw new Error("Failed to fetch low lens stock alerts")
   return (data as LowLensStockAlertDto[]) ?? []
 }

@@ -17,7 +17,7 @@ public sealed record GetLensCatalogQuery(bool IncludeInactive = false);
 /// </summary>
 public static class GetLensCatalogHandler
 {
-    public static async Task<List<LensCatalogItemDto>> Handle(
+    public static async Task<Result<List<LensCatalogItemDto>>> Handle(
         GetLensCatalogQuery query,
         ILensCatalogRepository repository,
         CancellationToken ct)

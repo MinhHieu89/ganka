@@ -2,6 +2,7 @@ using FluentAssertions;
 using NSubstitute;
 using Optical.Application.Features.Prescriptions;
 using Optical.Contracts.Queries;
+using Shared.Domain;
 using Wolverine;
 
 namespace Optical.Unit.Tests.Features;
@@ -69,9 +70,10 @@ public class PrescriptionHistoryHandlerTests
             query, _bus, CancellationToken.None);
 
         // Assert
-        result.Should().HaveCount(2);
-        result[0].Notes.Should().Be("Newer"); // Most recent first
-        result[1].Notes.Should().Be("Older");
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().HaveCount(2);
+        result.Value[0].Notes.Should().Be("Newer"); // Most recent first
+        result.Value[1].Notes.Should().Be("Older");
     }
 
     [Fact]
@@ -91,7 +93,8 @@ public class PrescriptionHistoryHandlerTests
             query, _bus, CancellationToken.None);
 
         // Assert
-        result.Should().BeEmpty();
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().BeEmpty();
     }
 
     [Fact]
@@ -111,7 +114,8 @@ public class PrescriptionHistoryHandlerTests
             query, _bus, CancellationToken.None);
 
         // Assert
-        result.Should().BeEmpty();
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().BeEmpty();
     }
 
     [Fact]
@@ -160,10 +164,10 @@ public class PrescriptionHistoryHandlerTests
             query, _bus, CancellationToken.None);
 
         // Assert
-        result.Should().NotBeNull();
-        result!.Older.Id.Should().Be(id1);
-        result.Newer.Id.Should().Be(id2);
-        result.Older.VisitDate.Should().BeBefore(result.Newer.VisitDate);
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Older.Id.Should().Be(id1);
+        result.Value.Newer.Id.Should().Be(id2);
+        result.Value.Older.VisitDate.Should().BeBefore(result.Value.Newer.VisitDate);
     }
 
     [Fact]
@@ -191,15 +195,15 @@ public class PrescriptionHistoryHandlerTests
             query, _bus, CancellationToken.None);
 
         // Assert
-        result.Should().NotBeNull();
-        result!.Changes.Should().NotBeNull();
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Changes.Should().NotBeNull();
         // SphOd changed: -1.00 -> -1.50 (worsened for myopia)
-        var sphOdChange = result.Changes.FirstOrDefault(c => c.FieldName == "SphOd");
+        var sphOdChange = result.Value.Changes.FirstOrDefault(c => c.FieldName == "SphOd");
         sphOdChange.Should().NotBeNull();
         sphOdChange!.OldValue.Should().Be("-1.00");
         sphOdChange.NewValue.Should().Be("-1.50");
         // CylOs improved: -0.50 -> -0.25
-        var cylOsChange = result.Changes.FirstOrDefault(c => c.FieldName == "CylOs");
+        var cylOsChange = result.Value.Changes.FirstOrDefault(c => c.FieldName == "CylOs");
         cylOsChange.Should().NotBeNull();
     }
 
@@ -229,12 +233,12 @@ public class PrescriptionHistoryHandlerTests
             query, _bus, CancellationToken.None);
 
         // Assert
-        result.Should().NotBeNull();
-        result!.Changes.Should().BeEmpty();
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Changes.Should().BeEmpty();
     }
 
     [Fact]
-    public async Task GetPrescriptionComparison_PrescriptionNotFound_ReturnsNull()
+    public async Task GetPrescriptionComparison_PrescriptionNotFound_ReturnsNotFoundFailure()
     {
         // Arrange
         var patientId = Guid.NewGuid();
@@ -255,7 +259,8 @@ public class PrescriptionHistoryHandlerTests
             query, _bus, CancellationToken.None);
 
         // Assert
-        result.Should().BeNull();
+        result.IsFailure.Should().BeTrue();
+        result.Error.Code.Should().Be("Error.NotFound");
     }
 
     [Fact]
@@ -282,8 +287,8 @@ public class PrescriptionHistoryHandlerTests
             query, _bus, CancellationToken.None);
 
         // Assert - regardless of input order, handler should correctly assign older/newer by VisitDate
-        result.Should().NotBeNull();
-        result!.Older.Id.Should().Be(olderId);
-        result.Newer.Id.Should().Be(newerId);
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Older.Id.Should().Be(olderId);
+        result.Value.Newer.Id.Should().Be(newerId);
     }
 }

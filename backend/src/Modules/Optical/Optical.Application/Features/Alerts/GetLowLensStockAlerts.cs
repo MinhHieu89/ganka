@@ -29,7 +29,7 @@ public sealed record LowLensStockAlertDto(
 /// </summary>
 public static class GetLowLensStockAlertsHandler
 {
-    public static async Task<List<LowLensStockAlertDto>> Handle(
+    public static async Task<Result<List<LowLensStockAlertDto>>> Handle(
         GetLowLensStockAlertsQuery query,
         ILensCatalogRepository repository,
         CancellationToken ct)

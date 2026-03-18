@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react"
+import { useTranslation } from "react-i18next"
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -53,6 +54,7 @@ export function FrameCatalogTable({
   onGenerateBarcode,
   isGeneratingBarcode = false,
 }: FrameCatalogTableProps) {
+  const { t } = useTranslation("optical")
   const [sorting, setSorting] = useState<SortingState>([])
   const [globalFilter, setGlobalFilter] = useState("")
   const [materialFilter, setMaterialFilter] = useState<string>(ALL_VALUE)
@@ -71,23 +73,23 @@ export function FrameCatalogTable({
   const columns = useMemo(
     () => [
       columnHelper.accessor("brand", {
-        header: "Brand",
+        header: t("frames.brand"),
         cell: (info) => <span className="font-medium">{info.getValue()}</span>,
         enableSorting: true,
       }),
       columnHelper.accessor("model", {
-        header: "Model",
+        header: t("frames.model"),
         cell: (info) => info.getValue(),
         enableSorting: true,
       }),
       columnHelper.accessor("color", {
-        header: "Color",
+        header: t("frames.color"),
         cell: (info) => info.getValue(),
         enableSorting: false,
       }),
       columnHelper.display({
         id: "size",
-        header: "Size",
+        header: t("frames.size"),
         cell: ({ row }) => {
           const { lensWidth, bridgeWidth, templeLength } = row.original
           return (
@@ -98,29 +100,29 @@ export function FrameCatalogTable({
         },
       }),
       columnHelper.accessor("material", {
-        header: "Material",
-        cell: (info) => FRAME_MATERIAL_MAP[info.getValue()] ?? String(info.getValue()),
+        header: t("frames.material"),
+        cell: (info) => t(FRAME_MATERIAL_MAP[info.getValue()] ?? String(info.getValue())),
         enableSorting: false,
       }),
       columnHelper.accessor("frameType", {
-        header: "Frame Type",
-        cell: (info) => FRAME_TYPE_MAP[info.getValue()] ?? String(info.getValue()),
+        header: t("frames.frameType"),
+        cell: (info) => t(FRAME_TYPE_MAP[info.getValue()] ?? String(info.getValue())),
         enableSorting: false,
       }),
       columnHelper.accessor("gender", {
-        header: "Gender",
-        cell: (info) => FRAME_GENDER_MAP[info.getValue()] ?? String(info.getValue()),
+        header: t("frames.gender"),
+        cell: (info) => t(FRAME_GENDER_MAP[info.getValue()] ?? String(info.getValue())),
         enableSorting: false,
       }),
       columnHelper.accessor("sellingPrice", {
-        header: "Price",
+        header: t("frames.sellingPrice"),
         cell: (info) => (
           <span className="font-medium">{formatVnd(info.getValue())}</span>
         ),
         enableSorting: true,
       }),
       columnHelper.accessor("stockQuantity", {
-        header: "Stock",
+        header: t("frames.stock"),
         cell: (info) => {
           const qty = info.getValue()
           const isLow = qty <= 0
@@ -133,10 +135,10 @@ export function FrameCatalogTable({
         enableSorting: true,
       }),
       columnHelper.accessor("barcode", {
-        header: "Barcode",
+        header: t("frames.barcode"),
         cell: (info) => {
           const barcode = info.getValue()
-          if (!barcode) return <span className="text-muted-foreground text-sm">No barcode</span>
+          if (!barcode) return <span className="text-muted-foreground text-sm">—</span>
           return (
             <div className="max-w-[200px]">
               <BarcodeDisplay value={barcode} height={40} showText={true} />
@@ -147,14 +149,14 @@ export function FrameCatalogTable({
       }),
       columnHelper.display({
         id: "actions",
-        header: "Actions",
+        header: t("common.actions"),
         cell: ({ row }) => (
           <div className="flex items-center gap-1">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => onEdit(row.original)}
-              title="Edit frame"
+              title={t("frames.editFrame")}
             >
               <IconEdit className="h-4 w-4" />
             </Button>
@@ -164,7 +166,7 @@ export function FrameCatalogTable({
                 size="sm"
                 onClick={() => onGenerateBarcode(row.original.id)}
                 disabled={isGeneratingBarcode}
-                title="Generate barcode"
+                title={t("frames.generateBarcode")}
               >
                 <IconBarcode className="h-4 w-4" />
               </Button>
@@ -173,7 +175,7 @@ export function FrameCatalogTable({
         ),
       }),
     ],
-    [onEdit, onGenerateBarcode, isGeneratingBarcode],
+    [onEdit, onGenerateBarcode, isGeneratingBarcode, t],
   )
 
   const table = useReactTable({
@@ -206,19 +208,19 @@ export function FrameCatalogTable({
         <Input
           value={globalFilter}
           onChange={(e) => setGlobalFilter(e.target.value)}
-          placeholder="Search brand, model, color, barcode..."
+          placeholder={t("frames.search")}
           className="max-w-sm"
         />
 
         <Select value={materialFilter} onValueChange={setMaterialFilter}>
           <SelectTrigger className="w-36">
-            <SelectValue placeholder="Material" />
+            <SelectValue placeholder={t("frames.material")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value={ALL_VALUE}>All Materials</SelectItem>
+            <SelectItem value={ALL_VALUE}>{t("common.all")}</SelectItem>
             {Object.entries(FRAME_MATERIAL_MAP).map(([value, label]) => (
               <SelectItem key={value} value={value}>
-                {label}
+                {t(label)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -226,13 +228,13 @@ export function FrameCatalogTable({
 
         <Select value={frameTypeFilter} onValueChange={setFrameTypeFilter}>
           <SelectTrigger className="w-36">
-            <SelectValue placeholder="Frame Type" />
+            <SelectValue placeholder={t("frames.frameType")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value={ALL_VALUE}>All Types</SelectItem>
+            <SelectItem value={ALL_VALUE}>{t("common.all")}</SelectItem>
             {Object.entries(FRAME_TYPE_MAP).map(([value, label]) => (
               <SelectItem key={value} value={value}>
-                {label}
+                {t(label)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -240,13 +242,13 @@ export function FrameCatalogTable({
 
         <Select value={genderFilter} onValueChange={setGenderFilter}>
           <SelectTrigger className="w-32">
-            <SelectValue placeholder="Gender" />
+            <SelectValue placeholder={t("frames.gender")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value={ALL_VALUE}>All Genders</SelectItem>
+            <SelectItem value={ALL_VALUE}>{t("common.all")}</SelectItem>
             {Object.entries(FRAME_GENDER_MAP).map(([value, label]) => (
               <SelectItem key={value} value={value}>
-                {label}
+                {t(label)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -263,7 +265,7 @@ export function FrameCatalogTable({
               setGlobalFilter("")
             }}
           >
-            Clear filters
+            {t("common.filter")}
           </Button>
         )}
       </div>
@@ -272,7 +274,7 @@ export function FrameCatalogTable({
       <DataTable
         table={table}
         columns={columns}
-        emptyMessage="No frames found. Add a frame to get started."
+        emptyMessage={t("frames.empty")}
       />
 
       {/* Pagination */}

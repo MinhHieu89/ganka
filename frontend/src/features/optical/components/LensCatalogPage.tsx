@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { IconPlus, IconPackage, IconChevronDown, IconChevronUp } from "@tabler/icons-react"
 import { Button } from "@/shared/components/Button"
 import { Skeleton } from "@/shared/components/Skeleton"
@@ -13,6 +14,7 @@ import {
 import type { LensCatalogItemDto } from "@/features/optical/api/optical-api"
 
 function LowLensStockAlert() {
+  const { t } = useTranslation("optical")
   const { data: alerts, isLoading } = useLowLensStockAlerts()
   const [open, setOpen] = useState(false)
 
@@ -37,17 +39,17 @@ function LowLensStockAlert() {
             <span
               className={`text-sm font-medium ${count > 0 ? "text-yellow-700 dark:text-yellow-400" : "text-muted-foreground"}`}
             >
-              Lens Stock Alerts
+              {t("lenses.lowStockAlert")}
             </span>
             {count > 0 ? (
               <Badge
                 variant="outline"
                 className="text-xs shrink-0 border-yellow-500 text-yellow-700 dark:text-yellow-400"
               >
-                {count} {count === 1 ? "entry" : "entries"} low
+                {t("lenses.lowStockCount", { count })}
               </Badge>
             ) : (
-              <span className="text-xs text-muted-foreground">All lens powers at adequate stock levels</span>
+              <span className="text-xs text-muted-foreground">{t("lenses.stockOk")}</span>
             )}
           </div>
 
@@ -68,11 +70,11 @@ function LowLensStockAlert() {
           <CollapsibleContent>
             <div className="mt-3 space-y-1 max-h-48 overflow-y-auto">
               <div className="grid grid-cols-5 gap-2 text-xs font-medium text-muted-foreground pb-1 border-b">
-                <span>Brand / Name</span>
-                <span>SPH</span>
-                <span>CYL</span>
-                <span>Qty</span>
-                <span>Min</span>
+                <span>{t("lenses.brand")} / {t("lenses.name")}</span>
+                <span>{t("lenses.sph")}</span>
+                <span>{t("lenses.cyl")}</span>
+                <span>{t("lenses.quantity")}</span>
+                <span>{t("lenses.minStock")}</span>
               </div>
               {alerts?.map((alert) => (
                 <div
@@ -80,7 +82,7 @@ function LowLensStockAlert() {
                   className="grid grid-cols-5 gap-2 text-xs py-0.5"
                 >
                   <span className="font-medium truncate">
-                    {alert.brand} {alert.name}
+                    {alert.brand} {alert.lensName}
                   </span>
                   <span className="font-mono">
                     {alert.sph >= 0 ? "+" : ""}{alert.sph.toFixed(2)}
@@ -89,9 +91,9 @@ function LowLensStockAlert() {
                     {alert.cyl >= 0 ? "+" : ""}{alert.cyl.toFixed(2)}
                   </span>
                   <span
-                    className={`font-semibold ${alert.quantity === 0 ? "text-destructive" : "text-yellow-600 dark:text-yellow-400"}`}
+                    className={`font-semibold ${alert.currentStock === 0 ? "text-destructive" : "text-yellow-600 dark:text-yellow-400"}`}
                   >
-                    {alert.quantity}
+                    {alert.currentStock}
                   </span>
                   <span className="text-muted-foreground">{alert.minStockLevel}</span>
                 </div>
@@ -105,6 +107,7 @@ function LowLensStockAlert() {
 }
 
 export function LensCatalogPage() {
+  const { t } = useTranslation("optical")
   const { data: lenses, isLoading } = useLensCatalog()
 
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -133,14 +136,14 @@ export function LensCatalogPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Lens Catalog</h1>
+          <h1 className="text-2xl font-bold">{t("lenses.title")}</h1>
           <p className="text-sm text-muted-foreground mt-0.5">
-            Manage lens inventory with per-power stock tracking
+            {t("lenses.subtitle")}
           </p>
         </div>
         <Button onClick={openCreateDialog}>
           <IconPlus className="h-4 w-4 mr-2" />
-          Add Lens
+          {t("lenses.addLens")}
         </Button>
       </div>
 

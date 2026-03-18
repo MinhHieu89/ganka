@@ -32,4 +32,5 @@ public sealed record WarrantyClaimSummaryDto(
     int Resolution,
     int ApprovalStatus,
     bool RequiresApproval,
+    string AssessmentNotes,
     DateTime CreatedAt);

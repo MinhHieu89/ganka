@@ -1,4 +1,5 @@
 using Optical.Contracts.Queries;
+using Shared.Domain;
 using Wolverine;
 
 namespace Optical.Application.Features.Prescriptions;
@@ -44,7 +45,7 @@ public static class GetPrescriptionComparisonHandler
         "Pd"
     ];
 
-    public static async Task<PrescriptionComparisonDto?> Handle(
+    public static async Task<Result<PrescriptionComparisonDto>> Handle(
         GetPrescriptionComparisonQuery query,
         IMessageBus bus,
         CancellationToken ct)
@@ -53,13 +54,15 @@ public static class GetPrescriptionComparisonHandler
             new GetPatientOpticalPrescriptionsQuery(query.PatientId), ct);
 
         if (history is null || history.Count == 0)
-            return null;
+            return Result.Failure<PrescriptionComparisonDto>(
+                Error.NotFound("Prescriptions", query.PatientId));
 
         var rx1 = history.FirstOrDefault(p => p.Id == query.PrescriptionId1);
         var rx2 = history.FirstOrDefault(p => p.Id == query.PrescriptionId2);
 
         if (rx1 is null || rx2 is null)
-            return null;
+            return Result.Failure<PrescriptionComparisonDto>(
+                Error.NotFound("Prescription", rx1 is null ? query.PrescriptionId1 : query.PrescriptionId2));
 
         // Determine which is older/newer by VisitDate
         var older = rx1.VisitDate <= rx2.VisitDate ? rx1 : rx2;

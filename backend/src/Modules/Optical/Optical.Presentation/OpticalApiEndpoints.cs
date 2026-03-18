@@ -76,7 +76,7 @@ public static class OpticalApiEndpoints
                 command.LensWidth, command.BridgeWidth, command.TempleLength,
                 command.Material, command.FrameType, command.Gender,
                 command.SellingPrice, command.CostPrice, command.Barcode,
-                command.IsActive);
+                command.StockQuantity, command.IsActive);
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
         });

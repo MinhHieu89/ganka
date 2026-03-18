@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { IconPlus, IconEdit, IconEye, IconEyeOff, IconPackage } from "@tabler/icons-react"
 import { Button } from "@/shared/components/Button"
 import { Badge } from "@/shared/components/Badge"
@@ -19,6 +20,7 @@ function formatVnd(amount: number): string {
 }
 
 function SavingsBadge({ combo }: { combo: ComboPackageDto }) {
+  const { t } = useTranslation("optical")
   if (!combo.originalTotalPrice || !combo.savings || combo.savings <= 0) return null
   const pct = Math.round((combo.savings / combo.originalTotalPrice) * 100)
   return (
@@ -27,7 +29,7 @@ function SavingsBadge({ combo }: { combo: ComboPackageDto }) {
         {formatVnd(combo.originalTotalPrice)}
       </span>
       <Badge className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border-0 text-xs">
-        Save {pct}%
+        {t("combos.savings")} {pct}%
       </Badge>
     </div>
   )
@@ -39,6 +41,7 @@ interface ComboCardProps {
 }
 
 function ComboCard({ combo, onEdit }: ComboCardProps) {
+  const { t } = useTranslation("optical")
   return (
     <Card className={combo.isActive ? undefined : "opacity-60 border-dashed"}>
       <CardHeader className="pb-2">
@@ -57,14 +60,14 @@ function ComboCard({ combo, onEdit }: ComboCardProps) {
                 variant="outline"
                 className="border-green-500 text-green-700 dark:text-green-400 text-xs"
               >
-                Active
+                {t("combos.active")}
               </Badge>
             ) : (
               <Badge
                 variant="outline"
                 className="border-muted-foreground text-muted-foreground text-xs"
               >
-                Inactive
+                {t("combos.inactive")}
               </Badge>
             )}
           </div>
@@ -74,13 +77,13 @@ function ComboCard({ combo, onEdit }: ComboCardProps) {
         {/* Frame and Lens info */}
         <div className="space-y-1 text-sm">
           <div className="flex items-center gap-2">
-            <span className="text-muted-foreground w-12 shrink-0">Frame:</span>
+            <span className="text-muted-foreground w-12 shrink-0">{t("combos.frame")}:</span>
             <span className="font-medium truncate">
               {combo.frameName ?? <span className="text-muted-foreground italic">Any frame</span>}
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-muted-foreground w-12 shrink-0">Lens:</span>
+            <span className="text-muted-foreground w-12 shrink-0">{t("combos.lens")}:</span>
             <span className="font-medium truncate">
               {combo.lensName ?? <span className="text-muted-foreground italic">Any lens</span>}
             </span>
@@ -90,7 +93,7 @@ function ComboCard({ combo, onEdit }: ComboCardProps) {
         {/* Pricing */}
         <div className="pt-2 border-t space-y-1">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">Combo Price</span>
+            <span className="text-sm text-muted-foreground">{t("combos.comboPrice")}</span>
             <span className="text-base font-bold text-primary">
               {formatVnd(combo.comboPrice)}
             </span>
@@ -99,7 +102,7 @@ function ComboCard({ combo, onEdit }: ComboCardProps) {
             <div className="flex items-center justify-between">
               <SavingsBadge combo={combo} />
               <span className="text-sm font-medium text-green-700 dark:text-green-400">
-                Save {formatVnd(combo.savings)}
+                {t("combos.savings")} {formatVnd(combo.savings)}
               </span>
             </div>
           )}
@@ -113,7 +116,7 @@ function ComboCard({ combo, onEdit }: ComboCardProps) {
           onClick={() => onEdit(combo)}
         >
           <IconEdit className="h-3.5 w-3.5 mr-1.5" />
-          Edit
+          {t("common.edit")}
         </Button>
       </CardContent>
     </Card>
@@ -121,6 +124,7 @@ function ComboCard({ combo, onEdit }: ComboCardProps) {
 }
 
 export function ComboPackagePage() {
+  const { t } = useTranslation("optical")
   const [showInactive, setShowInactive] = useState(false)
   const [formOpen, setFormOpen] = useState(false)
   const [editingCombo, setEditingCombo] = useState<ComboPackageDto | undefined>(undefined)
@@ -144,9 +148,9 @@ export function ComboPackagePage() {
       {/* Page header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Combo Packages</h1>
+          <h1 className="text-2xl font-bold">{t("combos.title")}</h1>
           <p className="text-sm text-muted-foreground mt-0.5">
-            Manage preset frame + lens combinations with discounted pricing
+            {t("combos.subtitle")}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -156,20 +160,15 @@ export function ComboPackagePage() {
             onClick={() => setShowInactive((v) => !v)}
           >
             {showInactive ? (
-              <>
-                <IconEyeOff className="h-4 w-4 mr-1.5" />
-                Hide Inactive
-              </>
+              <IconEyeOff className="h-4 w-4 mr-1.5" />
             ) : (
-              <>
-                <IconEye className="h-4 w-4 mr-1.5" />
-                Show Inactive
-              </>
+              <IconEye className="h-4 w-4 mr-1.5" />
             )}
+            {t("combos.inactive")}
           </Button>
           <Button onClick={openCreate}>
             <IconPlus className="h-4 w-4 mr-2" />
-            Create Combo
+            {t("combos.addCombo")}
           </Button>
         </div>
       </div>
@@ -184,13 +183,13 @@ export function ComboPackagePage() {
       ) : visibleCombos.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 text-center">
           <IconPackage className="h-12 w-12 text-muted-foreground mb-4" />
-          <h3 className="text-lg font-medium">No combo packages yet</h3>
+          <h3 className="text-lg font-medium">{t("combos.empty")}</h3>
           <p className="text-sm text-muted-foreground mt-1 mb-4">
-            Create preset frame and lens combinations with bundled pricing
+            {t("combos.subtitle")}
           </p>
           <Button onClick={openCreate}>
             <IconPlus className="h-4 w-4 mr-2" />
-            Create Combo
+            {t("combos.addCombo")}
           </Button>
         </div>
       ) : (

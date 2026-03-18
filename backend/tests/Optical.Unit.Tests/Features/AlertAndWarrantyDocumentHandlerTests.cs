@@ -51,8 +51,9 @@ public class AlertAndWarrantyDocumentHandlerTests
         var result = await GetLowLensStockAlertsHandler.Handle(query, _lensRepo, CancellationToken.None);
 
         // Assert
-        result.Should().HaveCount(1);
-        var alert = result[0];
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().HaveCount(1);
+        var alert = result.Value[0];
         alert.LensCatalogItemId.Should().Be(item.Id);
         alert.LensName.Should().Be("Crizal SV");
         alert.Brand.Should().Be("Essilor");
@@ -78,7 +79,8 @@ public class AlertAndWarrantyDocumentHandlerTests
         var result = await GetLowLensStockAlertsHandler.Handle(query, _lensRepo, CancellationToken.None);
 
         // Assert
-        result.Should().BeEmpty();
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().BeEmpty();
     }
 
     [Fact]
@@ -94,7 +96,8 @@ public class AlertAndWarrantyDocumentHandlerTests
         var result = await GetLowLensStockAlertsHandler.Handle(query, _lensRepo, CancellationToken.None);
 
         // Assert
-        result.Should().BeEmpty();
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().BeEmpty();
     }
 
     [Fact]
@@ -116,7 +119,8 @@ public class AlertAndWarrantyDocumentHandlerTests
         var result = await GetLowLensStockAlertsHandler.Handle(query, _lensRepo, CancellationToken.None);
 
         // Assert
-        result.Should().HaveCount(2);
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().HaveCount(2);
     }
 
     [Fact]
@@ -135,8 +139,9 @@ public class AlertAndWarrantyDocumentHandlerTests
         var result = await GetLowLensStockAlertsHandler.Handle(query, _lensRepo, CancellationToken.None);
 
         // Assert
-        result.Should().HaveCount(1);
-        result[0].Add.Should().Be(2.00m);
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().HaveCount(1);
+        result.Value[0].Add.Should().Be(2.00m);
     }
 
     // ─── UploadWarrantyDocument Tests ─────────────────────────────────────────

@@ -57,10 +57,11 @@ public class WarrantyHandlerTests
         var result = await GetWarrantyClaimsHandler.Handle(query, _warrantyRepo, CancellationToken.None);
 
         // Assert
-        result.Items.Should().HaveCount(2);
-        result.TotalCount.Should().Be(totalCount);
-        result.Page.Should().Be(1);
-        result.PageSize.Should().Be(20);
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Items.Should().HaveCount(2);
+        result.Value.TotalCount.Should().Be(totalCount);
+        result.Value.Page.Should().Be(1);
+        result.Value.PageSize.Should().Be(20);
     }
 
     [Fact]
@@ -85,8 +86,9 @@ public class WarrantyHandlerTests
         var result = await GetWarrantyClaimsHandler.Handle(query, _warrantyRepo, CancellationToken.None);
 
         // Assert
-        result.Items.Should().HaveCount(1);
-        result.TotalCount.Should().Be(pendingCount);
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Items.Should().HaveCount(1);
+        result.Value.TotalCount.Should().Be(pendingCount);
         await _warrantyRepo.Received(1).GetAllAsync(pendingStatusFilter, 1, 20, Arg.Any<CancellationToken>());
         await _warrantyRepo.Received(1).GetTotalCountAsync(pendingStatusFilter, Arg.Any<CancellationToken>());
     }
@@ -106,8 +108,9 @@ public class WarrantyHandlerTests
         var result = await GetWarrantyClaimsHandler.Handle(query, _warrantyRepo, CancellationToken.None);
 
         // Assert
-        result.Items.Should().BeEmpty();
-        result.TotalCount.Should().Be(0);
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Items.Should().BeEmpty();
+        result.Value.TotalCount.Should().Be(0);
     }
 
     [Fact]
@@ -126,7 +129,8 @@ public class WarrantyHandlerTests
         var result = await GetWarrantyClaimsHandler.Handle(query, _warrantyRepo, CancellationToken.None);
 
         // Assert
-        var dto = result.Items.First();
+        result.IsSuccess.Should().BeTrue();
+        var dto = result.Value.Items.First();
         dto.GlassesOrderId.Should().Be(DefaultOrderId);
         dto.Resolution.Should().Be((int)WarrantyResolution.Repair);
         dto.ApprovalStatus.Should().Be((int)WarrantyApprovalStatus.Pending);
@@ -149,7 +153,8 @@ public class WarrantyHandlerTests
         var result = await GetWarrantyClaimsHandler.Handle(query, _warrantyRepo, CancellationToken.None);
 
         // Assert
-        result.Items.First().RequiresApproval.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Items.First().RequiresApproval.Should().BeTrue();
     }
 
     #endregion

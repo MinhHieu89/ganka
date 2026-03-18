@@ -1,4 +1,6 @@
 import { useState } from "react"
+import { useNavigate } from "@tanstack/react-router"
+import { useTranslation } from "react-i18next"
 import { IconPlus } from "@tabler/icons-react"
 import { Button } from "@/shared/components/Button"
 import { Skeleton } from "@/shared/components/Skeleton"
@@ -8,6 +10,8 @@ import { OverdueOrderAlert } from "./OverdueOrderAlert"
 import { useGlassesOrders, useOverdueOrders } from "@/features/optical/api/optical-queries"
 
 export function GlassesOrdersPage() {
+  const { t } = useTranslation("optical")
+  const navigate = useNavigate()
   const [statusFilter, setStatusFilter] = useState<number | undefined>(undefined)
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
 
@@ -24,14 +28,14 @@ export function GlassesOrdersPage() {
       {/* Page header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Glasses Orders</h1>
+          <h1 className="text-2xl font-bold">{t("orders.title")}</h1>
           <p className="text-sm text-muted-foreground mt-0.5">
-            Manage glasses order lifecycle from ordering to delivery
+            {t("orders.subtitle")}
           </p>
         </div>
         <Button onClick={() => setCreateDialogOpen(true)}>
           <IconPlus className="h-4 w-4 mr-2" />
-          New Order
+          {t("orders.addOrder")}
         </Button>
       </div>
 
@@ -54,6 +58,7 @@ export function GlassesOrdersPage() {
           orders={orders}
           statusFilter={statusFilter}
           onStatusFilterChange={setStatusFilter}
+          onRowClick={(order) => navigate({ to: "/optical/orders/$orderId", params: { orderId: order.id } })}
         />
       )}
 

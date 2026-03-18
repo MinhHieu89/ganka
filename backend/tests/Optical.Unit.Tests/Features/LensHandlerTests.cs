@@ -353,9 +353,10 @@ public class LensHandlerTests
         var result = await GetLensCatalogHandler.Handle(query, repository, CancellationToken.None);
 
         // Assert
-        result.Should().HaveCount(1);
-        result[0].Brand.Should().Be("Essilor");
-        result[0].IsActive.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().HaveCount(1);
+        result.Value[0].Brand.Should().Be("Essilor");
+        result.Value[0].IsActive.Should().BeTrue();
     }
 
     [Fact]
@@ -376,7 +377,8 @@ public class LensHandlerTests
         var result = await GetLensCatalogHandler.Handle(query, repository, CancellationToken.None);
 
         // Assert
-        result.Should().HaveCount(2);
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().HaveCount(2);
     }
 
     [Fact]
@@ -397,10 +399,11 @@ public class LensHandlerTests
         var result = await GetLensCatalogHandler.Handle(query, repository, CancellationToken.None);
 
         // Assert
-        result.Should().HaveCount(1);
-        result[0].StockEntries.Should().HaveCount(2);
-        result[0].StockEntries[0].Sph.Should().Be(-2.00m);
-        result[0].StockEntries[1].Sph.Should().Be(-1.50m);
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().HaveCount(1);
+        result.Value[0].StockEntries.Should().HaveCount(2);
+        result.Value[0].StockEntries[0].Sph.Should().Be(-2.00m);
+        result.Value[0].StockEntries[1].Sph.Should().Be(-1.50m);
     }
 
     [Fact]
@@ -417,7 +420,8 @@ public class LensHandlerTests
         var result = await GetLensCatalogHandler.Handle(query, repository, CancellationToken.None);
 
         // Assert
-        result.Should().BeEmpty();
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().BeEmpty();
     }
 
     // ─── AdjustLensStock Tests ─────────────────────────────────────────────────

@@ -15,7 +15,8 @@ public sealed record AdjustLensStockCommand(
     decimal Cyl,
     decimal? Add,
     int QuantityChange,
-    string Reason);
+    string Reason,
+    int? MinStockLevel = null);
 
 /// <summary>
 /// Wolverine static handler for adjusting lens stock entries.
@@ -83,6 +84,9 @@ public static class AdjustLensStockHandler
                 return Result.Failure<LensStockEntryDto>(Error.Validation(ex.Message));
             }
         }
+
+        if (command.MinStockLevel.HasValue)
+            resultEntry.UpdateMinStockLevel(command.MinStockLevel.Value);
 
         await unitOfWork.SaveChangesAsync(ct);
 

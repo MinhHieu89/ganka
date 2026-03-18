@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react"
+import { useTranslation } from "react-i18next"
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -32,29 +33,30 @@ interface GlassesOrderTableProps {
 
 const columnHelper = createColumnHelper<GlassesOrderDto>()
 
-const STATUS_FILTER_OPTIONS = [
-  { value: "all", label: "All Statuses" },
-  { value: "0", label: "Ordered" },
-  { value: "1", label: "Processing" },
-  { value: "2", label: "Received" },
-  { value: "3", label: "Ready for Pickup" },
-  { value: "4", label: "Delivered" },
-]
-
 export function GlassesOrderTable({
   orders,
   onRowClick,
   statusFilter,
   onStatusFilterChange,
 }: GlassesOrderTableProps) {
+  const { t } = useTranslation("optical")
   const [sorting, setSorting] = useState<SortingState>([{ id: "createdAt", desc: true }])
+
+  const STATUS_FILTER_OPTIONS = useMemo(() => [
+    { value: "all", label: t("common.all") },
+    { value: "0", label: t("enums.orderStatus.ordered") },
+    { value: "1", label: t("enums.orderStatus.processing") },
+    { value: "2", label: t("enums.orderStatus.received") },
+    { value: "3", label: t("enums.orderStatus.ready") },
+    { value: "4", label: t("enums.orderStatus.delivered") },
+  ], [t])
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 20 })
 
   const columns = useMemo(
     () => [
       columnHelper.accessor("id", {
         id: "orderNumber",
-        header: () => "Order #",
+        header: () => t("orders.orderCode"),
         cell: (info) => (
           <span className="font-mono text-xs text-muted-foreground">
             {info.getValue().substring(0, 8).toUpperCase()}
@@ -63,12 +65,12 @@ export function GlassesOrderTable({
         enableSorting: false,
       }),
       columnHelper.accessor("patientName", {
-        header: () => "Patient Name",
+        header: () => t("orders.patient"),
         cell: (info) => <span className="font-medium">{info.getValue()}</span>,
         enableSorting: true,
       }),
       columnHelper.accessor("status", {
-        header: () => "Status",
+        header: () => t("orders.status"),
         cell: (info) => (
           <OrderStatusBadge
             status={info.getValue()}
@@ -79,39 +81,39 @@ export function GlassesOrderTable({
         enableSorting: false,
       }),
       columnHelper.accessor("processingType", {
-        header: () => "Processing",
+        header: () => t("orders.processingType"),
         cell: (info) => (
           <span className="text-sm">
-            {PROCESSING_TYPE_MAP[info.getValue()] ?? `Type ${info.getValue()}`}
+            {t(PROCESSING_TYPE_MAP[info.getValue()] ?? `Type ${info.getValue()}`)}
           </span>
         ),
         enableSorting: false,
       }),
       columnHelper.accessor("totalPrice", {
-        header: () => "Total Price",
+        header: () => t("orders.totalPrice"),
         cell: (info) => (
           <span className="font-medium tabular-nums">{formatVND(info.getValue())}</span>
         ),
         enableSorting: true,
       }),
       columnHelper.accessor("isPaymentConfirmed", {
-        header: () => "Payment",
+        header: () => t("orders.paymentStatus"),
         cell: (info) =>
           info.getValue() ? (
             <span className="inline-flex items-center gap-1 text-green-600 dark:text-green-400 text-sm font-medium">
               <IconCheck className="h-3.5 w-3.5" />
-              Confirmed
+              {t("enums.warrantyApproval.approved")}
             </span>
           ) : (
             <span className="inline-flex items-center gap-1 text-orange-600 dark:text-orange-400 text-sm">
               <IconAlertTriangle className="h-3.5 w-3.5" />
-              Pending
+              {t("enums.warrantyApproval.pending")}
             </span>
           ),
         enableSorting: false,
       }),
       columnHelper.accessor("estimatedDeliveryDate", {
-        header: () => "Est. Delivery",
+        header: () => t("orders.estimatedDelivery"),
         cell: (info) => {
           const val = info.getValue()
           if (!val) return <span className="text-muted-foreground text-sm">-</span>
@@ -131,7 +133,7 @@ export function GlassesOrderTable({
         enableSorting: true,
       }),
       columnHelper.accessor("createdAt", {
-        header: () => "Created At",
+        header: () => t("orders.createdAt"),
         cell: (info) => (
           <span className="text-sm text-muted-foreground">
             {new Date(info.getValue()).toLocaleDateString("vi-VN")}
@@ -201,7 +203,7 @@ export function GlassesOrderTable({
       <DataTable
         table={table}
         columns={columns}
-        emptyMessage="No glasses orders found."
+        emptyMessage={t("orders.empty")}
         onRowClick={onRowClick}
         rowClassName={rowClassName}
       />

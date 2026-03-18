@@ -97,7 +97,8 @@ public class Frame : AggregateRoot, IAuditable
         decimal sellingPrice,
         decimal costPrice,
         string? barcode,
-        BranchId branchId)
+        BranchId branchId,
+        int stockQuantity = 0)
     {
         var frame = new Frame
         {
@@ -113,7 +114,7 @@ public class Frame : AggregateRoot, IAuditable
             SellingPrice = sellingPrice,
             CostPrice = costPrice,
             Barcode = barcode,
-            StockQuantity = 0,
+            StockQuantity = stockQuantity,
             MinStockLevel = 2,
             IsActive = true
         };
@@ -123,7 +124,7 @@ public class Frame : AggregateRoot, IAuditable
     }
 
     /// <summary>
-    /// Updates all editable attributes of the frame. Does not change stock quantity.
+    /// Updates all editable attributes of the frame including stock quantity.
     /// </summary>
     public void Update(
         string brand,
@@ -137,7 +138,8 @@ public class Frame : AggregateRoot, IAuditable
         FrameGender gender,
         decimal sellingPrice,
         decimal costPrice,
-        string? barcode)
+        string? barcode,
+        int? stockQuantity = null)
     {
         Brand = brand;
         Model = model;
@@ -151,6 +153,8 @@ public class Frame : AggregateRoot, IAuditable
         SellingPrice = sellingPrice;
         CostPrice = costPrice;
         Barcode = barcode;
+        if (stockQuantity.HasValue)
+            StockQuantity = stockQuantity.Value;
 
         SetUpdatedAt();
     }

@@ -1,4 +1,5 @@
 import { useEffect, useMemo } from "react"
+import { useTranslation } from "react-i18next"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
@@ -12,6 +13,7 @@ import {
   DialogTitle,
 } from "@/shared/components/Dialog"
 import { Input } from "@/shared/components/Input"
+import { NumberInput } from "@/shared/components/NumberInput"
 import { AutoResizeTextarea } from "@/shared/components/AutoResizeTextarea"
 import { Button } from "@/shared/components/Button"
 import { Field, FieldLabel, FieldError } from "@/shared/components/Field"
@@ -74,6 +76,7 @@ export function ComboPackageForm({
   onOpenChange,
   onSuccess,
 }: ComboPackageFormProps) {
+  const { t } = useTranslation("optical")
   const isEdit = !!combo
 
   const createMutation = useCreateComboPackage()
@@ -169,10 +172,10 @@ export function ComboPackageForm({
     try {
       if (isEdit && combo) {
         await updateMutation.mutateAsync({ id: combo.id, ...input })
-        toast.success("Combo package updated")
+        toast.success(t("combos.updated"))
       } else {
         await createMutation.mutateAsync(input)
-        toast.success("Combo package created")
+        toast.success(t("combos.created"))
       }
       onOpenChange(false)
       onSuccess?.()
@@ -192,7 +195,7 @@ export function ComboPackageForm({
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>
-            {isEdit ? "Edit Combo Package" : "Create Combo Package"}
+            {isEdit ? t("combos.editCombo") : t("combos.addCombo")}
           </DialogTitle>
         </DialogHeader>
 
@@ -203,11 +206,11 @@ export function ComboPackageForm({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
-                <FieldLabel htmlFor={field.name}>Package Name</FieldLabel>
+                <FieldLabel htmlFor={field.name}>{t("combos.name")}</FieldLabel>
                 <Input
                   {...field}
                   id={field.name}
-                  placeholder="e.g. Rayban Classic + Essilor Crizal SV"
+                  placeholder={t("combos.namePlaceholder")}
                   aria-invalid={fieldState.invalid || undefined}
                 />
                 {fieldState.error && (
@@ -223,12 +226,12 @@ export function ComboPackageForm({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
-                <FieldLabel htmlFor={field.name}>Description</FieldLabel>
+                <FieldLabel htmlFor={field.name}>{t("combos.description")}</FieldLabel>
                 <AutoResizeTextarea
                   {...field}
                   id={field.name}
                   rows={2}
-                  placeholder="Optional details about the combo contents..."
+                  placeholder={t("combos.descriptionPlaceholder")}
                   aria-invalid={fieldState.invalid || undefined}
                 />
                 {fieldState.error && (
@@ -244,17 +247,17 @@ export function ComboPackageForm({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
-                <FieldLabel htmlFor="frameId">Frame</FieldLabel>
+                <FieldLabel htmlFor="frameId">{t("combos.frame")}</FieldLabel>
                 <Select
                   value={field.value ?? NONE_VALUE}
                   onValueChange={(v) => field.onChange(v === NONE_VALUE ? undefined : v)}
                 >
                   <SelectTrigger id="frameId" aria-invalid={fieldState.invalid || undefined}>
-                    <SelectValue placeholder="Select a frame (optional)" />
+                    <SelectValue placeholder={t("combos.selectFrame")} />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value={NONE_VALUE}>
-                      <span className="text-muted-foreground">Any frame</span>
+                      <span className="text-muted-foreground">{t("combos.anyFrame")}</span>
                     </SelectItem>
                     {frames.map((frame) => (
                       <SelectItem key={frame.id} value={frame.id}>
@@ -279,7 +282,7 @@ export function ComboPackageForm({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
-                <FieldLabel htmlFor="lensCatalogItemId">Lens</FieldLabel>
+                <FieldLabel htmlFor="lensCatalogItemId">{t("combos.lens")}</FieldLabel>
                 <Select
                   value={field.value ?? NONE_VALUE}
                   onValueChange={(v) => field.onChange(v === NONE_VALUE ? undefined : v)}
@@ -288,11 +291,11 @@ export function ComboPackageForm({
                     id="lensCatalogItemId"
                     aria-invalid={fieldState.invalid || undefined}
                   >
-                    <SelectValue placeholder="Select a lens (optional)" />
+                    <SelectValue placeholder={t("combos.selectLens")} />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value={NONE_VALUE}>
-                      <span className="text-muted-foreground">Any lens</span>
+                      <span className="text-muted-foreground">{t("combos.anyLens")}</span>
                     </SelectItem>
                     {(lenses ?? []).map((lens) => (
                       <SelectItem key={lens.id} value={lens.id}>
@@ -319,11 +322,10 @@ export function ComboPackageForm({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>Combo Price (₫)</FieldLabel>
-                  <Input
+                  <FieldLabel htmlFor={field.name}>{t("combos.comboPrice")} (₫)</FieldLabel>
+                  <NumberInput
                     {...field}
                     id={field.name}
-                    type="number"
                     min={1}
                     step={1000}
                     aria-invalid={fieldState.invalid || undefined}
@@ -342,17 +344,16 @@ export function ComboPackageForm({
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
                   <FieldLabel htmlFor="originalTotalPrice">
-                    Original Total (₫)
+                    {t("combos.originalPrice")} (₫)
                     {autoOriginalPrice !== null && (
                       <span className="ml-1 text-xs text-muted-foreground font-normal">
                         (auto)
                       </span>
                     )}
                   </FieldLabel>
-                  <Input
+                  <NumberInput
                     {...field}
                     id="originalTotalPrice"
-                    type="number"
                     min={0}
                     step={1000}
                     value={field.value ?? ""}
@@ -389,11 +390,11 @@ export function ComboPackageForm({
               variant="outline"
               onClick={() => onOpenChange(false)}
             >
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting && <IconLoader2 className="h-4 w-4 mr-2 animate-spin" />}
-              {isEdit ? "Save Changes" : "Create Combo"}
+              {isEdit ? t("common.save") : t("combos.addCombo")}
             </Button>
           </DialogFooter>
         </form>

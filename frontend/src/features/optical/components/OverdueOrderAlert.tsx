@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next"
 import { IconAlertTriangle } from "@tabler/icons-react"
 import { Alert, AlertDescription, AlertTitle } from "@/shared/components/Alert"
 import { cn } from "@/shared/lib/utils"
@@ -13,14 +14,15 @@ export function OverdueOrderAlert({
   orderCount,
   className,
 }: OverdueOrderAlertProps) {
+  const { t } = useTranslation("optical")
+
   if (orderCount !== undefined) {
     return (
       <Alert variant="destructive" className={cn("", className)}>
         <IconAlertTriangle className="h-4 w-4" />
-        <AlertTitle>Overdue Orders</AlertTitle>
+        <AlertTitle>{t("orders.overdueOrders")}</AlertTitle>
         <AlertDescription>
-          {orderCount} order{orderCount !== 1 ? "s are" : " is"} past the estimated delivery date
-          and require attention.
+          {t("orders.overdueAlert", { count: orderCount })}
         </AlertDescription>
       </Alert>
     )
@@ -29,13 +31,12 @@ export function OverdueOrderAlert({
   return (
     <Alert variant="destructive" className={cn("", className)}>
       <IconAlertTriangle className="h-4 w-4" />
-      <AlertTitle>Order Overdue</AlertTitle>
+      <AlertTitle>{t("orders.overdue")}</AlertTitle>
       <AlertDescription>
-        This order is past its estimated delivery date
-        {estimatedDate ? (
+        {t("orders.overdueAlert", { count: 1 })}
+        {estimatedDate && (
           <>
-            {" "}
-            of{" "}
+            {" — "}
             <span className="font-semibold">
               {new Date(estimatedDate).toLocaleDateString("vi-VN", {
                 year: "numeric",
@@ -44,10 +45,7 @@ export function OverdueOrderAlert({
               })}
             </span>
           </>
-        ) : (
-          ""
         )}
-        . Please follow up with the processing team.
       </AlertDescription>
     </Alert>
   )

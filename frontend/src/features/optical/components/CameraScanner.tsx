@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { Html5QrcodeScanner, Html5QrcodeSupportedFormats } from "html5-qrcode"
 import { IconCamera, IconCameraOff } from "@tabler/icons-react"
 import { Button } from "@/shared/components/Button"
@@ -21,6 +22,7 @@ export function CameraScanner({
   onError,
   isActive: externalIsActive,
 }: CameraScannerProps) {
+  const { t } = useTranslation("optical")
   const scannerRef = useRef<Html5QrcodeScanner | null>(null)
   const uniqueId = useId()
   const scannerElementId = `optical-barcode-reader-${uniqueId.replace(/:/g, "")}`
@@ -79,9 +81,9 @@ export function CameraScanner({
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="text-sm font-medium">Camera Scanner</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("stocktaking.cameraScanner")}</CardTitle>
             <CardDescription className="text-xs">
-              {isActive ? "Point camera at barcode" : "Use camera to scan barcodes"}
+              {isActive ? t("stocktaking.cameraHintActive") : t("stocktaking.cameraHintInactive")}
             </CardDescription>
           </div>
           {externalIsActive === undefined && (
@@ -93,12 +95,12 @@ export function CameraScanner({
               {isActive ? (
                 <>
                   <IconCameraOff className="mr-1 h-4 w-4" />
-                  Stop
+                  {t("stocktaking.stopCamera")}
                 </>
               ) : (
                 <>
                   <IconCamera className="mr-1 h-4 w-4" />
-                  Start Camera
+                  {t("stocktaking.startCamera")}
                 </>
               )}
             </Button>
@@ -113,7 +115,7 @@ export function CameraScanner({
         />
         {!isActive && (
           <div className="text-muted-foreground flex min-h-[100px] items-center justify-center text-sm">
-            Camera is off. Click "Start Camera" to begin scanning.
+            {t("stocktaking.cameraOff")}
           </div>
         )}
       </CardContent>

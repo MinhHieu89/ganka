@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import {
   IconPrinter,
   IconArrowsSort,
@@ -40,8 +41,9 @@ function getCategory(item: StocktakingItemDto): DiscrepancyCategory {
 }
 
 function getCategoryLabel(category: DiscrepancyCategory): string {
+  // Labels will be overridden by translations in the component
   switch (category) {
-    case "match": return "Match"
+    case "match": return "OK"
     case "over": return "Over"
     case "under": return "Under"
     case "missing": return "Missing"
@@ -67,6 +69,7 @@ function getCategoryRowClass(category: DiscrepancyCategory): string {
 }
 
 export function DiscrepancyReport({ sessionId }: DiscrepancyReportProps) {
+  const { t } = useTranslation("optical")
   const { data: report, isLoading, error } = useDiscrepancyReport(sessionId)
   const [sortKey, setSortKey] = useState<SortKey>("discrepancy")
   const [sortDir, setSortDir] = useState<SortDir>("desc")
@@ -101,7 +104,7 @@ export function DiscrepancyReport({ sessionId }: DiscrepancyReportProps) {
     return (
       <Card>
         <CardContent className="py-12 text-center text-muted-foreground">
-          <p>Failed to load discrepancy report. Please try again.</p>
+          <p>{t("common.noData")}</p>
         </CardContent>
       </Card>
     )
@@ -167,33 +170,33 @@ export function DiscrepancyReport({ sessionId }: DiscrepancyReportProps) {
       {/* Summary Cards */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
         <SummaryCard
-          title="Total Scanned"
+          title={t("stocktaking.itemsScanned")}
           value={totalScanned}
           className="sm:col-span-1"
         />
         <SummaryCard
-          title="Matches"
+          title="OK"
           value={matches}
           icon={<IconCheck className="h-4 w-4 text-green-600" />}
           valueClass="text-green-600"
           className="bg-green-50 dark:bg-green-950/20"
         />
         <SummaryCard
-          title="Over Count"
+          title={t("stocktaking.over")}
           value={overCount}
           icon={<IconArrowUp className="h-4 w-4 text-yellow-600" />}
           valueClass="text-yellow-600"
           className="bg-yellow-50 dark:bg-yellow-950/20"
         />
         <SummaryCard
-          title="Under Count"
+          title={t("stocktaking.under")}
           value={underCount}
           icon={<IconArrowDown className="h-4 w-4 text-red-600" />}
           valueClass="text-red-600"
           className="bg-red-50 dark:bg-red-950/20"
         />
         <SummaryCard
-          title="Missing"
+          title={t("stocktaking.missing")}
           value={missingCount}
           icon={<IconQuestionMark className="h-4 w-4 text-muted-foreground" />}
           valueClass="text-muted-foreground"
@@ -205,7 +208,7 @@ export function DiscrepancyReport({ sessionId }: DiscrepancyReportProps) {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-3">
           <CardTitle className="text-base">
-            Discrepancy Details
+            {t("stocktaking.discrepancyReport")}
             {report.sessionName && (
               <span className="text-muted-foreground ml-2 text-sm font-normal">
                 — {report.sessionName}
@@ -214,13 +217,13 @@ export function DiscrepancyReport({ sessionId }: DiscrepancyReportProps) {
           </CardTitle>
           <Button variant="outline" size="sm" onClick={handlePrint}>
             <IconPrinter className="mr-1.5 h-4 w-4" />
-            Print Report
+            {t("stocktaking.exportReport")}
           </Button>
         </CardHeader>
         <CardContent className="p-0">
           {sorted.length === 0 ? (
             <div className="text-muted-foreground py-12 text-center text-sm">
-              No items recorded in this stocktaking session.
+              {t("stocktaking.empty")}
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -231,33 +234,33 @@ export function DiscrepancyReport({ sessionId }: DiscrepancyReportProps) {
                       className="cursor-pointer select-none whitespace-nowrap"
                       onClick={() => handleSort("barcode")}
                     >
-                      Barcode <SortIcon columnKey="barcode" />
+                      {t("stocktaking.barcode")} <SortIcon columnKey="barcode" />
                     </TableHead>
                     <TableHead
                       className="cursor-pointer select-none"
                       onClick={() => handleSort("frameName")}
                     >
-                      Frame Name <SortIcon columnKey="frameName" />
+                      {t("stocktaking.frame")} <SortIcon columnKey="frameName" />
                     </TableHead>
                     <TableHead
                       className="cursor-pointer select-none text-right"
                       onClick={() => handleSort("physicalCount")}
                     >
-                      Physical <SortIcon columnKey="physicalCount" />
+                      {t("stocktaking.physicalCount")} <SortIcon columnKey="physicalCount" />
                     </TableHead>
                     <TableHead
                       className="cursor-pointer select-none text-right"
                       onClick={() => handleSort("systemCount")}
                     >
-                      System <SortIcon columnKey="systemCount" />
+                      {t("stocktaking.systemCount")} <SortIcon columnKey="systemCount" />
                     </TableHead>
                     <TableHead
                       className="cursor-pointer select-none text-right"
                       onClick={() => handleSort("discrepancy")}
                     >
-                      Discrepancy <SortIcon columnKey="discrepancy" />
+                      {t("stocktaking.discrepancy")} <SortIcon columnKey="discrepancy" />
                     </TableHead>
-                    <TableHead>Category</TableHead>
+                    <TableHead>{t("stocktaking.status")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>

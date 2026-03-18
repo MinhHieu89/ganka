@@ -20,23 +20,35 @@ public sealed record PagedWarrantyClaimsResult(List<WarrantyClaimSummaryDto> Ite
 /// </summary>
 public static class GetWarrantyClaimsHandler
 {
-    public static async Task<PagedWarrantyClaimsResult> Handle(
+    public static async Task<Result<PagedWarrantyClaimsResult>> Handle(
         GetWarrantyClaimsQuery query,
         IWarrantyClaimRepository repository,
+        IGlassesOrderRepository orderRepository,
         CancellationToken ct)
     {
         var claims = await repository.GetAllAsync(
             query.ApprovalStatusFilter, query.Page, query.PageSize, ct);
         var totalCount = await repository.GetTotalCountAsync(query.ApprovalStatusFilter, ct);
 
+        // Batch-load related glasses orders to resolve patient names
+        var orderIds = claims.Select(c => c.GlassesOrderId).Distinct().ToList();
+        var orders = new Dictionary<Guid, string>();
+        foreach (var orderId in orderIds)
+        {
+            var order = await orderRepository.GetByIdAsync(orderId, ct);
+            if (order is not null)
+                orders[orderId] = order.PatientName;
+        }
+
         var items = claims.Select(c => new WarrantyClaimSummaryDto(
             Id: c.Id,
             GlassesOrderId: c.GlassesOrderId,
-            PatientName: null,
+            PatientName: orders.GetValueOrDefault(c.GlassesOrderId),
             ClaimDate: c.ClaimDate,
             Resolution: (int)c.Resolution,
             ApprovalStatus: (int)c.ApprovalStatus,
             RequiresApproval: c.RequiresApproval,
+            AssessmentNotes: c.AssessmentNotes,
             CreatedAt: c.CreatedAt)).ToList();
 
         return new PagedWarrantyClaimsResult(

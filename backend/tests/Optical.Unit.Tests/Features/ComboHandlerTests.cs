@@ -317,9 +317,10 @@ public class ComboHandlerTests
             query, repository, frameRepository, lensRepository, CancellationToken.None);
 
         // Assert
-        result.Should().HaveCount(1);
-        result[0].Name.Should().Be("Active Combo");
-        result[0].ComboPrice.Should().Be(5_000_000m);
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().HaveCount(1);
+        result.Value[0].Name.Should().Be("Active Combo");
+        result.Value[0].ComboPrice.Should().Be(5_000_000m);
     }
 
     [Fact]
@@ -338,7 +339,8 @@ public class ComboHandlerTests
 
         // Assert
         await repository.Received(1).GetAllAsync(true, CancellationToken.None);
-        result.Should().BeEmpty();
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().BeEmpty();
     }
 
     [Fact]
@@ -364,9 +366,10 @@ public class ComboHandlerTests
             query, repository, frameRepository, lensRepository, CancellationToken.None);
 
         // Assert
-        result.Should().HaveCount(1);
-        result[0].FrameId.Should().Be(frameId);
-        result[0].FrameName.Should().Be("Ray-Ban RB3025");
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().HaveCount(1);
+        result.Value[0].FrameId.Should().Be(frameId);
+        result.Value[0].FrameName.Should().Be("Ray-Ban RB3025");
     }
 
     [Fact]
@@ -392,9 +395,10 @@ public class ComboHandlerTests
             query, repository, frameRepository, lensRepository, CancellationToken.None);
 
         // Assert
-        result.Should().HaveCount(1);
-        result[0].LensCatalogItemId.Should().Be(lensId);
-        result[0].LensName.Should().Be("Essilor Crizal Single Vision");
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().HaveCount(1);
+        result.Value[0].LensCatalogItemId.Should().Be(lensId);
+        result.Value[0].LensName.Should().Be("Essilor Crizal Single Vision");
     }
 
     [Fact]
@@ -420,8 +424,9 @@ public class ComboHandlerTests
             query, repository, frameRepository, lensRepository, CancellationToken.None);
 
         // Assert
-        result.Should().HaveCount(1);
-        var dto = result[0];
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().HaveCount(1);
+        var dto = result.Value[0];
         dto.Id.Should().Be(combo.Id);
         dto.Name.Should().Be("Full Combo");
         dto.Description.Should().Be("A complete glasses combo");

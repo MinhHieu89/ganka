@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react"
+import { useTranslation } from "react-i18next"
 import { IconPlus } from "@tabler/icons-react"
 import { toast } from "sonner"
 import { Button } from "@/shared/components/Button"
@@ -14,6 +15,7 @@ import {
 } from "@/features/optical/api/optical-queries"
 
 export function FrameCatalogPage() {
+  const { t } = useTranslation("optical")
   const [dialogOpen, setDialogOpen] = useState(false)
   const [dialogMode, setDialogMode] = useState<"create" | "edit">("create")
   const [editingFrame, setEditingFrame] = useState<FrameDto | undefined>()
@@ -58,7 +60,7 @@ export function FrameCatalogPage() {
     async (frameId: string) => {
       try {
         const result = await generateBarcodeMutation.mutateAsync(frameId)
-        toast.success(`Barcode generated: ${result.barcode}`)
+        toast.success(`${t("frames.barcodeScanned")}: ${result.barcode}`)
       } catch {
         // Error handled by mutation's onError toast
       }
@@ -78,14 +80,14 @@ export function FrameCatalogPage() {
       {/* Page header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Frame Catalog</h1>
+          <h1 className="text-2xl font-bold">{t("frames.title")}</h1>
           <p className="text-sm text-muted-foreground mt-0.5">
-            Manage optical frame inventory with barcode scanning
+            {t("frames.subtitle")}
           </p>
         </div>
         <Button onClick={openCreateDialog}>
           <IconPlus className="h-4 w-4 mr-2" />
-          Add Frame
+          {t("frames.addFrame")}
         </Button>
       </div>
 
@@ -96,7 +98,7 @@ export function FrameCatalogPage() {
           autoFocus={false}
         />
         <p className="text-xs text-muted-foreground mt-1">
-          Scan a barcode to find a frame quickly
+          {t("frames.scanBarcode")}
         </p>
       </div>
 

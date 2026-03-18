@@ -17,7 +17,7 @@ public sealed record GetPatientPrescriptionHistoryQuery(Guid PatientId);
 /// </summary>
 public static class GetPatientPrescriptionHistoryHandler
 {
-    public static async Task<List<OpticalPrescriptionHistoryDto>> Handle(
+    public static async Task<Result<List<OpticalPrescriptionHistoryDto>>> Handle(
         GetPatientPrescriptionHistoryQuery query,
         IMessageBus bus,
         CancellationToken ct)
@@ -26,7 +26,7 @@ public static class GetPatientPrescriptionHistoryHandler
             new GetPatientOpticalPrescriptionsQuery(query.PatientId), ct);
 
         if (history is null || history.Count == 0)
-            return [];
+            return new List<OpticalPrescriptionHistoryDto>();
 
         return history
             .OrderByDescending(p => p.VisitDate)
