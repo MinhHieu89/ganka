@@ -1,9 +1,8 @@
 import { useState, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { Button } from "@/shared/components/Button"
-import { Label } from "@/shared/components/Label"
 import { Badge } from "@/shared/components/Badge"
-import { RadioGroup, RadioGroupItem } from "@/shared/components/RadioGroup"
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card"
 import { cn } from "@/shared/lib/utils"
 
 // OSDI severity thresholds and config
@@ -133,10 +132,10 @@ export function OsdiQuestionnaire({ onSubmit, isSubmitting, disabled }: OsdiQues
   const { t, i18n } = useTranslation("clinical")
   const isVietnamese = i18n.language === "vi"
 
-  // -1 = N/A, null = unanswered, 0-4 = score
   const [answers, setAnswers] = useState<(number | null)[]>(
     new Array(12).fill(null),
   )
+  const [hasInteracted, setHasInteracted] = useState<boolean[]>(new Array(12).fill(false))
 
   const osdiResult = useMemo(() => calculateOsdi(answers), [answers])
 
@@ -145,6 +144,11 @@ export function OsdiQuestionnaire({ onSubmit, isSubmitting, disabled }: OsdiQues
       const next = [...prev]
       next[questionIndex] = value
       return next
+    })
+    setHasInteracted((prev) => {
+      const n = [...prev]
+      n[questionIndex] = true
+      return n
     })
   }
 
@@ -158,144 +162,99 @@ export function OsdiQuestionnaire({ onSubmit, isSubmitting, disabled }: OsdiQues
   return (
     <div className="space-y-4">
       {/* Live score preview */}
-      <div className="flex items-center gap-3 p-3 rounded-lg border bg-muted/30">
-        <span className="text-sm font-medium">{t("osdi.liveScore")}:</span>
+      <div className="mb-6 p-3 bg-muted rounded-lg text-center">
+        <p className="text-xs text-muted-foreground mb-1">{t("osdi.liveScore")}</p>
         {osdiResult.score !== null ? (
           <>
-            <span className="text-2xl font-bold tabular-nums">
-              {osdiResult.score.toFixed(1)}
-            </span>
-            <Badge className={cn("border", severityConfig.color)} variant="outline">
+            <div className="text-2xl font-bold">{osdiResult.score.toFixed(1)}</div>
+            <Badge variant="outline" className={cn("mt-1 border", severityConfig.color)}>
               {t(severityConfig.label)}
             </Badge>
           </>
         ) : (
-          <span className="text-sm text-muted-foreground">--</span>
+          <div className="text-2xl font-bold text-muted-foreground">--</div>
         )}
-        <span className="text-xs text-muted-foreground ml-auto">
+        <p className="text-xs text-muted-foreground mt-1">
           {t("osdi.answered", { count: osdiResult.answeredCount, total: 12 })}
-        </span>
+        </p>
       </div>
 
       {/* Questions */}
       <div className="space-y-4">
-        {/* Subscale headers */}
-        <div>
-          <h4 className="text-sm font-semibold mb-3">{t("osdi.subscaleA")}</h4>
-          {OSDI_QUESTIONS.slice(0, 5).map((q, idx) => (
-            <QuestionRow
-              key={q.index}
-              question={q}
-              answer={answers[idx]}
-              onChange={(val) => handleAnswerChange(idx, val)}
-              isVietnamese={isVietnamese}
-              disabled={disabled}
-              t={t}
-            />
-          ))}
-        </div>
+        {OSDI_QUESTIONS.map((q, idx) => {
+          const currentAnswer = answers[idx]
+          const isNaEligible = q.hasNA
+          const isNaSelected = isNaEligible && currentAnswer === null && hasInteracted[idx]
 
-        <div>
-          <h4 className="text-sm font-semibold mb-3">{t("osdi.subscaleB")}</h4>
-          {OSDI_QUESTIONS.slice(5, 9).map((q, idx) => (
-            <QuestionRow
-              key={q.index}
-              question={q}
-              answer={answers[idx + 5]}
-              onChange={(val) => handleAnswerChange(idx + 5, val)}
-              isVietnamese={isVietnamese}
-              disabled={disabled}
-              t={t}
-            />
-          ))}
-        </div>
-
-        <div>
-          <h4 className="text-sm font-semibold mb-3">{t("osdi.subscaleC")}</h4>
-          {OSDI_QUESTIONS.slice(9, 12).map((q, idx) => (
-            <QuestionRow
-              key={q.index}
-              question={q}
-              answer={answers[idx + 9]}
-              onChange={(val) => handleAnswerChange(idx + 9, val)}
-              isVietnamese={isVietnamese}
-              disabled={disabled}
-              t={t}
-            />
-          ))}
-        </div>
+          return (
+            <Card key={q.index} className="overflow-hidden">
+              <CardHeader className="pb-2 pt-3 px-4">
+                <CardTitle className="text-sm font-medium">
+                  {t("osdi.question", { number: q.index })}
+                </CardTitle>
+                <p className="text-sm mt-1">{isVietnamese ? q.vi : q.en}</p>
+                {isVietnamese && (
+                  <p className="text-xs text-muted-foreground italic">{q.en}</p>
+                )}
+              </CardHeader>
+              <CardContent className="px-4 pb-3">
+                <div className="flex flex-wrap gap-2">
+                  {ANSWER_OPTIONS.map((opt) => (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      disabled={disabled}
+                      className={cn(
+                        "flex-1 min-w-[60px] py-2 px-1 text-xs rounded-md border transition-colors",
+                        currentAnswer === opt.value
+                          ? "bg-primary text-primary-foreground border-primary"
+                          : "bg-card hover:bg-muted border-border"
+                      )}
+                      onClick={() => handleAnswerChange(idx, opt.value)}
+                    >
+                      <div className="font-medium">{opt.value}</div>
+                      <div className="mt-0.5 leading-tight">{t(opt.labelKey)}</div>
+                    </button>
+                  ))}
+                  {isNaEligible && (
+                    <button
+                      type="button"
+                      disabled={disabled}
+                      className={cn(
+                        "min-w-[60px] py-2 px-3 text-xs rounded-md border transition-colors",
+                        isNaSelected
+                          ? "bg-muted text-muted-foreground border-muted-foreground/30"
+                          : "bg-card hover:bg-muted border-border"
+                      )}
+                      onClick={() => {
+                        handleAnswerChange(idx, null)
+                        setHasInteracted((prev) => {
+                          const n = [...prev]
+                          n[idx] = true
+                          return n
+                        })
+                      }}
+                    >
+                      N/A
+                    </button>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          )
+        })}
       </div>
 
       {/* Submit */}
-      <div className="flex justify-end pt-2">
+      <div className="mt-6 text-center">
         <Button
           onClick={handleSubmit}
           disabled={disabled || isSubmitting || osdiResult.answeredCount === 0}
+          className="w-full sm:w-auto min-w-[200px]"
         >
           {isSubmitting ? t("osdi.submitting") : t("osdi.submit")}
         </Button>
       </div>
-    </div>
-  )
-}
-
-interface QuestionRowProps {
-  question: (typeof OSDI_QUESTIONS)[number]
-  answer: number | null
-  onChange: (value: number | null) => void
-  isVietnamese: boolean
-  disabled?: boolean
-  t: (key: string) => string
-}
-
-function QuestionRow({ question, answer, onChange, isVietnamese, disabled, t }: QuestionRowProps) {
-  return (
-    <div className="py-2 border-b last:border-b-0">
-      <div className="mb-2">
-        <span className="text-sm font-medium">
-          {question.index}. {isVietnamese ? question.vi : question.en}
-        </span>
-        {isVietnamese && (
-          <span className="text-xs text-muted-foreground ml-2 italic">
-            ({question.en})
-          </span>
-        )}
-      </div>
-      <RadioGroup
-        value={answer !== null ? String(answer) : undefined}
-        onValueChange={(val) => onChange(val === "na" ? null : Number(val))}
-        className="flex flex-wrap gap-2"
-        disabled={disabled}
-      >
-        {ANSWER_OPTIONS.map((opt) => (
-          <div key={opt.value} className="flex items-center gap-1">
-            <RadioGroupItem
-              value={String(opt.value)}
-              id={`q${question.index}-${opt.value}`}
-            />
-            <Label
-              htmlFor={`q${question.index}-${opt.value}`}
-              className="text-xs cursor-pointer"
-            >
-              {t(opt.labelKey)}
-            </Label>
-          </div>
-        ))}
-        {question.hasNA && (
-          <div className="flex items-center gap-1">
-            <RadioGroupItem
-              value="na"
-              id={`q${question.index}-na`}
-            />
-            <Label
-              htmlFor={`q${question.index}-na`}
-              className="text-xs cursor-pointer"
-            >
-              N/A
-            </Label>
-          </div>
-        )}
-      </RadioGroup>
     </div>
   )
 }
