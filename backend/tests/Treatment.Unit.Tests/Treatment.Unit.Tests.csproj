@@ -23,6 +23,7 @@
     <ProjectReference Include="..\..\src\Modules\Treatment\Treatment.Contracts\Treatment.Contracts.csproj" />
     <ProjectReference Include="..\..\src\Modules\Treatment\Treatment.Domain\Treatment.Domain.csproj" />
     <ProjectReference Include="..\..\src\Modules\Auth\Auth.Contracts\Auth.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Clinical\Clinical.Contracts\Clinical.Contracts.csproj" />
     <ProjectReference Include="..\..\src\Shared\Shared.Application\Shared.Application.csproj" />
     <ProjectReference Include="..\..\src\Shared\Shared.Domain\Shared.Domain.csproj" />
   </ItemGroup>

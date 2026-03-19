@@ -1,8 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
-using Treatment.Application;
 using Treatment.Application.Interfaces;
 using Treatment.Infrastructure.Repositories;
-using Treatment.Infrastructure.Services;
 
 namespace Treatment.Infrastructure;
 
@@ -24,9 +22,6 @@ public static class IoC
 
         // Unit of Work
         services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-        // OSDI token store (in-memory singleton with TTL expiration)
-        services.AddSingleton<IOsdiTokenStore, InMemoryOsdiTokenStore>();
 
         return services;
     }

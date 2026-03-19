@@ -10,7 +10,7 @@ namespace Clinical.Domain.Entities;
 /// </summary>
 public class OsdiSubmission : Entity
 {
-    public Guid VisitId { get; private set; }
+    public Guid? VisitId { get; private set; }
 
     /// <summary>
     /// Who submitted: "patient" for self-fill, or a userId string for staff-recorded.
@@ -73,7 +73,7 @@ public class OsdiSubmission : Entity
 
     /// <summary>
     /// Factory method for creating an OSDI submission with a public token for patient self-fill.
-    /// Token expires in 24 hours.
+    /// Token expires in 24 hours. Used by Clinical module's visit-based flow.
     /// </summary>
     public static OsdiSubmission CreateWithToken(
         Guid visitId,
@@ -82,6 +82,22 @@ public class OsdiSubmission : Entity
         return new OsdiSubmission
         {
             VisitId = visitId,
+            SubmittedBy = "patient",
+            PublicToken = token,
+            TokenExpiresAt = DateTime.UtcNow.AddHours(24)
+        };
+    }
+
+    /// <summary>
+    /// Factory method for creating an OSDI submission with a public token for treatment session flow.
+    /// No VisitId required — the token is created independently of a clinical visit.
+    /// Token expires in 24 hours.
+    /// </summary>
+    public static OsdiSubmission CreateWithTokenForTreatment(string token)
+    {
+        return new OsdiSubmission
+        {
+            VisitId = null,
             SubmittedBy = "patient",
             PublicToken = token,
             TokenExpiresAt = DateTime.UtcNow.AddHours(24)

@@ -45,8 +45,13 @@ public static class GetOsdiByTokenHandler
             return Result<OsdiQuestionnaireDto>.Failure(Error.Custom("Error.Expired", "Token expired."));
 
         // Get visit date for display (minimal data, no patient name for security)
-        var visit = await visitRepository.GetByIdAsync(submission.VisitId, ct);
-        var visitDate = visit?.VisitDate ?? DateTime.UtcNow;
+        // VisitId may be null for treatment-session tokens (no linked clinical visit)
+        DateTime visitDate = DateTime.UtcNow;
+        if (submission.VisitId.HasValue)
+        {
+            var visit = await visitRepository.GetByIdAsync(submission.VisitId.Value, ct);
+            visitDate = visit?.VisitDate ?? DateTime.UtcNow;
+        }
 
         // Parse existing answers if any
         int[]? currentAnswers = null;

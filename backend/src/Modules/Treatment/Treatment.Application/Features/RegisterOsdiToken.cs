@@ -1,11 +1,13 @@
+using Clinical.Contracts.IntegrationEvents;
 using FluentValidation;
 using Shared.Domain;
+using Wolverine;
 
 namespace Treatment.Application.Features;
 
 /// <summary>
 /// Command to register an OSDI self-fill QR token linked to a treatment package/session.
-/// The token is stored in-memory with a 24-hour TTL.
+/// The token is persisted in the Clinical module's database via cross-module command.
 /// </summary>
 public sealed record RegisterOsdiTokenCommand(
     Guid PackageId,
@@ -13,9 +15,9 @@ public sealed record RegisterOsdiTokenCommand(
     string Token);
 
 /// <summary>
-/// Response containing the registered token for frontend confirmation.
+/// Response containing the registered token, URL, and expiry for frontend.
 /// </summary>
-public sealed record RegisterOsdiTokenResponse(string Token, DateTime ExpiresAt);
+public sealed record RegisterOsdiTokenResponse(string Token, string Url, DateTime ExpiresAt);
 
 /// <summary>
 /// Validator for <see cref="RegisterOsdiTokenCommand"/>.
@@ -30,22 +32,14 @@ public class RegisterOsdiTokenCommandValidator : AbstractValidator<RegisterOsdiT
 }
 
 /// <summary>
-/// In-memory record linking a QR token to its package/session context.
-/// </summary>
-public sealed record OsdiTokenInfo(
-    Guid PackageId,
-    int? SessionNumber,
-    DateTime ExpiresAt);
-
-/// <summary>
 /// Wolverine static handler for <see cref="RegisterOsdiTokenCommand"/>.
-/// Stores the token in the <see cref="IOsdiTokenStore"/> singleton with 24-hour TTL.
+/// Delegates to Clinical module via IMessageBus to create a DB-backed OsdiSubmission record.
 /// </summary>
 public static class RegisterOsdiTokenHandler
 {
-    public static Task<Result<RegisterOsdiTokenResponse>> Handle(
+    public static async Task<Result<RegisterOsdiTokenResponse>> Handle(
         RegisterOsdiTokenCommand command,
-        IOsdiTokenStore tokenStore,
+        IMessageBus bus,
         IValidator<RegisterOsdiTokenCommand> validator,
         CancellationToken ct)
     {
@@ -55,15 +49,18 @@ public static class RegisterOsdiTokenHandler
             var errors = validationResult.Errors
                 .GroupBy(e => e.PropertyName)
                 .ToDictionary(g => g.Key, g => g.Select(e => e.ErrorMessage).ToArray());
-            return Task.FromResult(
-                Result<RegisterOsdiTokenResponse>.Failure(Error.ValidationWithDetails(errors)));
+            return Result<RegisterOsdiTokenResponse>.Failure(Error.ValidationWithDetails(errors));
         }
 
-        var expiresAt = DateTime.UtcNow.AddHours(24);
-        var tokenInfo = new OsdiTokenInfo(command.PackageId, command.SessionNumber, expiresAt);
-        tokenStore.Register(command.Token, tokenInfo);
+        // Create DB-backed token via Clinical module's handler
+        var clinicalResponse = await bus.InvokeAsync<CreateOsdiTokenForTreatmentResponse>(
+            new CreateOsdiTokenForTreatmentCommand(command.Token), ct);
 
-        var response = new RegisterOsdiTokenResponse(command.Token, expiresAt);
-        return Task.FromResult(Result<RegisterOsdiTokenResponse>.Success(response));
+        var response = new RegisterOsdiTokenResponse(
+            clinicalResponse.Token,
+            clinicalResponse.Url,
+            clinicalResponse.ExpiresAt);
+
+        return Result<RegisterOsdiTokenResponse>.Success(response);
     }
 }

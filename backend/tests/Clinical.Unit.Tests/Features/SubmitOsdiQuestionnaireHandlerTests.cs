@@ -185,7 +185,7 @@ public class SubmitOsdiQuestionnaireHandlerTests
         _osdiRepository.GetByTokenAsync("valid-token", Arg.Any<CancellationToken>()).Returns(submission);
 
         // We need visit for VisitDate
-        var visitId = submission.VisitId;
+        var visitId = submission.VisitId!.Value;
         var visit = Visit.Create(visitId, "Patient", Guid.NewGuid(), "Dr.", DefaultBranchId, false);
         typeof(Entity).GetProperty("Id")!.GetSetMethod(true)!.Invoke(visit, [visitId]);
         _visitRepository.GetByIdAsync(visitId, Arg.Any<CancellationToken>()).Returns(visit);

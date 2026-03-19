@@ -38,25 +38,28 @@ public static class SubmitOsdiQuestionnaireHandler
         var answersJson = JsonSerializer.Serialize(command.Answers);
         UpdateSubmission(submission, answersJson, osdiResult);
 
-        // Also update the DryEyeAssessment OSDI fields on the visit
-        var visit = await visitRepository.GetByIdWithDetailsAsync(submission.VisitId, ct);
-        if (visit is not null)
+        // Also update the DryEyeAssessment OSDI fields on the visit (only if linked to a visit)
+        if (submission.VisitId.HasValue)
         {
-            var dryEyeAssessment = visit.DryEyeAssessments.FirstOrDefault();
-            if (dryEyeAssessment is not null)
+            var visit = await visitRepository.GetByIdWithDetailsAsync(submission.VisitId.Value, ct);
+            if (visit is not null)
             {
-                dryEyeAssessment.SetOsdiScore(osdiResult.Score, osdiResult.Severity);
-            }
-            else
-            {
-                // Create a new DryEyeAssessment if one doesn't exist
-                var newAssessment = DryEyeAssessment.Create(submission.VisitId);
-                newAssessment.SetOsdiScore(osdiResult.Score, osdiResult.Severity);
+                var dryEyeAssessment = visit.DryEyeAssessments.FirstOrDefault();
+                if (dryEyeAssessment is not null)
+                {
+                    dryEyeAssessment.SetOsdiScore(osdiResult.Score, osdiResult.Severity);
+                }
+                else
+                {
+                    // Create a new DryEyeAssessment if one doesn't exist
+                    var newAssessment = DryEyeAssessment.Create(submission.VisitId.Value);
+                    newAssessment.SetOsdiScore(osdiResult.Score, osdiResult.Severity);
 
-                // For patient self-fill, we bypass EnsureEditable since
-                // this is a patient action, not a doctor edit.
-                // We add directly via repository instead of domain method.
-                visitRepository.AddDryEyeAssessment(newAssessment);
+                    // For patient self-fill, we bypass EnsureEditable since
+                    // this is a patient action, not a doctor edit.
+                    // We add directly via repository instead of domain method.
+                    visitRepository.AddDryEyeAssessment(newAssessment);
+                }
             }
         }
 

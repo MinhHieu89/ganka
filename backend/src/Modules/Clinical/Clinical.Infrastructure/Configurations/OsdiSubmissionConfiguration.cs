@@ -13,7 +13,7 @@ public class OsdiSubmissionConfiguration : IEntityTypeConfiguration<OsdiSubmissi
 
         builder.HasKey(o => o.Id);
 
-        builder.Property(o => o.VisitId).IsRequired();
+        builder.Property(o => o.VisitId).IsRequired(false);
 
         builder.Property(o => o.SubmittedBy)
             .IsRequired()

@@ -40,7 +40,7 @@ public sealed class OsdiSubmissionRepository : IOsdiSubmissionRepository
     {
         return await _dbContext.OsdiSubmissions
             .AsNoTracking()
-            .Where(o => visitIds.Contains(o.VisitId))
+            .Where(o => o.VisitId.HasValue && visitIds.Contains(o.VisitId.Value))
             .ToListAsync(ct);
     }
 }
