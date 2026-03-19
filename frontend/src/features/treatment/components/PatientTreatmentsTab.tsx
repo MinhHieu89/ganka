@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react"
+import { useTranslation } from "react-i18next"
 import { Link } from "@tanstack/react-router"
 import { format } from "date-fns"
 import {
@@ -25,31 +26,13 @@ import type { TreatmentPackageDto } from "@/features/treatment/api/treatment-typ
 
 // -- Status styles --
 
-const STATUS_STYLES: Record<string, { label: string; className: string }> = {
-  Active: {
-    label: "Ho\u1EA1t \u0111\u1ED9ng",
-    className: "border-green-500 text-green-700 dark:text-green-400",
-  },
-  Paused: {
-    label: "T\u1EA1m d\u1EEBng",
-    className: "border-yellow-500 text-yellow-700 dark:text-yellow-400",
-  },
-  PendingCancellation: {
-    label: "Ch\u1EDD hu\u1EF7",
-    className: "border-orange-500 text-orange-700 dark:text-orange-400",
-  },
-  Completed: {
-    label: "Ho\u00E0n th\u00E0nh",
-    className: "border-blue-500 text-blue-700 dark:text-blue-400",
-  },
-  Cancelled: {
-    label: "\u0110\u00E3 hu\u1EF7",
-    className: "border-red-500 text-red-700 dark:text-red-400",
-  },
-  Switched: {
-    label: "\u0110\u00E3 chuy\u1EC3n",
-    className: "border-gray-500 text-gray-700 dark:text-gray-400",
-  },
+const STATUS_STYLES: Record<string, string> = {
+  Active: "border-green-500 text-green-700 dark:text-green-400",
+  Paused: "border-yellow-500 text-yellow-700 dark:text-yellow-400",
+  PendingCancellation: "border-orange-500 text-orange-700 dark:text-orange-400",
+  Completed: "border-blue-500 text-blue-700 dark:text-blue-400",
+  Cancelled: "border-red-500 text-red-700 dark:text-red-400",
+  Switched: "border-gray-500 text-gray-700 dark:text-gray-400",
 }
 
 const TREATMENT_TYPE_STYLES: Record<string, string> = {
@@ -68,11 +51,12 @@ interface PatientTreatmentsTabProps {
 // -- Package card --
 
 function PackageCard({ pkg }: { pkg: TreatmentPackageDto }) {
+  const { t } = useTranslation("treatment")
   const percent =
     pkg.totalSessions > 0
       ? Math.round((pkg.sessionsCompleted / pkg.totalSessions) * 100)
       : 0
-  const statusStyle = STATUS_STYLES[pkg.status]
+  const statusClassName = STATUS_STYLES[pkg.status] ?? ""
   const typeStyle = TREATMENT_TYPE_STYLES[pkg.treatmentType] ?? ""
 
   return (
@@ -84,16 +68,16 @@ function PackageCard({ pkg }: { pkg: TreatmentPackageDto }) {
             {/* Type & template name */}
             <div className="flex items-center gap-2 flex-wrap">
               <Badge variant="outline" className={`text-xs ${typeStyle}`}>
-                {pkg.treatmentType}
+                {t(`treatmentType.${pkg.treatmentType}`)}
               </Badge>
               <span className="text-sm font-medium">
                 {pkg.protocolTemplateName}
               </span>
               <Badge
                 variant="outline"
-                className={`text-xs ${statusStyle?.className ?? ""}`}
+                className={`text-xs ${statusClassName}`}
               >
-                {statusStyle?.label ?? pkg.status}
+                {t(`status.${pkg.status}`)}
               </Badge>
             </div>
 
@@ -106,7 +90,7 @@ function PackageCard({ pkg }: { pkg: TreatmentPackageDto }) {
                 />
               </div>
               <span className="text-xs text-muted-foreground whitespace-nowrap">
-                {pkg.sessionsCompleted}/{pkg.totalSessions} phi\u00EAn
+                {pkg.sessionsCompleted}/{pkg.totalSessions} {t("patientTab.sessions")}
               </span>
             </div>
 
@@ -114,13 +98,13 @@ function PackageCard({ pkg }: { pkg: TreatmentPackageDto }) {
             <div className="flex items-center gap-4 text-xs text-muted-foreground">
               {pkg.lastSessionDate && (
                 <span>
-                  Phi\u00EAn cu\u1ED1i:{" "}
+                  {t("patientTab.lastSessionLabel")}:{" "}
                   {format(new Date(pkg.lastSessionDate), "dd/MM/yyyy")}
                 </span>
               )}
               {pkg.nextDueDate && pkg.status === "Active" && (
                 <span>
-                  \u0110\u1EBFn h\u1EA1n:{" "}
+                  {t("patientTab.nextDueLabel")}:{" "}
                   {format(new Date(pkg.nextDueDate), "dd/MM/yyyy")}
                 </span>
               )}
@@ -135,7 +119,7 @@ function PackageCard({ pkg }: { pkg: TreatmentPackageDto }) {
           >
             <Button variant="ghost" size="sm">
               <IconEye className="h-4 w-4 mr-1" />
-              Xem
+              {t("patientTab.view")}
             </Button>
           </Link>
         </div>
@@ -213,6 +197,7 @@ export function PatientTreatmentsTab({
   patientId,
   patientName,
 }: PatientTreatmentsTabProps) {
+  const { t } = useTranslation("treatment")
   const { data: packages = [], isLoading, isError } = usePatientTreatments(patientId)
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
 
@@ -235,7 +220,7 @@ export function PatientTreatmentsTab({
   if (isError) {
     return (
       <div className="text-center py-12 text-destructive">
-        Kh\u00F4ng th\u1EC3 t\u1EA3i danh s\u00E1ch \u0111i\u1EC1u tr\u1ECB. Vui l\u00F2ng th\u1EED l\u1EA1i.
+        {t("patientTab.loadError")}
       </div>
     )
   }
@@ -257,7 +242,7 @@ export function PatientTreatmentsTab({
       <div className="flex items-center justify-end">
         <Button size="sm" onClick={() => setCreateDialogOpen(true)}>
           <IconPlus className="h-4 w-4 mr-1" />
-          T\u1EA1o ph\u00E1c \u0111\u1ED3
+          {t("patientTab.createProtocol")}
         </Button>
       </div>
 
@@ -265,7 +250,7 @@ export function PatientTreatmentsTab({
       {packages.length === 0 ? (
         <div className="text-center py-12 border rounded-lg bg-muted/30">
           <p className="text-muted-foreground mb-3">
-            Ch\u01B0a c\u00F3 ph\u00E1c \u0111\u1ED3 \u0111i\u1EC1u tr\u1ECB cho b\u1EC7nh nh\u00E2n n\u00E0y
+            {t("patientTab.noProtocols")}
           </p>
           <Button
             variant="outline"
@@ -273,28 +258,28 @@ export function PatientTreatmentsTab({
             onClick={() => setCreateDialogOpen(true)}
           >
             <IconPlus className="h-4 w-4 mr-1" />
-            T\u1EA1o ph\u00E1c \u0111\u1ED3 \u0111i\u1EC1u tr\u1ECB
+            {t("patientTab.createFirst")}
           </Button>
         </div>
       ) : (
         <div className="space-y-6">
           {/* Active section (most prominent) */}
           <PackageSection
-            title="\u0110ang ho\u1EA1t \u0111\u1ED9ng"
+            title={t("patientTab.active")}
             packages={active}
             defaultOpen={true}
           />
 
           {/* Completed section */}
           <PackageSection
-            title="Ho\u00E0n th\u00E0nh"
+            title={t("patientTab.completed")}
             packages={completed}
             defaultOpen={true}
           />
 
           {/* Cancelled / Switched section (collapsed by default) */}
           <PackageSection
-            title="\u0110\u00E3 hu\u1EF7 / \u0110\u00E3 chuy\u1EC3n"
+            title={t("patientTab.other")}
             packages={other}
             defaultOpen={false}
           />

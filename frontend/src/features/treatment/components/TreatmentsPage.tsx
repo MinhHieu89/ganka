@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback } from "react"
+import { useTranslation } from "react-i18next"
 import { useNavigate } from "@tanstack/react-router"
 import {
   createColumnHelper,
@@ -33,31 +34,13 @@ import { TreatmentPackageForm } from "./TreatmentPackageForm"
 
 // -- Status badge mapping --
 
-const STATUS_STYLES: Record<string, { label: string; className: string }> = {
-  Active: {
-    label: "Hoạt động",
-    className: "border-green-500 text-green-700 dark:text-green-400",
-  },
-  Paused: {
-    label: "Tạm dừng",
-    className: "border-yellow-500 text-yellow-700 dark:text-yellow-400",
-  },
-  PendingCancellation: {
-    label: "Chờ huỷ",
-    className: "border-orange-500 text-orange-700 dark:text-orange-400",
-  },
-  Completed: {
-    label: "Hoàn thành",
-    className: "border-blue-500 text-blue-700 dark:text-blue-400",
-  },
-  Cancelled: {
-    label: "Đã huỷ",
-    className: "border-red-500 text-red-700 dark:text-red-400",
-  },
-  Switched: {
-    label: "Đã chuyển",
-    className: "border-gray-500 text-gray-700 dark:text-gray-400",
-  },
+const STATUS_STYLES: Record<string, string> = {
+  Active: "border-green-500 text-green-700 dark:text-green-400",
+  Paused: "border-yellow-500 text-yellow-700 dark:text-yellow-400",
+  PendingCancellation: "border-orange-500 text-orange-700 dark:text-orange-400",
+  Completed: "border-blue-500 text-blue-700 dark:text-blue-400",
+  Cancelled: "border-red-500 text-red-700 dark:text-red-400",
+  Switched: "border-gray-500 text-gray-700 dark:text-gray-400",
 }
 
 const TREATMENT_TYPE_STYLES: Record<string, string> = {
@@ -66,30 +49,12 @@ const TREATMENT_TYPE_STYLES: Record<string, string> = {
   LidCare: "border-emerald-500 text-emerald-700 dark:text-emerald-400",
 }
 
-// -- Filter options --
-
-const STATUS_FILTER_OPTIONS = [
-  { value: "all", label: "Tất cả trạng thái" },
-  { value: "Active", label: "Hoạt động" },
-  { value: "Paused", label: "Tạm dừng" },
-  { value: "PendingCancellation", label: "Chờ huỷ" },
-  { value: "Completed", label: "Hoàn thành" },
-  { value: "Cancelled", label: "Đã huỷ" },
-  { value: "Switched", label: "Đã chuyển" },
-]
-
-const TYPE_FILTER_OPTIONS = [
-  { value: "all", label: "Tất cả loại" },
-  { value: "IPL", label: "IPL" },
-  { value: "LLLT", label: "LLLT" },
-  { value: "LidCare", label: "LidCare" },
-]
-
 // -- Column helper --
 
 const columnHelper = createColumnHelper<TreatmentPackageDto>()
 
 export function TreatmentsPage() {
+  const { t } = useTranslation("treatment")
   const { data: packages = [], isLoading, isError } = useActiveTreatments()
   const navigate = useNavigate()
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
@@ -102,6 +67,24 @@ export function TreatmentsPage() {
   // Filter state
   const [statusFilter, setStatusFilter] = useState<string>("all")
   const [typeFilter, setTypeFilter] = useState<string>("all")
+
+  // Filter options (translated)
+  const statusFilterOptions = useMemo(() => [
+    { value: "all", label: t("list.allStatuses") },
+    { value: "Active", label: t("status.Active") },
+    { value: "Paused", label: t("status.Paused") },
+    { value: "PendingCancellation", label: t("status.PendingCancellation") },
+    { value: "Completed", label: t("status.Completed") },
+    { value: "Cancelled", label: t("status.Cancelled") },
+    { value: "Switched", label: t("status.Switched") },
+  ], [t])
+
+  const typeFilterOptions = useMemo(() => [
+    { value: "all", label: t("list.allTypes") },
+    { value: "IPL", label: t("treatmentType.IPL") },
+    { value: "LLLT", label: t("treatmentType.LLLT") },
+    { value: "LidCare", label: t("treatmentType.LidCare") },
+  ], [t])
 
   // Apply filters
   const filteredData = useMemo(() => {
@@ -125,7 +108,7 @@ export function TreatmentsPage() {
   const columns = useMemo(
     () => [
       columnHelper.accessor("patientName", {
-        header: "Bệnh nhân",
+        header: t("list.patient"),
         cell: (info) => (
           <Link
             to="/patients/$patientId"
@@ -139,7 +122,7 @@ export function TreatmentsPage() {
         enableSorting: true,
       }),
       columnHelper.accessor("treatmentType", {
-        header: "Loại",
+        header: t("list.type"),
         cell: (info) => {
           const type = info.getValue()
           return (
@@ -147,23 +130,23 @@ export function TreatmentsPage() {
               variant="outline"
               className={`text-xs ${TREATMENT_TYPE_STYLES[type] ?? ""}`}
             >
-              {type}
+              {t(`treatmentType.${type}`)}
             </Badge>
           )
         },
         enableSorting: false,
       }),
       columnHelper.accessor("status", {
-        header: "Trạng thái",
+        header: t("list.status"),
         cell: (info) => {
           const status = info.getValue()
-          const style = STATUS_STYLES[status]
+          const className = STATUS_STYLES[status] ?? ""
           return (
             <Badge
               variant="outline"
-              className={`text-xs ${style?.className ?? ""}`}
+              className={`text-xs ${className}`}
             >
-              {style?.label ?? status}
+              {t(`status.${status}`)}
             </Badge>
           )
         },
@@ -171,7 +154,7 @@ export function TreatmentsPage() {
       }),
       columnHelper.display({
         id: "progress",
-        header: "Tiến trình",
+        header: t("list.progress"),
         cell: ({ row }) => {
           const pkg = row.original
           const percent =
@@ -194,7 +177,7 @@ export function TreatmentsPage() {
         },
       }),
       columnHelper.accessor("packagePrice", {
-        header: "Giá",
+        header: t("list.pricing"),
         cell: (info) => {
           const pkg = info.row.original
           const displayPrice =
@@ -210,7 +193,7 @@ export function TreatmentsPage() {
         enableSorting: true,
       }),
       columnHelper.accessor("lastSessionDate", {
-        header: "Phiên cuối",
+        header: t("list.lastSession"),
         cell: (info) => {
           const dateStr = info.getValue()
           if (!dateStr) {
@@ -222,17 +205,17 @@ export function TreatmentsPage() {
           return (
             <span className="text-xs text-muted-foreground">
               {days === 0
-                ? "Hôm nay"
+                ? t("list.today")
                 : days === 1
-                  ? "1 ngày trước"
-                  : `${days} ngày trước`}
+                  ? t("list.oneDayAgo")
+                  : t("list.daysAgo", { days })}
             </span>
           )
         },
         enableSorting: true,
       }),
       columnHelper.accessor("nextDueDate", {
-        header: "Đến hạn",
+        header: t("list.nextDue"),
         cell: (info) => {
           const dateStr = info.getValue()
           if (!dateStr) {
@@ -247,7 +230,7 @@ export function TreatmentsPage() {
           if (isOverdue) {
             return (
               <Badge variant="destructive" className="text-xs">
-                Quá hạn
+                {t("list.overdue")}
               </Badge>
             )
           }
@@ -269,12 +252,12 @@ export function TreatmentsPage() {
             className="text-sm text-primary hover:underline"
             onClick={(e) => e.stopPropagation()}
           >
-            Xem
+            {t("list.view")}
           </Link>
         ),
       }),
     ],
-    [],
+    [t],
   )
 
   const table = useReactTable({
@@ -295,7 +278,7 @@ export function TreatmentsPage() {
   if (isError) {
     return (
       <div className="text-center py-12 text-destructive">
-        Không thể tải danh sách phác đồ điều trị. Vui lòng thử lại.
+        {t("list.loadError")}
       </div>
     )
   }
@@ -305,15 +288,15 @@ export function TreatmentsPage() {
       {/* Page header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Điều trị</h1>
+          <h1 className="text-2xl font-bold">{t("title")}</h1>
           <p className="text-sm text-muted-foreground mt-0.5">
-            Quản lý phác đồ điều trị cho bệnh nhân
+            {t("list.pageDescription")}
           </p>
         </div>
         {canCreate && (
           <Button onClick={() => setCreateDialogOpen(true)}>
             <IconPlus className="h-4 w-4 mr-2" />
-            Tạo phác đồ
+            {t("createPackage")}
           </Button>
         )}
       </div>
@@ -328,7 +311,7 @@ export function TreatmentsPage() {
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            {TYPE_FILTER_OPTIONS.map((opt) => (
+            {typeFilterOptions.map((opt) => (
               <SelectItem key={opt.value} value={opt.value}>
                 {opt.label}
               </SelectItem>
@@ -340,7 +323,7 @@ export function TreatmentsPage() {
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            {STATUS_FILTER_OPTIONS.map((opt) => (
+            {statusFilterOptions.map((opt) => (
               <SelectItem key={opt.value} value={opt.value}>
                 {opt.label}
               </SelectItem>
@@ -361,7 +344,7 @@ export function TreatmentsPage() {
           table={table}
           columns={columns}
           onRowClick={handleRowClick}
-          emptyMessage="Không có phác đồ điều trị nào"
+          emptyMessage={t("list.emptyMessage")}
         />
       )}
 

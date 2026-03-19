@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react"
 import { useForm, Controller } from "react-hook-form"
+import { useTranslation } from "react-i18next"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { toast } from "sonner"
@@ -35,12 +36,14 @@ import type { TreatmentPackageDto } from "@/features/treatment/api/treatment-typ
 
 // -- Schema --
 
-const switchSchema = z.object({
-  newProtocolTemplateId: z.string().min(1, "Vui lòng chọn phác đồ mới"),
-  reason: z.string().min(1, "Lý do chuyển đổi là bắt buộc"),
-})
+function createSwitchSchema(t: (key: string) => string) {
+  return z.object({
+    newProtocolTemplateId: z.string().min(1, t("switch.selectRequired")),
+    reason: z.string().min(1, t("switch.reasonRequired")),
+  })
+}
 
-type SwitchFormValues = z.infer<typeof switchSchema>
+type SwitchFormValues = z.infer<ReturnType<typeof createSwitchSchema>>
 
 // -- Props --
 
@@ -57,10 +60,13 @@ export function SwitchTreatmentDialog({
   onOpenChange,
   currentPackage,
 }: SwitchTreatmentDialogProps) {
+  const { t } = useTranslation("treatment")
   const navigate = useNavigate()
   const { data: templates = [] } = useProtocolTemplates()
   const switchMutation = useSwitchTreatmentType()
   const [selectedTemplateName, setSelectedTemplateName] = useState<string | null>(null)
+
+  const switchSchema = useMemo(() => createSwitchSchema(t), [t])
 
   const form = useForm<SwitchFormValues>({
     resolver: zodResolver(switchSchema),
@@ -101,7 +107,7 @@ export function SwitchTreatmentDialog({
         newProtocolTemplateId: data.newProtocolTemplateId,
         reason: data.reason,
       })
-      toast.success("Chuyển đổi loại điều trị thành công")
+      toast.success(t("switch.success"))
       onOpenChange(false)
       // Navigate to the new package
       navigate({
@@ -119,10 +125,9 @@ export function SwitchTreatmentDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Chuyển đổi loại điều trị</DialogTitle>
+          <DialogTitle>{t("switchTreatment")}</DialogTitle>
           <DialogDescription>
-            Phác đồ hiện tại sẽ được đánh dấu &ldquo;Switched&rdquo; và phác đồ
-            mới sẽ được tạo với số phiên còn lại.
+            {t("switch.dialogDescription")}
           </DialogDescription>
         </DialogHeader>
 
@@ -131,24 +136,24 @@ export function SwitchTreatmentDialog({
           <CardContent className="pt-4 pb-3 space-y-2">
             <div className="flex items-center gap-2 text-sm font-medium text-amber-700 dark:text-amber-400">
               <IconAlertTriangle className="h-4 w-4" />
-              Phác đồ hiện tại
+              {t("switch.currentPackage")}
             </div>
             <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
               <div>
-                <span className="text-muted-foreground">Loại:</span>{" "}
+                <span className="text-muted-foreground">{t("switch.type")}</span>{" "}
                 <Badge variant="outline">{currentPackage.treatmentType}</Badge>
               </div>
               <div>
-                <span className="text-muted-foreground">Trạng thái:</span>{" "}
-                <Badge variant="outline">{currentPackage.status}</Badge>
+                <span className="text-muted-foreground">{t("switch.statusLabel")}</span>{" "}
+                <Badge variant="outline">{t(`status.${currentPackage.status}`)}</Badge>
               </div>
               <div>
-                <span className="text-muted-foreground">Đã hoàn thành:</span>{" "}
-                {currentPackage.sessionsCompleted}/{currentPackage.totalSessions} phiên
+                <span className="text-muted-foreground">{t("switch.completed")}:</span>{" "}
+                {currentPackage.sessionsCompleted}/{currentPackage.totalSessions} {t("dueSoon.sessions")}
               </div>
               <div>
-                <span className="text-muted-foreground">Còn lại:</span>{" "}
-                {currentPackage.sessionsRemaining} phiên
+                <span className="text-muted-foreground">{t("switch.remaining")}:</span>{" "}
+                {currentPackage.sessionsRemaining} {t("dueSoon.sessions")}
               </div>
             </div>
           </CardContent>
@@ -167,7 +172,7 @@ export function SwitchTreatmentDialog({
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
                 <FieldLabel htmlFor="newProtocolTemplateId">
-                  Phác đồ mới
+                  {t("switch.newProtocol")}
                 </FieldLabel>
                 <Select
                   value={field.value}
@@ -177,7 +182,7 @@ export function SwitchTreatmentDialog({
                   }}
                 >
                   <SelectTrigger id="newProtocolTemplateId">
-                    <SelectValue placeholder="Chọn phác đồ mới..." />
+                    <SelectValue placeholder={t("switch.selectPlaceholder")} />
                   </SelectTrigger>
                   <SelectContent>
                     {availableTemplates.map((t) => (
@@ -198,7 +203,7 @@ export function SwitchTreatmentDialog({
           {selectedTemplateName && (
             <Card className="bg-muted/50">
               <CardContent className="pt-4 pb-3">
-                <div className="text-sm font-medium mb-2">Kết quả dự kiến</div>
+                <div className="text-sm font-medium mb-2">{t("switch.expectedResult")}</div>
                 <div className="space-y-1.5 text-sm">
                   <div className="flex items-center gap-2">
                     <Badge variant="outline">
@@ -210,12 +215,10 @@ export function SwitchTreatmentDialog({
                     </Badge>
                   </div>
                   <div className="text-muted-foreground">
-                    Phác đồ hiện tại ({currentPackage.protocolTemplateName}) sẽ được
-                    đánh dấu &ldquo;Switched&rdquo;
+                    {t("switch.currentWillBeMarked", { name: currentPackage.protocolTemplateName })}
                   </div>
                   <div className="text-muted-foreground">
-                    Phác đồ mới ({selectedTemplateName}) sẽ được tạo với{" "}
-                    {currentPackage.sessionsRemaining} phiên còn lại
+                    {t("switch.newWillBeCreatedWith", { name: selectedTemplateName, remaining: currentPackage.sessionsRemaining })}
                   </div>
                 </div>
               </CardContent>
@@ -229,7 +232,7 @@ export function SwitchTreatmentDialog({
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
                 <FieldLabel htmlFor="reason">
-                  Lý do chuyển đổi *
+                  {t("switch.reasonLabel")}
                 </FieldLabel>
                 <AutoResizeTextarea
                   {...field}
@@ -250,13 +253,13 @@ export function SwitchTreatmentDialog({
               variant="outline"
               onClick={() => onOpenChange(false)}
             >
-              Huỷ
+              {t("switch.cancel")}
             </Button>
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting && (
                 <IconLoader2 className="h-4 w-4 mr-2 animate-spin" />
               )}
-              Chuyển đổi
+              {t("switch.confirm")}
             </Button>
           </DialogFooter>
         </form>

@@ -1,5 +1,6 @@
 import { useEffect } from "react"
 import { useForm, Controller } from "react-hook-form"
+import { useTranslation } from "react-i18next"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { toast } from "sonner"
@@ -23,7 +24,7 @@ import type { TreatmentPackageDto } from "@/features/treatment/api/treatment-typ
 
 // -- Schema --
 
-function createModifyPackageSchema(sessionsCompleted: number) {
+function createModifyPackageSchema(sessionsCompleted: number, t: (key: string, opts?: Record<string, unknown>) => string) {
   return z.object({
     totalSessions: z.coerce
       .number()
@@ -34,11 +35,11 @@ function createModifyPackageSchema(sessionsCompleted: number) {
       .optional()
       .refine(
         (val) => val == null || val >= sessionsCompleted,
-        `Không thể giảm dưới số phiên đã hoàn thành (${sessionsCompleted})`,
+        t("modify.sessionMinError", { count: sessionsCompleted }),
       ),
     parametersJson: z.string().nullable().optional(),
     minIntervalDays: z.coerce.number().int().min(1).nullable().optional(),
-    reason: z.string().min(1, "Lý do thay đổi là bắt buộc"),
+    reason: z.string().min(1, t("modify.reasonRequired")),
   })
 }
 
@@ -59,8 +60,9 @@ export function ModifyPackageDialog({
   onOpenChange,
   package_,
 }: ModifyPackageDialogProps) {
+  const { t } = useTranslation("treatment")
   const modifyMutation = useModifyPackage(package_.id)
-  const schema = createModifyPackageSchema(package_.sessionsCompleted)
+  const schema = createModifyPackageSchema(package_.sessionsCompleted, t)
 
   const form = useForm<ModifyPackageFormValues>({
     resolver: zodResolver(schema),
@@ -92,7 +94,7 @@ export function ModifyPackageDialog({
         minIntervalDays: data.minIntervalDays,
         reason: data.reason,
       })
-      toast.success("Cập nhật phác đồ thành công")
+      toast.success(t("modify.success"))
       onOpenChange(false)
     } catch (error) {
       handleServerValidationError(error, form.setError)
@@ -105,33 +107,32 @@ export function ModifyPackageDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Chỉnh sửa phác đồ</DialogTitle>
+          <DialogTitle>{t("modifyPackage")}</DialogTitle>
           <DialogDescription>
-            Thay đổi thông số phác đồ điều trị. Tất cả thay đổi sẽ được ghi lại
-            trong lịch sử.
+            {t("modify.dialogDescription")}
           </DialogDescription>
         </DialogHeader>
 
         {/* Current values summary */}
         <div className="text-xs text-muted-foreground rounded-md bg-muted/50 p-3 space-y-1">
           <div className="font-medium text-sm text-foreground mb-1">
-            Giá trị hiện tại
+            {t("modify.currentValues")}
           </div>
           <div>
-            <span className="font-medium">Loại điều trị:</span>{" "}
+            <span className="font-medium">{t("fields.treatmentType")}:</span>{" "}
             {package_.treatmentType}
           </div>
           <div>
-            <span className="font-medium">Tổng số phiên:</span>{" "}
+            <span className="font-medium">{t("modify.totalSessions")}:</span>{" "}
             {package_.totalSessions}
           </div>
           <div>
-            <span className="font-medium">Đã hoàn thành:</span>{" "}
+            <span className="font-medium">{t("modify.completed")}:</span>{" "}
             {package_.sessionsCompleted}/{package_.totalSessions}
           </div>
           <div>
-            <span className="font-medium">Khoảng cách tối thiểu:</span>{" "}
-            {package_.minIntervalDays} ngày
+            <span className="font-medium">{t("modify.minInterval")}:</span>{" "}
+            {package_.minIntervalDays}
           </div>
         </div>
 
@@ -149,7 +150,7 @@ export function ModifyPackageDialog({
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
                   <FieldLabel htmlFor="totalSessions">
-                    Tổng số phiên
+                    {t("modify.totalSessions")}
                   </FieldLabel>
                   <Input
                     {...field}
@@ -178,7 +179,7 @@ export function ModifyPackageDialog({
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
                   <FieldLabel htmlFor="minIntervalDays">
-                    Khoảng cách tối thiểu (ngày)
+                    {t("modify.minInterval")}
                   </FieldLabel>
                   <Input
                     {...field}
@@ -207,7 +208,7 @@ export function ModifyPackageDialog({
             render={({ field }) => (
               <Field>
                 <FieldLabel htmlFor="parametersJson">
-                  Tham số điều trị (JSON)
+                  {t("modify.parametersJson")}
                 </FieldLabel>
                 <AutoResizeTextarea
                   {...field}
@@ -228,7 +229,7 @@ export function ModifyPackageDialog({
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
                 <FieldLabel htmlFor="reason">
-                  Lý do thay đổi *
+                  {t("modify.changeReason")} *
                 </FieldLabel>
                 <AutoResizeTextarea
                   {...field}
@@ -249,13 +250,13 @@ export function ModifyPackageDialog({
               variant="outline"
               onClick={() => onOpenChange(false)}
             >
-              Huỷ
+              {t("modify.cancel")}
             </Button>
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting && (
                 <IconLoader2 className="h-4 w-4 mr-2 animate-spin" />
               )}
-              Lưu thay đổi
+              {t("modify.submit")}
             </Button>
           </DialogFooter>
         </form>
