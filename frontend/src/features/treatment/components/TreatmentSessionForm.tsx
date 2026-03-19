@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react"
+import { useTranslation } from "react-i18next"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
@@ -177,6 +178,7 @@ export function TreatmentSessionForm({
   treatmentType,
   defaultParametersJson,
 }: TreatmentSessionFormProps) {
+  const { t } = useTranslation("treatment")
   const user = useAuthStore((s) => s.user)
   const recordMutation = useRecordSession(packageId)
 
@@ -307,9 +309,9 @@ export function TreatmentSessionForm({
 
       if (result.warning) {
         setIntervalWarning(result.warning)
-        toast.success("Phiên điều trị đã được ghi nhận (có cảnh báo khoảng cách)")
+        toast.success(t("sessionForm.successWithWarning"))
       } else {
-        toast.success("Phiên điều trị đã được ghi nhận thành công")
+        toast.success(t("sessionForm.success"))
         onOpenChange(false)
       }
     } catch (error) {
@@ -356,7 +358,7 @@ export function TreatmentSessionForm({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Ghi nhận phiên điều trị</DialogTitle>
+          <DialogTitle>{t("sessionForm.title")}</DialogTitle>
         </DialogHeader>
 
         <form
@@ -365,7 +367,7 @@ export function TreatmentSessionForm({
         >
           {/* Section 1: Device Parameters */}
           <div className="space-y-3">
-            <h4 className="text-sm font-semibold">Thông số thiết bị</h4>
+            <h4 className="text-sm font-semibold">{t("sessionForm.deviceParameters")}</h4>
 
             {treatmentType === "IPL" && (
               <IplParameterFields
@@ -395,7 +397,7 @@ export function TreatmentSessionForm({
 
           {/* Section 2: OSDI */}
           <div className="space-y-3">
-            <h4 className="text-sm font-semibold">OSDI</h4>
+            <h4 className="text-sm font-semibold">{t("fields.osdiScore")}</h4>
             <SessionOsdiCapture
               packageId={packageId}
               osdiScore={osdiScore}
@@ -408,7 +410,7 @@ export function TreatmentSessionForm({
 
           {/* Section 3: Clinical Notes */}
           <div className="space-y-3">
-            <h4 className="text-sm font-semibold">Ghi chú lâm sàng</h4>
+            <h4 className="text-sm font-semibold">{t("sessionForm.clinicalNotes")}</h4>
             <Controller
               name="clinicalNotes"
               control={form.control}
@@ -429,7 +431,7 @@ export function TreatmentSessionForm({
 
           {/* Section 4: Consumables */}
           <div className="space-y-3">
-            <h4 className="text-sm font-semibold">Vật tư tiêu hao</h4>
+            <h4 className="text-sm font-semibold">{t("sessionForm.consumables")}</h4>
             <ConsumableSelector
               value={consumables}
               onChange={setConsumables}
@@ -442,10 +444,9 @@ export function TreatmentSessionForm({
               <Separator />
               <Alert variant="destructive" className="border-yellow-300 bg-yellow-50 text-yellow-900 [&>svg]:text-yellow-600">
                 <IconAlertTriangle className="h-4 w-4" />
-                <AlertTitle>Cảnh báo khoảng cách phiên</AlertTitle>
+                <AlertTitle>{t("sessionForm.intervalWarningTitle")}</AlertTitle>
                 <AlertDescription>
-                  Phiên trước cách đây {intervalWarning.daysSinceLast} ngày
-                  (tối thiểu {intervalWarning.minIntervalDays} ngày).
+                  {t("intervalWarning", { days: intervalWarning.daysSinceLast, minDays: intervalWarning.minIntervalDays })}
                 </AlertDescription>
               </Alert>
               <Controller
@@ -453,7 +454,7 @@ export function TreatmentSessionForm({
                 control={form.control}
                 render={({ field }) => (
                   <Field>
-                    <FieldLabel>Lý do ghi đè khoảng cách</FieldLabel>
+                    <FieldLabel>{t("sessionForm.intervalOverrideReason")}</FieldLabel>
                     <AutoResizeTextarea
                       {...field}
                       value={field.value ?? ""}
@@ -474,13 +475,13 @@ export function TreatmentSessionForm({
               variant="outline"
               onClick={() => onOpenChange(false)}
             >
-              Huỷ
+              {t("sessionForm.cancel")}
             </Button>
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting && (
                 <IconLoader2 className="h-4 w-4 mr-2 animate-spin" />
               )}
-              Ghi nhận phiên
+              {t("sessionForm.submit")}
             </Button>
           </DialogFooter>
         </form>
@@ -500,6 +501,7 @@ function IplParameterFields({
   zones: string[]
   onZoneToggle: (zone: string, checked: boolean) => void
 }) {
+  const { t } = useTranslation("treatment")
   return (
     <div className="space-y-3">
       <div className="grid grid-cols-3 gap-3">
@@ -509,7 +511,7 @@ function IplParameterFields({
           render={({ field }) => (
             <Field>
               <FieldLabel htmlFor="iplEnergy">
-                Energy (J/cm²)
+                {t("ipl.energy")}
               </FieldLabel>
               <Input
                 {...field}
@@ -534,7 +536,7 @@ function IplParameterFields({
           render={({ field }) => (
             <Field>
               <FieldLabel htmlFor="iplPulseCount">
-                Pulse Count
+                {t("ipl.pulseCount")}
               </FieldLabel>
               <Input
                 {...field}
@@ -558,7 +560,7 @@ function IplParameterFields({
           render={({ field }) => (
             <Field>
               <FieldLabel htmlFor="iplSpotSize">
-                Spot Size
+                {t("ipl.spotSize")}
               </FieldLabel>
               <Input
                 {...field}
@@ -574,7 +576,7 @@ function IplParameterFields({
       </div>
 
       <div>
-        <Label className="text-sm">Treatment Zones</Label>
+        <Label className="text-sm">{t("ipl.treatmentZones")}</Label>
         <div className="grid grid-cols-3 gap-2 mt-2">
           {IPL_TREATMENT_ZONES.map((zone) => (
             <label
@@ -603,6 +605,7 @@ function LlltParameterFields({
 }: {
   form: ReturnType<typeof useForm<SessionFormValues>>
 }) {
+  const { t } = useTranslation("treatment")
   return (
     <div className="space-y-3">
       <div className="grid grid-cols-3 gap-3">
@@ -612,7 +615,7 @@ function LlltParameterFields({
           render={({ field }) => (
             <Field>
               <FieldLabel htmlFor="llltWavelength">
-                Wavelength (nm)
+                {t("lllt.wavelength")}
               </FieldLabel>
               <Input
                 {...field}
@@ -636,7 +639,7 @@ function LlltParameterFields({
           render={({ field }) => (
             <Field>
               <FieldLabel htmlFor="llltPower">
-                Power (mW)
+                {t("lllt.power")}
               </FieldLabel>
               <Input
                 {...field}
@@ -660,7 +663,7 @@ function LlltParameterFields({
           render={({ field }) => (
             <Field>
               <FieldLabel htmlFor="llltDuration">
-                Duration (min)
+                {t("lllt.duration")}
               </FieldLabel>
               <Input
                 {...field}
@@ -685,7 +688,7 @@ function LlltParameterFields({
         render={({ field }) => (
           <Field>
             <FieldLabel htmlFor="llltTreatmentArea">
-              Treatment Area
+              {t("lllt.treatmentArea")}
             </FieldLabel>
             <Input
               {...field}
@@ -723,11 +726,12 @@ function LidCareParameterFields({
   onAddProduct: () => void
   onRemoveProduct: (product: string) => void
 }) {
+  const { t } = useTranslation("treatment")
   return (
     <div className="space-y-4">
       {/* Procedure steps checklist */}
       <div>
-        <Label className="text-sm">Procedure Steps</Label>
+        <Label className="text-sm">{t("sessionForm.procedureSteps")}</Label>
         <div className="space-y-2 mt-2">
           {LID_CARE_STEPS.map((step) => (
             <label
@@ -748,7 +752,7 @@ function LidCareParameterFields({
 
       {/* Products used */}
       <div>
-        <Label className="text-sm">Products Used</Label>
+        <Label className="text-sm">{t("sessionForm.productsUsed")}</Label>
         <div className="space-y-2 mt-2">
           {products.map((product) => (
             <div
@@ -784,7 +788,7 @@ function LidCareParameterFields({
               size="sm"
               onClick={onAddProduct}
             >
-              Add
+              {t("sessionForm.addProduct")}
             </Button>
           </div>
         </div>
@@ -797,7 +801,7 @@ function LidCareParameterFields({
         render={({ field }) => (
           <Field>
             <FieldLabel htmlFor="lidCareDuration">
-              Duration (min)
+              {t("lidCare.duration")}
             </FieldLabel>
             <Input
               {...field}

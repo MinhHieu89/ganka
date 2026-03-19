@@ -1,4 +1,5 @@
 import { useMemo } from "react"
+import { useTranslation } from "react-i18next"
 import { format } from "date-fns"
 import {
   IconCalendar,
@@ -65,29 +66,30 @@ function parseParametersJson(json: string | null | undefined): ParsedParams {
 }
 
 function IplParams({ params }: { params: ParsedParams }) {
+  const { t } = useTranslation("treatment")
   return (
     <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
       {params.energy != null && (
         <div>
-          <span className="text-muted-foreground">Energy:</span>{" "}
-          <span className="font-medium">{String(params.energy)} J/cm²</span>
+          <span className="text-muted-foreground">{t("ipl.energy")}:</span>{" "}
+          <span className="font-medium">{String(params.energy)}</span>
         </div>
       )}
       {params.pulseCount != null && (
         <div>
-          <span className="text-muted-foreground">Pulses:</span>{" "}
+          <span className="text-muted-foreground">{t("ipl.pulseCount")}:</span>{" "}
           <span className="font-medium">{String(params.pulseCount)}</span>
         </div>
       )}
       {params.spotSize != null && (
         <div>
-          <span className="text-muted-foreground">Spot Size:</span>{" "}
-          <span className="font-medium">{String(params.spotSize)} mm</span>
+          <span className="text-muted-foreground">{t("ipl.spotSize")}:</span>{" "}
+          <span className="font-medium">{String(params.spotSize)}</span>
         </div>
       )}
       {params.treatmentZones != null && (
         <div>
-          <span className="text-muted-foreground">Zones:</span>{" "}
+          <span className="text-muted-foreground">{t("ipl.treatmentZones")}:</span>{" "}
           <span className="font-medium">
             {Array.isArray(params.treatmentZones)
               ? (params.treatmentZones as string[]).join(", ")
@@ -100,29 +102,30 @@ function IplParams({ params }: { params: ParsedParams }) {
 }
 
 function LlltParams({ params }: { params: ParsedParams }) {
+  const { t } = useTranslation("treatment")
   return (
     <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
       {params.wavelength != null && (
         <div>
-          <span className="text-muted-foreground">Wavelength:</span>{" "}
-          <span className="font-medium">{String(params.wavelength)} nm</span>
+          <span className="text-muted-foreground">{t("lllt.wavelength")}:</span>{" "}
+          <span className="font-medium">{String(params.wavelength)}</span>
         </div>
       )}
       {params.power != null && (
         <div>
-          <span className="text-muted-foreground">Power:</span>{" "}
-          <span className="font-medium">{String(params.power)} mW</span>
+          <span className="text-muted-foreground">{t("lllt.power")}:</span>{" "}
+          <span className="font-medium">{String(params.power)}</span>
         </div>
       )}
       {params.duration != null && (
         <div>
-          <span className="text-muted-foreground">Duration:</span>{" "}
-          <span className="font-medium">{String(params.duration)} min</span>
+          <span className="text-muted-foreground">{t("lllt.duration")}:</span>{" "}
+          <span className="font-medium">{String(params.duration)}</span>
         </div>
       )}
       {params.treatmentArea != null && (
         <div>
-          <span className="text-muted-foreground">Area:</span>{" "}
+          <span className="text-muted-foreground">{t("lllt.treatmentArea")}:</span>{" "}
           <span className="font-medium">{String(params.treatmentArea)}</span>
         </div>
       )}
@@ -131,24 +134,25 @@ function LlltParams({ params }: { params: ParsedParams }) {
 }
 
 function LidCareParams({ params }: { params: ParsedParams }) {
+  const { t } = useTranslation("treatment")
   return (
     <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
       {params.steps != null && (
         <div>
-          <span className="text-muted-foreground">Steps:</span>{" "}
+          <span className="text-muted-foreground">{t("lidCare.procedureSteps")}:</span>{" "}
           <span className="font-medium">{String(params.steps)}</span>
         </div>
       )}
       {params.products != null && (
         <div>
-          <span className="text-muted-foreground">Products:</span>{" "}
+          <span className="text-muted-foreground">{t("lidCare.productsUsed")}:</span>{" "}
           <span className="font-medium">{String(params.products)}</span>
         </div>
       )}
       {params.duration != null && (
         <div>
-          <span className="text-muted-foreground">Duration:</span>{" "}
-          <span className="font-medium">{String(params.duration)} min</span>
+          <span className="text-muted-foreground">{t("lidCare.duration")}:</span>{" "}
+          <span className="font-medium">{String(params.duration)}</span>
         </div>
       )}
     </div>
@@ -203,6 +207,7 @@ export function TreatmentSessionCard({
   session,
   treatmentType,
 }: TreatmentSessionCardProps) {
+  const { t } = useTranslation("treatment")
   const severityConfig = useMemo(() => {
     if (!session.osdiSeverity) return null
     return OSDI_SEVERITY_CONFIG[session.osdiSeverity] ?? null
@@ -221,7 +226,7 @@ export function TreatmentSessionCard({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-sm font-semibold">
-              Session #{session.sessionNumber}
+              {t("sessionCard.sessionNumber", { number: session.sessionNumber })}
             </span>
             <Badge variant={SESSION_STATUS_VARIANT[session.status] ?? "outline"}>
               {session.status}
@@ -277,7 +282,7 @@ export function TreatmentSessionCard({
         {/* Consumables */}
         {session.consumables.length > 0 && (
           <div className="text-sm">
-            <span className="text-muted-foreground">Consumables:</span>
+            <span className="text-muted-foreground">{t("sessionCard.consumables")}:</span>
             <ul className="mt-1 space-y-0.5">
               {session.consumables.map((c) => (
                 <li
@@ -296,7 +301,7 @@ export function TreatmentSessionCard({
           <div className="flex items-start gap-1.5 text-xs rounded-md bg-yellow-50 dark:bg-yellow-950/30 p-2 border border-yellow-200 dark:border-yellow-800">
             <IconAlertTriangle className="h-3.5 w-3.5 text-yellow-600 mt-0.5 flex-shrink-0" />
             <span className="text-yellow-800 dark:text-yellow-200">
-              Interval override: {session.intervalOverrideReason}
+              {t("sessionCard.intervalOverride")}: {session.intervalOverrideReason}
             </span>
           </div>
         )}
