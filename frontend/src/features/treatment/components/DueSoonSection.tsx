@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { Link } from "@tanstack/react-router"
 import {
   IconClock,
@@ -17,6 +18,7 @@ import type { TreatmentPackageDto } from "@/features/treatment/api/treatment-typ
 const COLLAPSED_LIMIT = 5
 
 export function DueSoonSection() {
+  const { t } = useTranslation("treatment")
   const { data: packages, isLoading } = useDueSoonSessions()
   const [expanded, setExpanded] = useState(false)
 
@@ -26,7 +28,7 @@ export function DueSoonSection() {
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-base">
             <IconClock className="h-5 w-5 text-orange-500" />
-            Phiên sắp đến hạn
+            {t("dueSoon.title")}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -46,12 +48,12 @@ export function DueSoonSection() {
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-base">
             <IconClock className="h-5 w-5 text-muted-foreground" />
-            Phiên sắp đến hạn
+            {t("dueSoon.title")}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground text-center py-4">
-            Không có phiên nào sắp đến hạn
+            {t("dueSoon.empty")}
           </p>
         </CardContent>
       </Card>
@@ -68,7 +70,7 @@ export function DueSoonSection() {
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-base">
           <IconClock className="h-5 w-5 text-orange-500" />
-          Phiên sắp đến hạn
+          {t("dueSoon.title")}
           <Badge variant="secondary" className="ml-1">
             {packages.length}
           </Badge>
@@ -91,12 +93,12 @@ export function DueSoonSection() {
             {expanded ? (
               <>
                 <IconChevronUp className="h-4 w-4 mr-1" />
-                Thu gọn
+                {t("dueSoon.showLess")}
               </>
             ) : (
               <>
                 <IconChevronDown className="h-4 w-4 mr-1" />
-                Xem thêm ({packages.length - COLLAPSED_LIMIT})
+                {t("dueSoon.showMore", { count: packages.length - COLLAPSED_LIMIT })}
               </>
             )}
           </Button>
@@ -107,6 +109,7 @@ export function DueSoonSection() {
 }
 
 function DueSoonItem({ pkg }: { pkg: TreatmentPackageDto }) {
+  const { t } = useTranslation("treatment")
   const daysSinceLast = pkg.lastSessionDate
     ? differenceInDays(new Date(), new Date(pkg.lastSessionDate))
     : null
@@ -129,20 +132,20 @@ function DueSoonItem({ pkg }: { pkg: TreatmentPackageDto }) {
           <TreatmentTypeBadge type={pkg.treatmentType} />
           {isOverdue && (
             <Badge variant="destructive" className="text-xs">
-              Quá hạn
+              {t("dueSoon.overdue")}
             </Badge>
           )}
         </div>
         <p className="text-xs text-muted-foreground mt-0.5">
           {daysSinceLast != null
-            ? `${daysSinceLast} ngày kể từ phiên cuối`
-            : "Chưa có phiên nào"}
+            ? t("dueSoon.daysSinceLast", { days: daysSinceLast })
+            : t("dueSoon.noSessions")}
           {" - "}
-          {pkg.sessionsCompleted}/{pkg.totalSessions} phiên
+          {pkg.sessionsCompleted}/{pkg.totalSessions} {t("dueSoon.sessions")}
           {pkg.nextDueDate && (
             <>
               {" - "}
-              Đến hạn: {format(new Date(pkg.nextDueDate), "dd/MM/yyyy")}
+              {t("dueSoon.dueDate", { date: format(new Date(pkg.nextDueDate), "dd/MM/yyyy") })}
             </>
           )}
         </p>
@@ -154,7 +157,7 @@ function DueSoonItem({ pkg }: { pkg: TreatmentPackageDto }) {
       >
         <Button variant="outline" size="sm">
           <IconPlayerRecord className="h-4 w-4 mr-1" />
-          Ghi nhận
+          {t("dueSoon.record")}
         </Button>
       </Link>
     </div>

@@ -1,4 +1,5 @@
 import { useState, useDeferredValue } from "react"
+import { useTranslation } from "react-i18next"
 import { IconPlus, IconTrash, IconSearch } from "@tabler/icons-react"
 import { Button } from "@/shared/components/Button"
 import { Input } from "@/shared/components/Input"
@@ -32,6 +33,7 @@ export function ConsumableSelector({
   value,
   onChange,
 }: ConsumableSelectorProps) {
+  const { t } = useTranslation("treatment")
   const { data: consumableItems = [] } = useConsumableItems()
   const [popoverOpen, setPopoverOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState("")
@@ -93,7 +95,7 @@ export function ConsumableSelector({
               </span>
               <div className="flex items-center gap-2">
                 <Label className="text-xs text-muted-foreground sr-only">
-                  Qty
+                  {t("consumable.qty")}
                 </Label>
                 <Input
                   type="number"
@@ -127,7 +129,7 @@ export function ConsumableSelector({
         <PopoverTrigger asChild>
           <Button type="button" variant="outline" size="sm">
             <IconPlus className="h-4 w-4 mr-1" />
-            Thêm vật tư
+            {t("consumable.addItem")}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-80 p-0" align="start">
@@ -137,7 +139,7 @@ export function ConsumableSelector({
               onValueChange={setSearchTerm}
             />
             <CommandList>
-              <CommandEmpty>Không tìm thấy vật tư</CommandEmpty>
+              <CommandEmpty>{t("consumable.noResults")}</CommandEmpty>
               <CommandGroup>
                 {filteredItems.map((item) => (
                   <CommandItem
@@ -155,7 +157,7 @@ export function ConsumableSelector({
                       )}
                     </div>
                     <span className="text-xs text-muted-foreground">
-                      {item.unit} - Stock: {item.currentStock}
+                      {item.unit} - {t("consumable.stock")}: {item.currentStock}
                     </span>
                   </CommandItem>
                 ))}

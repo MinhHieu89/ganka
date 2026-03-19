@@ -101,15 +101,6 @@
     "estimatedRefund": "Estimated Refund",
     "deduction": "Deduction"
   },
-  "switch": {
-    "currentWillBeSwitched": "Current package will be marked as 'Switched'",
-    "newWillBeCreated": "New package will be created with {{remaining}} remaining sessions",
-    "selectNewTemplate": "Select New Template"
-  },
-  "modify": {
-    "changeReason": "Reason for Change",
-    "currentValues": "Current Values"
-  },
   "approvalQueue": {
     "pageTitle": "Cancellation Approval Queue",
     "pageDescription": "Manage treatment cancellation requests pending approval",
@@ -179,6 +170,157 @@
     "submit": "Create Package",
     "cancel": "Cancel",
     "createSuccess": "Treatment package created successfully"
+  },
+  "osdiChart": {
+    "title": "OSDI Score Trend",
+    "noData": "No OSDI scores recorded yet",
+    "needMore": "More sessions needed for trend chart",
+    "sessionAxis": "Session",
+    "session": "Session",
+    "normal": "Normal",
+    "mild": "Mild",
+    "moderate": "Moderate",
+    "severe": "Severe"
+  },
+  "history": {
+    "loading": "Loading...",
+    "noChanges": "No changes have been recorded",
+    "version": "Version",
+    "reason": "Reason:",
+    "changes": "Change details:",
+    "technicalDetails": "Technical details",
+    "before": "Before",
+    "after": "After"
+  },
+  "consumable": {
+    "stock": "Stock",
+    "addItem": "Add consumable",
+    "noResults": "No consumables found",
+    "qty": "Qty"
+  },
+  "dueSoon": {
+    "title": "Sessions Due Soon",
+    "empty": "No sessions due at this time",
+    "showMore": "Show more ({{count}})",
+    "showLess": "Show less",
+    "overdue": "Overdue",
+    "daysSinceLast": "{{days}} days since last session",
+    "noSessions": "No sessions yet",
+    "sessions": "sessions",
+    "dueDate": "Due: {{date}}",
+    "record": "Record"
+  },
+  "list": {
+    "patient": "Patient",
+    "type": "Type",
+    "status": "Status",
+    "progress": "Progress",
+    "pricing": "Price",
+    "lastSession": "Last Session",
+    "nextDue": "Next Due",
+    "view": "View",
+    "overdue": "Overdue",
+    "today": "Today",
+    "daysAgo": "{{days}} days ago",
+    "oneDayAgo": "1 day ago",
+    "emptyMessage": "No treatment protocols found",
+    "pageDescription": "Manage treatment protocols for patients",
+    "allStatuses": "All statuses",
+    "allTypes": "All types",
+    "loadError": "Failed to load treatment protocols. Please try again."
+  },
+  "modify": {
+    "changeReason": "Reason for Change",
+    "currentValues": "Current Values",
+    "submit": "Save Changes",
+    "cancel": "Cancel",
+    "success": "Protocol updated successfully",
+    "error": "Failed to update protocol",
+    "dialogDescription": "Change protocol parameters. All changes will be recorded in the history.",
+    "totalSessions": "Total Sessions",
+    "minInterval": "Min Interval (days)",
+    "completed": "Completed",
+    "parametersJson": "Treatment Parameters (JSON)",
+    "reasonRequired": "Reason for change is required",
+    "sessionMinError": "Cannot reduce below completed sessions ({{count}})"
+  },
+  "switch": {
+    "currentWillBeSwitched": "Current package will be marked as 'Switched'",
+    "newWillBeCreated": "New package will be created with {{remaining}} remaining sessions",
+    "selectNewTemplate": "Select New Template",
+    "confirm": "Switch",
+    "cancel": "Cancel",
+    "success": "Treatment type switched successfully",
+    "error": "Failed to switch treatment type",
+    "dialogDescription": "Current protocol will be marked as \"Switched\" and a new protocol will be created with remaining sessions.",
+    "currentPackage": "Current protocol",
+    "type": "Type:",
+    "statusLabel": "Status:",
+    "completed": "Completed",
+    "remaining": "Remaining",
+    "newProtocol": "New protocol",
+    "selectPlaceholder": "Select new protocol...",
+    "expectedResult": "Expected result",
+    "currentWillBeMarked": "Current protocol ({{name}}) will be marked as \"Switched\"",
+    "newWillBeCreatedWith": "New protocol ({{name}}) will be created with {{remaining}} remaining sessions",
+    "reasonLabel": "Reason for switch *",
+    "reasonRequired": "Reason for switch is required",
+    "selectRequired": "Please select a new protocol"
+  },
+  "patientTab": {
+    "active": "Active",
+    "completed": "Completed",
+    "other": "Cancelled / Switched",
+    "createProtocol": "Create protocol",
+    "noProtocols": "No treatment protocols for this patient",
+    "createFirst": "Create treatment protocol",
+    "loadError": "Failed to load treatments. Please try again.",
+    "view": "View",
+    "lastSessionLabel": "Last session",
+    "nextDueLabel": "Due",
+    "sessions": "sessions"
+  },
+  "templateForm": {
+    "cancel": "Cancel",
+    "create": "Create",
+    "update": "Update",
+    "createSuccess": "Protocol template created successfully",
+    "updateSuccess": "Protocol template updated successfully",
+    "createError": "Failed to create protocol template",
+    "updateError": "Failed to update protocol template"
+  },
+  "detail": {
+    "back": "Back",
+    "patient": "Patient",
+    "created": "Created",
+    "pause": "Pause",
+    "resume": "Resume",
+    "noSessions": "No sessions recorded yet",
+    "notFound": "Treatment package not found",
+    "cancellationRequest": "Cancellation Request",
+    "requestedBy": "Requested by",
+    "date": "Date",
+    "status": "Status"
+  },
+  "sessionForm": {
+    "title": "Record Treatment Session",
+    "deviceParameters": "Device Parameters",
+    "clinicalNotes": "Clinical Notes",
+    "consumables": "Consumables",
+    "intervalWarningTitle": "Session Interval Warning",
+    "intervalOverrideReason": "Interval Override Reason",
+    "submit": "Record Session",
+    "cancel": "Cancel",
+    "success": "Treatment session recorded successfully",
+    "successWithWarning": "Treatment session recorded (interval warning)",
+    "procedureSteps": "Procedure Steps",
+    "productsUsed": "Products Used",
+    "addProduct": "Add"
+  },
+  "sessionCard": {
+    "sessionNumber": "Session #{{number}}",
+    "intervalOverride": "Interval override",
+    "consumables": "Consumables"
   },
   "templateList": {
     "pageTitle": "Protocol Templates",

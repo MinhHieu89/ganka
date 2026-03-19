@@ -1,4 +1,5 @@
 import { useMemo } from "react"
+import { useTranslation } from "react-i18next"
 import { format } from "date-fns"
 import {
   LineChart,
@@ -14,31 +15,24 @@ import type { TreatmentSessionDto } from "../api/treatment-types"
 
 // Severity zones matching OSDI scoring thresholds
 const SEVERITY_BANDS = [
-  { y1: 0, y2: 12, fill: "#dcfce7", label: "Normal" },
-  { y1: 12, y2: 22, fill: "#fef9c3", label: "Mild" },
-  { y1: 22, y2: 32, fill: "#fed7aa", label: "Moderate" },
-  { y1: 32, y2: 100, fill: "#fecaca", label: "Severe" },
+  { y1: 0, y2: 12, fill: "#dcfce7", labelKey: "normal" },
+  { y1: 12, y2: 22, fill: "#fef9c3", labelKey: "mild" },
+  { y1: 22, y2: 32, fill: "#fed7aa", labelKey: "moderate" },
+  { y1: 32, y2: 100, fill: "#fecaca", labelKey: "severe" },
 ] as const
 
-const SEVERITY_LABELS: Record<string, string> = {
-  Normal: "Normal",
-  Mild: "Mild",
-  Moderate: "Moderate",
-  Severe: "Severe",
-}
-
-function getSeverityLabel(score: number): string {
-  if (score <= 12) return "Normal"
-  if (score <= 22) return "Mild"
-  if (score <= 32) return "Moderate"
-  return "Severe"
+function getSeverityKey(score: number): string {
+  if (score <= 12) return "normal"
+  if (score <= 22) return "mild"
+  if (score <= 32) return "moderate"
+  return "severe"
 }
 
 interface ChartDataPoint {
   sessionLabel: string
   sessionDate: string
   score: number
-  severity: string
+  severityKey: string
 }
 
 interface OsdiTrendChartProps {
@@ -46,6 +40,8 @@ interface OsdiTrendChartProps {
 }
 
 export function OsdiTrendChart({ sessions }: OsdiTrendChartProps) {
+  const { t } = useTranslation("treatment")
+
   const chartData = useMemo<ChartDataPoint[]>(() => {
     return sessions
       .filter((s) => s.osdiScore != null)
@@ -55,8 +51,10 @@ export function OsdiTrendChart({ sessions }: OsdiTrendChartProps) {
           sessionLabel: `#${s.sessionNumber}`,
           sessionDate: format(new Date(date), "dd/MM/yyyy"),
           score: Number(s.osdiScore),
-          severity:
-            s.osdiSeverity ?? getSeverityLabel(Number(s.osdiScore)),
+          severityKey:
+            s.osdiSeverity
+              ? getSeverityKey(Number(s.osdiScore))
+              : getSeverityKey(Number(s.osdiScore)),
         }
       })
   }, [sessions])
@@ -66,11 +64,11 @@ export function OsdiTrendChart({ sessions }: OsdiTrendChartProps) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">OSDI Score Trend</CardTitle>
+          <CardTitle className="text-base">{t("osdiChart.title")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="h-[250px] flex items-center justify-center text-muted-foreground">
-            No OSDI scores recorded yet
+            {t("osdiChart.noData")}
           </div>
         </CardContent>
       </Card>
@@ -82,7 +80,7 @@ export function OsdiTrendChart({ sessions }: OsdiTrendChartProps) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">OSDI Score Trend</CardTitle>
+          <CardTitle className="text-base">{t("osdiChart.title")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="h-[250px] flex flex-col items-center justify-center gap-2">
@@ -90,10 +88,10 @@ export function OsdiTrendChart({ sessions }: OsdiTrendChartProps) {
               {point.score.toFixed(1)}
             </span>
             <span className="text-sm text-muted-foreground">
-              {point.severity} - Session {point.sessionLabel} ({point.sessionDate})
+              {t(`osdiChart.${point.severityKey}`)} - {t("osdiChart.session")} {point.sessionLabel} ({point.sessionDate})
             </span>
             <span className="text-xs text-muted-foreground">
-              More sessions needed for trend chart
+              {t("osdiChart.needMore")}
             </span>
           </div>
         </CardContent>
@@ -104,7 +102,7 @@ export function OsdiTrendChart({ sessions }: OsdiTrendChartProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">OSDI Score Trend</CardTitle>
+        <CardTitle className="text-base">{t("osdiChart.title")}</CardTitle>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
@@ -115,7 +113,7 @@ export function OsdiTrendChart({ sessions }: OsdiTrendChartProps) {
             {/* Severity background bands */}
             {SEVERITY_BANDS.map((band) => (
               <ReferenceArea
-                key={band.label}
+                key={band.labelKey}
                 y1={band.y1}
                 y2={band.y2}
                 fill={band.fill}
@@ -132,17 +130,15 @@ export function OsdiTrendChart({ sessions }: OsdiTrendChartProps) {
               content={({ active, payload }) => {
                 if (!active || !payload?.length) return null
                 const data = payload[0].payload as ChartDataPoint
-                const severityLabel =
-                  SEVERITY_LABELS[data.severity] ?? data.severity
                 return (
                   <div className="rounded-lg border bg-background p-2 shadow-md">
                     <p className="text-xs text-muted-foreground">
-                      Session {data.sessionLabel} - {data.sessionDate}
+                      {t("osdiChart.session")} {data.sessionLabel} - {data.sessionDate}
                     </p>
                     <p className="text-sm font-bold">
                       OSDI: {data.score.toFixed(1)}
                     </p>
-                    <p className="text-xs">{severityLabel}</p>
+                    <p className="text-xs">{t(`osdiChart.${data.severityKey}`)}</p>
                   </div>
                 )
               }}

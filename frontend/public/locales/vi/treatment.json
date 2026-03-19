@@ -101,15 +101,6 @@
     "estimatedRefund": "Số tiền hoàn trả ước tính",
     "deduction": "Khấu trừ"
   },
-  "switch": {
-    "currentWillBeSwitched": "Gói hiện tại sẽ được đánh dấu là 'Đã chuyển đổi'",
-    "newWillBeCreated": "Gói mới sẽ được tạo với {{remaining}} buổi còn lại",
-    "selectNewTemplate": "Chọn mẫu phác đồ mới"
-  },
-  "modify": {
-    "changeReason": "Lý do thay đổi",
-    "currentValues": "Giá trị hiện tại"
-  },
   "approvalQueue": {
     "pageTitle": "Phê duyệt hủy phác đồ",
     "pageDescription": "Quản lý các yêu cầu hủy phác đồ điều trị cần phê duyệt",
@@ -179,6 +170,115 @@
     "submit": "Tạo gói",
     "cancel": "Hủy",
     "createSuccess": "Tạo gói điều trị thành công"
+  },
+  "osdiChart": {
+    "title": "Xu hướng điểm OSDI",
+    "noData": "Chưa có điểm OSDI nào được ghi nhận",
+    "needMore": "Cần thêm buổi điều trị để hiển thị biểu đồ",
+    "sessionAxis": "Buổi",
+    "session": "Buổi",
+    "normal": "Bình thường",
+    "mild": "Nhẹ",
+    "moderate": "Trung bình",
+    "severe": "Nặng"
+  },
+  "history": {
+    "loading": "Đang tải...",
+    "noChanges": "Chưa có thay đổi nào được ghi nhận",
+    "version": "Phiên bản",
+    "reason": "Lý do:",
+    "changes": "Nội dung thay đổi:",
+    "technicalDetails": "Chi tiết kỹ thuật",
+    "before": "Trước",
+    "after": "Sau"
+  },
+  "consumable": {
+    "stock": "Tồn kho",
+    "addItem": "Thêm vật tư",
+    "noResults": "Không tìm thấy vật tư",
+    "qty": "SL"
+  },
+  "dueSoon": {
+    "title": "Phiên sắp đến hạn",
+    "empty": "Không có phiên nào sắp đến hạn",
+    "showMore": "Xem thêm ({{count}})",
+    "showLess": "Thu gọn",
+    "overdue": "Quá hạn",
+    "daysSinceLast": "{{days}} ngày kể từ phiên cuối",
+    "noSessions": "Chưa có phiên nào",
+    "sessions": "phiên",
+    "dueDate": "Đến hạn: {{date}}",
+    "record": "Ghi nhận"
+  },
+  "list": {
+    "patient": "Bệnh nhân",
+    "type": "Loại",
+    "status": "Trạng thái",
+    "progress": "Tiến trình",
+    "pricing": "Giá",
+    "lastSession": "Phiên cuối",
+    "nextDue": "Đến hạn",
+    "view": "Xem",
+    "overdue": "Quá hạn",
+    "today": "Hôm nay",
+    "daysAgo": "{{days}} ngày trước",
+    "oneDayAgo": "1 ngày trước",
+    "emptyMessage": "Không có phác đồ điều trị nào",
+    "pageDescription": "Quản lý phác đồ điều trị cho bệnh nhân",
+    "allStatuses": "Tất cả trạng thái",
+    "allTypes": "Tất cả loại",
+    "loadError": "Không thể tải danh sách phác đồ điều trị. Vui lòng thử lại."
+  },
+  "modify": {
+    "changeReason": "Lý do thay đổi",
+    "currentValues": "Giá trị hiện tại",
+    "submit": "Lưu thay đổi",
+    "cancel": "Huỷ",
+    "success": "Cập nhật phác đồ thành công",
+    "error": "Không thể cập nhật phác đồ",
+    "dialogDescription": "Thay đổi thông số phác đồ điều trị. Tất cả thay đổi sẽ được ghi lại trong lịch sử.",
+    "totalSessions": "Tổng số phiên",
+    "minInterval": "Khoảng cách tối thiểu (ngày)",
+    "completed": "Đã hoàn thành",
+    "parametersJson": "Tham số điều trị (JSON)",
+    "reasonRequired": "Lý do thay đổi là bắt buộc",
+    "sessionMinError": "Không thể giảm dưới số phiên đã hoàn thành ({{count}})"
+  },
+  "switch": {
+    "currentWillBeSwitched": "Gói hiện tại sẽ được đánh dấu là 'Đã chuyển đổi'",
+    "newWillBeCreated": "Gói mới sẽ được tạo với {{remaining}} buổi còn lại",
+    "selectNewTemplate": "Chọn mẫu phác đồ mới",
+    "confirm": "Chuyển đổi",
+    "cancel": "Huỷ",
+    "success": "Chuyển đổi loại điều trị thành công",
+    "error": "Không thể chuyển đổi loại điều trị",
+    "dialogDescription": "Phác đồ hiện tại sẽ được đánh dấu \"Đã chuyển đổi\" và phác đồ mới sẽ được tạo với số phiên còn lại.",
+    "currentPackage": "Phác đồ hiện tại",
+    "type": "Loại:",
+    "statusLabel": "Trạng thái:",
+    "completed": "Đã hoàn thành",
+    "remaining": "Còn lại",
+    "newProtocol": "Phác đồ mới",
+    "selectPlaceholder": "Chọn phác đồ mới...",
+    "expectedResult": "Kết quả dự kiến",
+    "currentWillBeMarked": "Phác đồ hiện tại ({{name}}) sẽ được đánh dấu \"Đã chuyển đổi\"",
+    "newWillBeCreatedWith": "Phác đồ mới ({{name}}) sẽ được tạo với {{remaining}} phiên còn lại",
+    "reasonLabel": "Lý do chuyển đổi *",
+    "reasonRequired": "Lý do chuyển đổi là bắt buộc",
+    "selectRequired": "Vui lòng chọn phác đồ mới"
+  },
+  "patientTab": {
+    "active": "Đang hoạt động",
+    "completed": "Hoàn thành",
+    "other": "Đã huỷ / Đã chuyển",
+    "createProtocol": "Tạo phác đồ",
+    "noProtocols": "Chưa có phác đồ điều trị cho bệnh nhân này",
+    "createFirst": "Tạo phác đồ điều trị",
+    "loadError": "Không thể tải danh sách điều trị. Vui lòng thử lại.",
+    "view": "Xem",
+    "lastSessionLabel": "Phiên cuối",
+    "nextDueLabel": "Đến hạn",
+    "sessions": "phiên"
   },
   "templateList": {
     "pageTitle": "Mẫu phác đồ",

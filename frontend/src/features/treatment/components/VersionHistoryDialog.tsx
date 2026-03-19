@@ -1,4 +1,5 @@
 import { format } from "date-fns"
+import { useTranslation } from "react-i18next"
 import { IconHistory, IconLoader2 } from "@tabler/icons-react"
 import {
   Dialog,
@@ -28,6 +29,7 @@ export function VersionHistoryDialog({
   packageId,
   packageName,
 }: VersionHistoryDialogProps) {
+  const { t } = useTranslation("treatment")
   const { data: versions, isLoading } = usePackageVersions(
     open ? packageId : undefined,
   )
@@ -38,7 +40,7 @@ export function VersionHistoryDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <IconHistory className="h-5 w-5" />
-            Lich su thay doi
+            {t("versionHistory")}
           </DialogTitle>
           {packageName && (
             <DialogDescription>{packageName}</DialogDescription>
@@ -48,11 +50,11 @@ export function VersionHistoryDialog({
         {isLoading ? (
           <div className="flex flex-col items-center gap-2 py-8">
             <IconLoader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-            <p className="text-sm text-muted-foreground">Dang tai...</p>
+            <p className="text-sm text-muted-foreground">{t("history.loading")}</p>
           </div>
         ) : !versions || versions.length === 0 ? (
           <div className="py-8 text-center text-muted-foreground">
-            Chua co thay doi nao duoc ghi nhan
+            {t("history.noChanges")}
           </div>
         ) : (
           <div className="space-y-3">
@@ -62,7 +64,7 @@ export function VersionHistoryDialog({
                   {/* Header row */}
                   <div className="flex items-center justify-between">
                     <Badge variant="outline">
-                      Phien ban {version.versionNumber}
+                      {t("history.version")} {version.versionNumber}
                     </Badge>
                     <span className="text-xs text-muted-foreground">
                       {format(
@@ -74,13 +76,13 @@ export function VersionHistoryDialog({
 
                   {/* Reason */}
                   <div className="text-sm">
-                    <span className="text-muted-foreground">Ly do:</span>{" "}
+                    <span className="text-muted-foreground">{t("history.reason")}</span>{" "}
                     {version.reason}
                   </div>
 
                   {/* Change description */}
                   <div className="text-sm">
-                    <span className="text-muted-foreground">Noi dung thay doi:</span>{" "}
+                    <span className="text-muted-foreground">{t("history.changes")}</span>{" "}
                     {version.changeDescription}
                   </div>
 
@@ -88,13 +90,13 @@ export function VersionHistoryDialog({
                   {(version.previousJson || version.currentJson) && (
                     <details className="text-xs">
                       <summary className="cursor-pointer text-muted-foreground hover:text-foreground transition-colors">
-                        Chi tiet ky thuat
+                        {t("history.technicalDetails")}
                       </summary>
                       <div className="mt-2 grid grid-cols-2 gap-2">
                         {version.previousJson && (
                           <div>
                             <div className="font-medium text-muted-foreground mb-1">
-                              Truoc
+                              {t("history.before")}
                             </div>
                             <pre className="p-2 bg-muted rounded text-xs whitespace-pre-wrap break-all">
                               {formatJson(version.previousJson)}
@@ -104,7 +106,7 @@ export function VersionHistoryDialog({
                         {version.currentJson && (
                           <div>
                             <div className="font-medium text-muted-foreground mb-1">
-                              Sau
+                              {t("history.after")}
                             </div>
                             <pre className="p-2 bg-muted rounded text-xs whitespace-pre-wrap break-all">
                               {formatJson(version.currentJson)}
