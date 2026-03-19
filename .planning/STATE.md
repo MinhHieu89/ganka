@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 09-34-PLAN.md
-last_updated: "2026-03-19T14:31:13.758Z"
+stopped_at: Completed 09-35-PLAN.md
+last_updated: "2026-03-19T14:32:13.642Z"
 last_activity: "2026-03-13 - Completed quick task 2: Add Serilog with file output for development"
 progress:
   total_phases: 19
   completed_phases: 16
   total_plans: 287
-  completed_plans: 276
+  completed_plans: 277
 ---
 
 ---
@@ -872,6 +872,7 @@ Progress: [█████████░] 96%
 | Phase 09 P33 | 7min | 2 tasks | 10 files |
 | Phase 09 P32 | 10min | 2 tasks | 6 files |
 | Phase 09 P34 | 2min | 1 tasks | 1 files |
+| Phase 09 P35 | 2min | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -1371,6 +1372,7 @@ Recent decisions affecting current work:
 - [Phase 09]: Used nested key groups and schema factory i18n pattern for treatment batch 2 components
 - [Phase 09]: Used useTranslation in each sub-component rather than prop-drilling t function for i18n wiring
 - [Phase 09]: Managed parameter fields via useState instead of react-hook-form Controller to match TreatmentParameterFields onChange API
+- [Phase 09]: Removed subscale headers for flat sequential OSDI question list matching public page
 
 ### Roadmap Evolution
 
@@ -1401,6 +1403,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-19T14:31:13.753Z
-Stopped at: Completed 09-34-PLAN.md
+Last session: 2026-03-19T14:32:13.638Z
+Stopped at: Completed 09-35-PLAN.md
 Resume file: None
