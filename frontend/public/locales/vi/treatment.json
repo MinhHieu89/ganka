@@ -280,6 +280,48 @@
     "nextDueLabel": "Đến hạn",
     "sessions": "phiên"
   },
+  "templateForm": {
+    "cancel": "Hu\u1ef7",
+    "create": "T\u1ea1o",
+    "update": "C\u1eadp nh\u1eadt",
+    "createSuccess": "T\u1ea1o m\u1eabu ph\u00e1c \u0111\u1ed3 th\u00e0nh c\u00f4ng",
+    "updateSuccess": "C\u1eadp nh\u1eadt m\u1eabu ph\u00e1c \u0111\u1ed3 th\u00e0nh c\u00f4ng",
+    "createError": "Kh\u00f4ng th\u1ec3 t\u1ea1o m\u1eabu ph\u00e1c \u0111\u1ed3",
+    "updateError": "Kh\u00f4ng th\u1ec3 c\u1eadp nh\u1eadt m\u1eabu ph\u00e1c \u0111\u1ed3"
+  },
+  "detail": {
+    "back": "Quay l\u1ea1i",
+    "patient": "B\u1ec7nh nh\u00e2n",
+    "created": "Ng\u00e0y t\u1ea1o",
+    "pause": "T\u1ea1m d\u1eebng",
+    "resume": "Ti\u1ebfp t\u1ee5c",
+    "noSessions": "Ch\u01b0a c\u00f3 bu\u1ed5i \u0111i\u1ec1u tr\u1ecb n\u00e0o",
+    "notFound": "Kh\u00f4ng t\u00ecm th\u1ea5y g\u00f3i li\u1ec7u tr\u00ecnh",
+    "cancellationRequest": "Y\u00eau c\u1ea7u hu\u1ef7",
+    "requestedBy": "Ng\u01b0\u1eddi y\u00eau c\u1ea7u",
+    "date": "Ng\u00e0y",
+    "status": "Tr\u1ea1ng th\u00e1i"
+  },
+  "sessionForm": {
+    "title": "Ghi nh\u1eadn phi\u00ean \u0111i\u1ec1u tr\u1ecb",
+    "deviceParameters": "Th\u00f4ng s\u1ed1 thi\u1ebft b\u1ecb",
+    "clinicalNotes": "Ghi ch\u00fa l\u00e2m s\u00e0ng",
+    "consumables": "V\u1eadt t\u01b0 ti\u00eau hao",
+    "intervalWarningTitle": "C\u1ea3nh b\u00e1o kho\u1ea3ng c\u00e1ch phi\u00ean",
+    "intervalOverrideReason": "L\u00fd do ghi \u0111\u00e8 kho\u1ea3ng c\u00e1ch",
+    "submit": "Ghi nh\u1eadn phi\u00ean",
+    "cancel": "Hu\u1ef7",
+    "success": "Phi\u00ean \u0111i\u1ec1u tr\u1ecb \u0111\u00e3 \u0111\u01b0\u1ee3c ghi nh\u1eadn th\u00e0nh c\u00f4ng",
+    "successWithWarning": "Phi\u00ean \u0111i\u1ec1u tr\u1ecb \u0111\u00e3 \u0111\u01b0\u1ee3c ghi nh\u1eadn (c\u00f3 c\u1ea3nh b\u00e1o kho\u1ea3ng c\u00e1ch)",
+    "procedureSteps": "C\u00e1c b\u01b0\u1edbc th\u1ef1c hi\u1ec7n",
+    "productsUsed": "S\u1ea3n ph\u1ea9m \u0111\u00e3 d\u00f9ng",
+    "addProduct": "Th\u00eam"
+  },
+  "sessionCard": {
+    "sessionNumber": "Phi\u00ean #{{number}}",
+    "intervalOverride": "Ghi \u0111\u00e8 kho\u1ea3ng c\u00e1ch",
+    "consumables": "V\u1eadt t\u01b0 ti\u00eau hao"
+  },
   "templateList": {
     "pageTitle": "Mẫu phác đồ",
     "pageDescription": "Quản lý mẫu phác đồ điều trị cho IPL, LLLT và Chăm sóc mi mắt",

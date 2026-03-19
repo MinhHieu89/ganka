@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useCallback } from "react"
+import { useTranslation } from "react-i18next"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
@@ -114,6 +115,7 @@ export function ProtocolTemplateForm({
   onOpenChange,
   initialData,
 }: ProtocolTemplateFormProps) {
+  const { t } = useTranslation("treatment")
   const isEdit = !!initialData
   const createMutation = useCreateProtocolTemplate()
   const updateMutation = useUpdateProtocolTemplate()
@@ -211,10 +213,10 @@ export function ProtocolTemplateForm({
     try {
       if (isEdit && initialData) {
         await updateMutation.mutateAsync({ id: initialData.id, ...command })
-        toast.success("Protocol template updated successfully")
+        toast.success(t("templateForm.updateSuccess"))
       } else {
         await createMutation.mutateAsync(command)
-        toast.success("Protocol template created successfully")
+        toast.success(t("templateForm.createSuccess"))
       }
       onOpenChange(false)
     } catch (error) {
@@ -250,7 +252,7 @@ export function ProtocolTemplateForm({
       <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
-            {isEdit ? "Edit Protocol Template" : "Create Protocol Template"}
+            {isEdit ? t("editTemplate") : t("createTemplate")}
           </DialogTitle>
         </DialogHeader>
 
@@ -261,7 +263,7 @@ export function ProtocolTemplateForm({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
-                <FieldLabel htmlFor={field.name}>Name</FieldLabel>
+                <FieldLabel htmlFor={field.name}>{t("fields.name")}</FieldLabel>
                 <Input
                   {...field}
                   id={field.name}
@@ -281,7 +283,7 @@ export function ProtocolTemplateForm({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel>Treatment Type</FieldLabel>
+                  <FieldLabel>{t("fields.treatmentType")}</FieldLabel>
                   <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger>
                       <SelectValue />
@@ -289,7 +291,7 @@ export function ProtocolTemplateForm({
                     <SelectContent>
                       {TREATMENT_TYPE_OPTIONS.map((opt) => (
                         <SelectItem key={opt.value} value={opt.value}>
-                          {opt.label}
+                          {t(`treatmentType.${opt.value}`)}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -306,7 +308,7 @@ export function ProtocolTemplateForm({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>Default Session Count (1-6)</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>{t("fields.sessionCount")} (1-6)</FieldLabel>
                   <Input
                     {...field}
                     id={field.name}
@@ -332,7 +334,7 @@ export function ProtocolTemplateForm({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel>Pricing Mode</FieldLabel>
+                  <FieldLabel>{t("fields.pricingMode")}</FieldLabel>
                   <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger>
                       <SelectValue />
@@ -340,7 +342,7 @@ export function ProtocolTemplateForm({
                     <SelectContent>
                       {PRICING_MODE_OPTIONS.map((opt) => (
                         <SelectItem key={opt.value} value={opt.value}>
-                          {opt.label}
+                          {t(`pricingMode.${opt.value}`)}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -357,7 +359,7 @@ export function ProtocolTemplateForm({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>Package Price (VND)</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>{t("fields.packagePrice")} (VND)</FieldLabel>
                   <Input
                     {...field}
                     id={field.name}
@@ -379,7 +381,7 @@ export function ProtocolTemplateForm({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>Session Price (VND)</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>{t("fields.sessionPrice")} (VND)</FieldLabel>
                   <Input
                     {...field}
                     id={field.name}
@@ -404,7 +406,7 @@ export function ProtocolTemplateForm({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>Min Interval (days)</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>{t("fields.minInterval")}</FieldLabel>
                   <Input
                     {...field}
                     id={field.name}
@@ -426,7 +428,7 @@ export function ProtocolTemplateForm({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>Max Interval (days)</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>{t("fields.maxInterval")}</FieldLabel>
                   <Input
                     {...field}
                     id={field.name}
@@ -451,7 +453,7 @@ export function ProtocolTemplateForm({
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
                 <FieldLabel htmlFor={field.name}>
-                  Cancellation Deduction % (10-20)
+                  {t("fields.deductionPercent")} (10-20)
                 </FieldLabel>
                 <Input
                   {...field}
@@ -476,7 +478,7 @@ export function ProtocolTemplateForm({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
-                <FieldLabel htmlFor={field.name}>Description</FieldLabel>
+                <FieldLabel htmlFor={field.name}>{t("fields.description")}</FieldLabel>
                 <AutoResizeTextarea
                   {...field}
                   id={field.name}
@@ -503,13 +505,13 @@ export function ProtocolTemplateForm({
               variant="outline"
               onClick={() => onOpenChange(false)}
             >
-              Cancel
+              {t("templateForm.cancel")}
             </Button>
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting && (
                 <IconLoader2 className="h-4 w-4 mr-2 animate-spin" />
               )}
-              {isEdit ? "Update" : "Create"}
+              {isEdit ? t("templateForm.update") : t("templateForm.create")}
             </Button>
           </DialogFooter>
         </form>

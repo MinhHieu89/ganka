@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react"
+import { useTranslation } from "react-i18next"
 import { Link, useNavigate } from "@tanstack/react-router"
 import { format } from "date-fns"
 import {
@@ -75,10 +76,11 @@ function ProgressBar({
 // -- Pricing display --
 
 function PricingInfo({ pkg }: { pkg: TreatmentPackageDto }) {
+  const { t } = useTranslation("treatment")
   if (pkg.pricingMode === "PerPackage") {
     return (
       <div className="text-sm">
-        <span className="text-muted-foreground">Package price:</span>{" "}
+        <span className="text-muted-foreground">{t("fields.packagePrice")}:</span>{" "}
         <span className="font-medium">
           {pkg.packagePrice.toLocaleString()} VND
         </span>
@@ -87,7 +89,7 @@ function PricingInfo({ pkg }: { pkg: TreatmentPackageDto }) {
   }
   return (
     <div className="text-sm">
-      <span className="text-muted-foreground">Per session:</span>{" "}
+      <span className="text-muted-foreground">{t("fields.sessionPrice")}:</span>{" "}
       <span className="font-medium">
         {pkg.sessionPrice.toLocaleString()} VND
       </span>
@@ -98,6 +100,7 @@ function PricingInfo({ pkg }: { pkg: TreatmentPackageDto }) {
 // -- Cancellation info --
 
 function CancellationInfo({ pkg }: { pkg: TreatmentPackageDto }) {
+  const { t } = useTranslation("treatment")
   if (!pkg.cancellationRequest) return null
   const req = pkg.cancellationRequest
   return (
@@ -105,40 +108,40 @@ function CancellationInfo({ pkg }: { pkg: TreatmentPackageDto }) {
       <CardHeader className="pb-2">
         <CardTitle className="text-base flex items-center gap-2 text-red-700 dark:text-red-400">
           <IconAlertCircle className="h-4 w-4" />
-          Cancellation Request
+          {t("detail.cancellationRequest")}
         </CardTitle>
       </CardHeader>
       <CardContent className="text-sm space-y-1">
         <div>
-          <span className="text-muted-foreground">Requested by:</span>{" "}
+          <span className="text-muted-foreground">{t("detail.requestedBy")}:</span>{" "}
           {req.requestedByName}
         </div>
         <div>
-          <span className="text-muted-foreground">Date:</span>{" "}
+          <span className="text-muted-foreground">{t("detail.date")}:</span>{" "}
           {format(new Date(req.requestedAt), "dd/MM/yyyy HH:mm")}
         </div>
         <div>
-          <span className="text-muted-foreground">Reason:</span> {req.reason}
+          <span className="text-muted-foreground">{t("fields.reason")}:</span> {req.reason}
         </div>
         <div>
-          <span className="text-muted-foreground">Status:</span>{" "}
-          <Badge variant="outline">{req.status}</Badge>
+          <span className="text-muted-foreground">{t("detail.status")}:</span>{" "}
+          <Badge variant="outline">{t(`status.${req.status}`)}</Badge>
         </div>
         {req.deductionPercent > 0 && (
           <div>
-            <span className="text-muted-foreground">Deduction:</span>{" "}
+            <span className="text-muted-foreground">{t("cancellation.deduction")}:</span>{" "}
             {req.deductionPercent}%
           </div>
         )}
         {req.refundAmount > 0 && (
           <div>
-            <span className="text-muted-foreground">Refund:</span>{" "}
+            <span className="text-muted-foreground">{t("fields.refundAmount")}:</span>{" "}
             {req.refundAmount.toLocaleString()} VND
           </div>
         )}
         {req.rejectionReason && (
           <div>
-            <span className="text-muted-foreground">Rejection:</span>{" "}
+            <span className="text-muted-foreground">{t("fields.rejectionReason")}:</span>{" "}
             {req.rejectionReason}
           </div>
         )}
@@ -156,6 +159,7 @@ interface TreatmentPackageDetailProps {
 export function TreatmentPackageDetail({
   packageId,
 }: TreatmentPackageDetailProps) {
+  const { t } = useTranslation("treatment")
   const navigate = useNavigate()
   const { data: pkg, isLoading, error } = useTreatmentPackage(packageId)
 
@@ -194,10 +198,10 @@ export function TreatmentPackageDetail({
       <div className="p-4 space-y-4 max-w-5xl mx-auto">
         <Button variant="ghost" size="sm" onClick={goBack}>
           <IconArrowLeft className="h-4 w-4 mr-1" />
-          Back
+          {t("detail.back")}
         </Button>
         <div className="flex items-center justify-center h-64 text-muted-foreground">
-          Treatment package not found
+          {t("detail.notFound")}
         </div>
       </div>
     )
@@ -218,7 +222,7 @@ export function TreatmentPackageDetail({
       {/* Back button */}
       <Button variant="ghost" size="sm" onClick={goBack}>
         <IconArrowLeft className="h-4 w-4 mr-1" />
-        Back
+        {t("detail.back")}
       </Button>
 
       {/* Header Card */}
@@ -236,10 +240,10 @@ export function TreatmentPackageDetail({
                   TREATMENT_TYPE_COLOR[pkg.treatmentType] ?? "",
                 )}
               >
-                {pkg.treatmentType}
+                {t(`treatmentType.${pkg.treatmentType}`)}
               </Badge>
               <Badge variant={STATUS_VARIANT[pkg.status] ?? "outline"}>
-                {pkg.status}
+                {t(`status.${pkg.status}`)}
               </Badge>
             </div>
           </div>
@@ -247,7 +251,7 @@ export function TreatmentPackageDetail({
         <CardContent className="space-y-4">
           {/* Patient link */}
           <div className="text-sm">
-            <span className="text-muted-foreground">Patient:</span>{" "}
+            <span className="text-muted-foreground">{t("detail.patient")}:</span>{" "}
             <Link
               to="/patients/$patientId"
               params={{ patientId: pkg.patientId }}
@@ -260,7 +264,7 @@ export function TreatmentPackageDetail({
           {/* Progress */}
           <div>
             <div className="text-sm text-muted-foreground mb-1">
-              Sessions Progress
+              {t("fields.progress")}
             </div>
             <ProgressBar
               completed={pkg.sessionsCompleted}
@@ -272,14 +276,14 @@ export function TreatmentPackageDetail({
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
             <PricingInfo pkg={pkg} />
             <div>
-              <span className="text-muted-foreground">Created:</span>{" "}
+              <span className="text-muted-foreground">{t("detail.created")}:</span>{" "}
               <span className="font-medium">
                 {format(new Date(pkg.createdAt), "dd/MM/yyyy")}
               </span>
             </div>
             {pkg.lastSessionDate && (
               <div>
-                <span className="text-muted-foreground">Last session:</span>{" "}
+                <span className="text-muted-foreground">{t("fields.lastSession")}:</span>{" "}
                 <span className="font-medium">
                   {format(new Date(pkg.lastSessionDate), "dd/MM/yyyy")}
                 </span>
@@ -287,7 +291,7 @@ export function TreatmentPackageDetail({
             )}
             {pkg.nextDueDate && (
               <div>
-                <span className="text-muted-foreground">Next due:</span>{" "}
+                <span className="text-muted-foreground">{t("fields.nextDue")}:</span>{" "}
                 <span className="font-medium">
                   {format(new Date(pkg.nextDueDate), "dd/MM/yyyy")}
                 </span>
@@ -299,7 +303,7 @@ export function TreatmentPackageDetail({
           <div className="flex flex-wrap gap-2 pt-2 border-t">
             {isActive && (
               <Button size="sm" onClick={() => setSessionFormOpen(true)}>
-                Record Session
+                {t("recordSession")}
               </Button>
             )}
             {canModify && (
@@ -309,18 +313,18 @@ export function TreatmentPackageDetail({
                   size="sm"
                   onClick={() => setModifyDialogOpen(true)}
                 >
-                  Modify
+                  {t("modifyPackage")}
                 </Button>
                 <Button variant="outline" size="sm">
                   {isActive ? (
                     <>
                       <IconPlayerPause className="h-4 w-4 mr-1" />
-                      Pause
+                      {t("detail.pause")}
                     </>
                   ) : (
                     <>
                       <IconPlayerPlay className="h-4 w-4 mr-1" />
-                      Resume
+                      {t("detail.resume")}
                     </>
                   )}
                 </Button>
@@ -329,7 +333,7 @@ export function TreatmentPackageDetail({
                   size="sm"
                   onClick={() => setSwitchDialogOpen(true)}
                 >
-                  Switch Type
+                  {t("switchTreatment")}
                 </Button>
                 <Button
                   variant="outline"
@@ -337,7 +341,7 @@ export function TreatmentPackageDetail({
                   className="text-red-600"
                   onClick={() => setCancelDialogOpen(true)}
                 >
-                  Request Cancellation
+                  {t("requestCancellation")}
                 </Button>
               </>
             )}
@@ -348,7 +352,7 @@ export function TreatmentPackageDetail({
                 onClick={() => setHistoryDialogOpen(true)}
               >
                 <IconHistory className="h-4 w-4 mr-1" />
-                View History
+                {t("versionHistory")}
               </Button>
             )}
           </div>
@@ -364,7 +368,7 @@ export function TreatmentPackageDetail({
       {/* Sessions grid */}
       {sortedSessions.length > 0 ? (
         <div>
-          <h2 className="text-lg font-semibold mb-3">Sessions</h2>
+          <h2 className="text-lg font-semibold mb-3">{t("sessionHistory")}</h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {sortedSessions.map((session) => (
               <TreatmentSessionCard
@@ -379,7 +383,7 @@ export function TreatmentPackageDetail({
         <Card>
           <CardContent className="py-8">
             <div className="text-center text-muted-foreground">
-              No sessions recorded yet
+              {t("detail.noSessions")}
             </div>
           </CardContent>
         </Card>
