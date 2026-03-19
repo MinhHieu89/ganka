@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useForm, Controller } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -18,6 +18,7 @@ import { Button } from "@/shared/components/Button"
 import { AutoResizeTextarea } from "@/shared/components/AutoResizeTextarea"
 import { Field, FieldLabel, FieldError } from "@/shared/components/Field"
 import { Separator } from "@/shared/components/Separator"
+import { TreatmentParameterFields, buildParametersJson, parseParametersJson } from "./TreatmentParameterFields"
 import { handleServerValidationError } from "@/shared/lib/server-validation"
 import { useModifyPackage } from "@/features/treatment/api/treatment-api"
 import type { TreatmentPackageDto } from "@/features/treatment/api/treatment-types"
@@ -37,7 +38,6 @@ function createModifyPackageSchema(sessionsCompleted: number, t: (key: string, o
         (val) => val == null || val >= sessionsCompleted,
         t("modify.sessionMinError", { count: sessionsCompleted }),
       ),
-    parametersJson: z.string().nullable().optional(),
     minIntervalDays: z.coerce.number().int().min(1).nullable().optional(),
     reason: z.string().min(1, t("modify.reasonRequired")),
   })
@@ -68,21 +68,24 @@ export function ModifyPackageDialog({
     resolver: zodResolver(schema),
     defaultValues: {
       totalSessions: package_.totalSessions,
-      parametersJson: package_.parametersJson || null,
       minIntervalDays: package_.minIntervalDays,
       reason: "",
     },
   })
+
+  const [paramFields, setParamFields] = useState<Record<string, unknown>>(() =>
+    parseParametersJson(package_.treatmentType, package_.parametersJson)
+  )
 
   // Reset form when dialog opens with current package values
   useEffect(() => {
     if (open) {
       form.reset({
         totalSessions: package_.totalSessions,
-        parametersJson: package_.parametersJson || null,
         minIntervalDays: package_.minIntervalDays,
         reason: "",
       })
+      setParamFields(parseParametersJson(package_.treatmentType, package_.parametersJson))
     }
   }, [open, package_, form])
 
@@ -90,7 +93,7 @@ export function ModifyPackageDialog({
     try {
       await modifyMutation.mutateAsync({
         totalSessions: data.totalSessions,
-        parametersJson: data.parametersJson,
+        parametersJson: buildParametersJson(package_.treatmentType, paramFields),
         minIntervalDays: data.minIntervalDays,
         reason: data.reason,
       })
@@ -105,7 +108,7 @@ export function ModifyPackageDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{t("modifyPackage")}</DialogTitle>
           <DialogDescription>
@@ -201,25 +204,14 @@ export function ModifyPackageDialog({
             />
           </div>
 
-          {/* Parameters JSON */}
-          <Controller
-            name="parametersJson"
-            control={form.control}
-            render={({ field }) => (
-              <Field>
-                <FieldLabel htmlFor="parametersJson">
-                  {t("modify.parametersJson")}
-                </FieldLabel>
-                <AutoResizeTextarea
-                  {...field}
-                  id="parametersJson"
-                  value={field.value ?? ""}
-                  onChange={(e) => field.onChange(e.target.value || null)}
-                  rows={3}
-                  className="font-mono text-xs"
-                />
-              </Field>
-            )}
+          {/* Treatment Parameters */}
+          <TreatmentParameterFields
+            treatmentType={package_.treatmentType}
+            values={paramFields}
+            onChange={(field, value) =>
+              setParamFields((prev) => ({ ...prev, [field]: value }))
+            }
+            disabled={isSubmitting}
           />
 
           {/* Reason - required */}
