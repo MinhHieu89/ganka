@@ -157,6 +157,20 @@
     "submitButton": "Gửi yêu cầu hủy",
     "submitSuccess": "Yêu cầu hủy đã được gửi"
   },
+  "packageForm": {
+    "title": "Tạo gói điều trị",
+    "editTitle": "Sửa gói điều trị",
+    "selectTemplate": "Chọn phác đồ mẫu",
+    "selectPatient": "Chọn bệnh nhân",
+    "searchPatient": "Tìm bệnh nhân...",
+    "overrideSessions": "Ghi đè số buổi",
+    "overridePricing": "Ghi đè chế độ giá",
+    "overrideParams": "Ghi đè thông số",
+    "templateDefaults": "Mặc định từ phác đồ",
+    "submit": "Tạo gói",
+    "cancel": "Hủy",
+    "createSuccess": "Tạo gói điều trị thành công"
+  },
   "templateList": {
     "pageTitle": "Mẫu phác đồ",
     "pageDescription": "Quản lý mẫu phác đồ điều trị cho IPL, LLLT và Chăm sóc mi mắt",

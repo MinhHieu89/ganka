@@ -157,6 +157,20 @@
     "submitButton": "Submit Cancellation Request",
     "submitSuccess": "Cancellation request submitted"
   },
+  "packageForm": {
+    "title": "Create Treatment Package",
+    "editTitle": "Edit Treatment Package",
+    "selectTemplate": "Select Protocol Template",
+    "selectPatient": "Select Patient",
+    "searchPatient": "Search patient...",
+    "overrideSessions": "Override Session Count",
+    "overridePricing": "Override Pricing Mode",
+    "overrideParams": "Override Parameters",
+    "templateDefaults": "Template Defaults",
+    "submit": "Create Package",
+    "cancel": "Cancel",
+    "createSuccess": "Treatment package created successfully"
+  },
   "templateList": {
     "pageTitle": "Protocol Templates",
     "pageDescription": "Manage treatment protocol templates for IPL, LLLT, and Lid Care",

@@ -1,8 +1,9 @@
-import { useState, useEffect, useDeferredValue } from "react"
+import { useState, useEffect, useCallback, useDeferredValue } from "react"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { toast } from "sonner"
+import { useTranslation } from "react-i18next"
 import { IconLoader2, IconSearch, IconUser } from "@tabler/icons-react"
 import {
   Dialog,
@@ -23,7 +24,6 @@ import {
   SelectValue,
 } from "@/shared/components/Select"
 import { Separator } from "@/shared/components/Separator"
-import { AutoResizeTextarea } from "@/shared/components/AutoResizeTextarea"
 import { formatVND } from "@/shared/lib/format-vnd"
 import { handleServerValidationError } from "@/shared/lib/server-validation"
 import {
@@ -35,6 +35,11 @@ import type {
   TreatmentProtocolDto,
   CreateTreatmentPackageCommand,
 } from "@/features/treatment/api/treatment-types"
+import {
+  TreatmentParameterFields,
+  buildParametersJson,
+  parseParametersJson,
+} from "./TreatmentParameterFields"
 
 // -- Pricing mode enum values matching backend --
 const PRICING_MODE_PER_SESSION = 0
@@ -76,11 +81,15 @@ export function TreatmentPackageForm({
   patientId: presetPatientId,
   patientName: presetPatientName,
 }: TreatmentPackageFormProps) {
+  const { t } = useTranslation("treatment")
   const { data: templates = [] } = useProtocolTemplates()
   const createMutation = useCreateTreatmentPackage()
 
   const [selectedTemplate, setSelectedTemplate] =
     useState<TreatmentProtocolDto | null>(null)
+
+  // Structured parameter fields state
+  const [paramFields, setParamFields] = useState<Record<string, unknown>>({})
 
   // Patient search state
   const [patientSearchTerm, setPatientSearchTerm] = useState("")
@@ -127,6 +136,7 @@ export function TreatmentPackageForm({
         visitId: visitId ?? null,
       })
       setSelectedTemplate(null)
+      setParamFields({})
       if (presetPatientId && presetPatientName) {
         setSelectedPatientDisplay({
           id: presetPatientId,
@@ -158,11 +168,22 @@ export function TreatmentPackageForm({
     form.setValue("packagePrice", template.defaultPackagePrice)
     form.setValue("sessionPrice", template.defaultSessionPrice)
     form.setValue("minIntervalDays", template.minIntervalDays)
-    form.setValue(
-      "parametersJson",
-      template.defaultParametersJson || null,
+
+    // Parse template parameters into structured fields
+    const parsed = parseParametersJson(
+      template.treatmentType,
+      template.defaultParametersJson,
     )
+    setParamFields(parsed)
   }
+
+  // Handle parameter field changes from shared component
+  const handleParamFieldChange = useCallback(
+    (field: string, value: unknown) => {
+      setParamFields((prev) => ({ ...prev, [field]: value }))
+    },
+    [],
+  )
 
   // Handle patient selection
   const handleSelectPatient = (patient: {
@@ -192,6 +213,11 @@ export function TreatmentPackageForm({
 
   const handleSubmit = async (data: PackageFormValues) => {
     try {
+      // Convert structured parameter fields back to JSON string for the API
+      const parametersJson = selectedTemplate
+        ? buildParametersJson(selectedTemplate.treatmentType, paramFields)
+        : data.parametersJson
+
       const command: CreateTreatmentPackageCommand = {
         protocolTemplateId: data.protocolTemplateId,
         patientId: data.patientId,
@@ -201,11 +227,11 @@ export function TreatmentPackageForm({
         packagePrice: data.packagePrice,
         sessionPrice: data.sessionPrice,
         minIntervalDays: data.minIntervalDays,
-        parametersJson: data.parametersJson,
+        parametersJson: parametersJson ?? null,
         visitId: data.visitId,
       }
       await createMutation.mutateAsync(command)
-      toast.success("Tạo phác đồ điều trị thành công")
+      toast.success(t("packageForm.createSuccess"))
       onOpenChange(false)
     } catch (error) {
       handleServerValidationError(error, form.setError)
@@ -218,7 +244,7 @@ export function TreatmentPackageForm({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Tạo phác đồ điều trị</DialogTitle>
+          <DialogTitle>{t("packageForm.title")}</DialogTitle>
         </DialogHeader>
 
         <form
@@ -232,7 +258,7 @@ export function TreatmentPackageForm({
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
                 <FieldLabel htmlFor="protocolTemplateId">
-                  Phác đồ mẫu
+                  {t("packageForm.selectTemplate")}
                 </FieldLabel>
                 <Select
                   value={field.value}
@@ -242,12 +268,12 @@ export function TreatmentPackageForm({
                   }}
                 >
                   <SelectTrigger id="protocolTemplateId">
-                    <SelectValue placeholder="Chọn phác đồ mẫu..." />
+                    <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {activeTemplates.map((t) => (
-                      <SelectItem key={t.id} value={t.id}>
-                        {t.name} ({t.treatmentType})
+                    {activeTemplates.map((tmpl) => (
+                      <SelectItem key={tmpl.id} value={tmpl.id}>
+                        {tmpl.name} ({tmpl.treatmentType})
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -263,22 +289,22 @@ export function TreatmentPackageForm({
           {selectedTemplate && (
             <div className="text-xs text-muted-foreground rounded-md bg-muted/50 p-3 space-y-1">
               <div>
-                <span className="font-medium">Loại:</span>{" "}
+                <span className="font-medium">{t("fields.treatmentType")}:</span>{" "}
                 {selectedTemplate.treatmentType}
               </div>
               <div>
-                <span className="font-medium">Số phiên mặc định:</span>{" "}
+                <span className="font-medium">{t("fields.sessionCount")}:</span>{" "}
                 {selectedTemplate.defaultSessionCount}
               </div>
               <div>
-                <span className="font-medium">Giá mặc định:</span>{" "}
+                <span className="font-medium">{t("packageForm.templateDefaults")}:</span>{" "}
                 {selectedTemplate.pricingMode === "PerPackage"
                   ? formatVND(selectedTemplate.defaultPackagePrice)
-                  : `${formatVND(selectedTemplate.defaultSessionPrice)}/phiên`}
+                  : `${formatVND(selectedTemplate.defaultSessionPrice)}/${t("cancellationDialog.perSession")}`}
               </div>
               {selectedTemplate.description && (
                 <div>
-                  <span className="font-medium">Mô tả:</span>{" "}
+                  <span className="font-medium">{t("fields.description")}:</span>{" "}
                   {selectedTemplate.description}
                 </div>
               )}
@@ -289,7 +315,7 @@ export function TreatmentPackageForm({
 
           {/* Step 2: Patient selector */}
           <div className="space-y-2">
-            <Label>Bệnh nhân</Label>
+            <Label>{t("packageForm.selectPatient")}</Label>
             {selectedPatientDisplay ? (
               <div className="flex items-center gap-2 p-2 border rounded-md">
                 <IconUser className="h-4 w-4 text-muted-foreground" />
@@ -318,6 +344,7 @@ export function TreatmentPackageForm({
                   <IconSearch className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                   <Input
                     className="pl-8"
+                    placeholder={t("packageForm.searchPatient")}
                     value={patientSearchTerm}
                     onChange={(e) => setPatientSearchTerm(e.target.value)}
                   />
@@ -362,7 +389,7 @@ export function TreatmentPackageForm({
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid || undefined}>
                       <FieldLabel htmlFor="totalSessions">
-                        Tổng số phiên
+                        {t("packageForm.overrideSessions")}
                       </FieldLabel>
                       <Input
                         {...field}
@@ -391,7 +418,7 @@ export function TreatmentPackageForm({
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid || undefined}>
                       <FieldLabel htmlFor="minIntervalDays">
-                        Khoảng cách tối thiểu (ngày)
+                        {t("fields.minInterval")}
                       </FieldLabel>
                       <Input
                         {...field}
@@ -419,7 +446,7 @@ export function TreatmentPackageForm({
                 control={form.control}
                 render={({ field }) => (
                   <Field>
-                    <FieldLabel>Hình thức tính giá</FieldLabel>
+                    <FieldLabel>{t("packageForm.overridePricing")}</FieldLabel>
                     <Select
                       value={field.value != null ? String(field.value) : ""}
                       onValueChange={(v) => field.onChange(Number(v))}
@@ -429,10 +456,10 @@ export function TreatmentPackageForm({
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value={String(PRICING_MODE_PER_SESSION)}>
-                          Theo phiên
+                          {t("pricingMode.PerSession")}
                         </SelectItem>
                         <SelectItem value={String(PRICING_MODE_PER_PACKAGE)}>
-                          Trọn gói
+                          {t("pricingMode.PerPackage")}
                         </SelectItem>
                       </SelectContent>
                     </Select>
@@ -448,7 +475,7 @@ export function TreatmentPackageForm({
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid || undefined}>
                       <FieldLabel htmlFor="packagePrice">
-                        Giá trọn gói
+                        {t("fields.packagePrice")}
                       </FieldLabel>
                       <Input
                         {...field}
@@ -476,7 +503,7 @@ export function TreatmentPackageForm({
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid || undefined}>
                       <FieldLabel htmlFor="sessionPrice">
-                        Giá mỗi phiên
+                        {t("fields.sessionPrice")}
                       </FieldLabel>
                       <Input
                         {...field}
@@ -498,27 +525,11 @@ export function TreatmentPackageForm({
                 />
               </div>
 
-              {/* Parameters JSON */}
-              <Controller
-                name="parametersJson"
-                control={form.control}
-                render={({ field }) => (
-                  <Field>
-                    <FieldLabel htmlFor="parametersJson">
-                      Tham số điều trị (JSON)
-                    </FieldLabel>
-                    <AutoResizeTextarea
-                      {...field}
-                      id="parametersJson"
-                      value={field.value ?? ""}
-                      onChange={(e) =>
-                        field.onChange(e.target.value || null)
-                      }
-                      rows={3}
-                      className="font-mono text-xs"
-                    />
-                  </Field>
-                )}
+              {/* Structured treatment parameters (replaces raw JSON textarea) */}
+              <TreatmentParameterFields
+                treatmentType={selectedTemplate.treatmentType}
+                values={paramFields}
+                onChange={handleParamFieldChange}
               />
             </>
           )}
@@ -529,13 +540,13 @@ export function TreatmentPackageForm({
               variant="outline"
               onClick={() => onOpenChange(false)}
             >
-              Huỷ
+              {t("packageForm.cancel")}
             </Button>
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting && (
                 <IconLoader2 className="h-4 w-4 mr-2 animate-spin" />
               )}
-              Tạo phác đồ
+              {t("packageForm.submit")}
             </Button>
           </DialogFooter>
         </form>
