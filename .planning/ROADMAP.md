@@ -433,7 +433,7 @@ Plans:
   4. Doctor can modify a treatment protocol mid-course (add/remove sessions, change parameters) or switch a patient to a different treatment type, both requiring doctor approval
   5. Manager can process treatment cancellation with configurable refund deduction (10-20% fee), and consumables used per session are tracked and auto-deducted from the consumables warehouse
 
-**Plans**: 29 plans in 11 waves
+**Plans**: 33 plans (29 original + 4 UAT gap closure)
 
 Plans:
 - [ ] 09-01-PLAN.md -- Domain enums: TreatmentType, PackageStatus, PricingMode, SessionStatus
@@ -465,6 +465,10 @@ Plans:
 - [ ] 09-27-PLAN.md -- Sidebar navigation + i18n translations (EN/VI)
 - [ ] 09-28-PLAN.md -- End-to-end verification checkpoint
 - [ ] 09-29-PLAN.md -- Vietnamese user stories documentation (DOC-01)
+- [ ] 09-30-PLAN.md -- [UAT GAP] Fix OSDI self-fill link (DB-backed token) + replace direct input with OsdiQuestionnaire
+- [ ] 09-31-PLAN.md -- [UAT GAP] Extract shared TreatmentParameterFields + replace JSON textarea in package form
+- [ ] 09-32-PLAN.md -- [UAT GAP] i18n batch 1: ProtocolTemplateForm, PackageDetail, SessionForm, SessionCard
+- [ ] 09-33-PLAN.md -- [UAT GAP] i18n batch 2: remaining 8 treatment components
 
 ### Phase 9.1: Fix Phase 09 Code Review Issues
 **Goal**: Resolve all critical and important bugs, missing requirement implementations, and quality gaps found during Phase 9 code review
@@ -533,3 +537,13 @@ Plans:
 - [ ] 10-05-PLAN.md -- Frontend pharmacy: pagination UI, Excel import dialog, OTC inline stock validation
 - [ ] 10-06-PLAN.md -- Frontend clinical: dry eye charts, OSDI answers display, realtime OSDI hook, batch label button, logo upload UI
 - [ ] 10-07-PLAN.md -- End-to-end verification checkpoint
+
+### Phase 10.1: fix all issues in issues.md (INSERTED)
+
+**Goal:** [Urgent work - to be planned]
+**Requirements**: TBD
+**Depends on:** Phase 10
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd:plan-phase 10.1 to break down)
