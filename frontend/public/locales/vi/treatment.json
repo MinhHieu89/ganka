@@ -81,7 +81,16 @@
     "inline": "Nhập điểm",
     "selfFill": "Bệnh nhân tự điền",
     "generateQr": "Tạo liên kết QR",
-    "severity": "Mức độ nghiêm trọng"
+    "severity": "Mức độ nghiêm trọng",
+    "inlineTab": "Nhập trực tiếp",
+    "selfFillTab": "Bệnh nhân tự điền",
+    "generateQrDesc": "Tạo mã QR để bệnh nhân tự điền bảng câu hỏi OSDI",
+    "scanQrInstructions": "Bệnh nhân quét mã QR hoặc mở link để điền bảng OSDI",
+    "generatingQr": "Đang tạo mã QR...",
+    "linkCopied": "Link đã được sao chép",
+    "qrError": "Không thể tạo mã QR. Vui lòng thử lại.",
+    "submitted": "Đã ghi nhận điểm OSDI",
+    "retake": "Làm lại"
   },
   "intervalWarning": "Cảnh báo: Chỉ {{days}} ngày kể từ buổi trước (khuyến nghị tối thiểu {{minDays}} ngày)",
   "cancellation": {

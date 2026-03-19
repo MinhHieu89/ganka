@@ -101,6 +101,7 @@ export interface RegisterOsdiTokenData {
 
 interface RegisterOsdiTokenResponse {
   token: string
+  url: string
   expiresAt: string
 }
 

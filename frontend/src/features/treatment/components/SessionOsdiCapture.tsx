@@ -1,33 +1,12 @@
-import { useState, useMemo, useCallback } from "react"
+import { useState, useCallback } from "react"
+import { useTranslation } from "react-i18next"
 import { QRCodeSVG } from "qrcode.react"
 import { IconClipboard, IconLoader2 } from "@tabler/icons-react"
 import { toast } from "sonner"
 import { Button } from "@/shared/components/Button"
-import { Badge } from "@/shared/components/Badge"
-import { Input } from "@/shared/components/Input"
-import { Label } from "@/shared/components/Label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/Tabs"
-import { cn } from "@/shared/lib/utils"
 import { useRegisterOsdiToken } from "@/features/treatment/api/treatment-api"
-
-// -- Severity config reused from OsdiQuestionnaire --
-
-const SEVERITY_CONFIG = {
-  Normal: {
-    color: "bg-green-100 text-green-800 border-green-300",
-  },
-  Mild: {
-    color: "bg-yellow-100 text-yellow-800 border-yellow-300",
-  },
-  Moderate: {
-    color: "bg-orange-100 text-orange-800 border-orange-300",
-  },
-  Severe: {
-    color: "bg-red-100 text-red-800 border-red-300",
-  },
-} as const
-
-type SeverityKey = keyof typeof SEVERITY_CONFIG
+import { OsdiQuestionnaire, calculateOsdi } from "@/features/clinical/components/OsdiQuestionnaire"
 
 // -- Props --
 
@@ -37,6 +16,7 @@ interface SessionOsdiCaptureProps {
   osdiScore: number | null
   onOsdiScoreChange: (score: number | null) => void
   osdiSeverity: string | null
+  onOsdiAnswersChange?: (answers: (number | null)[]) => void
 }
 
 // -- Component --
@@ -46,98 +26,83 @@ export function SessionOsdiCapture({
   sessionNumber,
   osdiScore,
   onOsdiScoreChange,
-  osdiSeverity,
+  onOsdiAnswersChange,
 }: SessionOsdiCaptureProps) {
+  const { t } = useTranslation("treatment")
   const [qrUrl, setQrUrl] = useState<string | null>(null)
+  const [submitted, setSubmitted] = useState(false)
   const registerToken = useRegisterOsdiToken()
 
-  const severityConfig = osdiSeverity
-    ? SEVERITY_CONFIG[osdiSeverity as SeverityKey]
-    : null
-
-  const handleScoreChange = useCallback(
-    (value: string) => {
-      if (value === "") {
-        onOsdiScoreChange(null)
-        return
-      }
-      const num = Number(value)
-      if (!isNaN(num) && num >= 0 && num <= 100) {
-        onOsdiScoreChange(num)
-      }
+  const handleOsdiSubmit = useCallback(
+    (answers: (number | null)[]) => {
+      const result = calculateOsdi(answers)
+      onOsdiScoreChange(result.score)
+      onOsdiAnswersChange?.(answers)
+      setSubmitted(true)
     },
-    [onOsdiScoreChange],
+    [onOsdiScoreChange, onOsdiAnswersChange],
   )
 
   const handleGenerateQr = useCallback(() => {
     const token = crypto.randomUUID()
     const baseUrl = window.location.origin
 
-    // Register token with backend before displaying QR
+    // Register token with backend (now creates DB-backed record via Clinical module)
     registerToken.mutate(
       { packageId, sessionNumber, token },
       {
-        onSuccess: () => {
-          const url = `${baseUrl}/osdi/${token}`
+        onSuccess: (response) => {
+          // Use the URL returned from backend response
+          const url = `${baseUrl}${response.url}`
           setQrUrl(url)
         },
         onError: () => {
-          toast.error("Không thể tạo mã QR. Vui lòng thử lại.")
+          toast.error(t("osdi.qrError"))
         },
       },
     )
-  }, [packageId, sessionNumber, registerToken])
+  }, [packageId, sessionNumber, registerToken, t])
 
   const handleCopyLink = useCallback(() => {
     if (qrUrl) {
       navigator.clipboard.writeText(qrUrl)
-      toast.success("Link đã được sao chép")
+      toast.success(t("osdi.linkCopied"))
     }
-  }, [qrUrl])
+  }, [qrUrl, t])
 
   return (
     <Tabs defaultValue="inline" className="w-full">
       <TabsList className="grid w-full grid-cols-2">
-        <TabsTrigger value="inline">Nhập trực tiếp</TabsTrigger>
-        <TabsTrigger value="self-fill">Bệnh nhân tự điền</TabsTrigger>
+        <TabsTrigger value="inline">{t("osdi.inlineTab")}</TabsTrigger>
+        <TabsTrigger value="self-fill">{t("osdi.selfFillTab")}</TabsTrigger>
       </TabsList>
 
-      {/* Inline mode */}
+      {/* Inline mode - full 12-question OSDI questionnaire */}
       <TabsContent value="inline" className="space-y-3 mt-3">
-        <div className="flex items-center gap-4">
-          <div className="flex-1">
-            <Label htmlFor="osdiScoreInline" className="text-sm">
-              OSDI Score (0-100)
-            </Label>
-            <Input
-              id="osdiScoreInline"
-              type="number"
-              min={0}
-              max={100}
-              step="0.1"
-              value={osdiScore ?? ""}
-              onChange={(e) => handleScoreChange(e.target.value)}
-              className="mt-1"
-            />
+        {submitted && osdiScore !== null ? (
+          <div className="text-center py-4">
+            <p className="text-sm text-muted-foreground mb-2">
+              {t("osdi.submitted")}
+            </p>
+            <span className="text-2xl font-bold tabular-nums">
+              {osdiScore.toFixed(1)}
+            </span>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="ml-2"
+              onClick={() => {
+                setSubmitted(false)
+                onOsdiScoreChange(null)
+              }}
+            >
+              {t("osdi.retake")}
+            </Button>
           </div>
-
-          {/* Severity badge */}
-          {osdiSeverity && severityConfig && (
-            <div className="pt-5">
-              <Badge
-                variant="outline"
-                className={cn("border", severityConfig.color)}
-              >
-                {osdiSeverity}
-              </Badge>
-            </div>
-          )}
-        </div>
-
-        {/* Severity guide */}
-        <div className="text-xs text-muted-foreground space-y-0.5">
-          <div>0-12: Normal | 13-22: Mild | 23-32: Moderate | 33-100: Severe</div>
-        </div>
+        ) : (
+          <OsdiQuestionnaire onSubmit={handleOsdiSubmit} />
+        )}
       </TabsContent>
 
       {/* Patient self-fill mode */}
@@ -146,20 +111,20 @@ export function SessionOsdiCapture({
           <div className="flex flex-col items-center gap-2 py-6">
             <IconLoader2 className="h-6 w-6 animate-spin text-muted-foreground" />
             <p className="text-sm text-muted-foreground">
-              Đang tạo mã QR...
+              {t("osdi.generatingQr")}
             </p>
           </div>
         ) : !qrUrl ? (
           <div className="text-center py-4">
             <p className="text-sm text-muted-foreground mb-3">
-              Tạo mã QR để bệnh nhân tự điền bảng câu hỏi OSDI
+              {t("osdi.generateQrDesc")}
             </p>
             <Button
               type="button"
               variant="outline"
               onClick={handleGenerateQr}
             >
-              Tạo QR Link
+              {t("osdi.generateQr")}
             </Button>
           </div>
         ) : (
@@ -179,7 +144,7 @@ export function SessionOsdiCapture({
               </Button>
             </div>
             <p className="text-xs text-muted-foreground">
-              Bệnh nhân quét mã QR hoặc mở link để điền bảng OSDI
+              {t("osdi.scanQrInstructions")}
             </p>
           </div>
         )}

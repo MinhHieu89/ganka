@@ -81,7 +81,16 @@
     "inline": "Enter Score",
     "selfFill": "Patient Self-Fill",
     "generateQr": "Generate QR Link",
-    "severity": "Severity"
+    "severity": "Severity",
+    "inlineTab": "Enter Directly",
+    "selfFillTab": "Patient Self-Fill",
+    "generateQrDesc": "Generate QR code for patient to self-fill OSDI questionnaire",
+    "scanQrInstructions": "Patient scans QR code or opens link to fill OSDI form",
+    "generatingQr": "Generating QR code...",
+    "linkCopied": "Link copied",
+    "qrError": "Could not generate QR. Please try again.",
+    "submitted": "OSDI Score Recorded",
+    "retake": "Retake"
   },
   "intervalWarning": "Warning: Only {{days}} days since last session (minimum {{minDays}} days recommended)",
   "cancellation": {
