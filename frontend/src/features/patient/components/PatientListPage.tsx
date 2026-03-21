@@ -25,6 +25,7 @@ export function PatientListPage() {
   const [registerOpen, setRegisterOpen] = useState(false)
 
   // Filter state
+  const [statusFilter, setStatusFilter] = useState<string>("active")
   const [genderFilter, setGenderFilter] = useState<string>(ALL)
   const [allergyFilter, setAllergyFilter] = useState<string>(ALL)
   const [dateFrom, setDateFrom] = useState<Date | undefined>(undefined)
@@ -58,6 +59,12 @@ export function PatientListPage() {
     dateFrom: dateFrom ? dateFrom.toISOString() : null,
     dateTo: dateTo ? dateTo.toISOString() : null,
     search: debouncedSearch || null,
+    isActive:
+      statusFilter === "active"
+        ? true
+        : statusFilter === "inactive"
+          ? false
+          : null,
   })
 
   const patients = patientList.data?.items ?? []
@@ -93,6 +100,27 @@ export function PatientListPage() {
               className="pl-9"
             />
           </div>
+        </Field>
+
+        {/* Status filter */}
+        <Field className="w-[160px]">
+          <FieldLabel>{t("status")}</FieldLabel>
+          <Select
+            value={statusFilter}
+            onValueChange={(v) => {
+              setStatusFilter(v)
+              setPagination((p) => ({ ...p, pageIndex: 0 }))
+            }}
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="active">{t("active")}</SelectItem>
+              <SelectItem value="inactive">{t("inactive")}</SelectItem>
+              <SelectItem value={ALL}>{t("all")}</SelectItem>
+            </SelectContent>
+          </Select>
         </Field>
 
         {/* Gender filter */}

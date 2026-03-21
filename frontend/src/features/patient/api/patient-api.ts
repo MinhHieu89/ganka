@@ -99,6 +99,7 @@ export interface GetPatientListParams {
   dateFrom?: string | null
   dateTo?: string | null
   search?: string | null
+  isActive?: boolean | null
 }
 
 // ---- Field validation types (matches backend PatientFieldValidationResult) ----
@@ -269,6 +270,8 @@ async function getPatientList(
   if (params.dateFrom) query.dateFrom = params.dateFrom
   if (params.dateTo) query.dateTo = params.dateTo
   if (params.search) query.search = params.search
+  if (params.isActive !== undefined && params.isActive !== null)
+    query.isActive = params.isActive
 
   const res = await api.GET("/api/patients" as never, {
     params: { query } as never,
