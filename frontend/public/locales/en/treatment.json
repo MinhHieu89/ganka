@@ -116,7 +116,8 @@
     "linkCopied": "Link copied",
     "qrError": "Could not generate QR. Please try again.",
     "submitted": "OSDI Score Recorded",
-    "retake": "Retake"
+    "retake": "Retake",
+    "selfFillReceived": "Patient submitted OSDI score"
   },
   "intervalWarning": "Warning: Only {{days}} days since last session (minimum {{minDays}} days recommended)",
   "cancellation": {

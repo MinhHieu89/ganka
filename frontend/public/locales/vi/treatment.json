@@ -116,7 +116,8 @@
     "linkCopied": "Link đã được sao chép",
     "qrError": "Không thể tạo mã QR. Vui lòng thử lại.",
     "submitted": "Đã ghi nhận điểm OSDI",
-    "retake": "Làm lại"
+    "retake": "Làm lại",
+    "selfFillReceived": "Bệnh nhân đã gửi điểm OSDI"
   },
   "intervalWarning": "Cảnh báo: Chỉ {{days}} ngày kể từ buổi trước (khuyến nghị tối thiểu {{minDays}} ngày)",
   "cancellation": {

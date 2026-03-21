@@ -1,12 +1,13 @@
 import { useState, useCallback } from "react"
 import { useTranslation } from "react-i18next"
 import { QRCodeSVG } from "qrcode.react"
-import { IconClipboard, IconLoader2 } from "@tabler/icons-react"
+import { IconClipboard, IconLoader2, IconCheck } from "@tabler/icons-react"
 import { toast } from "sonner"
 import { Button } from "@/shared/components/Button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/Tabs"
 import { useRegisterOsdiToken } from "@/features/treatment/api/treatment-api"
 import { OsdiQuestionnaire, calculateOsdi } from "@/features/clinical/components/OsdiQuestionnaire"
+import { useOsdiTokenHub } from "@/features/clinical/hooks/use-osdi-hub"
 
 // -- Props --
 
@@ -30,8 +31,20 @@ export function SessionOsdiCapture({
 }: SessionOsdiCaptureProps) {
   const { t } = useTranslation("treatment")
   const [qrUrl, setQrUrl] = useState<string | null>(null)
+  const [registeredToken, setRegisteredToken] = useState<string | undefined>(undefined)
   const [submitted, setSubmitted] = useState(false)
+  const [selfFillReceived, setSelfFillReceived] = useState(false)
   const registerToken = useRegisterOsdiToken()
+
+  // Listen for score from patient's QR self-fill submission via SignalR
+  const handleScoreReceived = useCallback(
+    (score: number) => {
+      onOsdiScoreChange(score)
+      setSelfFillReceived(true)
+    },
+    [onOsdiScoreChange],
+  )
+  useOsdiTokenHub(registeredToken, handleScoreReceived)
 
   const handleOsdiSubmit = useCallback(
     (answers: (number | null)[]) => {
@@ -55,6 +68,8 @@ export function SessionOsdiCapture({
           // Use the URL returned from backend response
           const url = `${baseUrl}${response.url}`
           setQrUrl(url)
+          setRegisteredToken(token)
+          setSelfFillReceived(false)
         },
         onError: () => {
           toast.error(t("osdi.qrError"))
@@ -126,6 +141,18 @@ export function SessionOsdiCapture({
             >
               {t("osdi.generateQr")}
             </Button>
+          </div>
+        ) : selfFillReceived && osdiScore !== null ? (
+          <div className="text-center py-4">
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <IconCheck className="h-5 w-5 text-green-600" />
+              <p className="text-sm text-muted-foreground">
+                {t("osdi.selfFillReceived")}
+              </p>
+            </div>
+            <span className="text-2xl font-bold tabular-nums">
+              {osdiScore.toFixed(1)}
+            </span>
           </div>
         ) : (
           <div className="flex flex-col items-center gap-3 p-4 rounded-lg border bg-background">

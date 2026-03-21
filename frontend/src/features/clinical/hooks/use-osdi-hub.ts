@@ -132,3 +132,118 @@ export function useOsdiHub(visitId: string | undefined): ConnectionStatus {
 
   return status
 }
+
+/**
+ * Custom hook for connecting to the OsdiHub via SignalR for token-scoped groups.
+ * Used by the treatment session flow where OSDI tokens have no VisitId.
+ *
+ * Joins a token group and calls the provided callback when the patient submits
+ * their OSDI questionnaire via the public QR page.
+ *
+ * @param token - The OSDI token to listen for (undefined = no subscription)
+ * @param onScoreReceived - Callback invoked with the OSDI score when received
+ */
+export function useOsdiTokenHub(
+  token: string | undefined,
+  onScoreReceived: (score: number) => void,
+): ConnectionStatus {
+  const [status, setStatus] = useState<ConnectionStatus>("disconnected")
+  const connectionRef = useRef<HubConnection | null>(null)
+
+  const tokenRef = useRef(token)
+  tokenRef.current = token
+
+  const onScoreReceivedRef = useRef(onScoreReceived)
+  onScoreReceivedRef.current = onScoreReceived
+
+  useEffect(() => {
+    if (!token) return
+
+    const isMounted = { current: true }
+
+    const connection = new HubConnectionBuilder()
+      .withUrl(HUB_URL, {
+        accessTokenFactory: () => {
+          return useAuthStore.getState().accessToken ?? ""
+        },
+      })
+      .withAutomaticReconnect()
+      .configureLogging(LogLevel.Warning)
+      .build()
+
+    connectionRef.current = connection
+
+    // Register event handler -- call onScoreReceived when patient submits OSDI
+    connection.on(
+      "OsdiTokenSubmitted",
+      (data: { token: string; score: number; severity: string }) => {
+        if (!isMounted.current) return
+        onScoreReceivedRef.current(data.score)
+      },
+    )
+
+    // Connection lifecycle events
+    connection.onreconnecting(() => {
+      if (isMounted.current) setStatus("reconnecting")
+    })
+
+    connection.onreconnected(async () => {
+      if (isMounted.current) setStatus("connected")
+      // Re-join the token group (group membership lost on reconnect)
+      try {
+        const currentToken = tokenRef.current
+        if (currentToken) {
+          await connection.invoke("JoinToken", currentToken)
+        }
+      } catch {
+        // Ignore errors; will retry on next reconnect
+      }
+    })
+
+    connection.onclose(() => {
+      if (isMounted.current) setStatus("disconnected")
+    })
+
+    // Start connection
+    const start = async () => {
+      try {
+        await connection.start()
+        if (isMounted.current) setStatus("connected")
+        await connection.invoke("JoinToken", token)
+      } catch {
+        if (isMounted.current) setStatus("disconnected")
+      }
+    }
+
+    start()
+
+    // Cleanup on unmount
+    return () => {
+      isMounted.current = false
+      connectionRef.current = null
+
+      const cleanup = async () => {
+        if (
+          connection.state === HubConnectionState.Connected ||
+          connection.state === HubConnectionState.Connecting ||
+          connection.state === HubConnectionState.Reconnecting
+        ) {
+          if (connection.state === HubConnectionState.Connected) {
+            try {
+              const currentToken = tokenRef.current
+              if (currentToken) {
+                await connection.invoke("LeaveToken", currentToken)
+              }
+            } catch {
+              // Ignore errors during cleanup
+            }
+          }
+        }
+        await connection.stop()
+      }
+      cleanup()
+    }
+  }, [token]) // Reconnect when token changes
+
+  return status
+}
