@@ -1,6 +1,6 @@
+import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useQuery } from "@tanstack/react-query"
-import { useNavigate } from "@tanstack/react-router"
 import { format } from "date-fns"
 import { vi, enUS } from "date-fns/locale"
 import {
@@ -11,6 +11,7 @@ import {
 import { Badge } from "@/shared/components/Badge"
 import { Button } from "@/shared/components/Button"
 import { api } from "@/shared/lib/api-client"
+import { AppointmentBookingDialog } from "@/features/scheduling/components/AppointmentBookingDialog"
 
 interface AppointmentDto {
   id: string
@@ -24,14 +25,15 @@ interface AppointmentDto {
 
 interface PatientAppointmentTabProps {
   patientId: string
+  patientName: string
 }
 
 export function PatientAppointmentTab({
   patientId,
+  patientName,
 }: PatientAppointmentTabProps) {
   const { t, i18n } = useTranslation("patient")
-  const { t: tScheduling } = useTranslation("scheduling")
-  const navigate = useNavigate()
+  const [bookingDialogOpen, setBookingDialogOpen] = useState(false)
   const locale = i18n.language === "vi" ? vi : enUS
   const dateFormat = i18n.language === "vi" ? "dd/MM/yyyy" : "MM/dd/yyyy"
 
@@ -109,13 +111,17 @@ export function PatientAppointmentTab({
         <h3 className="font-medium">{t("appointments")}</h3>
         <Button
           size="sm"
-          onClick={() =>
-            navigate({ to: "/appointments" as string } as never)
-          }
+          onClick={() => setBookingDialogOpen(true)}
         >
           <IconCalendarPlus className="h-4 w-4 mr-1" />
           {t("bookAppointment")}
         </Button>
+        <AppointmentBookingDialog
+          open={bookingDialogOpen}
+          onOpenChange={setBookingDialogOpen}
+          defaultPatientId={patientId}
+          defaultPatientName={patientName}
+        />
       </div>
 
       {appointments.length === 0 ? (

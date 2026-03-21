@@ -155,7 +155,7 @@ export function PatientProfilePage({ patientId, initialTab }: PatientProfilePage
         </TabsContent>
 
         <TabsContent value="appointments" className="mt-4">
-          <PatientAppointmentTab patientId={patient.id} />
+          <PatientAppointmentTab patientId={patient.id} patientName={patient.fullName} />
         </TabsContent>
 
         <TabsContent value="prescriptions" className="mt-4">

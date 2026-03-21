@@ -64,6 +64,8 @@ interface AppointmentBookingDialogProps {
   defaultDoctorId?: string
   defaultStartTime?: Date
   defaultEndTime?: Date
+  defaultPatientId?: string
+  defaultPatientName?: string
 }
 
 export function AppointmentBookingDialog({
@@ -71,6 +73,8 @@ export function AppointmentBookingDialog({
   onOpenChange,
   defaultDoctorId,
   defaultStartTime,
+  defaultPatientId,
+  defaultPatientName,
 }: AppointmentBookingDialogProps) {
   const { t, i18n } = useTranslation("scheduling")
   const { t: tCommon } = useTranslation("common")
@@ -100,8 +104,8 @@ export function AppointmentBookingDialog({
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
-      patientId: "",
-      patientName: "",
+      patientId: defaultPatientId ?? "",
+      patientName: defaultPatientName ?? "",
       doctorId: defaultDoctorId ?? "",
       doctorName: "",
       appointmentTypeId: "",
@@ -119,8 +123,8 @@ export function AppointmentBookingDialog({
       setNonFieldError(null)
       const doctorName = doctors?.find((d) => d.id === defaultDoctorId)?.fullName ?? ""
       form.reset({
-        patientId: "",
-        patientName: "",
+        patientId: defaultPatientId ?? "",
+        patientName: defaultPatientName ?? "",
         doctorId: defaultDoctorId ?? "",
         doctorName,
         appointmentTypeId: "",
@@ -131,7 +135,7 @@ export function AppointmentBookingDialog({
         notes: "",
       })
     }
-  }, [open, defaultDoctorId, defaultStartTime, form, doctors])
+  }, [open, defaultDoctorId, defaultStartTime, defaultPatientId, defaultPatientName, form, doctors])
 
   // -- Patient search state --
   const [patientSearchTerm, setPatientSearchTerm] = useState("")
