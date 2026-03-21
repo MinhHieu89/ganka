@@ -30,6 +30,17 @@
     "Switched": "Đã chuyển đổi",
     "Completed": "Hoàn thành"
   },
+  "sessionStatus": {
+    "Scheduled": "Đã lên lịch",
+    "InProgress": "Đang thực hiện",
+    "Completed": "Hoàn thành",
+    "Cancelled": "Đã hủy"
+  },
+  "cancellationStatus": {
+    "Requested": "Đã yêu cầu",
+    "Approved": "Đã phê duyệt",
+    "Rejected": "Đã từ chối"
+  },
   "pricingMode": {
     "PerSession": "Theo buổi",
     "PerPackage": "Theo gói"
@@ -64,7 +75,15 @@
     "energy": "Năng lượng (J/cm2)",
     "pulseCount": "Số xung",
     "spotSize": "Kích thước điểm chiếu",
-    "treatmentZones": "Vùng điều trị"
+    "treatmentZones": "Vùng điều trị",
+    "zones": {
+      "Upper eyelid": "Mi trên",
+      "Lower eyelid": "Mi dưới",
+      "Periorbital": "Quanh hốc mắt",
+      "Cheek": "Má",
+      "Nose bridge": "Sống mũi",
+      "Forehead": "Trán"
+    }
   },
   "lllt": {
     "wavelength": "Bước sóng (nm)",
@@ -75,7 +94,14 @@
   "lidCare": {
     "procedureSteps": "Các bước thực hiện",
     "productsUsed": "Sản phẩm đã dùng",
-    "duration": "Thời gian (phút)"
+    "duration": "Thời gian (phút)",
+    "steps": {
+      "Warm compress applied": "Đắp gạc ấm",
+      "Lid margin cleaning": "Vệ sinh bờ mi",
+      "Meibomian gland expression": "Ép tuyến Meibomian",
+      "Debridement": "Cắt lọc",
+      "Antibiotic ointment applied": "Bôi thuốc mỡ kháng sinh"
+    }
   },
   "osdi": {
     "inline": "Nhập điểm",
@@ -190,7 +216,15 @@
     "changes": "Nội dung thay đổi:",
     "technicalDetails": "Chi tiết kỹ thuật",
     "before": "Trước",
-    "after": "Sau"
+    "after": "Sau",
+    "fields": {
+      "totalSessions": "Tổng số buổi",
+      "minIntervalDays": "Khoảng cách tối thiểu (ngày)",
+      "parametersJson": "Thông số điều trị",
+      "packagePrice": "Giá gói",
+      "sessionPrice": "Giá mỗi buổi",
+      "pricingMode": "Hình thức tính giá"
+    }
   },
   "consumable": {
     "stock": "Tồn kho",

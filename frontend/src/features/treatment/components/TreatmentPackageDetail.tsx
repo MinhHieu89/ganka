@@ -168,7 +168,13 @@ export function TreatmentPackageDetail({
   const [historyDialogOpen, setHistoryDialogOpen] = useState(false)
   const pauseMutation = usePausePackage()
 
-  const goBack = () => navigate({ to: "/treatments" })
+  const goBack = () => {
+    if (window.history.length > 1) {
+      window.history.back()
+    } else {
+      navigate({ to: "/treatments" })
+    }
+  }
 
   const sortedSessions = useMemo(() => {
     if (!pkg?.sessions) return []

@@ -30,6 +30,17 @@
     "Switched": "Switched",
     "Completed": "Completed"
   },
+  "sessionStatus": {
+    "Scheduled": "Scheduled",
+    "InProgress": "In Progress",
+    "Completed": "Completed",
+    "Cancelled": "Cancelled"
+  },
+  "cancellationStatus": {
+    "Requested": "Requested",
+    "Approved": "Approved",
+    "Rejected": "Rejected"
+  },
   "pricingMode": {
     "PerSession": "Per Session",
     "PerPackage": "Per Package"
@@ -64,7 +75,15 @@
     "energy": "Energy (J/cm2)",
     "pulseCount": "Pulse Count",
     "spotSize": "Spot Size",
-    "treatmentZones": "Treatment Zones"
+    "treatmentZones": "Treatment Zones",
+    "zones": {
+      "Upper eyelid": "Upper eyelid",
+      "Lower eyelid": "Lower eyelid",
+      "Periorbital": "Periorbital",
+      "Cheek": "Cheek",
+      "Nose bridge": "Nose bridge",
+      "Forehead": "Forehead"
+    }
   },
   "lllt": {
     "wavelength": "Wavelength (nm)",
@@ -75,7 +94,14 @@
   "lidCare": {
     "procedureSteps": "Procedure Steps",
     "productsUsed": "Products Used",
-    "duration": "Duration (min)"
+    "duration": "Duration (min)",
+    "steps": {
+      "Warm compress applied": "Warm compress applied",
+      "Lid margin cleaning": "Lid margin cleaning",
+      "Meibomian gland expression": "Meibomian gland expression",
+      "Debridement": "Debridement",
+      "Antibiotic ointment applied": "Antibiotic ointment applied"
+    }
   },
   "osdi": {
     "inline": "Enter Score",
@@ -190,7 +216,15 @@
     "changes": "Change details:",
     "technicalDetails": "Technical details",
     "before": "Before",
-    "after": "After"
+    "after": "After",
+    "fields": {
+      "totalSessions": "Total Sessions",
+      "minIntervalDays": "Min Interval (days)",
+      "parametersJson": "Treatment Parameters",
+      "packagePrice": "Package Price",
+      "sessionPrice": "Session Price",
+      "pricingMode": "Pricing Mode"
+    }
   },
   "consumable": {
     "stock": "Stock",

@@ -313,68 +313,75 @@ export function TreatmentPackageForm({
 
           <Separator />
 
-          {/* Step 2: Patient selector */}
-          <div className="space-y-2">
-            <Label>{t("packageForm.selectPatient")}</Label>
-            {selectedPatientDisplay ? (
-              <div className="flex items-center gap-2 p-2 border rounded-md">
-                <IconUser className="h-4 w-4 text-muted-foreground" />
-                <div className="flex-1">
-                  <div className="text-sm font-medium">
-                    {selectedPatientDisplay.name}
+          {/* Step 2: Patient selector (hidden when patient is preset from context) */}
+          {!presetPatientId ? (
+            <div className="space-y-2">
+              <Label>{t("packageForm.selectPatient")}</Label>
+              {selectedPatientDisplay ? (
+                <div className="flex items-center gap-2 p-2 border rounded-md">
+                  <IconUser className="h-4 w-4 text-muted-foreground" />
+                  <div className="flex-1">
+                    <div className="text-sm font-medium">
+                      {selectedPatientDisplay.name}
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      {selectedPatientDisplay.phone}
+                      {selectedPatientDisplay.code &&
+                        ` - ${selectedPatientDisplay.code}`}
+                    </div>
                   </div>
-                  <div className="text-xs text-muted-foreground">
-                    {selectedPatientDisplay.phone}
-                    {selectedPatientDisplay.code &&
-                      ` - ${selectedPatientDisplay.code}`}
-                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={clearPatient}
+                  >
+                    &times;
+                  </Button>
                 </div>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={clearPatient}
-                >
-                  &times;
-                </Button>
-              </div>
-            ) : (
-              <div className="space-y-1">
-                <div className="relative">
-                  <IconSearch className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    className="pl-8"
-                    placeholder={t("packageForm.searchPatient")}
-                    value={patientSearchTerm}
-                    onChange={(e) => setPatientSearchTerm(e.target.value)}
-                  />
-                </div>
-                {searchResults && searchResults.length > 0 && (
-                  <div className="border rounded-md max-h-48 overflow-y-auto">
-                    {searchResults.map((p) => (
-                      <button
-                        key={p.id}
-                        type="button"
-                        className="w-full text-left px-3 py-2 text-sm hover:bg-accent transition-colors"
-                        onClick={() => handleSelectPatient(p)}
-                      >
-                        <div className="font-medium">{p.fullName}</div>
-                        <div className="text-xs text-muted-foreground">
-                          {p.phone}
-                          {p.patientCode && ` - ${p.patientCode}`}
-                        </div>
-                      </button>
-                    ))}
+              ) : (
+                <div className="space-y-1">
+                  <div className="relative">
+                    <IconSearch className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      className="pl-8"
+                      placeholder={t("packageForm.searchPatient")}
+                      value={patientSearchTerm}
+                      onChange={(e) => setPatientSearchTerm(e.target.value)}
+                    />
                   </div>
-                )}
-                {form.formState.errors.patientId && (
-                  <FieldError>
-                    {form.formState.errors.patientId.message}
-                  </FieldError>
-                )}
-              </div>
-            )}
-          </div>
+                  {searchResults && searchResults.length > 0 && (
+                    <div className="border rounded-md max-h-48 overflow-y-auto">
+                      {searchResults.map((p) => (
+                        <button
+                          key={p.id}
+                          type="button"
+                          className="w-full text-left px-3 py-2 text-sm hover:bg-accent transition-colors"
+                          onClick={() => handleSelectPatient(p)}
+                        >
+                          <div className="font-medium">{p.fullName}</div>
+                          <div className="text-xs text-muted-foreground">
+                            {p.phone}
+                            {p.patientCode && ` - ${p.patientCode}`}
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  {form.formState.errors.patientId && (
+                    <FieldError>
+                      {form.formState.errors.patientId.message}
+                    </FieldError>
+                  )}
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 p-2 border rounded-md">
+              <IconUser className="h-4 w-4 text-muted-foreground" />
+              <div className="text-sm font-medium">{presetPatientName}</div>
+            </div>
+          )}
 
           {/* Customization fields (all optional, defaults from template) */}
           {selectedTemplate && (
