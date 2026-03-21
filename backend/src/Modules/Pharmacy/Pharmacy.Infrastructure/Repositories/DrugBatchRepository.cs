@@ -103,23 +103,22 @@ public sealed class DrugBatchRepository(PharmacyDbContext context) : IDrugBatchR
             .Select(g => new { DrugCatalogItemId = g.Key, TotalStock = g.Sum(b => b.CurrentQuantity) })
             .ToListAsync(ct);
 
-        var drugIds = stockByDrug.Select(s => s.DrugCatalogItemId).ToList();
-
-        // Also include drugs with zero stock (no batches at all or all expired)
-        // by querying all active drugs with MinStockLevel > 0
-        var drugsWithThreshold = await context.DrugCatalogItems
+        // Query all active drugs (not just those with MinStockLevel > 0)
+        // so that stock=0 drugs always trigger an alert regardless of MinStockLevel setting
+        var allActiveDrugs = await context.DrugCatalogItems
             .AsNoTracking()
-            .Where(d => d.IsActive && d.MinStockLevel > 0)
+            .Where(d => d.IsActive)
             .Select(d => new { d.Id, d.Name, d.MinStockLevel })
             .ToListAsync(ct);
 
         var stockLookup = stockByDrug.ToDictionary(s => s.DrugCatalogItemId, s => s.TotalStock);
 
-        return drugsWithThreshold
+        return allActiveDrugs
             .Where(d =>
             {
                 var totalStock = stockLookup.TryGetValue(d.Id, out var stock) ? stock : 0;
-                return totalStock < d.MinStockLevel;
+                // Alert if stock is below minimum threshold OR if stock is zero (out of stock)
+                return (d.MinStockLevel > 0 && totalStock < d.MinStockLevel) || totalStock == 0;
             })
             .Select(d => new LowStockAlertDto(
                 d.Id,

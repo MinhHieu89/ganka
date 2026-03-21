@@ -37,7 +37,8 @@ public sealed record DrugInventoryDto(
     int TotalStock,
     int BatchCount,
     bool IsLowStock,
-    bool HasExpiryAlert);
+    bool HasExpiryAlert,
+    bool IsOutOfStock);
 
 /// <summary>
 /// Cross-module DTO for a stock import event (supplier invoice or Excel bulk import).

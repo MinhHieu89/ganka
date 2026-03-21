@@ -45,6 +45,7 @@ public static class GetConsumableItemsHandler
             }
 
             bool isLowStock = item.MinStockLevel > 0 && currentStock < item.MinStockLevel;
+            bool isOutOfStock = currentStock == 0;
 
             dtos.Add(new ConsumableItemDto(
                 Id: item.Id,
@@ -55,7 +56,8 @@ public static class GetConsumableItemsHandler
                 CurrentStock: currentStock,
                 MinStockLevel: item.MinStockLevel,
                 IsActive: item.IsActive,
-                IsLowStock: isLowStock));
+                IsLowStock: isLowStock,
+                IsOutOfStock: isOutOfStock));
         }
 
         return dtos;

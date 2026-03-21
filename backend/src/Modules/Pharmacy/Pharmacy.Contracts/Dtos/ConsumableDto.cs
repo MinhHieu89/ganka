@@ -15,7 +15,8 @@ public sealed record ConsumableItemDto(
     int CurrentStock,
     int MinStockLevel,
     bool IsActive,
-    bool IsLowStock);
+    bool IsLowStock,
+    bool IsOutOfStock);
 
 /// <summary>
 /// Cross-module DTO for a consumable batch (only for ExpiryTracked consumables).

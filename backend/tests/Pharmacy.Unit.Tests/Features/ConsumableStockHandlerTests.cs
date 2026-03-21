@@ -328,9 +328,9 @@ public class ConsumableStockHandlerTests
         var expectedItems = new List<ConsumableItemDto>
         {
             new(Guid.NewGuid(), "Eye Shield", "Kính che mắt", "Piece",
-                (int)ConsumableTrackingMode.SimpleStock, 15, 5, true, false),
+                (int)ConsumableTrackingMode.SimpleStock, 15, 5, true, false, false),
             new(Guid.NewGuid(), "IPL Gel", "Gel IPL", "Tube",
-                (int)ConsumableTrackingMode.ExpiryTracked, 8, 2, true, false)
+                (int)ConsumableTrackingMode.ExpiryTracked, 8, 2, true, false, false)
         };
 
         _consumableRepository.GetAllActiveAsync(Arg.Any<CancellationToken>())
@@ -372,9 +372,9 @@ public class ConsumableStockHandlerTests
         var expectedAlerts = new List<ConsumableItemDto>
         {
             new(Guid.NewGuid(), "Eye Shield", "Kính che mắt", "Piece",
-                (int)ConsumableTrackingMode.SimpleStock, 3, 10, true, true),
+                (int)ConsumableTrackingMode.SimpleStock, 3, 10, true, true, false),
             new(Guid.NewGuid(), "IPL Gel", "Gel IPL", "Tube",
-                (int)ConsumableTrackingMode.ExpiryTracked, 1, 5, true, true)
+                (int)ConsumableTrackingMode.ExpiryTracked, 1, 5, true, true, false)
         };
 
         _consumableRepository.GetAlertsAsync(Arg.Any<CancellationToken>())

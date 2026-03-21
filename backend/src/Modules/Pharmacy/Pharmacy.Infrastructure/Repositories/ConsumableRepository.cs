@@ -46,17 +46,17 @@ public sealed class ConsumableRepository(PharmacyDbContext context) : IConsumabl
     }
 
     /// <summary>
-    /// Returns consumable items that are below their minimum stock level.
+    /// Returns consumable items that are below their minimum stock level or have zero stock.
     /// For SimpleStock items: compares CurrentStock directly.
     /// For ExpiryTracked items: aggregates batch CurrentQuantity and compares to MinStockLevel.
-    /// Only returns items where MinStockLevel > 0 (items without thresholds are never alerted).
+    /// Includes items where stock=0 regardless of MinStockLevel setting (always alert on out-of-stock).
     /// </summary>
     public async Task<List<ConsumableItemDto>> GetAlertsAsync(CancellationToken ct)
     {
-        // Get all active items with a stock threshold configured
+        // Get all active items (include those with MinStockLevel=0 for zero-stock detection)
         var items = await context.ConsumableItems
             .AsNoTracking()
-            .Where(c => c.IsActive && c.MinStockLevel > 0)
+            .Where(c => c.IsActive)
             .ToListAsync(ct);
 
         // Compute batch stock totals for all ExpiryTracked items in a single query
@@ -90,7 +90,11 @@ public sealed class ConsumableRepository(PharmacyDbContext context) : IConsumabl
                 effectiveStock = batchStockByItem.TryGetValue(item.Id, out var batchStock) ? batchStock : 0;
             }
 
-            if (effectiveStock < item.MinStockLevel)
+            bool isOutOfStock = effectiveStock == 0;
+            bool isLowStock = item.MinStockLevel > 0 && effectiveStock < item.MinStockLevel;
+
+            // Alert if stock is below minimum OR if stock is zero (out of stock always triggers alert)
+            if (isLowStock || isOutOfStock)
             {
                 alertItems.Add(new ConsumableItemDto(
                     item.Id,
@@ -101,7 +105,8 @@ public sealed class ConsumableRepository(PharmacyDbContext context) : IConsumabl
                     effectiveStock,
                     item.MinStockLevel,
                     item.IsActive,
-                    IsLowStock: true));
+                    IsLowStock: isLowStock,
+                    IsOutOfStock: isOutOfStock));
             }
         }
 

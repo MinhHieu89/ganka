@@ -156,6 +156,7 @@ public sealed class DrugCatalogItemRepository : IDrugCatalogItemRepository
             var batchCount = agg?.BatchCount ?? 0;
             var hasExpiryAlert = agg?.HasExpiryAlert ?? false;
             var isLowStock = d.MinStockLevel > 0 && totalStock < d.MinStockLevel;
+            var isOutOfStock = totalStock == 0;
 
             return new DrugInventoryDto(
                 d.Id,
@@ -170,7 +171,8 @@ public sealed class DrugCatalogItemRepository : IDrugCatalogItemRepository
                 totalStock,
                 batchCount,
                 isLowStock,
-                hasExpiryAlert);
+                hasExpiryAlert,
+                isOutOfStock);
         }).ToList();
     }
 

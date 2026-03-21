@@ -302,7 +302,8 @@ public class OtcSaleAndInventoryHandlerTests
                 TotalStock: 45,
                 BatchCount: 2,
                 IsLowStock: false,
-                HasExpiryAlert: false)
+                HasExpiryAlert: false,
+                IsOutOfStock: false)
         };
 
         _drugCatalogItemRepository.GetAllWithInventoryAsync(30, Arg.Any<CancellationToken>())
