@@ -127,6 +127,7 @@ export function PatientProfilePage({ patientId, initialTab }: PatientProfilePage
       <PatientProfileHeader
         patient={patient}
         onEdit={() => setIsEditing(true)}
+        isEditing={isEditing}
       />
 
       {/* Tabs */}

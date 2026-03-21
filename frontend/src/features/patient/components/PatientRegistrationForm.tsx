@@ -445,7 +445,7 @@ function AllergyRow({
                       value={searchValue}
                       onValueChange={setSearchValue}
                     />
-                    <CommandList>
+                    <CommandList className="max-h-52 overflow-y-auto">
                       {filtered.length === 0 && !searchValue.trim() && (
                         <CommandEmpty>
                           {t("noResults") || "No results"}

@@ -40,6 +40,7 @@ import { toast } from "sonner"
 interface PatientProfileHeaderProps {
   patient: PatientDto
   onEdit: () => void
+  isEditing?: boolean
 }
 
 function getInitials(name: string): string {
@@ -65,6 +66,7 @@ function calculateAge(dateOfBirth: string): number {
 export function PatientProfileHeader({
   patient,
   onEdit,
+  isEditing,
 }: PatientProfileHeaderProps) {
   const { t, i18n } = useTranslation("patient")
   const { t: tCommon } = useTranslation("common")
@@ -194,10 +196,12 @@ export function PatientProfileHeader({
 
                 {/* Action buttons */}
                 <div className="flex items-center gap-2 shrink-0">
-                  <Button variant="outline" size="sm" onClick={onEdit}>
-                    <IconEdit className="h-4 w-4 mr-1.5" />
-                    {t("edit")}
-                  </Button>
+                  {!isEditing && (
+                    <Button variant="outline" size="sm" onClick={onEdit}>
+                      <IconEdit className="h-4 w-4 mr-1.5" />
+                      {t("edit")}
+                    </Button>
+                  )}
 
                   <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
                     <AlertDialogTrigger asChild>
