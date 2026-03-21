@@ -80,7 +80,18 @@ async function uploadClinicLogo(file: File): Promise<string> {
   })
 
   if (!res.ok) {
-    throw new Error("Failed to upload clinic logo")
+    let message = "Failed to upload clinic logo"
+    try {
+      const errorBody = await res.json()
+      if (errorBody.detail) message = errorBody.detail
+      else if (errorBody.title) message = errorBody.title
+    } catch {
+      // Response is not JSON, use status text
+      if (res.status === 413) message = "File is too large (max 5MB)"
+      else if (res.status === 415) message = "Unsupported file type. Only JPEG, PNG, and WebP are allowed."
+      else if (res.status === 401) message = "Not authenticated. Please log in again."
+    }
+    throw new Error(message)
   }
 
   const data = await res.json()

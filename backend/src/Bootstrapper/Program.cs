@@ -317,6 +317,18 @@ app.UseExceptionHandler(errorApp =>
     });
 });
 
+// Serve uploaded files from wwwroot/uploads in development
+if (app.Environment.IsDevelopment())
+{
+    var uploadsPath = Path.Combine(app.Environment.ContentRootPath, "wwwroot", "uploads");
+    Directory.CreateDirectory(uploadsPath);
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(uploadsPath),
+        RequestPath = "/uploads"
+    });
+}
+
 app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();

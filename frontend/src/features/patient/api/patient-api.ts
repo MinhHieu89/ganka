@@ -343,7 +343,18 @@ async function uploadPatientPhoto(
     },
   )
   if (!res.ok) {
-    throw new Error("Failed to upload photo")
+    let message = "Failed to upload photo"
+    try {
+      const errorBody = await res.json()
+      if (errorBody.detail) message = errorBody.detail
+      else if (errorBody.title) message = errorBody.title
+    } catch {
+      // Response is not JSON, use status text
+      if (res.status === 413) message = "File is too large"
+      else if (res.status === 415) message = "Unsupported file type"
+      else if (res.status === 401) message = "Not authenticated. Please log in again."
+    }
+    throw new Error(message)
   }
   return (await res.json()) as string
 }
