@@ -37,6 +37,10 @@ function formatValue(val: unknown): string {
   return String(val)
 }
 
+function toCamelCase(str: string): string {
+  return str.charAt(0).toLowerCase() + str.slice(1)
+}
+
 function parseAndTranslateChanges(
   previousJson: string | null,
   currentJson: string | null,
@@ -52,8 +56,9 @@ function parseAndTranslateChanges(
       const prevVal = JSON.stringify(prev[key])
       const currVal = JSON.stringify(curr[key])
       if (prevVal !== currVal) {
+        const camelKey = toCamelCase(key)
         changes.push({
-          field: t(`history.fields.${key}`, { defaultValue: key }),
+          field: t(`history.fields.${camelKey}`, { defaultValue: key }),
           from: formatValue(prev[key]),
           to: formatValue(curr[key]),
         })
