@@ -491,6 +491,9 @@ export async function dispenseDrugs(input: DispenseDrugsInput): Promise<{ id: st
   if (error || !response.ok) {
     const err = error as Record<string, unknown> | undefined
     if (err?.errors) throw new Error(JSON.stringify(err))
+    // Extract ProblemDetails "detail" field for domain-specific error messages
+    // (e.g., "Prescription already dispensed", "Insufficient stock", "Prescription expired")
+    if (err?.detail) throw new Error(err.detail as string)
     throw new Error("Failed to dispense drugs")
   }
   return data as { id: string }
