@@ -145,13 +145,10 @@ export function RefundDialog({
         reason: data.reason,
       })
 
-      // TODO: Re-enable PIN approval flow when manager PIN management is implemented
-      // For now, auto-approve and process the refund
       await approveRefundMutation.mutateAsync({
         refundId: result.id,
         invoiceId,
         managerId: currentUser?.id ?? "",
-        managerPin: "bypass",
       })
       await processRefundMutation.mutateAsync({
         refundId: result.id,
@@ -173,15 +170,17 @@ export function RefundDialog({
     setPinError(null)
 
     try {
-      // Step 1: Approve the refund with manager PIN
       await approveRefundMutation.mutateAsync({
         refundId: pendingRefundId,
-        managerPin: pin,
+        invoiceId,
+        managerId: currentUser?.id ?? "",
       })
 
-      // Step 2: Process the refund automatically after approval
       await processRefundMutation.mutateAsync({
         refundId: pendingRefundId,
+        invoiceId,
+        refundMethod: 0,
+        notes: null,
       })
 
       setPinDialogOpen(false)

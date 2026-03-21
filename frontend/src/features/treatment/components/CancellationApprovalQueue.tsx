@@ -50,11 +50,6 @@ const TREATMENT_TYPE_STYLES: Record<string, string> = {
 // -- Approve schema --
 
 const approveSchema = z.object({
-  managerPin: z
-    .string()
-    .min(4, "PIN phai co 4-6 ky tu so")
-    .max(6, "PIN phai co 4-6 ky tu so")
-    .regex(/^\d+$/, "PIN chi chua ky tu so"),
   deductionPercent: z.coerce
     .number()
     .min(0, "Phan tram khau tru khong duoc am")
@@ -113,7 +108,6 @@ function ApproveDialog({ open, onOpenChange, pkg }: ApproveDialogProps) {
   const form = useForm<ApproveFormValues>({
     resolver: zodResolver(approveSchema),
     defaultValues: {
-      managerPin: "",
       deductionPercent: defaultDeduction,
     },
   })
@@ -129,7 +123,6 @@ function ApproveDialog({ open, onOpenChange, pkg }: ApproveDialogProps) {
       await approveMutation.mutateAsync({
         packageId: pkg.id,
         managerId: user.id,
-        managerPin: data.managerPin,
         deductionPercent: data.deductionPercent,
       })
       toast.success(t("approvalQueue.approveSuccess"))
@@ -145,7 +138,6 @@ function ApproveDialog({ open, onOpenChange, pkg }: ApproveDialogProps) {
     (isOpen: boolean) => {
       if (isOpen && pkg) {
         form.reset({
-          managerPin: "",
           deductionPercent: getDefaultDeductionPercent(pkg),
         })
       }
@@ -219,33 +211,6 @@ function ApproveDialog({ open, onOpenChange, pkg }: ApproveDialogProps) {
               <span className="text-muted-foreground">{t("approvalQueue.estimatedRefund")}:</span>{" "}
               <span className="font-semibold text-base">{formatVND(refundAmount)}</span>
             </div>
-
-            {/* Manager PIN */}
-            <Controller
-              name="managerPin"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>{t("approvalQueue.managerPin")}</FieldLabel>
-                  <Input
-                    {...field}
-                    id={field.name}
-                    type="password"
-                    inputMode="numeric"
-                    maxLength={6}
-                    onChange={(e) => {
-                      const val = e.target.value.replace(/\D/g, "")
-                      field.onChange(val)
-                    }}
-                    autoComplete="off"
-                    aria-invalid={fieldState.invalid || undefined}
-                  />
-                  {fieldState.error && (
-                    <FieldError>{fieldState.error.message}</FieldError>
-                  )}
-                </Field>
-              )}
-            />
 
             <DialogFooter>
               <Button

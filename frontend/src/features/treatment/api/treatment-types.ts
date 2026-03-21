@@ -194,7 +194,6 @@ export interface RequestCancellationCommand {
 export interface ApproveCancellationCommand {
   packageId: string
   managerId: string
-  managerPin: string
   deductionPercent: number
 }
 

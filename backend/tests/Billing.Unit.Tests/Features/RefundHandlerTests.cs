@@ -1,4 +1,3 @@
-using Auth.Contracts.Queries;
 using Billing.Application.Features;
 using Billing.Application.Interfaces;
 using Billing.Contracts.Dtos;
@@ -10,7 +9,6 @@ using FluentValidation.Results;
 using NSubstitute;
 using Shared.Application;
 using Shared.Domain;
-using Wolverine;
 
 namespace Billing.Unit.Tests.Features;
 
@@ -22,7 +20,6 @@ public class RefundHandlerTests
     private readonly IInvoiceRepository _invoiceRepository = Substitute.For<IInvoiceRepository>();
     private readonly IUnitOfWork _unitOfWork = Substitute.For<IUnitOfWork>();
     private readonly IValidator<RequestRefundCommand> _validator = Substitute.For<IValidator<RequestRefundCommand>>();
-    private readonly IMessageBus _messageBus = Substitute.For<IMessageBus>();
     private readonly IPaymentRepository _paymentRepository = Substitute.For<IPaymentRepository>();
     private readonly ICashierShiftRepository _cashierShiftRepository = Substitute.For<ICashierShiftRepository>();
     private readonly ICurrentUser _currentUser = Substitute.For<ICurrentUser>();
@@ -134,21 +131,18 @@ public class RefundHandlerTests
     // ===== ApproveRefund Tests =====
 
     [Fact]
-    public async Task ApproveRefund_ValidPin_ApprovesRefund()
+    public async Task ApproveRefund_ApprovesRefund()
     {
         // Arrange
         var invoice = CreateFinalizedInvoiceWithRefund(out var refund);
         var managerId = Guid.NewGuid();
-        var command = new ApproveRefundCommand(invoice.Id, refund.Id, managerId, "1234");
+        var command = new ApproveRefundCommand(invoice.Id, refund.Id, managerId);
 
         _invoiceRepository.GetByIdAsync(invoice.Id, Arg.Any<CancellationToken>()).Returns(invoice);
-        _messageBus.InvokeAsync<VerifyManagerPinResponse>(
-            Arg.Any<VerifyManagerPinQuery>(), Arg.Any<CancellationToken>())
-            .Returns(new VerifyManagerPinResponse(true));
 
         // Act
         var result = await ApproveRefundHandler.Handle(
-            command, _invoiceRepository, _unitOfWork, _messageBus, CancellationToken.None);
+            command, _invoiceRepository, _unitOfWork, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -158,38 +152,17 @@ public class RefundHandlerTests
     }
 
     [Fact]
-    public async Task ApproveRefund_InvalidPin_ReturnsError()
-    {
-        // Arrange
-        var invoice = CreateFinalizedInvoiceWithRefund(out var refund);
-        var command = new ApproveRefundCommand(invoice.Id, refund.Id, Guid.NewGuid(), "wrong-pin");
-
-        _invoiceRepository.GetByIdAsync(invoice.Id, Arg.Any<CancellationToken>()).Returns(invoice);
-        _messageBus.InvokeAsync<VerifyManagerPinResponse>(
-            Arg.Any<VerifyManagerPinQuery>(), Arg.Any<CancellationToken>())
-            .Returns(new VerifyManagerPinResponse(false));
-
-        // Act
-        var result = await ApproveRefundHandler.Handle(
-            command, _invoiceRepository, _unitOfWork, _messageBus, CancellationToken.None);
-
-        // Assert
-        result.IsFailure.Should().BeTrue();
-        result.Error.Description.Should().Contain("Invalid manager PIN");
-    }
-
-    [Fact]
     public async Task ApproveRefund_NotRequested_ReturnsError()
     {
         // Arrange - refund is already Approved
         var invoice = CreateFinalizedInvoiceWithRefund(out var refund, RefundStatus.Approved);
-        var command = new ApproveRefundCommand(invoice.Id, refund.Id, Guid.NewGuid(), "1234");
+        var command = new ApproveRefundCommand(invoice.Id, refund.Id, Guid.NewGuid());
 
         _invoiceRepository.GetByIdAsync(invoice.Id, Arg.Any<CancellationToken>()).Returns(invoice);
 
         // Act
         var result = await ApproveRefundHandler.Handle(
-            command, _invoiceRepository, _unitOfWork, _messageBus, CancellationToken.None);
+            command, _invoiceRepository, _unitOfWork, CancellationToken.None);
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -201,13 +174,13 @@ public class RefundHandlerTests
     {
         // Arrange
         var invoice = CreateFinalizedInvoice();
-        var command = new ApproveRefundCommand(invoice.Id, Guid.NewGuid(), Guid.NewGuid(), "1234");
+        var command = new ApproveRefundCommand(invoice.Id, Guid.NewGuid(), Guid.NewGuid());
 
         _invoiceRepository.GetByIdAsync(invoice.Id, Arg.Any<CancellationToken>()).Returns(invoice);
 
         // Act
         var result = await ApproveRefundHandler.Handle(
-            command, _invoiceRepository, _unitOfWork, _messageBus, CancellationToken.None);
+            command, _invoiceRepository, _unitOfWork, CancellationToken.None);
 
         // Assert
         result.IsFailure.Should().BeTrue();

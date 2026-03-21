@@ -152,7 +152,7 @@ public static class BillingApiEndpoints
             async (Guid discountId, ApproveDiscountCommand command, IMessageBus bus, CancellationToken ct) =>
         {
             var enriched = new ApproveDiscountCommand(
-                command.InvoiceId, discountId, command.ManagerId, command.ManagerPin);
+                command.InvoiceId, discountId, command.ManagerId);
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
         });
@@ -163,7 +163,7 @@ public static class BillingApiEndpoints
         {
             var enriched = new RejectDiscountCommand(
                 command.InvoiceId, discountId, command.RejectionReason,
-                command.ManagerId, command.ManagerPin);
+                command.ManagerId);
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
         });
@@ -183,7 +183,7 @@ public static class BillingApiEndpoints
             async (Guid refundId, ApproveRefundCommand command, IMessageBus bus, CancellationToken ct) =>
         {
             var enriched = new ApproveRefundCommand(
-                command.InvoiceId, refundId, command.ManagerId, command.ManagerPin);
+                command.InvoiceId, refundId, command.ManagerId);
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
         });

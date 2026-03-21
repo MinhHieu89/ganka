@@ -139,7 +139,6 @@ export interface ApplyDiscountInput {
 export interface ApproveDiscountInput {
   invoiceId: string
   managerId: string
-  managerPin: string
 }
 
 export interface RequestRefundInput {
@@ -152,7 +151,6 @@ export interface RequestRefundInput {
 export interface ApproveRefundInput {
   invoiceId: string
   managerId: string
-  managerPin: string
 }
 
 export interface ProcessRefundInput {
@@ -426,7 +424,6 @@ async function processRefund(refundId: string, command: ProcessRefundInput): Pro
   const { error, response } = await api.POST(
     `/api/billing/refunds/${refundId}/process` as never,
     { body: command } as never,
-    {} as never,
   )
   if (error || !response.ok) {
     const err = error as Record<string, unknown> | undefined

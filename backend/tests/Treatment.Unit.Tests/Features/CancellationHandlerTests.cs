@@ -1,10 +1,8 @@
-using Auth.Contracts.Queries;
 using FluentValidation;
 using FluentValidation.Results;
 using Shared.Application;
 using Shared.Domain;
 using Treatment.Application.Features;
-using Wolverine;
 
 namespace Treatment.Unit.Tests.Features;
 
@@ -16,7 +14,6 @@ public class CancellationHandlerTests
     private readonly ITreatmentPackageRepository _packageRepository = Substitute.For<ITreatmentPackageRepository>();
     private readonly ITreatmentProtocolRepository _protocolRepository = Substitute.For<ITreatmentProtocolRepository>();
     private readonly IUnitOfWork _unitOfWork = Substitute.For<IUnitOfWork>();
-    private readonly IMessageBus _messageBus = Substitute.For<IMessageBus>();
     private readonly ICurrentUser _currentUser = Substitute.For<ICurrentUser>();
     private readonly IValidator<RequestCancellationCommand> _requestValidator = Substitute.For<IValidator<RequestCancellationCommand>>();
     private readonly IValidator<ApproveCancellationCommand> _approveValidator = Substitute.For<IValidator<ApproveCancellationCommand>>();
@@ -200,16 +197,13 @@ public class CancellationHandlerTests
             deductionPercent: 15m);
 
         var managerId = Guid.NewGuid();
-        var command = new ApproveCancellationCommand(package.Id, managerId, "1234", 15m);
+        var command = new ApproveCancellationCommand(package.Id, managerId, 15m);
 
         _packageRepository.GetByIdAsync(package.Id, Arg.Any<CancellationToken>()).Returns(package);
-        _messageBus.InvokeAsync<VerifyManagerPinResponse>(
-            Arg.Any<VerifyManagerPinQuery>(), Arg.Any<CancellationToken>())
-            .Returns(new VerifyManagerPinResponse(true));
 
         // Act
         var result = await ApproveCancellationHandler.Handle(
-            command, _packageRepository, _unitOfWork, _messageBus, _approveValidator, CancellationToken.None);
+            command, _packageRepository, _unitOfWork, _approveValidator, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -234,16 +228,13 @@ public class CancellationHandlerTests
             deductionPercent: 20m);
 
         var managerId = Guid.NewGuid();
-        var command = new ApproveCancellationCommand(package.Id, managerId, "1234", 20m);
+        var command = new ApproveCancellationCommand(package.Id, managerId, 20m);
 
         _packageRepository.GetByIdAsync(package.Id, Arg.Any<CancellationToken>()).Returns(package);
-        _messageBus.InvokeAsync<VerifyManagerPinResponse>(
-            Arg.Any<VerifyManagerPinQuery>(), Arg.Any<CancellationToken>())
-            .Returns(new VerifyManagerPinResponse(true));
 
         // Act
         var result = await ApproveCancellationHandler.Handle(
-            command, _packageRepository, _unitOfWork, _messageBus, _approveValidator, CancellationToken.None);
+            command, _packageRepository, _unitOfWork, _approveValidator, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -253,39 +244,17 @@ public class CancellationHandlerTests
     }
 
     [Fact]
-    public async Task ApproveCancellation_InvalidPin_ReturnsError()
-    {
-        // Arrange
-        SetupValidApproveValidator();
-        var package = CreatePendingCancellationPackage();
-        var command = new ApproveCancellationCommand(package.Id, Guid.NewGuid(), "wrong-pin", 15m);
-
-        _packageRepository.GetByIdAsync(package.Id, Arg.Any<CancellationToken>()).Returns(package);
-        _messageBus.InvokeAsync<VerifyManagerPinResponse>(
-            Arg.Any<VerifyManagerPinQuery>(), Arg.Any<CancellationToken>())
-            .Returns(new VerifyManagerPinResponse(false));
-
-        // Act
-        var result = await ApproveCancellationHandler.Handle(
-            command, _packageRepository, _unitOfWork, _messageBus, _approveValidator, CancellationToken.None);
-
-        // Assert
-        result.IsFailure.Should().BeTrue();
-        result.Error.Description.Should().Contain("Invalid manager PIN");
-    }
-
-    [Fact]
     public async Task ApproveCancellation_DeductionOutsideRange_ReturnsValidationError()
     {
         // Arrange
-        var command = new ApproveCancellationCommand(Guid.NewGuid(), Guid.NewGuid(), "1234", 5m);
+        var command = new ApproveCancellationCommand(Guid.NewGuid(), Guid.NewGuid(), 5m);
         var failures = new List<ValidationFailure> { new("DeductionPercent", "Deduction percent must be between 10 and 20.") };
         _approveValidator.ValidateAsync(command, Arg.Any<CancellationToken>())
             .Returns(new ValidationResult(failures));
 
         // Act
         var result = await ApproveCancellationHandler.Handle(
-            command, _packageRepository, _unitOfWork, _messageBus, _approveValidator, CancellationToken.None);
+            command, _packageRepository, _unitOfWork, _approveValidator, CancellationToken.None);
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -298,13 +267,13 @@ public class CancellationHandlerTests
         // Arrange
         SetupValidApproveValidator();
         var package = CreateActivePackage(); // Active, not PendingCancellation
-        var command = new ApproveCancellationCommand(package.Id, Guid.NewGuid(), "1234", 15m);
+        var command = new ApproveCancellationCommand(package.Id, Guid.NewGuid(), 15m);
 
         _packageRepository.GetByIdAsync(package.Id, Arg.Any<CancellationToken>()).Returns(package);
 
         // Act
         var result = await ApproveCancellationHandler.Handle(
-            command, _packageRepository, _unitOfWork, _messageBus, _approveValidator, CancellationToken.None);
+            command, _packageRepository, _unitOfWork, _approveValidator, CancellationToken.None);
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -461,16 +430,13 @@ public class CancellationHandlerTests
             deductionPercent: 15m);
 
         var managerId = Guid.NewGuid();
-        var command = new ApproveCancellationCommand(package.Id, managerId, "5678", 15m);
+        var command = new ApproveCancellationCommand(package.Id, managerId, 15m);
 
         _packageRepository.GetByIdAsync(package.Id, Arg.Any<CancellationToken>()).Returns(package);
-        _messageBus.InvokeAsync<VerifyManagerPinResponse>(
-            Arg.Any<VerifyManagerPinQuery>(), Arg.Any<CancellationToken>())
-            .Returns(new VerifyManagerPinResponse(true));
 
         // Act
         var result = await ApproveCancellationHandler.Handle(
-            command, _packageRepository, _unitOfWork, _messageBus, _approveValidator, CancellationToken.None);
+            command, _packageRepository, _unitOfWork, _approveValidator, CancellationToken.None);
 
         // Assert — Manager (with Treatment.Manage) can approve cancellations per TRT-09
         result.IsSuccess.Should().BeTrue();
@@ -495,16 +461,13 @@ public class CancellationHandlerTests
 
         var managerId = Guid.NewGuid();
         // Manager overrides to 12% deduction
-        var command = new ApproveCancellationCommand(package.Id, managerId, "1234", 12m);
+        var command = new ApproveCancellationCommand(package.Id, managerId, 12m);
 
         _packageRepository.GetByIdAsync(package.Id, Arg.Any<CancellationToken>()).Returns(package);
-        _messageBus.InvokeAsync<VerifyManagerPinResponse>(
-            Arg.Any<VerifyManagerPinQuery>(), Arg.Any<CancellationToken>())
-            .Returns(new VerifyManagerPinResponse(true));
 
         // Act
         var result = await ApproveCancellationHandler.Handle(
-            command, _packageRepository, _unitOfWork, _messageBus, _approveValidator, CancellationToken.None);
+            command, _packageRepository, _unitOfWork, _approveValidator, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();

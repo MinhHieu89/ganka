@@ -162,12 +162,10 @@ export function DiscountDialog({
       })
 
       // TODO: Re-enable PIN approval flow when manager PIN management is implemented
-      // For now, auto-approve with current user
       await approveDiscount.mutateAsync({
         discountId: result.id,
         invoiceId,
         managerId: currentUser?.id ?? "",
-        managerPin: "bypass",
       })
       toast.success(t("discountApplied"))
       onOpenChange(false)

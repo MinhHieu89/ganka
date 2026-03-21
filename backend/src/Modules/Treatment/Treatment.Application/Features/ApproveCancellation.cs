@@ -1,19 +1,16 @@
-using Auth.Contracts.Queries;
 using FluentValidation;
 using Shared.Domain;
 using Treatment.Application.Interfaces;
-using Wolverine;
 
 namespace Treatment.Application.Features;
 
 /// <summary>
-/// Command to approve a pending cancellation request with manager PIN verification.
-/// Manager provides their ID, PIN, and the deduction percentage to apply.
+/// Command to approve a pending cancellation request.
+/// Manager provides their ID and the deduction percentage to apply.
 /// </summary>
 public sealed record ApproveCancellationCommand(
     Guid PackageId,
     Guid ManagerId,
-    string ManagerPin,
     decimal DeductionPercent);
 
 /// <summary>
@@ -25,17 +22,15 @@ public class ApproveCancellationCommandValidator : AbstractValidator<ApproveCanc
     {
         RuleFor(x => x.PackageId).NotEmpty();
         RuleFor(x => x.ManagerId).NotEmpty();
-        RuleFor(x => x.ManagerPin).NotEmpty().WithMessage("Manager PIN is required.");
         RuleFor(x => x.DeductionPercent)
-            .InclusiveBetween(10m, 20m)
-            .WithMessage("Deduction percent must be between 10 and 20.");
+            .InclusiveBetween(0m, 100m)
+            .WithMessage("Deduction percent must be between 0 and 100.");
     }
 }
 
 /// <summary>
 /// Wolverine handler for <see cref="ApproveCancellationCommand"/>.
-/// Verifies manager PIN via cross-module query to Auth module,
-/// recalculates refund amount with the manager's chosen deduction percentage,
+/// Recalculates refund amount with the manager's chosen deduction percentage,
 /// then approves the cancellation request.
 /// </summary>
 public static class ApproveCancellationHandler
@@ -44,7 +39,6 @@ public static class ApproveCancellationHandler
         ApproveCancellationCommand command,
         ITreatmentPackageRepository packageRepository,
         IUnitOfWork unitOfWork,
-        IMessageBus messageBus,
         IValidator<ApproveCancellationCommand> validator,
         CancellationToken cancellationToken)
     {
@@ -66,16 +60,7 @@ public static class ApproveCancellationHandler
             return Result.Failure(Error.Validation(
                 $"Cannot approve cancellation for a package in '{package.Status}' status."));
 
-        // Verify manager PIN via cross-module query to Auth module
-        var pinResponse = await messageBus.InvokeAsync<VerifyManagerPinResponse>(
-            new VerifyManagerPinQuery(command.ManagerId, command.ManagerPin), cancellationToken);
-
-        if (!pinResponse.IsValid)
-            return Result.Failure(Error.Validation("Invalid manager PIN."));
-
         // Approve the cancellation (domain method validates status and transitions)
-        // The manager may adjust the deduction percentage at approval time;
-        // the domain will recalculate the refund amount if the override differs
         package.ApproveCancellation(command.ManagerId, null, command.DeductionPercent);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);

@@ -1,22 +1,18 @@
-using Auth.Contracts.Queries;
 using Billing.Application.Interfaces;
 using Billing.Domain.Enums;
 using FluentValidation;
 using Shared.Domain;
-using Wolverine;
 
 namespace Billing.Application.Features;
 
 /// <summary>
-/// Command to reject a pending discount with manager PIN verification and rejection reason.
-/// ManagerId is included for PIN verification via cross-module query (same pattern as ApproveDiscountCommand).
+/// Command to reject a pending discount with rejection reason.
 /// </summary>
 public sealed record RejectDiscountCommand(
     Guid InvoiceId,
     Guid DiscountId,
     string RejectionReason,
-    Guid ManagerId,
-    string ManagerPin);
+    Guid ManagerId);
 
 /// <summary>
 /// Validator for <see cref="RejectDiscountCommand"/>.
@@ -32,8 +28,7 @@ public class RejectDiscountCommandValidator : AbstractValidator<RejectDiscountCo
 
 /// <summary>
 /// Wolverine handler for <see cref="RejectDiscountCommand"/>.
-/// Verifies manager PIN via cross-module query, then rejects discount with reason
-/// and recalculates invoice totals to exclude the rejected discount.
+/// Rejects discount with reason and recalculates invoice totals.
 /// </summary>
 public static class RejectDiscountHandler
 {
@@ -41,7 +36,6 @@ public static class RejectDiscountHandler
         RejectDiscountCommand command,
         IInvoiceRepository invoiceRepository,
         IUnitOfWork unitOfWork,
-        IMessageBus messageBus,
         CancellationToken cancellationToken)
     {
         var invoice = await invoiceRepository.GetByIdAsync(command.InvoiceId, cancellationToken);
@@ -55,15 +49,6 @@ public static class RejectDiscountHandler
         if (discount.ApprovalStatus != ApprovalStatus.Pending)
             return Result.Failure(Error.Validation("Discount has already been processed."));
 
-        // Verify manager PIN via cross-module query to Auth module
-        var pinResponse = await messageBus.InvokeAsync<VerifyManagerPinResponse>(
-            new VerifyManagerPinQuery(command.ManagerId, command.ManagerPin), cancellationToken);
-
-        if (!pinResponse.IsValid)
-            return Result.Failure(Error.Validation("Invalid manager PIN."));
-
-        // Reject the discount with reason and recalculate invoice totals
-        // Invoice is tracked via GetByIdAsync -- no Update() needed
         discount.Reject(command.ManagerId, command.RejectionReason);
         invoice.RecalculateAfterDiscountApproval();
 
