@@ -35,6 +35,10 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.IsActive)
             .HasDefaultValue(true);
 
+        builder.Property(u => u.ManagerPinHash)
+            .HasMaxLength(200)
+            .IsRequired(false);
+
         builder.Property(u => u.BranchId)
             .HasConversion(
                 b => b.Value,

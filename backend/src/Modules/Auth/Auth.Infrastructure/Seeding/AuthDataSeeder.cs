@@ -191,6 +191,11 @@ public sealed class AuthDataSeeder : IHostedService
         var passwordHash = passwordHasher.HashPassword(adminPassword);
         var adminUser = User.Create(adminEmail, "System Administrator", passwordHash, branchId);
 
+        // Set default manager PIN for admin user (default: 123456)
+        var adminPin = _configuration["Admin:ManagerPin"] ?? "123456";
+        var pinHash = passwordHasher.HashPassword(adminPin);
+        adminUser.SetManagerPinHash(pinHash);
+
         var adminRole = await dbContext.Roles.FirstOrDefaultAsync(r => r.Name == "Admin", ct);
         if (adminRole is not null)
         {

@@ -15,6 +15,7 @@ public class User : AggregateRoot, IAuditable
     public string PasswordHash { get; private set; } = string.Empty;
     public string PreferredLanguage { get; private set; } = "vi";
     public bool IsActive { get; private set; } = true;
+    public string? ManagerPinHash { get; private set; }
 
     private readonly List<UserRole> _userRoles = [];
     public IReadOnlyCollection<UserRole> UserRoles => _userRoles.AsReadOnly();
@@ -104,6 +105,15 @@ public class User : AggregateRoot, IAuditable
     public void ResetPassword(string newHash)
     {
         PasswordHash = newHash;
+        SetUpdatedAt();
+    }
+
+    /// <summary>
+    /// Sets the manager PIN hash (pre-hashed by the caller using IPasswordHasher).
+    /// </summary>
+    public void SetManagerPinHash(string pinHash)
+    {
+        ManagerPinHash = pinHash;
         SetUpdatedAt();
     }
 }
