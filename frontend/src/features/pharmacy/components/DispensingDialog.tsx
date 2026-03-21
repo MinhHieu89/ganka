@@ -258,8 +258,9 @@ export function DispensingDialog({
       await dispenseMutation.mutateAsync(input)
       toast.success(t("queue.dispensed"))
       onOpenChange(false)
-    } catch {
-      // onError in mutation handles toast
+    } catch (error) {
+      // onError in mutation also handles toast, but log for debugging
+      console.error("[DispensingDialog] Dispense failed:", error)
     }
   }
 

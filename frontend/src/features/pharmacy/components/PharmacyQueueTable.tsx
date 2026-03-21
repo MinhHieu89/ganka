@@ -84,12 +84,14 @@ export function PharmacyQueueTable({ patientId }: PharmacyQueueTableProps) {
         ),
         enableSorting: true,
       }),
-      columnHelper.accessor("itemCount", {
+      columnHelper.display({
+        id: "itemCount",
         header: () => t("queue.itemCount"),
-        cell: (info) => (
-          <span className="text-sm text-center block">{info.getValue()}</span>
+        cell: ({ row }) => (
+          <span className="text-sm text-center block">
+            {row.original.items?.length ?? row.original.itemCount ?? 0}
+          </span>
         ),
-        enableSorting: false,
       }),
       columnHelper.accessor("daysRemaining", {
         header: () => t("queue.daysRemaining"),

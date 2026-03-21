@@ -61,7 +61,14 @@ async function createServiceCatalogItem(
   )
   if (error || !response.ok) {
     const err = error as Record<string, unknown> | undefined
-    if (err?.errors) throw new Error(JSON.stringify(err))
+    // Extract human-readable error from validation or conflict responses
+    if (err?.detail && typeof err.detail === "string") throw new Error(err.detail)
+    if (err?.errors && typeof err.errors === "object") {
+      const messages = Object.values(err.errors as Record<string, string[]>)
+        .flat()
+        .join("; ")
+      if (messages) throw new Error(messages)
+    }
     throw new Error("Failed to create service catalog item")
   }
   return data as ServiceCatalogItemDto
@@ -77,7 +84,13 @@ async function updateServiceCatalogItem(
   )
   if (error || !response.ok) {
     const err = error as Record<string, unknown> | undefined
-    if (err?.errors) throw new Error(JSON.stringify(err))
+    if (err?.detail && typeof err.detail === "string") throw new Error(err.detail)
+    if (err?.errors && typeof err.errors === "object") {
+      const messages = Object.values(err.errors as Record<string, string[]>)
+        .flat()
+        .join("; ")
+      if (messages) throw new Error(messages)
+    }
     throw new Error("Failed to update service catalog item")
   }
   return data as ServiceCatalogItemDto

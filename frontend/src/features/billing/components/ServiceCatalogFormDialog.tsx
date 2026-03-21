@@ -205,13 +205,13 @@ export function ServiceCatalogFormDialog({
               variant="outline"
               onClick={() => onOpenChange(false)}
             >
-              {tCommon("cancel")}
+              {tCommon("buttons.cancel")}
             </Button>
             <Button type="submit" disabled={isPending}>
               {isPending && (
                 <IconLoader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
-              {tCommon("save")}
+              {tCommon("buttons.save")}
             </Button>
           </DialogFooter>
         </form>
