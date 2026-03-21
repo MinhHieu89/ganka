@@ -204,8 +204,7 @@ async function recordSession(
   )
   if (error || !response.ok) {
     const err = error as Record<string, unknown> | undefined
-    if (err?.errors) throw new Error(JSON.stringify(err))
-    throw new Error("Failed to record treatment session")
+    throw new Error(err ? JSON.stringify(err) : "Failed to record treatment session")
   }
   return data as RecordSessionResponse
 }
@@ -442,9 +441,6 @@ export function useRecordSession(packageId: string) {
       })
       queryClient.invalidateQueries({ queryKey: treatmentKeys.dueSoon() })
       queryClient.invalidateQueries({ queryKey: treatmentKeys.packages() })
-    },
-    onError: (error: Error) => {
-      toast.error(error.message)
     },
   })
 }

@@ -329,7 +329,10 @@ export function TreatmentSessionForm({
         onOpenChange(false)
       }
     } catch (error) {
-      handleServerValidationError(error, form.setError)
+      const nonFieldErrors = handleServerValidationError(error, form.setError)
+      if (nonFieldErrors.length > 0) {
+        toast.error(nonFieldErrors.join(". "))
+      }
     }
   }
 
