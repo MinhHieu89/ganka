@@ -50,7 +50,7 @@ Plans:
 **Goal:** Frontend uses shadcn/ui comprehensively with dashboard-01 layout, login-04 login page, wrapper component pattern for safe upgrades, Field+Controller forms, generic DataTable, and AlertDialog for session warning
 **Depends on:** Phase 1
 **Requirements:** UI-01, UI-02, AUTH-01, AUTH-03, AUTH-04, AUD-01, AUD-02
-**Plans:** 8/8 plans complete
+**Plans:** 10 plans (8 complete, 2 gap closure)
 
 Plans:
 - [x] 01.2-01a-PLAN.md -- Install/upgrade all 20 shadcn/ui primitives via CLI
@@ -231,7 +231,7 @@ Plans:
 **Goal:** All 55 NetArchTest architecture rules pass with zero failures, restoring clean architecture boundaries across Patient and Clinical modules
 **Depends on:** Phase 5
 **Requirements**: ARCH-01, ARCH-02, ARCH-03, ARCH-04, ARCH-05
-**Plans:** 8/8 plans complete
+**Plans:** 10 plans (8 complete, 2 gap closure)
 
 Plans:
 - [ ] 05.1-01-PLAN.md -- Move FieldChange record to Clinical.Domain.ValueObjects + remove stale Clinical.Contracts Domain reference
@@ -550,14 +550,16 @@ Plans:
 **Goal:** Fix all 24 reported issues (21 bugs, 3 improvements) across Patient, Pharmacy, Inventory, Appointment, Admin, Localization, Login, Examination, Cashier, Dashboard, Treatment, and Service Catalog modules
 **Requirements**: TASK-2, TASK-3, TASK-4, TASK-5, TASK-7, TASK-8, TASK-9, TASK-10, TASK-11, TASK-12, TASK-13, TASK-14, TASK-15, TASK-16, TASK-17, TASK-18, TASK-19, TASK-21, TASK-23, TASK-25, TASK-26, TASK-28, TASK-29, TASK-30
 **Depends on:** Phase 10
-**Plans:** 8/8 plans complete
+**Plans:** 10 plans (8 complete, 2 gap closure)
 
 Plans:
-- [ ] 10.1-01-PLAN.md -- Patient UI fixes: allergy dropdown scroll, edit button visibility, validation messages (TASK-2, TASK-3, TASK-9)
-- [ ] 10.1-02-PLAN.md -- Patient features: appointment auto-fill, inactive patient filter (TASK-5, TASK-7)
-- [ ] 10.1-03-PLAN.md -- Pharmacy/OTC + Inventory: catalog loading, stock status, alerts, OTC UI (TASK-16, TASK-23, TASK-21, TASK-25, TASK-18)
-- [ ] 10.1-04-PLAN.md -- Upload infrastructure: patient photo and clinic logo upload fixes (TASK-8, TASK-10)
-- [ ] 10.1-05-PLAN.md -- Auth + Localization: remember login, Vietnamese translations (TASK-14, TASK-4, TASK-28)
-- [ ] 10.1-06-PLAN.md -- Appointment improvements: calendar display, time/type display (TASK-12, TASK-13)
-- [ ] 10.1-07-PLAN.md -- Admin/Dashboard/Navigation: audit log IDs, examination nav, dashboard stats (TASK-11, TASK-26, TASK-17)
-- [ ] 10.1-08-PLAN.md -- Investigation fixes: medication import, cashier timestamps, dispensing, service catalog (TASK-15, TASK-19, TASK-29, TASK-30)
+- [x] 10.1-01-PLAN.md -- Patient UI fixes: allergy dropdown scroll, edit button visibility, validation messages (TASK-2, TASK-3, TASK-9)
+- [x] 10.1-02-PLAN.md -- Patient features: appointment auto-fill, inactive patient filter (TASK-5, TASK-7)
+- [x] 10.1-03-PLAN.md -- Pharmacy/OTC + Inventory: catalog loading, stock status, alerts, OTC UI (TASK-16, TASK-23, TASK-21, TASK-25, TASK-18)
+- [x] 10.1-04-PLAN.md -- Upload infrastructure: patient photo and clinic logo upload fixes (TASK-8, TASK-10)
+- [x] 10.1-05-PLAN.md -- Auth + Localization: remember login, Vietnamese translations (TASK-14, TASK-4, TASK-28)
+- [x] 10.1-06-PLAN.md -- Appointment improvements: calendar display, time/type display (TASK-12, TASK-13)
+- [x] 10.1-07-PLAN.md -- Admin/Dashboard/Navigation: audit log IDs, examination nav, dashboard stats (TASK-11, TASK-26, TASK-17)
+- [x] 10.1-08-PLAN.md -- Investigation fixes: medication import, cashier timestamps, dispensing, service catalog (TASK-15, TASK-19, TASK-29, TASK-30)
+- [ ] 10.1-09-PLAN.md -- Gap closure: wire dashboard stats cross-module queries (TASK-17)
+- [ ] 10.1-10-PLAN.md -- Gap closure: investigate and fix dispensing confirmation (TASK-29)
