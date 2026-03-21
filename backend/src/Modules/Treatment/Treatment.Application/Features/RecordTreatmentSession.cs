@@ -93,12 +93,6 @@ public static class RecordTreatmentSessionHandler
             return Result<RecordSessionResponse>.Failure(
                 Error.NotFound("TreatmentPackage", command.PackageId));
 
-        // Check if package is active (domain will throw, but we return a clean Result)
-        if (package.Status != PackageStatus.Active)
-            return Result<RecordSessionResponse>.Failure(
-                Error.Validation(
-                    $"Cannot record session on a package in '{package.Status}' status. Package must be Active."));
-
         // Check interval warning (TRT-05: soft enforcement -- warn but don't block)
         IntervalWarning? warning = null;
         var completedSessions = package.Sessions
@@ -125,7 +119,7 @@ public static class RecordTreatmentSessionHandler
             .ToList();
 
         // Record session via domain method (handles status, events, auto-completion)
-        var session = package.RecordSession(
+        var sessionResult = package.RecordSession(
             parametersJson: command.ParametersJson,
             osdiScore: command.OsdiScore,
             osdiSeverity: command.OsdiSeverity,
@@ -135,6 +129,11 @@ public static class RecordTreatmentSessionHandler
             scheduledAt: command.ScheduledAt,
             intervalOverrideReason: command.IntervalOverrideReason,
             consumables: consumables);
+
+        if (sessionResult.IsFailure)
+            return Result<RecordSessionResponse>.Failure(sessionResult.Error);
+
+        var session = sessionResult.Value;
 
         // Persist (package is tracked via GetByIdAsync)
         await unitOfWork.SaveChangesAsync(ct);

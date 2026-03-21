@@ -38,7 +38,7 @@ public class TreatmentPackageDomainTests
         DateTime? scheduledAt = null,
         string? intervalOverrideReason = null)
     {
-        return package.RecordSession(
+        var result = package.RecordSession(
             parametersJson: "{}",
             osdiScore: null,
             osdiSeverity: null,
@@ -48,6 +48,7 @@ public class TreatmentPackageDomainTests
             scheduledAt: scheduledAt,
             intervalOverrideReason: intervalOverrideReason,
             consumables: EmptyConsumables);
+        return result.Value;
     }
 
     #region RecordSession - Interval Enforcement
@@ -67,18 +68,27 @@ public class TreatmentPackageDomainTests
     }
 
     [Fact]
-    public void RecordSession_IntervalViolation_NoOverride_ThrowsInvalidOperation()
+    public void RecordSession_IntervalViolation_NoOverride_ReturnsFailure()
     {
         // Arrange
         var package = CreateTestPackage(minIntervalDays: 14);
         RecordSessionOnPackage(package, scheduledAt: DateTime.UtcNow.AddDays(-20));
 
         // Act - try to record a second session too soon (only 5 days later)
-        var act = () => RecordSessionOnPackage(package, scheduledAt: DateTime.UtcNow.AddDays(-20).AddDays(5));
+        var result = package.RecordSession(
+            parametersJson: "{}",
+            osdiScore: null,
+            osdiSeverity: null,
+            clinicalNotes: null,
+            performedById: DefaultUserId,
+            visitId: null,
+            scheduledAt: DateTime.UtcNow.AddDays(-20).AddDays(5),
+            intervalOverrideReason: null,
+            consumables: EmptyConsumables);
 
         // Assert
-        act.Should().Throw<InvalidOperationException>()
-            .WithMessage("*interval*");
+        result.IsFailure.Should().BeTrue();
+        result.Error.Description.Should().Contain("interval");
     }
 
     [Fact]

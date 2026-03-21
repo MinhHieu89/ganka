@@ -140,8 +140,8 @@ public class TreatmentPackage : AggregateRoot, IAuditable
     /// If the package becomes complete after this session, auto-transitions to Completed status (TRT-04).
     /// Always raises TreatmentSessionCompletedEvent with consumable list for inventory deduction (TRT-11).
     /// </summary>
-    /// <returns>The created TreatmentSession entity.</returns>
-    public TreatmentSession RecordSession(
+    /// <returns>Result containing the created TreatmentSession entity, or a validation error.</returns>
+    public Result<TreatmentSession> RecordSession(
         string parametersJson,
         decimal? osdiScore,
         string? osdiSeverity,
@@ -152,11 +152,13 @@ public class TreatmentPackage : AggregateRoot, IAuditable
         string? intervalOverrideReason,
         List<(Guid ConsumableItemId, string ConsumableName, int Quantity)> consumables)
     {
-        EnsureActive();
+        if (Status != PackageStatus.Active)
+            return Result<TreatmentSession>.Failure(Error.Validation(
+                $"Cannot record session on a package in '{Status}' status. Package must be Active."));
 
         if (SessionsCompleted >= TotalSessions)
-            throw new InvalidOperationException(
-                "Cannot record more sessions than the total allowed for this package.");
+            return Result<TreatmentSession>.Failure(Error.Validation(
+                "Cannot record more sessions than the total allowed for this package."));
 
         // Enforce minimum interval between sessions (TRT-05)
         if (MinIntervalDays > 0)
@@ -175,9 +177,9 @@ public class TreatmentPackage : AggregateRoot, IAuditable
                 var daysSinceLastSession = (currentDate - lastSessionDate).TotalDays;
 
                 if (daysSinceLastSession < MinIntervalDays && string.IsNullOrWhiteSpace(intervalOverrideReason))
-                    throw new InvalidOperationException(
+                    return Result<TreatmentSession>.Failure(Error.Validation(
                         $"Cannot record session: minimum interval of {MinIntervalDays} days between sessions has not been met " +
-                        $"({daysSinceLastSession:F0} days since last session). Provide an interval override reason to proceed.");
+                        $"({daysSinceLastSession:F0} days since last session). Provide an interval override reason to proceed."));
             }
         }
 
@@ -242,7 +244,7 @@ public class TreatmentPackage : AggregateRoot, IAuditable
                 TreatmentType: TreatmentType));
         }
 
-        return session;
+        return Result<TreatmentSession>.Success(session);
     }
 
     /// <summary>
