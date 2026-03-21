@@ -33,7 +33,10 @@ export function ConsumableSelector({
   value,
   onChange,
 }: ConsumableSelectorProps) {
-  const { t } = useTranslation("treatment")
+  const { t, i18n } = useTranslation("treatment")
+
+  const getDisplayName = (item: { name: string; nameVi: string }) =>
+    i18n.language === "vi" && item.nameVi ? item.nameVi : item.name
   const { data: consumableItems = [] } = useConsumableItems()
   const [popoverOpen, setPopoverOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState("")
@@ -59,7 +62,7 @@ export function ConsumableSelector({
 
     const newEntry: ConsumableInput = {
       consumableItemId: item.id,
-      consumableName: item.name,
+      consumableName: getDisplayName(item),
       quantity: 1,
     }
     onChange([...value, newEntry])
@@ -149,12 +152,7 @@ export function ConsumableSelector({
                     className="flex items-center justify-between"
                   >
                     <div>
-                      <span className="text-sm">{item.name}</span>
-                      {item.nameVi && item.nameVi !== item.name && (
-                        <span className="text-xs text-muted-foreground ml-2">
-                          ({item.nameVi})
-                        </span>
-                      )}
+                      <span className="text-sm">{getDisplayName(item)}</span>
                     </div>
                     <span className="text-xs text-muted-foreground">
                       {item.unit} - {t("consumable.stock")}: {item.currentStock}

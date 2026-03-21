@@ -48,7 +48,7 @@ const sessionFormSchema = z.object({
   // IPL parameters
   iplEnergy: z.coerce.number().min(0).nullable().optional(),
   iplPulseCount: z.coerce.number().int().min(0).nullable().optional(),
-  iplSpotSize: z.string().nullable().optional(),
+  iplSpotSize: z.coerce.string().nullable().optional(),
   iplTreatmentZones: z.array(z.string()).optional(),
   // LLLT parameters
   llltWavelength: z.coerce.number().min(0).nullable().optional(),
@@ -167,6 +167,8 @@ interface TreatmentSessionFormProps {
   packageId: string
   treatmentType: TreatmentType
   defaultParametersJson?: string | null
+  lastSessionDate?: string | null
+  minIntervalDays?: number
 }
 
 // -- Component --
@@ -177,6 +179,8 @@ export function TreatmentSessionForm({
   packageId,
   treatmentType,
   defaultParametersJson,
+  lastSessionDate,
+  minIntervalDays,
 }: TreatmentSessionFormProps) {
   const { t } = useTranslation("treatment")
   const user = useAuthStore((s) => s.user)
@@ -283,7 +287,17 @@ export function TreatmentSessionForm({
     }
 
     form.reset(resetValues)
-  }, [open, defaults, treatmentType, form])
+
+    // Proactive interval warning (client-side check on dialog open)
+    if (lastSessionDate && minIntervalDays) {
+      const daysSinceLast = Math.floor(
+        (Date.now() - new Date(lastSessionDate).getTime()) / (1000 * 60 * 60 * 24)
+      )
+      if (daysSinceLast < minIntervalDays) {
+        setIntervalWarning({ daysSinceLast, minIntervalDays })
+      }
+    }
+  }, [open, defaults, treatmentType, form, lastSessionDate, minIntervalDays])
 
   const isSubmitting = recordMutation.isPending
 
@@ -589,7 +603,7 @@ function IplParameterFields({
                   onZoneToggle(zone, checked === true)
                 }
               />
-              {zone}
+              {t(`ipl.zones.${zone}`, zone)}
             </label>
           ))}
         </div>
@@ -744,7 +758,7 @@ function LidCareParameterFields({
                   onStepToggle(step, checked === true)
                 }
               />
-              {step}
+              {t(`lidCare.steps.${step}`, step)}
             </label>
           ))}
         </div>
