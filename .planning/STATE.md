@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 09-36-PLAN.md
-last_updated: "2026-03-21T09:09:23.510Z"
+stopped_at: Completed 09-38-PLAN.md
+last_updated: "2026-03-21T09:12:10.219Z"
 last_activity: "2026-03-13 - Completed quick task 2: Add Serilog with file output for development"
 progress:
   total_phases: 19
   completed_phases: 16
   total_plans: 291
-  completed_plans: 278
+  completed_plans: 279
 ---
 
 ---
@@ -874,6 +874,7 @@ Progress: [█████████░] 96%
 | Phase 09 P34 | 2min | 1 tasks | 1 files |
 | Phase 09 P35 | 2min | 1 tasks | 1 files |
 | Phase 09 P36 | 2min | 2 tasks | 2 files |
+| Phase 09 P38 | 4min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -1375,6 +1376,9 @@ Recent decisions affecting current work:
 - [Phase 09]: Managed parameter fields via useState instead of react-hook-form Controller to match TreatmentParameterFields onChange API
 - [Phase 09]: Removed subscale headers for flat sequential OSDI question list matching public page
 - [Phase 09]: Broadened GetActivePackagesAsync to include Paused/PendingCancellation without renaming method
+- [Phase 09]: Keep server-side interval warning as defense-in-depth alongside client-side proactive check
+- [Phase 09]: Use i18n.language to conditionally display consumable names in active language only
+- [Phase 09]: Replace raw JSON diff with translated field-by-field comparison in version history
 
 ### Roadmap Evolution
 
@@ -1405,6 +1409,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-21T09:09:23.501Z
-Stopped at: Completed 09-36-PLAN.md
+Last session: 2026-03-21T09:12:10.213Z
+Stopped at: Completed 09-38-PLAN.md
 Resume file: None
