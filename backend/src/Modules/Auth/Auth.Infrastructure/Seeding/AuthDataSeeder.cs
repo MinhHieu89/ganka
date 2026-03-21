@@ -179,9 +179,19 @@ public sealed class AuthDataSeeder : IHostedService
         var adminPassword = _configuration["Admin:Password"] ?? "Admin@123456";
 
         // Check if admin already exists (ignore query filters to include soft-deleted)
-        if (await dbContext.Users.IgnoreQueryFilters().AnyAsync(u => u.Email == adminEmail, ct))
+        var existingAdmin = await dbContext.Users.IgnoreQueryFilters()
+            .FirstOrDefaultAsync(u => u.Email == adminEmail, ct);
+        if (existingAdmin is not null)
         {
-            _logger.LogInformation("AuthDataSeeder: Root admin user already exists, skipping.");
+            // Ensure manager PIN is set on existing admin
+            if (string.IsNullOrEmpty(existingAdmin.ManagerPinHash))
+            {
+                var hasher = sp.GetRequiredService<IPasswordHasher>();
+                var pin = _configuration["Admin:ManagerPin"] ?? "123456";
+                existingAdmin.SetManagerPinHash(hasher.HashPassword(pin));
+                await dbContext.SaveChangesAsync(ct);
+                _logger.LogInformation("AuthDataSeeder: Set manager PIN for existing admin user.");
+            }
             return;
         }
 
