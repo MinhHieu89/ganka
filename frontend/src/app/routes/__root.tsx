@@ -1,9 +1,10 @@
-import { Suspense } from "react"
+import { Suspense, useEffect, useState } from "react"
 import type { ReactNode } from "react"
 import { Outlet, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { Toaster } from "@/shared/components/Sonner"
 import { TooltipProvider } from "@/shared/components/Tooltip"
+import { useAuthStore } from "@/shared/stores/authStore"
 import globalsCss from "@/styles/globals.css?url"
 import "@/shared/i18n/i18n"
 
@@ -34,13 +35,27 @@ export const Route = createRootRoute({
 })
 
 function RootComponent() {
+  const isInitializing = useAuthStore((s) => s.isInitializing)
+  const [initStarted, setInitStarted] = useState(false)
+
+  useEffect(() => {
+    if (!initStarted) {
+      setInitStarted(true)
+      useAuthStore.getState().initialize()
+    }
+  }, [initStarted])
+
   return (
     <RootDocument>
       <QueryClientProvider client={queryClient}>
         <TooltipProvider delayDuration={0}>
-          <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
-            <Outlet />
-          </Suspense>
+          {isInitializing ? (
+            <div className="flex items-center justify-center min-h-screen">Loading...</div>
+          ) : (
+            <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
+              <Outlet />
+            </Suspense>
+          )}
           <Toaster />
         </TooltipProvider>
       </QueryClientProvider>
