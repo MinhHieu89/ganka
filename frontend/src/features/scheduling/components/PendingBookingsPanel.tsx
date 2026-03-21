@@ -58,6 +58,28 @@ function generateTimeSlots(): string[] {
   return slots
 }
 
+/** Map English appointment type name to i18n key */
+const APPOINTMENT_TYPE_KEYS: Record<string, string> = {
+  "New Patient": "types.newPatient",
+  "Follow-up": "types.followUp",
+  "Treatment": "types.treatment",
+  "Ortho-K": "types.orthoK",
+}
+
+/** Map a time slot key to its default start time */
+function getDefaultTimeForSlot(slot: string | null | undefined): string {
+  switch (slot) {
+    case "morning":
+      return "08:00"
+    case "afternoon":
+      return "13:00"
+    case "evening":
+      return "17:00"
+    default:
+      return "08:00"
+  }
+}
+
 export function PendingBookingsPanel() {
   const { t, i18n } = useTranslation("scheduling")
   const { t: tCommon } = useTranslation("common")
@@ -187,12 +209,17 @@ export function PendingBookingsPanel() {
                 <span className="flex items-center gap-1.5 text-muted-foreground">
                   <IconCalendar className="h-3.5 w-3.5" />
                   {format(new Date(booking.preferredDate), "EEEE, dd/MM/yyyy", { locale })}
-                  {booking.preferredTimeSlot && ` - ${booking.preferredTimeSlot}`}
+                  {booking.preferredTimeSlot &&
+                    ` - ${t(`selfBooking.${booking.preferredTimeSlot}`)}`}
                 </span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-muted-foreground">{t("appointmentType")}:</span>
-                <span>{booking.appointmentTypeName}</span>
+                <span>
+                  {APPOINTMENT_TYPE_KEYS[booking.appointmentTypeName]
+                    ? t(APPOINTMENT_TYPE_KEYS[booking.appointmentTypeName])
+                    : booking.appointmentTypeName}
+                </span>
               </div>
               <div className="flex items-center gap-1 text-xs text-muted-foreground">
                 {format(new Date(booking.createdAt), "dd/MM/yyyy HH:mm", { locale })}
@@ -205,7 +232,7 @@ export function PendingBookingsPanel() {
                 onClick={() => {
                   setApproveTarget(booking)
                   setApproveDate(new Date(booking.preferredDate))
-                  setApproveTime("14:00")
+                  setApproveTime(getDefaultTimeForSlot(booking.preferredTimeSlot))
                   setApproveError(null)
                 }}
               >
