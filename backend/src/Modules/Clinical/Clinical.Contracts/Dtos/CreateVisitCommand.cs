@@ -182,3 +182,9 @@ public record CheckDrugAllergyQuery(
     Guid PatientId,
     string DrugName,
     string? GenericName);
+
+/// <summary>
+/// Cross-module query to retrieve the count of active visits.
+/// Handled by Clinical.Application.
+/// </summary>
+public record GetActiveVisitCountQuery();
