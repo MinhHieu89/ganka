@@ -68,6 +68,13 @@
     "environmental": "Environmental",
     "custom": "Custom"
   },
+  "validation": {
+    "dobRequired": "Date of birth is required for Medical patients",
+    "genderRequired": "Gender is required for Medical patients",
+    "fullNameMin": "Full name must be at least 3 characters",
+    "fullNameMax": "Full name must not exceed 50 characters",
+    "phoneDuplicate": "Phone number is already in use"
+  },
   "fieldWarning": {
     "title": "Missing Required Information",
     "description": "The following fields are needed for referrals and legal exports:",

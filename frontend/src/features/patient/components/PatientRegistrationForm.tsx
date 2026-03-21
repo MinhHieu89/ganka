@@ -73,7 +73,9 @@ export function PatientRegistrationForm({
   const [nonFieldError, setNonFieldError] = useState<string | null>(null)
 
   const schema = z.object({
-    fullName: z.string().min(1, tCommon("validation.required")),
+    fullName: z.string()
+      .min(3, t("validation.fullNameMin"))
+      .max(50, t("validation.fullNameMax")),
     phone: z
       .string()
       .min(1, tCommon("validation.required"))
@@ -90,6 +92,23 @@ export function PatientRegistrationForm({
         }),
       )
       .optional(),
+  }).superRefine((data, ctx) => {
+    if (patientType === "Medical") {
+      if (!data.dateOfBirth) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: t("validation.dobRequired"),
+          path: ["dateOfBirth"],
+        })
+      }
+      if (!data.gender) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: t("validation.genderRequired"),
+          path: ["gender"],
+        })
+      }
+    }
   })
 
   type FormValues = z.infer<typeof schema>
@@ -141,6 +160,18 @@ export function PatientRegistrationForm({
         params: { patientId } as never,
       })
     } catch (error) {
+      // Check for phone duplicate error
+      const errorMessage = error instanceof Error ? error.message : ""
+      if (
+        errorMessage.toLowerCase().includes("phone") &&
+        errorMessage.toLowerCase().includes("already exists")
+      ) {
+        form.setError("phone", {
+          type: "server",
+          message: t("validation.phoneDuplicate"),
+        })
+        return
+      }
       const nonFieldErrors = handleServerValidationError(error, form.setError)
       if (nonFieldErrors.length > 0) {
         setNonFieldError(nonFieldErrors[0])
