@@ -14,7 +14,7 @@ import { Button } from "@/shared/components/Button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card"
 import { Skeleton } from "@/shared/components/Skeleton"
 import { cn } from "@/shared/lib/utils"
-import { useTreatmentPackage } from "../api/treatment-api"
+import { useTreatmentPackage, usePausePackage } from "../api/treatment-api"
 import type { TreatmentPackageDto } from "../api/treatment-types"
 import { TreatmentSessionCard } from "./TreatmentSessionCard"
 import { OsdiTrendChart } from "./OsdiTrendChart"
@@ -27,16 +27,13 @@ import type { TreatmentType } from "../api/treatment-types"
 
 // -- Status badge styling --
 
-const STATUS_VARIANT: Record<
-  string,
-  "default" | "secondary" | "outline" | "destructive"
-> = {
-  Active: "default",
-  Paused: "secondary",
-  PendingCancellation: "outline",
-  Cancelled: "destructive",
-  Switched: "outline",
-  Completed: "default",
+const STATUS_STYLES: Record<string, { variant: "default" | "outline" | "destructive"; className?: string }> = {
+  Active: { variant: "default" },
+  Paused: { variant: "outline", className: "border-yellow-500 text-yellow-700 dark:text-yellow-400" },
+  PendingCancellation: { variant: "outline", className: "border-orange-500 text-orange-700 dark:text-orange-400" },
+  Cancelled: { variant: "destructive" },
+  Switched: { variant: "outline" },
+  Completed: { variant: "outline", className: "border-blue-500 text-blue-700 dark:text-blue-400" },
 }
 
 const TREATMENT_TYPE_COLOR: Record<string, string> = {
@@ -125,7 +122,7 @@ function CancellationInfo({ pkg }: { pkg: TreatmentPackageDto }) {
         </div>
         <div>
           <span className="text-muted-foreground">{t("detail.status")}:</span>{" "}
-          <Badge variant="outline">{t(`status.${req.status}`)}</Badge>
+          <Badge variant="outline">{t(`cancellationStatus.${req.status}`, req.status)}</Badge>
         </div>
         {req.deductionPercent > 0 && (
           <div>
@@ -169,6 +166,7 @@ export function TreatmentPackageDetail({
   const [cancelDialogOpen, setCancelDialogOpen] = useState(false)
   const [switchDialogOpen, setSwitchDialogOpen] = useState(false)
   const [historyDialogOpen, setHistoryDialogOpen] = useState(false)
+  const pauseMutation = usePausePackage()
 
   const goBack = () => navigate({ to: "/treatments" })
 
@@ -242,7 +240,7 @@ export function TreatmentPackageDetail({
               >
                 {t(`treatmentType.${pkg.treatmentType}`)}
               </Badge>
-              <Badge variant={STATUS_VARIANT[pkg.status] ?? "outline"}>
+              <Badge variant={STATUS_STYLES[pkg.status]?.variant ?? "outline"} className={STATUS_STYLES[pkg.status]?.className}>
                 {t(`status.${pkg.status}`)}
               </Badge>
             </div>
@@ -315,7 +313,17 @@ export function TreatmentPackageDetail({
                 >
                   {t("modifyPackage")}
                 </Button>
-                <Button variant="outline" size="sm">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={pauseMutation.isPending}
+                  onClick={() =>
+                    pauseMutation.mutate({
+                      packageId,
+                      action: isActive ? 0 : 1,
+                    })
+                  }
+                >
                   {isActive ? (
                     <>
                       <IconPlayerPause className="h-4 w-4 mr-1" />
@@ -396,6 +404,8 @@ export function TreatmentPackageDetail({
         packageId={packageId}
         treatmentType={pkg.treatmentType as TreatmentType}
         defaultParametersJson={pkg.parametersJson}
+        lastSessionDate={pkg.lastSessionDate}
+        minIntervalDays={pkg.minIntervalDays}
       />
 
       <ModifyPackageDialog
