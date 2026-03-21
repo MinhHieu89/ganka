@@ -84,6 +84,13 @@ export function SiteHeader() {
     }
     const isLast = index === segments.length - 1
     let path = "/" + segments.slice(0, index + 1).join("/")
+    // Override certain segments to redirect to a different route
+    const segmentPathOverride: Record<string, string> = {
+      visits: "/clinical",
+    }
+    if (segmentPathOverride[segment]) {
+      path = segmentPathOverride[segment]
+    }
     // Redirect intermediate segments that have no standalone route to their parent
     const noStandaloneRoute = ["approvals", "templates"]
     if (noStandaloneRoute.includes(segment) && !isLast) {

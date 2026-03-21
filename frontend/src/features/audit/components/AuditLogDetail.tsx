@@ -65,10 +65,6 @@ export function AuditLogDetail({ log }: AuditLogDetailProps) {
             </span>{" "}
             {log.entityName}
           </div>
-          <div>
-            <span className="font-medium text-muted-foreground">ID:</span>{" "}
-            <span className="font-mono text-xs">{log.entityId}</span>
-          </div>
         </div>
         <Button
           variant="outline"
@@ -85,8 +81,12 @@ export function AuditLogDetail({ log }: AuditLogDetailProps) {
         </Button>
       </div>
 
-      {/* Changes table */}
-      {log.changes.length > 0 ? (
+      {/* Changes table - filter out ID/GUID fields */}
+      {log.changes.filter(
+        (c) =>
+          !c.propertyName.endsWith("Id") &&
+          c.propertyName !== "Id"
+      ).length > 0 ? (
         <div className="border bg-background rounded-lg overflow-hidden">
           <table className="w-full text-sm">
             <thead>
@@ -103,7 +103,11 @@ export function AuditLogDetail({ log }: AuditLogDetailProps) {
               </tr>
             </thead>
             <tbody>
-              {log.changes.map((change, idx) => (
+              {log.changes.filter(
+                (c) =>
+                  !c.propertyName.endsWith("Id") &&
+                  c.propertyName !== "Id"
+              ).map((change, idx) => (
                 <tr key={idx} className="border-b last:border-0">
                   <td className="px-3 py-2 font-mono text-xs font-medium">
                     {change.propertyName}

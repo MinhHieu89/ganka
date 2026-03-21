@@ -125,15 +125,6 @@ export function AuditLogTable({
           <span className="font-mono text-xs">{getValue<string>()}</span>
         ),
       },
-      {
-        accessorKey: "entityId",
-        header: () => "ID",
-        cell: ({ getValue }) => (
-          <span className="font-mono text-xs text-muted-foreground truncate max-w-[120px] block">
-            {getValue<string>()}
-          </span>
-        ),
-      },
     ],
     [t]
   )
