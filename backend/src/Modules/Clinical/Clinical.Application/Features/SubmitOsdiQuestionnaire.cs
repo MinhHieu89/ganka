@@ -17,6 +17,7 @@ public static class SubmitOsdiQuestionnaireHandler
         SubmitOsdiCommand command,
         IOsdiSubmissionRepository osdiRepository,
         IVisitRepository visitRepository,
+        IOsdiNotificationService osdiNotificationService,
         IUnitOfWork unitOfWork,
         CancellationToken ct)
     {
@@ -64,6 +65,18 @@ public static class SubmitOsdiQuestionnaireHandler
         }
 
         await unitOfWork.SaveChangesAsync(ct);
+
+        // Notify any listeners waiting for this token's result (treatment session flow)
+        await osdiNotificationService.NotifyTokenSubmittedAsync(
+            submission.PublicToken!, osdiResult.Score, osdiResult.Severity.ToString(), ct);
+
+        // Also notify visit group for backward compatibility (clinical visit flow)
+        if (submission.VisitId.HasValue)
+        {
+            await osdiNotificationService.NotifyOsdiSubmittedAsync(
+                submission.VisitId.Value, osdiResult.Score, osdiResult.Severity.ToString(), ct);
+        }
+
         return Result<decimal>.Success(osdiResult.Score);
     }
 

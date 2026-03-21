@@ -15,4 +15,14 @@ public interface IOsdiNotificationService
         decimal score,
         string severity,
         CancellationToken ct);
+
+    /// <summary>
+    /// Notifies the token group that an OSDI questionnaire was submitted.
+    /// Used for treatment session tokens where VisitId is null.
+    /// </summary>
+    Task NotifyTokenSubmittedAsync(
+        string token,
+        decimal score,
+        string severity,
+        CancellationToken ct);
 }

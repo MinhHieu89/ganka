@@ -44,6 +44,25 @@ public class OsdiHub : Hub
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"visit-{visitId}");
     }
 
+    /// <summary>
+    /// Joins a token-scoped group for receiving OSDI submission notifications.
+    /// Used by treatment session flow where VisitId is null.
+    /// </summary>
+    public async Task JoinToken(string token)
+    {
+        if (string.IsNullOrWhiteSpace(token))
+        {
+            throw new HubException("Token is required.");
+        }
+
+        await Groups.AddToGroupAsync(Context.ConnectionId, $"osdi-token-{token}");
+    }
+
+    public async Task LeaveToken(string token)
+    {
+        await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"osdi-token-{token}");
+    }
+
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
         await base.OnDisconnectedAsync(exception);
