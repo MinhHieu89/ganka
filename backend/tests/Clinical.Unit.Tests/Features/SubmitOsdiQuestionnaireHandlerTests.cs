@@ -15,6 +15,7 @@ public class SubmitOsdiQuestionnaireHandlerTests
 {
     private readonly IOsdiSubmissionRepository _osdiRepository = Substitute.For<IOsdiSubmissionRepository>();
     private readonly IVisitRepository _visitRepository = Substitute.For<IVisitRepository>();
+    private readonly IOsdiNotificationService _osdiNotificationService = Substitute.For<IOsdiNotificationService>();
     private readonly IUnitOfWork _unitOfWork = Substitute.For<IUnitOfWork>();
 
     private static readonly BranchId DefaultBranchId = new(Guid.Parse("00000000-0000-0000-0000-000000000001"));
@@ -38,7 +39,7 @@ public class SubmitOsdiQuestionnaireHandlerTests
 
         // Act
         var result = await SubmitOsdiQuestionnaireHandler.Handle(
-            command, _osdiRepository, _visitRepository, _unitOfWork, CancellationToken.None);
+            command, _osdiRepository, _visitRepository, _osdiNotificationService, _unitOfWork, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -63,7 +64,7 @@ public class SubmitOsdiQuestionnaireHandlerTests
 
         // Act
         var result = await SubmitOsdiQuestionnaireHandler.Handle(
-            command, _osdiRepository, _visitRepository, _unitOfWork, CancellationToken.None);
+            command, _osdiRepository, _visitRepository, _osdiNotificationService, _unitOfWork, CancellationToken.None);
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -81,7 +82,7 @@ public class SubmitOsdiQuestionnaireHandlerTests
 
         // Act
         var result = await SubmitOsdiQuestionnaireHandler.Handle(
-            command, _osdiRepository, _visitRepository, _unitOfWork, CancellationToken.None);
+            command, _osdiRepository, _visitRepository, _osdiNotificationService, _unitOfWork, CancellationToken.None);
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -100,7 +101,7 @@ public class SubmitOsdiQuestionnaireHandlerTests
 
         // Act
         var result = await SubmitOsdiQuestionnaireHandler.Handle(
-            command, _osdiRepository, _visitRepository, _unitOfWork, CancellationToken.None);
+            command, _osdiRepository, _visitRepository, _osdiNotificationService, _unitOfWork, CancellationToken.None);
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -125,7 +126,7 @@ public class SubmitOsdiQuestionnaireHandlerTests
 
         // Act
         var result = await SubmitOsdiQuestionnaireHandler.Handle(
-            command, _osdiRepository, _visitRepository, _unitOfWork, CancellationToken.None);
+            command, _osdiRepository, _visitRepository, _osdiNotificationService, _unitOfWork, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();

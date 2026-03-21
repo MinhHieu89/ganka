@@ -92,7 +92,7 @@ function IplParams({ params }: { params: ParsedParams }) {
           <span className="text-muted-foreground">{t("ipl.treatmentZones")}:</span>{" "}
           <span className="font-medium">
             {Array.isArray(params.treatmentZones)
-              ? (params.treatmentZones as string[]).join(", ")
+              ? (params.treatmentZones as string[]).map(z => t(`ipl.zones.${z}`, z)).join(", ")
               : String(params.treatmentZones)}
           </span>
         </div>
@@ -140,7 +140,7 @@ function LidCareParams({ params }: { params: ParsedParams }) {
       {params.steps != null && (
         <div>
           <span className="text-muted-foreground">{t("lidCare.procedureSteps")}:</span>{" "}
-          <span className="font-medium">{String(params.steps)}</span>
+          <span className="font-medium">{Array.isArray(params.steps) ? (params.steps as string[]).map(s => t(`lidCare.steps.${s}`, s)).join(", ") : String(params.steps)}</span>
         </div>
       )}
       {params.products != null && (
@@ -229,7 +229,7 @@ export function TreatmentSessionCard({
               {t("sessionCard.sessionNumber", { number: session.sessionNumber })}
             </span>
             <Badge variant={SESSION_STATUS_VARIANT[session.status] ?? "outline"}>
-              {session.status}
+              {t(`sessionStatus.${session.status}`, session.status)}
             </Badge>
           </div>
           <div className="flex items-center gap-1 text-xs text-muted-foreground">
