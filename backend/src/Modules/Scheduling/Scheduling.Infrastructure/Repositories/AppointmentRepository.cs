@@ -74,6 +74,14 @@ public sealed class AppointmentRepository : IAppointmentRepository
             .ToListAsync(ct);
     }
 
+    public async Task<int> GetTodayCountAsync(CancellationToken ct = default)
+    {
+        var today = DateTime.UtcNow.Date;
+        var tomorrow = today.AddDays(1);
+        return await _dbContext.Appointments
+            .CountAsync(a => a.StartTime >= today && a.StartTime < tomorrow && a.Status != AppointmentStatus.Cancelled, ct);
+    }
+
     public void Add(Appointment appointment)
     {
         _dbContext.Appointments.Add(appointment);

@@ -53,13 +53,17 @@ public sealed class PatientRepository : IPatientRepository
         DateTime? from = null,
         DateTime? to = null,
         string? search = null,
+        bool? isActive = null,
         CancellationToken cancellationToken = default)
     {
         var query = _dbContext.Patients
             .AsNoTracking()
             .Include(p => p.Allergies)
-            .Where(p => p.IsActive)
             .AsQueryable();
+
+        // Filter by active status: null = show all, true = active only, false = inactive only
+        if (isActive.HasValue)
+            query = query.Where(p => p.IsActive == isActive.Value);
 
         if (!string.IsNullOrWhiteSpace(search))
         {
@@ -122,6 +126,11 @@ public sealed class PatientRepository : IPatientRepository
     public async Task<bool> ExistsAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await _dbContext.Patients.AnyAsync(p => p.Id == id, cancellationToken);
+    }
+
+    public async Task<int> GetActiveCountAsync(CancellationToken cancellationToken = default)
+    {
+        return await _dbContext.Patients.CountAsync(p => p.IsActive, cancellationToken);
     }
 
     public void Add(Domain.Entities.Patient patient)

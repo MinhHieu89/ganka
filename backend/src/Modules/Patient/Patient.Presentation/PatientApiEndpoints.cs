@@ -27,6 +27,7 @@ public static class PatientApiEndpoints
         MapSearchEndpoints(group);
         MapPhotoEndpoints(group);
         MapValidationEndpoints(group);
+        MapDashboardEndpoints(app);
 
         return app;
     }
@@ -124,6 +125,17 @@ public static class PatientApiEndpoints
         {
             var result = await bus.InvokeAsync<Result<PatientFieldValidationResult>>(
                 new ValidatePatientFieldsQuery(patientId), ct);
+            return result.ToHttpResult();
+        });
+    }
+
+    private static void MapDashboardEndpoints(IEndpointRouteBuilder app)
+    {
+        var group = app.MapGroup("/api/dashboard").RequireAuthorization();
+
+        group.MapGet("/stats", async (IMessageBus bus, CancellationToken ct) =>
+        {
+            var result = await bus.InvokeAsync<Result<DashboardStatsDto>>(new GetDashboardStatsQuery(), ct);
             return result.ToHttpResult();
         });
     }

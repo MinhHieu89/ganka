@@ -1,8 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router"
 import { useTranslation } from "react-i18next"
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card"
+import { Skeleton } from "@/shared/components/Skeleton"
 import { useAuthStore } from "@/shared/stores/authStore"
 import { useRecentPatientsStore } from "@/shared/stores/recentPatientsStore"
+import { useDashboardStats } from "@/features/dashboard/api/dashboard-api"
 import {
   IconUsers,
   IconCalendar,
@@ -16,6 +18,17 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
   component: DashboardPage,
 })
 
+function StatValue({ value, isLoading }: { value: number | undefined; isLoading: boolean }) {
+  if (isLoading) {
+    return <Skeleton className="h-8 w-16" />
+  }
+  return (
+    <div className="text-2xl font-semibold tabular-nums">
+      {value?.toLocaleString() ?? 0}
+    </div>
+  )
+}
+
 function DashboardPage() {
   const { t } = useTranslation("common")
   const { t: tAuth } = useTranslation("auth")
@@ -23,6 +36,7 @@ function DashboardPage() {
   const user = useAuthStore((s) => s.user)
   const recentPatients = useRecentPatientsStore((s) => s.recent)
   const firstName = user?.fullName?.split(" ").pop() ?? user?.fullName ?? ""
+  const { data: stats, isLoading: statsLoading } = useDashboardStats()
 
   return (
     <div className="space-y-8">
@@ -46,8 +60,7 @@ function DashboardPage() {
             <IconUsers className="h-4 w-4 text-muted-foreground/50" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-semibold tabular-nums">&mdash;</div>
-            <p className="text-xs text-muted-foreground/70 mt-1">{t("sidebar.comingSoon")}</p>
+            <StatValue value={stats?.totalPatients} isLoading={statsLoading} />
           </CardContent>
         </Card>
 
@@ -59,8 +72,7 @@ function DashboardPage() {
             <IconCalendar className="h-4 w-4 text-muted-foreground/50" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-semibold tabular-nums">&mdash;</div>
-            <p className="text-xs text-muted-foreground/70 mt-1">{t("sidebar.comingSoon")}</p>
+            <StatValue value={stats?.todayAppointments} isLoading={statsLoading} />
           </CardContent>
         </Card>
 
@@ -72,8 +84,7 @@ function DashboardPage() {
             <IconStethoscope className="h-4 w-4 text-muted-foreground/50" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-semibold tabular-nums">&mdash;</div>
-            <p className="text-xs text-muted-foreground/70 mt-1">{t("sidebar.comingSoon")}</p>
+            <StatValue value={stats?.activeVisits} isLoading={statsLoading} />
           </CardContent>
         </Card>
 
@@ -85,8 +96,7 @@ function DashboardPage() {
             <IconActivity className="h-4 w-4 text-muted-foreground/50" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-semibold tabular-nums">&mdash;</div>
-            <p className="text-xs text-muted-foreground/70 mt-1">{t("sidebar.comingSoon")}</p>
+            <StatValue value={stats?.activeTreatments} isLoading={statsLoading} />
           </CardContent>
         </Card>
       </div>

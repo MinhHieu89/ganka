@@ -17,10 +17,12 @@ public interface IPatientRepository
         DateTime? from = null,
         DateTime? to = null,
         string? search = null,
+        bool? isActive = null,
         CancellationToken cancellationToken = default);
     Task<bool> PhoneExistsAsync(string phone, CancellationToken cancellationToken = default);
     Task<int> GetMaxSequenceNumberForYearAsync(int year, CancellationToken cancellationToken = default);
     Task<List<Domain.Entities.Patient>> GetRecentAsync(int count = 10, CancellationToken cancellationToken = default);
     Task<bool> ExistsAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<int> GetActiveCountAsync(CancellationToken cancellationToken = default);
     void Add(Domain.Entities.Patient patient);
 }

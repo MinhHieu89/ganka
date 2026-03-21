@@ -26,5 +26,10 @@ public interface IAppointmentRepository
     Task<Appointment?> GetByIdAsync(Guid appointmentId, CancellationToken ct = default);
     Task<AppointmentType?> GetAppointmentTypeAsync(Guid appointmentTypeId, CancellationToken ct = default);
     Task<List<AppointmentType>> GetAllAppointmentTypesAsync(CancellationToken ct = default);
+    /// <summary>
+    /// Returns the count of appointments for the current day.
+    /// </summary>
+    Task<int> GetTodayCountAsync(CancellationToken ct = default);
+
     void Add(Appointment appointment);
 }
