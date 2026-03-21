@@ -137,7 +137,7 @@ export function ExcelImportDialog({
       await createImport.mutateAsync({
         supplierId,
         invoiceNumber: null,
-        importDate: new Date().toISOString().slice(0, 10),
+        notes: null,
         lines: preview.validLines,
       })
       toast.success(t("stockImport.excelSuccess"))

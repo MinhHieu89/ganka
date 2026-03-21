@@ -181,7 +181,7 @@ export function StockImportForm({ onSuccess }: StockImportFormProps) {
       await createImport.mutateAsync({
         supplierId: data.supplierId,
         invoiceNumber: data.invoiceNumber || null,
-        importDate: format(data.importDate, "yyyy-MM-dd"),
+        notes: data.notes || null,
         lines: data.lines.map((line) => ({
           drugCatalogItemId: line.drugCatalogItemId,
           drugName: line.drugName,

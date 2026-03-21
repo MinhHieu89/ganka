@@ -194,7 +194,7 @@ export interface AdjustStockInput {
 export interface CreateStockImportInput {
   supplierId: string
   invoiceNumber?: string | null
-  importDate: string
+  notes?: string | null
   lines: StockImportLineDto[]
 }
 

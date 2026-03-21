@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next"
-import { format } from "date-fns"
 import { IconPrinter, IconClock, IconUser } from "@tabler/icons-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card"
 import { Separator } from "@/shared/components/Separator"
@@ -14,6 +13,7 @@ import {
   TableRow,
 } from "@/shared/components/Table"
 import { formatVND } from "@/shared/lib/format-vnd"
+import { formatVietnamDate } from "@/shared/lib/format-date"
 import { cn } from "@/shared/lib/utils"
 import { useShiftReport, getShiftReportPdf } from "../api/shift-api"
 import { PAYMENT_METHOD_I18N_KEY } from "../api/billing-api"
@@ -69,9 +69,9 @@ export function ShiftReportView({ shiftId }: ShiftReportViewProps) {
             </span>
             <span className="flex items-center gap-1">
               <IconClock className="h-4 w-4" />
-              {format(new Date(report.openedAt), "dd/MM/yyyy HH:mm")}
+              {formatVietnamDate(report.openedAt)}
               {report.closedAt &&
-                ` - ${format(new Date(report.closedAt), "HH:mm")}`}
+                ` - ${formatVietnamDate(report.closedAt, "HH:mm")}`}
             </span>
           </div>
         </div>
