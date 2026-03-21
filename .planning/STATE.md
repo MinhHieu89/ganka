@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: Completed 09-37-PLAN.md
-last_updated: "2026-03-21T10:50:57.088Z"
+stopped_at: Completed 10.1-05-PLAN.md
+last_updated: "2026-03-21T10:59:30.761Z"
 last_activity: "2026-03-13 - Completed quick task 2: Add Serilog with file output for development"
 progress:
   total_phases: 19
   completed_phases: 16
   total_plans: 291
-  completed_plans: 281
+  completed_plans: 284
   percent: 97
 ---
 
@@ -892,6 +892,7 @@ Progress: [█████████░] 96%
 | Phase 09 P36 | 2min | 2 tasks | 2 files |
 | Phase 09 P38 | 4min | 2 tasks | 7 files |
 | Phase 09 P37 | 12min | 2 tasks | 6 files |
+| Phase 10.1 P01 | 3min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -1397,6 +1398,8 @@ Recent decisions affecting current work:
 - [Phase 09]: Use i18n.language to conditionally display consumable names in active language only
 - [Phase 09]: Replace raw JSON diff with translated field-by-field comparison in version history
 - [Phase 09]: Used IPasswordHasher (Argon2id) for PIN hashing instead of BCrypt -- consistent with project's existing password infrastructure
+- [Phase 10.1]: Used Zod superRefine for DOB/Gender conditional validation to catch errors client-side
+- [Phase 10.1]: Use silent refresh via HTTP-only cookie on bootstrap instead of zustand persist to avoid exposing tokens
 
 ### Roadmap Evolution
 
@@ -1427,6 +1430,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-21T09:19:53.769Z
-Stopped at: Completed 09-37-PLAN.md
+Last session: 2026-03-21T10:59:25.180Z
+Stopped at: Completed 10.1-05-PLAN.md
 Resume file: None
