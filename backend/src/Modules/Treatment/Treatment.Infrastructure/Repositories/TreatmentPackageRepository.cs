@@ -53,7 +53,9 @@ public sealed class TreatmentPackageRepository(TreatmentDbContext context) : ITr
         return await context.TreatmentPackages
             .Include(x => x.Sessions)
             .AsNoTracking()
-            .Where(x => x.Status == PackageStatus.Active)
+            .Where(x => x.Status == PackageStatus.Active
+                     || x.Status == PackageStatus.Paused
+                     || x.Status == PackageStatus.PendingCancellation)
             .OrderBy(x => x.PatientName)
             .ToListAsync(ct);
     }
