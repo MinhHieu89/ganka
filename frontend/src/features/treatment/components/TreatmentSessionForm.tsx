@@ -304,6 +304,14 @@ export function TreatmentSessionForm({
   const handleSubmit = async (data: SessionFormValues) => {
     if (!user) return
 
+    // Client-side: require override reason when interval warning is active
+    if (intervalWarning && !data.intervalOverrideReason?.trim()) {
+      form.setError("intervalOverrideReason", {
+        message: t("sessionForm.intervalOverrideRequired"),
+      })
+      return
+    }
+
     try {
       const parametersJson = serializeParameters(data, treatmentType)
 

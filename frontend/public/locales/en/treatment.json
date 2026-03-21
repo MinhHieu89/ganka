@@ -350,7 +350,8 @@
     "successWithWarning": "Treatment session recorded (interval warning)",
     "procedureSteps": "Procedure Steps",
     "productsUsed": "Products Used",
-    "addProduct": "Add"
+    "addProduct": "Add",
+    "intervalOverrideRequired": "Please provide a reason for overriding the session interval"
   },
   "sessionCard": {
     "sessionNumber": "Session #{{number}}",

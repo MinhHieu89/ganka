@@ -350,7 +350,8 @@
     "successWithWarning": "Phi\u00ean \u0111i\u1ec1u tr\u1ecb \u0111\u00e3 \u0111\u01b0\u1ee3c ghi nh\u1eadn (c\u00f3 c\u1ea3nh b\u00e1o kho\u1ea3ng c\u00e1ch)",
     "procedureSteps": "C\u00e1c b\u01b0\u1edbc th\u1ef1c hi\u1ec7n",
     "productsUsed": "S\u1ea3n ph\u1ea9m \u0111\u00e3 d\u00f9ng",
-    "addProduct": "Th\u00eam"
+    "addProduct": "Th\u00eam",
+    "intervalOverrideRequired": "Vui l\u00f2ng nh\u1eadp l\u00fd do ghi \u0111\u00e8 kho\u1ea3ng c\u00e1ch phi\u00ean"
   },
   "sessionCard": {
     "sessionNumber": "Phi\u00ean #{{number}}",
