@@ -4,9 +4,15 @@ import timeGridPlugin from "@fullcalendar/timegrid"
 import dayGridPlugin from "@fullcalendar/daygrid"
 import interactionPlugin from "@fullcalendar/interaction"
 import momentTimezonePlugin from "@fullcalendar/moment-timezone"
-import type { EventClickArg, DateSelectArg, EventDropArg } from "@fullcalendar/core"
+import type { EventClickArg, DateSelectArg, EventDropArg, EventContentArg } from "@fullcalendar/core"
 import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/shared/components/Tooltip"
 import { useAppointmentsForCalendar } from "@/features/scheduling/hooks/useAppointments"
 import { useRescheduleAppointment } from "@/features/scheduling/api/scheduling-api"
 import { Skeleton } from "@/shared/components/Skeleton"
@@ -15,6 +21,36 @@ interface AppointmentCalendarProps {
   doctorId: string | undefined
   onSlotClick: (info: DateSelectArg) => void
   onEventClick: (info: EventClickArg) => void
+}
+
+function EventContent({ event, timeText }: EventContentArg) {
+  const { i18n } = useTranslation("scheduling")
+  const props = event.extendedProps
+  const typeName =
+    i18n.language === "vi"
+      ? props.appointmentTypeNameVi || props.appointmentTypeName
+      : props.appointmentTypeName
+  const tooltipText = `${props.patientName}\n${typeName}\n${timeText}`
+
+  return (
+    <TooltipProvider delayDuration={200}>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div className="w-full overflow-hidden px-0.5 leading-tight">
+            <div className="truncate text-[11px] font-semibold">
+              {props.patientName}
+            </div>
+            <div className="truncate text-[10px] opacity-85">
+              {typeName}
+            </div>
+          </div>
+        </TooltipTrigger>
+        <TooltipContent side="top" className="max-w-[220px] whitespace-pre-line text-xs">
+          {tooltipText}
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  )
 }
 
 export function AppointmentCalendar({
@@ -95,6 +131,7 @@ export function AppointmentCalendar({
         select={onSlotClick}
         eventClick={onEventClick}
         eventDrop={handleEventDrop}
+        eventContent={EventContent}
         events={events}
         datesSet={handleDatesSet}
         timeZone="Asia/Ho_Chi_Minh"
@@ -168,8 +205,12 @@ export function AppointmentCalendar({
         .appointment-calendar .fc .fc-event {
           border-radius: calc(var(--radius) - 4px);
           font-size: 0.75rem;
-          padding: 1px 3px;
+          padding: 1px 2px;
           cursor: pointer;
+          overflow: hidden;
+        }
+        .appointment-calendar .fc .fc-event-main {
+          overflow: hidden;
         }
         .appointment-calendar .fc .fc-event:hover {
           opacity: 0.9;
