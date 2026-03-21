@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { useTranslation } from "react-i18next"
-import { Link } from "@tanstack/react-router"
+import { Link, useNavigate } from "@tanstack/react-router"
 import { IconArrowLeft } from "@tabler/icons-react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/Tabs"
 import { Skeleton } from "@/shared/components/Skeleton"
@@ -18,16 +18,30 @@ import { PatientTreatmentsTab } from "@/features/treatment/components/PatientTre
 
 interface PatientProfilePageProps {
   patientId: string
+  initialTab?: string
 }
 
-export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
+export function PatientProfilePage({ patientId, initialTab }: PatientProfilePageProps) {
   const { t } = useTranslation("patient")
   const { t: tCommon } = useTranslation("common")
   const { t: tClinical } = useTranslation("clinical")
   const { t: tPharmacy } = useTranslation("pharmacy")
   const { t: tOptical } = useTranslation("optical")
+  const navigate = useNavigate()
   const addRecent = useRecentPatientsStore((s) => s.addRecent)
   const [isEditing, setIsEditing] = useState(false)
+
+  const handleTabChange = useCallback(
+    (value: string) => {
+      navigate({
+        to: "/patients/$patientId",
+        params: { patientId },
+        search: value === "overview" ? {} : { tab: value },
+        replace: true,
+      })
+    },
+    [navigate, patientId],
+  )
 
   const patientQuery = usePatientById(patientId)
   const patient = patientQuery.data
@@ -116,7 +130,7 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
       />
 
       {/* Tabs */}
-      <Tabs defaultValue="overview">
+      <Tabs defaultValue={initialTab || "overview"} onValueChange={handleTabChange}>
         <TabsList>
           <TabsTrigger value="overview">{t("overview")}</TabsTrigger>
           <TabsTrigger value="allergies">{t("allergies")}</TabsTrigger>
