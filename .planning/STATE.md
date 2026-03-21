@@ -4,14 +4,29 @@ milestone: v1.0
 milestone_name: milestone
 status: in-progress
 stopped_at: Completed 10.1-06-PLAN.md
-last_updated: "2026-03-21T11:00:24.216Z"
+last_updated: "2026-03-21T11:04:13.708Z"
 last_activity: "2026-03-13 - Completed quick task 2: Add Serilog with file output for development"
 progress:
   total_phases: 19
   completed_phases: 16
   total_plans: 291
-  completed_plans: 284
-  percent: 97
+  completed_plans: 285
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: in-progress
+stopped_at: Completed 10.1-07-PLAN.md
+last_updated: "2026-03-21T11:03:00Z"
+last_activity: "2026-03-21 - Completed 10.1-07 audit log IDs, examination navigation, dashboard stats"
+progress:
+  total_phases: 19
+  completed_phases: 16
+  total_plans: 291
+  completed_plans: 285
+  percent: 98
 ---
 
 ---
@@ -1402,6 +1417,7 @@ Recent decisions affecting current work:
 - [Phase 10.1]: Used Zod superRefine for DOB/Gender conditional validation to catch errors client-side
 - [Phase 10.1]: Use silent refresh via HTTP-only cookie on bootstrap instead of zustand persist to avoid exposing tokens
 - [Phase 10.1-06]: Used shadcn Tooltip for calendar event hover info; mapped English appointment type names to i18n keys via lookup table
+- [Phase 10.1]: Dashboard stats endpoint placed in Patient module under /api/dashboard/stats
 
 ### Roadmap Evolution
 
