@@ -477,8 +477,8 @@ export function TreatmentSessionForm({
               <Controller
                 name="intervalOverrideReason"
                 control={form.control}
-                render={({ field }) => (
-                  <Field>
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid || undefined}>
                     <FieldLabel>{t("sessionForm.intervalOverrideReason")}</FieldLabel>
                     <AutoResizeTextarea
                       {...field}
@@ -487,7 +487,11 @@ export function TreatmentSessionForm({
                         field.onChange(e.target.value || null)
                       }
                       rows={2}
+                      aria-invalid={fieldState.invalid || undefined}
                     />
+                    {fieldState.error && (
+                      <FieldError>{fieldState.error.message}</FieldError>
+                    )}
                   </Field>
                 )}
               />
