@@ -204,7 +204,7 @@ function LineItemRow({
 
   return (
     <div>
-      <div className="grid grid-cols-[1fr_90px_130px_40px] gap-2 items-start">
+      <div className="grid grid-cols-[1fr_90px_130px_48px] gap-2 items-start">
         {/* Drug selector */}
         <Controller
           name={`lines.${index}.drugCatalogItemId`}
@@ -262,17 +262,19 @@ function LineItemRow({
         />
 
         {/* Remove */}
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          className="mt-0.5 h-9 w-9 p-0 text-destructive hover:text-destructive"
-          onClick={onRemove}
-          disabled={!canRemove}
-          title={tCommon("buttons.remove")}
-        >
-          <IconTrash className="h-4 w-4" />
-        </Button>
+        <div className="flex items-center justify-center">
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="mt-0.5 h-9 w-9 p-0 text-destructive hover:text-destructive"
+            onClick={onRemove}
+            disabled={!canRemove}
+            title={tCommon("buttons.remove")}
+          >
+            <IconTrash className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
 
       {/* Inline stock warning */}
@@ -517,7 +519,7 @@ export function OtcSaleForm({ onSuccess }: OtcSaleFormProps) {
         </div>
 
         {/* Column headers */}
-        <div className="grid grid-cols-[1fr_90px_130px_40px] gap-2 text-xs font-medium text-muted-foreground px-1">
+        <div className="grid grid-cols-[1fr_90px_130px_48px] gap-2 text-xs font-medium text-muted-foreground px-1">
           <span>{t("otcSale.drug")}</span>
           <span>{t("otcSale.quantity")}</span>
           <span>{t("otcSale.unitPrice")}</span>

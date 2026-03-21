@@ -117,6 +117,13 @@ export function ConsumableItemTable() {
         header: "Trạng thái",
         cell: ({ row }) => {
           const item = row.original
+          if (item.isOutOfStock || item.currentStock === 0) {
+            return (
+              <Badge variant="destructive" className="text-xs">
+                Hết hàng
+              </Badge>
+            )
+          }
           if (item.isLowStock) {
             return (
               <Badge
@@ -129,7 +136,7 @@ export function ConsumableItemTable() {
           }
           return (
             <Badge variant="outline" className="text-xs">
-              OK
+              Còn hàng
             </Badge>
           )
         },

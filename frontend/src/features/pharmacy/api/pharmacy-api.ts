@@ -61,6 +61,7 @@ export interface DrugInventoryDto {
   batchCount: number
   isLowStock: boolean
   hasExpiryAlert: boolean
+  isOutOfStock: boolean
 }
 
 export interface StockImportDto {

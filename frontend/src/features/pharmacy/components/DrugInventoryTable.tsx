@@ -262,25 +262,35 @@ export function DrugInventoryTable({ drugs }: DrugInventoryTableProps) {
         header: () => t("inventory.status"),
         cell: ({ row }) => {
           const drug = row.original
-          if (drug.hasExpiryAlert && drug.isLowStock) {
-            return (
-              <div className="flex flex-col gap-1">
-                <Badge variant="destructive" className="text-xs">{t("inventory.statusExpiry")}</Badge>
-                <Badge variant="outline" className="text-xs border-yellow-500 text-yellow-700 dark:text-yellow-400">{t("inventory.statusLow")}</Badge>
-              </div>
+          const badges: React.ReactNode[] = []
+
+          if (drug.hasExpiryAlert) {
+            badges.push(
+              <Badge key="expiry" variant="destructive" className="text-xs">{t("inventory.statusExpiry")}</Badge>
             )
           }
-          if (drug.hasExpiryAlert) {
-            return <Badge variant="destructive" className="text-xs">{t("inventory.statusExpiry")}</Badge>
-          }
-          if (drug.isLowStock) {
-            return (
-              <Badge variant="outline" className="text-xs border-yellow-500 text-yellow-700 dark:text-yellow-400">
+
+          if (drug.isOutOfStock || drug.totalStock === 0) {
+            badges.push(
+              <Badge key="oos" variant="destructive" className="text-xs">
+                {t("inventory.statusOutOfStock")}
+              </Badge>
+            )
+          } else if (drug.isLowStock) {
+            badges.push(
+              <Badge key="low" variant="outline" className="text-xs border-yellow-500 text-yellow-700 dark:text-yellow-400">
                 {t("inventory.statusLow")}
               </Badge>
             )
           }
-          return <Badge variant="outline" className="text-xs">{t("inventory.statusOk")}</Badge>
+
+          if (badges.length === 0) {
+            return <Badge variant="outline" className="text-xs">{t("inventory.statusOk")}</Badge>
+          }
+
+          return badges.length === 1 ? badges[0] : (
+            <div className="flex flex-col gap-1">{badges}</div>
+          )
         },
       }),
       columnHelper.display({

@@ -12,6 +12,7 @@ export interface ConsumableItemDto {
   minStockLevel: number
   isLowStock: boolean
   isActive: boolean
+  isOutOfStock: boolean
 }
 
 export interface ConsumableBatchDto {
