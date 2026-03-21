@@ -1,5 +1,9 @@
 using Patient.Application.Interfaces;
 using Shared.Domain;
+using Wolverine;
+using Scheduling.Contracts.Queries;
+using Clinical.Contracts.Dtos;
+using Treatment.Contracts.Queries;
 
 namespace Patient.Application.Features;
 
@@ -19,25 +23,33 @@ public sealed record DashboardStatsDto(
 
 /// <summary>
 /// Wolverine handler for dashboard statistics.
-/// Returns patient count from the Patient module.
-/// Appointment, visit, and treatment counts are provided by their respective endpoints.
+/// Aggregates counts from Patient, Scheduling, Clinical, and Treatment modules
+/// via IMessageBus cross-module queries.
 /// </summary>
 public static class GetDashboardStatsHandler
 {
     public static async Task<Result<DashboardStatsDto>> Handle(
         GetDashboardStatsQuery query,
         IPatientRepository patientRepository,
+        IMessageBus bus,
         CancellationToken cancellationToken)
     {
         var totalPatients = await patientRepository.GetActiveCountAsync(cancellationToken);
 
-        // TODO: activeVisits and activeTreatments require cross-module queries
-        // These are provided as 0 for now and will be wired when cross-module query infrastructure is added
+        // Cross-module queries via Wolverine message bus with graceful degradation
+        int todayAppointments = 0;
+        int activeVisits = 0;
+        int activeTreatments = 0;
+
+        try { todayAppointments = await bus.InvokeAsync<int>(new GetTodayAppointmentCountQuery(), cancellationToken); } catch { /* graceful degradation */ }
+        try { activeVisits = await bus.InvokeAsync<int>(new GetActiveVisitCountQuery(), cancellationToken); } catch { /* graceful degradation */ }
+        try { activeTreatments = await bus.InvokeAsync<int>(new GetActiveTreatmentCountQuery(), cancellationToken); } catch { /* graceful degradation */ }
+
         var stats = new DashboardStatsDto(
             TotalPatients: totalPatients,
-            TodayAppointments: 0,  // Will be populated from Scheduling module endpoint
-            ActiveVisits: 0,       // Will be populated from Clinical module endpoint
-            ActiveTreatments: 0);  // Will be populated from Treatment module endpoint
+            TodayAppointments: todayAppointments,
+            ActiveVisits: activeVisits,
+            ActiveTreatments: activeTreatments);
 
         return stats;
     }
