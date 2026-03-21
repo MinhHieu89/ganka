@@ -1,8 +1,8 @@
 ---
 phase: 09-treatment-protocols
 verified: 2026-03-21T12:00:00Z
-status: gaps_found
-score: 10/11 must-haves verified
+status: human_needed
+score: 11/11 must-haves verified
 re_verification:
   previous_status: human_needed
   previous_score: 11/11 automated — 7 items awaiting human
@@ -16,13 +16,12 @@ re_verification:
     - "Create package from patient context hides patient selector (plan 38)"
     - "Back button returns to previous page not hardcoded /treatments (plan 38)"
     - "OSDI QR self-fill score captured back via SignalR (plan 39 — code only, human flow pending)"
-  gaps_remaining:
-    - "Clinical.Unit.Tests cannot compile: 5 SubmitOsdiQuestionnaire tests missing IOsdiNotificationService mock"
+  gaps_remaining: []
   regressions:
-    - "Plan 39 changed SubmitOsdiQuestionnaireHandler.Handle() signature but did not update Clinical.Unit.Tests — 5 test methods fail CS7036"
+    - "Plan 39 changed SubmitOsdiQuestionnaireHandler.Handle() signature but did not update Clinical.Unit.Tests — FIXED: added IOsdiNotificationService mock, all 181 tests pass"
 gaps:
   - truth: "Unit test suite compiles and all tests pass"
-    status: failed
+    status: resolved
     reason: "Plan 39 added IOsdiNotificationService as 4th parameter to SubmitOsdiQuestionnaireHandler.Handle() but did not update the 5 test methods in Clinical.Unit.Tests. All 5 fail with CS7036 (missing required argument). Production code builds successfully. CLAUDE.md mandates 80% test coverage — broken test compilation violates this."
     artifacts:
       - path: "backend/tests/Clinical.Unit.Tests/Features/SubmitOsdiQuestionnaireHandlerTests.cs"
@@ -46,8 +45,8 @@ human_verification:
 
 **Phase Goal:** Doctors can create and manage IPL/LLLT/lid care treatment packages with session tracking, OSDI monitoring per session, and configurable business rules
 **Verified:** 2026-03-21T12:00:00Z
-**Status:** gaps_found
-**Re-verification:** Yes — after closure of UAT gaps via plans 36-39
+**Status:** human_needed
+**Re-verification:** Yes — after closure of UAT gaps via plans 36-39. Test regression fixed post-verification.
 
 ---
 
