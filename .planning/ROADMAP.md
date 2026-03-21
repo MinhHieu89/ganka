@@ -433,7 +433,7 @@ Plans:
   4. Doctor can modify a treatment protocol mid-course (add/remove sessions, change parameters) or switch a patient to a different treatment type, both requiring doctor approval
   5. Manager can process treatment cancellation with configurable refund deduction (10-20% fee), and consumables used per session are tracked and auto-deducted from the consumables warehouse
 
-**Plans**: 33 plans (29 original + 4 UAT gap closure)
+**Plans**: 39 plans (29 original + 10 UAT gap closure)
 
 Plans:
 - [ ] 09-01-PLAN.md -- Domain enums: TreatmentType, PackageStatus, PricingMode, SessionStatus
@@ -469,6 +469,12 @@ Plans:
 - [ ] 09-31-PLAN.md -- [UAT GAP] Extract shared TreatmentParameterFields + replace JSON textarea in package form
 - [ ] 09-32-PLAN.md -- [UAT GAP] i18n batch 1: ProtocolTemplateForm, PackageDetail, SessionForm, SessionCard
 - [ ] 09-33-PLAN.md -- [UAT GAP] i18n batch 2: remaining 8 treatment components
+- [ ] 09-34-PLAN.md -- [UAT GAP] ModifyPackageDialog structured parameter fields
+- [ ] 09-35-PLAN.md -- [UAT GAP] OSDI questionnaire card-based UI rewrite
+- [ ] 09-36-PLAN.md -- [UAT GAP] Fix pause/resume: broaden backend query + yellow badge on detail page
+- [ ] 09-37-PLAN.md -- [UAT GAP] Implement real manager PIN verification (Auth domain)
+- [ ] 09-38-PLAN.md -- [UAT GAP] Frontend fixes: interval warning, consumable lang, version history, patient context
+- [ ] 09-39-PLAN.md -- [UAT GAP] OSDI QR self-fill score capture via SignalR
 
 ### Phase 9.1: Fix Phase 09 Code Review Issues
 **Goal**: Resolve all critical and important bugs, missing requirement implementations, and quality gaps found during Phase 9 code review
