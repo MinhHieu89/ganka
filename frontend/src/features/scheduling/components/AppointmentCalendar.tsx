@@ -1,4 +1,4 @@
-import { useRef, useCallback } from "react"
+import { useRef, useCallback, useMemo } from "react"
 import FullCalendar from "@fullcalendar/react"
 import timeGridPlugin from "@fullcalendar/timegrid"
 import dayGridPlugin from "@fullcalendar/daygrid"
@@ -7,12 +7,6 @@ import momentTimezonePlugin from "@fullcalendar/moment-timezone"
 import type { EventClickArg, DateSelectArg, EventDropArg, EventContentArg } from "@fullcalendar/core"
 import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/shared/components/Tooltip"
 import { useAppointmentsForCalendar } from "@/features/scheduling/hooks/useAppointments"
 import { useRescheduleAppointment } from "@/features/scheduling/api/scheduling-api"
 import { Skeleton } from "@/shared/components/Skeleton"
@@ -23,34 +17,26 @@ interface AppointmentCalendarProps {
   onEventClick: (info: EventClickArg) => void
 }
 
-function EventContent({ event, timeText }: EventContentArg) {
-  const { i18n } = useTranslation("scheduling")
-  const props = event.extendedProps
-  const typeName =
-    i18n.language === "vi"
-      ? props.appointmentTypeNameVi || props.appointmentTypeName
-      : props.appointmentTypeName
-  const tooltipText = `${props.patientName}\n${typeName}\n${timeText}`
+function renderEventContent(lang: string) {
+  return function EventContent({ event, timeText }: EventContentArg) {
+    const props = event.extendedProps
+    const typeName =
+      lang === "vi"
+        ? props.appointmentTypeNameVi || props.appointmentTypeName
+        : props.appointmentTypeName
+    const tooltipText = `${props.patientName}\n${typeName}\n${timeText}`
 
-  return (
-    <TooltipProvider delayDuration={200}>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <div className="w-full overflow-hidden px-0.5 leading-tight">
-            <div className="truncate text-[11px] font-semibold">
-              {props.patientName}
-            </div>
-            <div className="truncate text-[10px] opacity-85">
-              {typeName}
-            </div>
-          </div>
-        </TooltipTrigger>
-        <TooltipContent side="top" className="max-w-[220px] whitespace-pre-line text-xs">
-          {tooltipText}
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
-  )
+    return (
+      <div className="w-full overflow-hidden px-0.5 leading-tight" title={tooltipText}>
+        <div className="truncate text-[11px] font-semibold">
+          {props.patientName}
+        </div>
+        <div className="truncate text-[10px] opacity-85">
+          {typeName}
+        </div>
+      </div>
+    )
+  }
 }
 
 export function AppointmentCalendar({
@@ -58,11 +44,12 @@ export function AppointmentCalendar({
   onSlotClick,
   onEventClick,
 }: AppointmentCalendarProps) {
-  const { t } = useTranslation("scheduling")
+  const { t, i18n } = useTranslation("scheduling")
   const calendarRef = useRef<FullCalendar>(null)
   const { events, businessHours, isLoading, handleDatesSet } =
     useAppointmentsForCalendar(doctorId)
   const reschedule = useRescheduleAppointment()
+  const eventContentRenderer = useMemo(() => renderEventContent(i18n.language), [i18n.language])
 
   const handleEventDrop = useCallback(
     (info: EventDropArg) => {
@@ -131,7 +118,7 @@ export function AppointmentCalendar({
         select={onSlotClick}
         eventClick={onEventClick}
         eventDrop={handleEventDrop}
-        eventContent={EventContent}
+        eventContent={eventContentRenderer}
         events={events}
         datesSet={handleDatesSet}
         timeZone="Asia/Ho_Chi_Minh"
