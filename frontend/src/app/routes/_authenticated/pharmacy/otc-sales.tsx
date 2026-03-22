@@ -136,7 +136,7 @@ function OtcSalesPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[480px_1fr]">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         {/* New sale form */}
         <Card>
           <CardHeader>
