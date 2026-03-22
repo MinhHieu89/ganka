@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react"
+import { useCallback } from "react"
 import { useForm, useFieldArray, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
@@ -9,7 +9,6 @@ import {
   IconPlus,
   IconTrash,
   IconLoader2,
-  IconSearch,
 } from "@tabler/icons-react"
 import { Button } from "@/shared/components/Button"
 import { Input } from "@/shared/components/Input"
@@ -24,23 +23,10 @@ import {
   SelectValue,
 } from "@/shared/components/Select"
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@/shared/components/Command"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/shared/components/Popover"
-import { cn } from "@/shared/lib/utils"
-import {
   useSuppliers,
-  useDrugCatalogList,
   useCreateStockImport,
 } from "@/features/pharmacy/api/pharmacy-queries"
+import { DrugCombobox } from "@/features/pharmacy/components/DrugCombobox"
 
 // ---- Schema ----
 
@@ -62,71 +48,6 @@ const stockImportSchema = z.object({
 })
 
 type StockImportValues = z.infer<typeof stockImportSchema>
-
-// ---- Drug search combobox ----
-
-interface DrugComboboxProps {
-  value: string
-  onSelect: (id: string, name: string) => void
-  disabled?: boolean
-}
-
-function DrugCombobox({ value, onSelect, disabled }: DrugComboboxProps) {
-  const { t } = useTranslation("pharmacy")
-  const [open, setOpen] = useState(false)
-  const { data: drugs } = useDrugCatalogList()
-
-  const selectedDrug = drugs?.find((d) => d.id === value)
-
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          type="button"
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          disabled={disabled}
-          className={cn(
-            "w-full justify-start text-left font-normal",
-            !selectedDrug && "text-muted-foreground",
-          )}
-        >
-          <IconSearch className="h-4 w-4 mr-2 shrink-0" />
-          {selectedDrug ? (
-            <span className="truncate">{selectedDrug.nameVi || selectedDrug.name}</span>
-          ) : (
-            t("stockImport.selectDrug")
-          )}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-72 p-0" align="start">
-        <Command>
-          <CommandInput placeholder={t("catalog.search")} />
-          <CommandEmpty>{t("catalog.empty")}</CommandEmpty>
-          <CommandGroup className="max-h-48 overflow-y-auto">
-            {(drugs ?? []).map((drug) => (
-              <CommandItem
-                key={drug.id}
-                value={drug.nameVi || drug.name}
-                keywords={[drug.name, drug.genericName ?? ""].filter(Boolean)}
-                onSelect={() => {
-                  onSelect(drug.id, drug.nameVi || drug.name)
-                  setOpen(false)
-                }}
-              >
-                <div>
-                  <div className="text-sm font-medium">{drug.nameVi || drug.name}</div>
-                  <div className="text-xs text-muted-foreground">{drug.genericName}</div>
-                </div>
-              </CommandItem>
-            ))}
-          </CommandGroup>
-        </Command>
-      </PopoverContent>
-    </Popover>
-  )
-}
 
 // ---- Main form ----
 
@@ -331,9 +252,9 @@ export function StockImportForm({ onSuccess }: StockImportFormProps) {
                 <Field data-invalid={fieldState.invalid || undefined}>
                   <DrugCombobox
                     value={f.value}
-                    onSelect={(id, name) => {
-                      form.setValue(`lines.${index}.drugCatalogItemId`, id, { shouldValidate: true, shouldDirty: true })
-                      form.setValue(`lines.${index}.drugName`, name)
+                    onSelect={(drug) => {
+                      form.setValue(`lines.${index}.drugCatalogItemId`, drug.id, { shouldValidate: true, shouldDirty: true })
+                      form.setValue(`lines.${index}.drugName`, drug.nameVi || drug.name)
                     }}
                   />
                   {fieldState.error && (

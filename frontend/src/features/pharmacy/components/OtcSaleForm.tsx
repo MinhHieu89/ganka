@@ -7,7 +7,6 @@ import { toast } from "sonner"
 import {
   IconPlus,
   IconTrash,
-  IconSearch,
   IconLoader2,
   IconUser,
   IconUserOff,
@@ -17,26 +16,14 @@ import { Button } from "@/shared/components/Button"
 import { Input } from "@/shared/components/Input"
 import { AutoResizeTextarea } from "@/shared/components/AutoResizeTextarea"
 import { Field, FieldLabel, FieldError } from "@/shared/components/Field"
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@/shared/components/Command"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/shared/components/Popover"
 import { Separator } from "@/shared/components/Separator"
 import { cn } from "@/shared/lib/utils"
 import {
-  useDrugCatalogList,
   useCreateOtcSale,
   useDrugAvailableStock,
 } from "@/features/pharmacy/api/pharmacy-queries"
 import type { DrugCatalogItemDto } from "@/features/pharmacy/api/pharmacy-api"
+import { DrugCombobox } from "@/features/pharmacy/components/DrugCombobox"
 
 // ---- Schema ----
 
@@ -55,93 +42,6 @@ const otcSaleSchema = z.object({
 })
 
 type OtcSaleValues = z.infer<typeof otcSaleSchema>
-
-// ---- Drug search combobox ----
-
-interface DrugComboboxProps {
-  value: string
-  onSelect: (drug: DrugCatalogItemDto) => void
-  disabled?: boolean
-}
-
-function DrugCombobox({ value, onSelect, disabled }: DrugComboboxProps) {
-  const { t } = useTranslation("pharmacy")
-  const [open, setOpen] = useState(false)
-  const [search, setSearch] = useState("")
-  const { data: drugs } = useDrugCatalogList()
-
-  const selectedDrug = drugs?.find((d) => d.id === value)
-
-  const filtered = drugs?.filter((d) => {
-    if (!search) return true
-    const s = search.toLowerCase()
-    return (
-      d.nameVi.toLowerCase().includes(s) ||
-      d.name.toLowerCase().includes(s) ||
-      d.genericName.toLowerCase().includes(s)
-    )
-  })
-
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <div>
-          <Button
-            type="button"
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            disabled={disabled}
-            className={cn(
-              "w-full justify-start text-left font-normal",
-              !selectedDrug && "text-muted-foreground",
-            )}
-          >
-            <IconSearch className="h-4 w-4 mr-2 shrink-0" />
-            {selectedDrug ? (
-              <span className="truncate">{selectedDrug.nameVi || selectedDrug.name}</span>
-            ) : (
-              t("otcSale.selectDrug")
-            )}
-          </Button>
-        </div>
-      </PopoverTrigger>
-      <PopoverContent className="w-80 p-0" align="start">
-        <Command shouldFilter={false}>
-          <CommandInput
-            placeholder={t("catalog.search")}
-            value={search}
-            onValueChange={setSearch}
-          />
-          <CommandEmpty>{t("catalog.empty")}</CommandEmpty>
-          <CommandGroup className="max-h-52 overflow-y-auto">
-            {(filtered ?? []).map((drug) => (
-              <CommandItem
-                key={drug.id}
-                value={drug.id}
-                onSelect={() => {
-                  onSelect(drug)
-                  setOpen(false)
-                  setSearch("")
-                }}
-              >
-                <div>
-                  <div className="text-sm font-medium">{drug.nameVi || drug.name}</div>
-                  <div className="text-xs text-muted-foreground">
-                    {drug.genericName}
-                    {drug.sellingPrice != null && drug.sellingPrice > 0 && (
-                      <span className="ml-2">{drug.sellingPrice.toLocaleString("vi-VN")} ₫/{drug.unit}</span>
-                    )}
-                  </div>
-                </div>
-              </CommandItem>
-            ))}
-          </CommandGroup>
-        </Command>
-      </PopoverContent>
-    </Popover>
-  )
-}
 
 // ---- Stock warning component ----
 
@@ -214,6 +114,13 @@ function LineItemRow({
               <DrugCombobox
                 value={f.value}
                 onSelect={(drug) => onDrugSelect(drug, index)}
+                renderExtra={(drug) =>
+                  drug.sellingPrice != null && drug.sellingPrice > 0 ? (
+                    <span className="ml-2">
+                      {drug.sellingPrice.toLocaleString("vi-VN")} /{drug.unit}
+                    </span>
+                  ) : null
+                }
               />
               {fieldState.error && (
                 <FieldError className="text-xs">{getError(fieldState.error)}</FieldError>
