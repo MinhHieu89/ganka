@@ -20,3 +20,11 @@ Resolved debug sessions. Used by `gsd-debugger` to surface known-pattern hypothe
 - **Files changed:** backend/src/Modules/Patient/Patient.Application/Features/RegisterPatient.cs, backend/src/Shared/Shared.Presentation/ResultExtensions.cs, frontend/src/features/patient/components/PatientRegistrationForm.tsx
 ---
 
+## drug-search-not-filtering — Drug search dropdown doesn't filter results on stock-import and otc-sales pages
+- **Date:** 2026-03-22
+- **Error patterns:** drug search, dropdown, filter not working, all drugs shown, CommandList missing, shouldFilter, server-side pagination, useDrugCatalogList, cmdk
+- **Root cause:** Three compounding issues: (1) Missing CommandList wrapper prevented cmdk from managing item visibility. (2) StockImportForm relied on cmdk built-in filtering instead of shouldFilter={false}. (3) useDrugCatalogList() only returned first 20 drugs from server due to pagination, so drugs beyond that limit could never appear regardless of client-side filtering.
+- **Fix:** Created shared DrugCombobox component using server-side search via useDrugCatalogSearch() when 2+ chars typed, shouldFilter={false}, CommandList, and pickedDrug local state to persist selection display after search clears. Removed duplicated inline implementations from both forms.
+- **Files changed:** frontend/src/features/pharmacy/components/DrugCombobox.tsx, frontend/src/features/pharmacy/components/StockImportForm.tsx, frontend/src/features/pharmacy/components/OtcSaleForm.tsx
+---
+
