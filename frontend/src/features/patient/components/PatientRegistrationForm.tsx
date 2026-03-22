@@ -160,7 +160,10 @@ export function PatientRegistrationForm({
         params: { patientId } as never,
       })
     } catch (error) {
-      // Check for phone duplicate error
+      const nonFieldErrors = handleServerValidationError(error, form.setError, {
+        Phone: "phone" as const,
+      })
+      // Override phone duplicate error with localized message
       const errorMessage = error instanceof Error ? error.message : ""
       if (
         errorMessage.toLowerCase().includes("phone") &&
@@ -170,9 +173,7 @@ export function PatientRegistrationForm({
           type: "server",
           message: t("validation.phoneDuplicate"),
         })
-        return
       }
-      const nonFieldErrors = handleServerValidationError(error, form.setError)
       if (nonFieldErrors.length > 0) {
         setNonFieldError(nonFieldErrors[0])
       }

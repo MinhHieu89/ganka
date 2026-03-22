@@ -68,7 +68,10 @@ public static class ResultExtensions
                 title: "Unauthorized",
                 statusCode: 401),
             "Error.NotFound" => Results.NotFound(),
-            "Error.Conflict" => Results.Conflict(new { error = error.Description }),
+            "Error.Conflict" => Results.Problem(
+                detail: error.Description,
+                title: "Conflict",
+                statusCode: 409),
             "Error.Validation" => Results.Problem(
                 detail: error.Description,
                 title: "Validation Error",

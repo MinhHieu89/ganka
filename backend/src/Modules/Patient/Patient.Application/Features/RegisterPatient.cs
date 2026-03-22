@@ -67,7 +67,11 @@ public static class RegisterPatientHandler
 
         var phoneExists = await patientRepository.PhoneExistsAsync(command.Phone, cancellationToken);
         if (phoneExists)
-            return Result<Guid>.Failure(Error.Conflict("A patient with this phone number already exists."));
+            return Result<Guid>.Failure(Error.ValidationWithDetails(
+                new Dictionary<string, string[]>
+                {
+                    ["Phone"] = ["A patient with this phone number already exists."]
+                }));
 
         // Use default branch for now
         var branchId = new BranchId(Guid.Parse("00000000-0000-0000-0000-000000000001"));
