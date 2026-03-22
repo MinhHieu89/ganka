@@ -159,6 +159,7 @@ export function AllergyForm({ open, onClose, patientId }: AllergyFormProps) {
                     className="w-[--radix-popover-trigger-width] p-0"
                     align="start"
                     onOpenAutoFocus={(e) => e.preventDefault()}
+                    onWheel={(e) => e.stopPropagation()}
                   >
                     <Command shouldFilter={false}>
                       <CommandList>
