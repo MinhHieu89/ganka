@@ -214,10 +214,10 @@ export function FrameCatalogTable({
 
         <Select value={materialFilter} onValueChange={setMaterialFilter}>
           <SelectTrigger className="w-36">
-            <SelectValue placeholder={t("frames.material")} />
+            <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value={ALL_VALUE}>{t("common.all")}</SelectItem>
+            <SelectItem value={ALL_VALUE}>{t("frames.material")}</SelectItem>
             {Object.entries(FRAME_MATERIAL_MAP).map(([value, label]) => (
               <SelectItem key={value} value={value}>
                 {t(label)}
@@ -228,10 +228,10 @@ export function FrameCatalogTable({
 
         <Select value={frameTypeFilter} onValueChange={setFrameTypeFilter}>
           <SelectTrigger className="w-36">
-            <SelectValue placeholder={t("frames.frameType")} />
+            <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value={ALL_VALUE}>{t("common.all")}</SelectItem>
+            <SelectItem value={ALL_VALUE}>{t("frames.frameType")}</SelectItem>
             {Object.entries(FRAME_TYPE_MAP).map(([value, label]) => (
               <SelectItem key={value} value={value}>
                 {t(label)}
@@ -242,10 +242,10 @@ export function FrameCatalogTable({
 
         <Select value={genderFilter} onValueChange={setGenderFilter}>
           <SelectTrigger className="w-32">
-            <SelectValue placeholder={t("frames.gender")} />
+            <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value={ALL_VALUE}>{t("common.all")}</SelectItem>
+            <SelectItem value={ALL_VALUE}>{t("frames.gender")}</SelectItem>
             {Object.entries(FRAME_GENDER_MAP).map(([value, label]) => (
               <SelectItem key={value} value={value}>
                 {t(label)}
@@ -265,7 +265,7 @@ export function FrameCatalogTable({
               setGlobalFilter("")
             }}
           >
-            {t("common.filter")}
+            {t("common.clearFilter")}
           </Button>
         )}
       </div>
@@ -281,13 +281,14 @@ export function FrameCatalogTable({
       {table.getPageCount() > 1 && (
         <div className="flex items-center justify-between">
           <p className="text-sm text-muted-foreground">
-            Showing {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1}
-            {" "}-{" "}
-            {Math.min(
-              (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize,
-              filteredFrames.length,
-            )}{" "}
-            of {filteredFrames.length} frames
+            {t("frames.showingResults", {
+              from: table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1,
+              to: Math.min(
+                (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize,
+                filteredFrames.length,
+              ),
+              total: filteredFrames.length,
+            })}
           </p>
           <div className="flex items-center gap-2">
             <Button
@@ -299,7 +300,10 @@ export function FrameCatalogTable({
               <IconChevronLeft className="h-4 w-4" />
             </Button>
             <span className="text-sm">
-              Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+              {t("frames.pageOf", {
+                current: table.getState().pagination.pageIndex + 1,
+                total: table.getPageCount(),
+              })}
             </span>
             <Button
               variant="outline"

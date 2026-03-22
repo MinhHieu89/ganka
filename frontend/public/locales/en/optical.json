@@ -41,7 +41,9 @@
     "scanBarcode": "Scan Barcode",
     "barcodeScanned": "Barcode scanned",
     "lowStock": "Low Stock",
-    "outOfStock": "Out of Stock"
+    "outOfStock": "Out of Stock",
+    "showingResults": "Showing {{from}} - {{to}} of {{total}} frames",
+    "pageOf": "Page {{current}} of {{total}}"
   },
   "lenses": {
     "title": "Lens Catalog",
@@ -272,6 +274,7 @@
     "inactive": "Inactive",
     "search": "Search",
     "filter": "Filter",
+    "clearFilter": "Clear Filter",
     "actions": "Actions",
     "edit": "Edit",
     "delete": "Delete",

@@ -41,7 +41,9 @@
     "scanBarcode": "Quét mã vạch",
     "barcodeScanned": "Đã quét mã vạch",
     "lowStock": "Sắp hết hàng",
-    "outOfStock": "Hết hàng"
+    "outOfStock": "Hết hàng",
+    "showingResults": "Hiển thị {{from}} - {{to}} trong {{total}} gọng kính",
+    "pageOf": "Trang {{current}} / {{total}}"
   },
   "lenses": {
     "title": "Danh mục tròng kính",
@@ -272,6 +274,7 @@
     "inactive": "Ngừng hoạt động",
     "search": "Tìm kiếm",
     "filter": "Lọc",
+    "clearFilter": "Xóa bộ lọc",
     "actions": "Thao tác",
     "edit": "Sửa",
     "delete": "Xóa",

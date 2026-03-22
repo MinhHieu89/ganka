@@ -6,6 +6,8 @@ export const FRAME_MATERIAL_MAP: Record<number, string> = {
   0: "enums.material.metal",
   1: "enums.material.plastic",
   2: "enums.material.titanium",
+  3: "enums.material.acetate",
+  4: "enums.material.stainlessSteel",
 }
 
 export const FRAME_TYPE_MAP: Record<number, string> = {
