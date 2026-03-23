@@ -46,7 +46,7 @@ function DashboardPage() {
           {tAuth("login.welcome")}{firstName ? `, ${firstName}` : ""}
         </h1>
         <p className="text-muted-foreground mt-1">
-          Ganka28 &middot; Ophthalmology Clinic Management
+          Ganka28 &middot; Clinic Management
         </p>
       </div>
 
