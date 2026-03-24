@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router"
+import { requirePermission } from "@/shared/utils/permission-guard"
 import { useState, useMemo, useCallback } from "react"
 import { useTranslation } from "react-i18next"
 import {
@@ -25,6 +26,7 @@ import {
 } from "@/features/pharmacy/api/pharmacy-queries"
 
 export const Route = createFileRoute("/_authenticated/pharmacy/suppliers")({
+  beforeLoad: () => requirePermission("Pharmacy.View"),
   component: SuppliersPage,
 })
 

@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router"
+import { requirePermission } from "@/shared/utils/permission-guard"
 import { useState, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import {
@@ -20,6 +21,7 @@ import type { StockImportDto } from "@/features/pharmacy/api/pharmacy-api"
 import { useStockImports } from "@/features/pharmacy/api/pharmacy-queries"
 
 export const Route = createFileRoute("/_authenticated/pharmacy/stock-import")({
+  beforeLoad: () => requirePermission("Pharmacy.Create"),
   component: StockImportPage,
 })
 
