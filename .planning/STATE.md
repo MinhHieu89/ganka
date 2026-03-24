@@ -2,16 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: completed
-stopped_at: Phase 12 context gathered
-last_updated: "2026-03-24T08:43:07.020Z"
-last_activity: "2026-03-13 - Completed quick task 2: Add Serilog with file output for development"
+status: Milestone complete
+stopped_at: Completed 12-03-PLAN.md
+last_updated: "2026-03-24T10:52:17.719Z"
 progress:
   total_phases: 21
-  completed_phases: 17
-  total_plans: 293
-  completed_plans: 291
-  percent: 96
+  completed_phases: 18
+  total_plans: 300
+  completed_plans: 297
 ---
 
 # Project State
@@ -21,16 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-02-28)
 
 **Core value:** Doctors can manage chronic eye disease patients (Dry Eye, Myopia Control) with structured data tracking, image comparison across visits, and treatment progress reporting
-**Current focus:** Phase 05.1: Fix Architecture Test Failures from Prior Phases
+**Current focus:** Phase 12 — fix-test-failures-verify-prt03
 
 ## Current Position
 
-Phase: 07-billing-finance
-Plan: 25 complete
-Status: Supplementary invoice & shift handlers complete
-Last activity: 2026-03-13 - Completed quick task 2: Add Serilog with file output for development
-
-Progress: [█████████░] 96%
+Phase: 12
+Plan: Not started
 
 ## Performance Metrics
 
@@ -293,6 +287,12 @@ Progress: [█████████░] 96%
 | Phase 10.1 P08 | 25min | 3 tasks | 9 files |
 | Phase 10.1 P09 | 8min | 2 tasks | 14 files |
 | Phase 10.1 P10 | 15min | 2 tasks | 1 files |
+| Phase 11 P00 | 5min | 1 tasks | 1 files |
+| Phase 11 P02 | 13min | 4 tasks | 32 files |
+| Phase 11 P01 | 25min | 3 tasks | 14 files |
+| Phase 12 P01 | 4min | 2 tasks | 2 files |
+| Phase 12 P02 | 15min | 1 tasks | 1 files |
+| Phase 12 P03 | 10min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -808,6 +808,14 @@ Recent decisions affecting current work:
 - [Phase 10.1]: Created shared formatVietnamDateTime utility for consistent timezone display
 - [Phase 10.1]: Dashboard stats use IMessageBus cross-module queries with try/catch graceful degradation
 - [Phase 10.1]: Extract ProblemDetails detail field for domain-specific dispensing error messages
+- [Phase 11]: Used file-based source scanning for permission enforcement tests instead of assembly reflection
+- [Phase 11]: No Admin permission constant needed; admin role gets all individual permissions via seeder
+- [Phase 11]: Dashboard stats endpoint accessible to all authenticated users (no RequirePermissions)
+- [Phase 11]: Consumables endpoints use Pharmacy permissions (shared permission module)
+- [Phase 12]: UTC enforcement at DTO constructor level (global convention per D-03) rather than per-handler DateTime.SpecifyKind
+- [Phase 12]: Remove AuthDataSeeder and DomainEventDispatcherInterceptor from test host to prevent Wolverine startup race condition
+- [Phase 12]: Seed full permission set + Admin role in BillingWebApplicationFactory for authenticated integration tests
+- [Phase 12]: Create all module DB tables in test database to prevent hosted service startup failures
 
 ### Roadmap Evolution
 
@@ -838,6 +846,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-24T08:43:07.013Z
-Stopped at: Phase 12 context gathered
-Resume file: .planning/phases/12-fix-test-failures-verify-prt03/12-CONTEXT.md
+Last session: 2026-03-24T10:34:13.437Z
+Stopped at: Completed 12-03-PLAN.md
+Resume file: None

@@ -22,7 +22,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 8: Optical Center** - Frame/lens inventory, glasses order tracking, warranty, and stocktaking (completed 2026-03-08)
 - [ ] **Phase 9: Treatment Protocols** - IPL/LLLT/lid care packages with session tracking and OSDI monitoring
 - [ ] **Phase 11: Granular Permission Enforcement** - Add granular permission authorization policies to all API endpoints and frontend route guards (gap closure)
-- [ ] **Phase 12: Fix Test Failures & Verify PRT-03** - Fix broken test suites and verify invoice/receipt printing (gap closure)
+- [x] **Phase 12: Fix Test Failures & Verify PRT-03** - Fix broken test suites and verify invoice/receipt printing (gap closure) (completed 2026-03-24)
 
 ## Phase Details
 
@@ -579,7 +579,7 @@ Plans:
   3. A user without the required permission gets 403 on backend and redirect on frontend
   4. Treatment routes and audit-logs (already guarded) remain working as reference
 
-**Plans:** 4 plans in 3 waves
+**Plans:** 0/4 plans executed
 
 Plans:
 - [ ] 11-00-PLAN.md — TDD RED: failing architecture test for permission enforcement coverage
@@ -602,9 +602,9 @@ Plans:
   5. PRT-03 verified: invoice print (A4) and receipt print (A5) endpoints return valid PDF, UI buttons trigger correctly
   6. Phase 05 VERIFICATION.md created with PRT-03 status
 
-**Plans:** 3 plans in 2 waves
+**Plans:** 3/3 plans complete
 
 Plans:
-- [ ] 12-01-PLAN.md — Fix Optical.Unit.Tests build failure and Scheduling.Unit.Tests UTC assertions
-- [ ] 12-02-PLAN.md — Fix Auth.Integration.Tests Wolverine startup in WebApplicationFactory
+- [x] 12-01-PLAN.md — Fix Optical.Unit.Tests build failure and Scheduling.Unit.Tests UTC assertions
+- [x] 12-02-PLAN.md — Fix Auth.Integration.Tests Wolverine startup in WebApplicationFactory
 - [ ] 12-03-PLAN.md — PRT-03 integration tests for invoice/receipt print endpoints + VERIFICATION.md

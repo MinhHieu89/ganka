@@ -12,8 +12,8 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **AUTH-01**: Staff can log in with credentials and receive JWT token with role-based claims
 - [x] **AUTH-02**: System supports roles: Doctor, Technician, Nurse, Cashier, Optical Staff, Manager, Accountant
 - [x] **AUTH-03**: Admin can configure granular permissions per role (CRUD per entity/action)
-- [ ] **AUTH-04**: User session persists with token refresh, times out after inactivity, supports logout
-- [ ] **AUTH-05**: System logs all login attempts, record access, and data views (access logging)
+- [x] **AUTH-04**: User session persists with token refresh, times out after inactivity, supports logout
+- [x] **AUTH-05**: System logs all login attempts, record access, and data views (access logging)
 
 ### Patient Management
 
@@ -128,7 +128,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **PRT-01**: System prints drug prescriptions with clinic header, doctor name, patient info, drug list with dosage
 - [x] **PRT-02**: System prints glasses prescriptions (optical Rx) with refraction parameters
-- [ ] **PRT-03**: System prints invoices/receipts with itemized charges and payment method
+- [x] **PRT-03**: System prints invoices/receipts with itemized charges and payment method
 - [x] **PRT-04**: System prints referral letters (giay chuyen vien) with patient info, diagnosis, reason
 - [x] **PRT-05**: System prints treatment consent forms with patient name, procedure type, date
 - [x] **PRT-06**: System prints pharmacy labels with patient name, drug name, dose, frequency, expiry
@@ -233,8 +233,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUTH-01 | Phase 1 | Complete |
 | AUTH-02 | Phase 1 | Complete |
 | AUTH-03 | Phase 1 | Complete |
-| AUTH-04 | Phase 11 | Pending |
-| AUTH-05 | Phase 11 | Pending |
+| AUTH-04 | Phase 11 | Complete |
+| AUTH-05 | Phase 11 | Complete |
 | PAT-01 | Phase 2 | Complete |
 | PAT-02 | Phase 2 | Complete |
 | PAT-03 | Phase 2 | Complete |
@@ -295,7 +295,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | OPT-04 | Phase 8 | Complete |
 | OPT-05 | Phase 8 | Complete |
 | OPT-06 | Phase 8 | Complete |
-| OPT-07 | Phase 12 | Pending |
+| OPT-07 | Phase 12 | Complete |
 | OPT-08 | Phase 8 | Complete |
 | OPT-09 | Phase 8 | Complete |
 | FIN-01 | Phase 7 | Complete |
@@ -310,7 +310,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FIN-10 | Phase 7 | Complete |
 | PRT-01 | Phase 5 | Complete |
 | PRT-02 | Phase 5 | Complete |
-| PRT-03 | Phase 12 | Pending |
+| PRT-03 | Phase 12 | Complete |
 | PRT-04 | Phase 5 | Complete |
 | PRT-05 | Phase 5 | Complete |
 | PRT-06 | Phase 5 | Complete |
