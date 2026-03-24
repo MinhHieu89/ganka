@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router"
+import { requirePermission } from "@/shared/utils/permission-guard"
 import { useTranslation } from "react-i18next"
 import { format } from "date-fns"
 import {
@@ -29,6 +30,7 @@ import {
 import { useBillingHub, type ConnectionStatus } from "@/features/billing/hooks/use-billing-hub"
 
 export const Route = createFileRoute("/_authenticated/billing/")({
+  beforeLoad: () => requirePermission("Billing.View"),
   component: BillingDashboard,
 })
 
