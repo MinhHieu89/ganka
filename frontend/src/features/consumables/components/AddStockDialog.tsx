@@ -1,7 +1,9 @@
-import { useEffect } from "react"
+import { useEffect, useMemo } from "react"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
+import { useTranslation } from "react-i18next"
+import { createValidationMessages } from "@/shared/lib/validation"
 import { toast } from "sonner"
 import { format } from "date-fns"
 import { IconLoader2 } from "@tabler/icons-react"
@@ -26,20 +28,26 @@ const TRACKING_MODE_SIMPLE = 1
 
 // ---- Schemas ----
 
-const simpleStockSchema = z.object({
-  quantity: z.coerce.number().int().min(1, "Số lượng phải >= 1"),
-  notes: z.string().max(500).optional().or(z.literal("")),
-})
+function createSimpleStockSchema(t: (key: string, opts?: Record<string, unknown>) => string) {
+  const v = createValidationMessages(t)
+  return z.object({
+    quantity: z.coerce.number().int().min(1, v.minValue(1)),
+    notes: z.string().max(500).optional().or(z.literal("")),
+  })
+}
 
-const expiryStockSchema = z.object({
-  quantity: z.coerce.number().int().min(1, "Số lượng phải >= 1"),
-  batchNumber: z.string().min(1, "Bắt buộc").max(100),
-  expiryDate: z.date({ required_error: "Bắt buộc" }),
-  notes: z.string().max(500).optional().or(z.literal("")),
-})
+function createExpiryStockSchema(t: (key: string, opts?: Record<string, unknown>) => string) {
+  const v = createValidationMessages(t)
+  return z.object({
+    quantity: z.coerce.number().int().min(1, v.minValue(1)),
+    batchNumber: z.string().min(1, v.required).max(100),
+    expiryDate: z.date({ required_error: v.required }),
+    notes: z.string().max(500).optional().or(z.literal("")),
+  })
+}
 
-type SimpleStockValues = z.infer<typeof simpleStockSchema>
-type ExpiryStockValues = z.infer<typeof expiryStockSchema>
+type SimpleStockValues = z.infer<ReturnType<typeof createSimpleStockSchema>>
+type ExpiryStockValues = z.infer<ReturnType<typeof createExpiryStockSchema>>
 
 // ---- Props ----
 
@@ -60,8 +68,10 @@ function SimpleStockForm({
   open: boolean
   onOpenChange: (open: boolean) => void
 }) {
+  const { t: tCommon } = useTranslation("common")
   const addStock = useAddConsumableStock()
 
+  const simpleStockSchema = useMemo(() => createSimpleStockSchema(tCommon), [tCommon])
   const form = useForm<SimpleStockValues>({
     resolver: zodResolver(simpleStockSchema),
     defaultValues: { quantity: 1, notes: "" },
@@ -153,8 +163,10 @@ function ExpiryTrackedForm({
   open: boolean
   onOpenChange: (open: boolean) => void
 }) {
+  const { t: tCommon } = useTranslation("common")
   const addStock = useAddConsumableStock()
 
+  const expiryStockSchema = useMemo(() => createExpiryStockSchema(tCommon), [tCommon])
   const form = useForm<ExpiryStockValues>({
     resolver: zodResolver(expiryStockSchema),
     defaultValues: {

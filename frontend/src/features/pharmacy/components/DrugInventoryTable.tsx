@@ -26,6 +26,7 @@ import { Field, FieldLabel, FieldError } from "@/shared/components/Field"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
+import { createValidationMessages } from "@/shared/lib/validation"
 import { toast } from "sonner"
 import { IconLoader2 } from "@tabler/icons-react"
 import { type DrugInventoryDto, DRUG_FORM_MAP } from "@/features/pharmacy/api/pharmacy-api"
@@ -39,11 +40,14 @@ interface DrugInventoryTableProps {
 const columnHelper = createColumnHelper<DrugInventoryDto>()
 
 // Pricing dialog schema
-const pricingSchema = z.object({
-  sellingPrice: z.coerce.number().min(0, "Must be >= 0"),
-  minStockLevel: z.coerce.number().int().min(0, "Must be >= 0"),
-})
-type PricingValues = z.infer<typeof pricingSchema>
+function createPricingSchema(t: (key: string, opts?: Record<string, unknown>) => string) {
+  const v = createValidationMessages(t)
+  return z.object({
+    sellingPrice: z.coerce.number().min(0, v.mustBeNonNegative),
+    minStockLevel: z.coerce.number().int().min(0, v.mustBeNonNegative),
+  })
+}
+type PricingValues = z.infer<ReturnType<typeof createPricingSchema>>
 
 interface EditPricingDialogProps {
   drug: DrugInventoryDto | null
@@ -56,6 +60,7 @@ function EditPricingDialog({ drug, open, onOpenChange }: EditPricingDialogProps)
   const { t: tCommon } = useTranslation("common")
   const updatePricing = useUpdateDrugPricing()
 
+  const pricingSchema = useMemo(() => createPricingSchema(tCommon), [tCommon])
   const form = useForm<PricingValues>({
     resolver: zodResolver(pricingSchema),
     defaultValues: {

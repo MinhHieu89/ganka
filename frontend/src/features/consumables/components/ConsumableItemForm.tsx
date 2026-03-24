@@ -1,7 +1,9 @@
-import { useEffect } from "react"
+import { useEffect, useMemo } from "react"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
+import { useTranslation } from "react-i18next"
+import { createValidationMessages } from "@/shared/lib/validation"
 import { toast } from "sonner"
 import { IconLoader2 } from "@tabler/icons-react"
 import {
@@ -28,15 +30,18 @@ const TRACKING_MODE_SIMPLE = 1
 
 // ---- Schema ----
 
-const consumableItemSchema = z.object({
-  name: z.string().min(1, "required").max(200),
-  nameVi: z.string().min(1, "required").max(200),
-  unit: z.string().min(1, "required").max(50),
-  trackingMode: z.number().int().min(0).max(1),
-  minStockLevel: z.coerce.number().int().min(0, "Must be >= 0"),
-})
+function createConsumableItemSchema(t: (key: string, opts?: Record<string, unknown>) => string) {
+  const v = createValidationMessages(t)
+  return z.object({
+    name: z.string().min(1, v.required).max(200),
+    nameVi: z.string().min(1, v.required).max(200),
+    unit: z.string().min(1, v.required).max(50),
+    trackingMode: z.number().int().min(0).max(1),
+    minStockLevel: z.coerce.number().int().min(0, v.mustBeNonNegative),
+  })
+}
 
-type ConsumableItemValues = z.infer<typeof consumableItemSchema>
+type ConsumableItemValues = z.infer<ReturnType<typeof createConsumableItemSchema>>
 
 // ---- Props ----
 
@@ -55,9 +60,11 @@ export function ConsumableItemForm({
   open,
   onOpenChange,
 }: ConsumableItemFormProps) {
+  const { t: tCommon } = useTranslation("common")
   const createMutation = useCreateConsumableItem()
   const updateMutation = useUpdateConsumableItem()
 
+  const consumableItemSchema = useMemo(() => createConsumableItemSchema(tCommon), [tCommon])
   const form = useForm<ConsumableItemValues>({
     resolver: zodResolver(consumableItemSchema),
     defaultValues: {
@@ -118,12 +125,6 @@ export function ConsumableItemForm({
     }
   }
 
-  const getErrorMessage = (error: { message?: string } | undefined): string | undefined => {
-    if (!error?.message) return undefined
-    if (error.message === "required") return "Bắt buộc"
-    return error.message
-  }
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
@@ -147,7 +148,7 @@ export function ConsumableItemForm({
                   aria-invalid={fieldState.invalid || undefined}
                 />
                 {fieldState.error && (
-                  <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                  <FieldError>{fieldState.error?.message}</FieldError>
                 )}
               </Field>
             )}
@@ -166,7 +167,7 @@ export function ConsumableItemForm({
                   aria-invalid={fieldState.invalid || undefined}
                 />
                 {fieldState.error && (
-                  <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                  <FieldError>{fieldState.error?.message}</FieldError>
                 )}
               </Field>
             )}
@@ -186,7 +187,7 @@ export function ConsumableItemForm({
                     aria-invalid={fieldState.invalid || undefined}
                   />
                   {fieldState.error && (
-                    <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                    <FieldError>{fieldState.error?.message}</FieldError>
                   )}
                 </Field>
               )}
@@ -208,7 +209,7 @@ export function ConsumableItemForm({
                     aria-invalid={fieldState.invalid || undefined}
                   />
                   {fieldState.error && (
-                    <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                    <FieldError>{fieldState.error?.message}</FieldError>
                   )}
                 </Field>
               )}

@@ -1,7 +1,8 @@
-import { useState, useMemo, useCallback } from "react"
+import { useState, useMemo, useCallback, useEffect } from "react"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
+import { createValidationMessages } from "@/shared/lib/validation"
 import { toast } from "sonner"
 import { format } from "date-fns"
 import { useTranslation } from "react-i18next"
@@ -49,22 +50,28 @@ const TREATMENT_TYPE_STYLES: Record<string, string> = {
 
 // -- Approve schema --
 
-const approveSchema = z.object({
-  deductionPercent: z.coerce
-    .number()
-    .min(0, "Phan tram khau tru khong duoc am")
-    .max(100, "Phan tram khau tru khong duoc vuot qua 100"),
-})
+function createApproveSchema(t: (key: string, opts?: Record<string, unknown>) => string) {
+  const v = createValidationMessages(t)
+  return z.object({
+    deductionPercent: z.coerce
+      .number()
+      .min(0, v.mustBeNonNegative)
+      .max(100, v.percentMax100),
+  })
+}
 
-type ApproveFormValues = z.infer<typeof approveSchema>
+type ApproveFormValues = z.infer<ReturnType<typeof createApproveSchema>>
 
 // -- Reject schema --
 
-const rejectSchema = z.object({
-  rejectionReason: z.string().min(1, "Ly do tu choi la bat buoc"),
-})
+function createRejectSchema(t: (key: string, opts?: Record<string, unknown>) => string) {
+  const v = createValidationMessages(t)
+  return z.object({
+    rejectionReason: z.string().min(1, v.reasonRequired),
+  })
+}
 
-type RejectFormValues = z.infer<typeof rejectSchema>
+type RejectFormValues = z.infer<ReturnType<typeof createRejectSchema>>
 
 // -- Helpers --
 
@@ -100,11 +107,13 @@ interface ApproveDialogProps {
 
 function ApproveDialog({ open, onOpenChange, pkg }: ApproveDialogProps) {
   const { t } = useTranslation("treatment")
+  const { t: tCommon } = useTranslation("common")
   const user = useAuthStore((s) => s.user)
   const approveMutation = useApproveCancellation()
 
   const defaultDeduction = pkg ? getDefaultDeductionPercent(pkg) : 15
 
+  const approveSchema = useMemo(() => createApproveSchema(tCommon), [tCommon])
   const form = useForm<ApproveFormValues>({
     resolver: zodResolver(approveSchema),
     defaultValues: {
@@ -245,9 +254,11 @@ interface RejectDialogProps {
 
 function RejectDialog({ open, onOpenChange, pkg }: RejectDialogProps) {
   const { t } = useTranslation("treatment")
+  const { t: tCommon } = useTranslation("common")
   const user = useAuthStore((s) => s.user)
   const rejectMutation = useRejectCancellation()
 
+  const rejectSchema = useMemo(() => createRejectSchema(tCommon), [tCommon])
   const form = useForm<RejectFormValues>({
     resolver: zodResolver(rejectSchema),
     defaultValues: {

@@ -1,7 +1,8 @@
-import { useEffect } from "react"
+import { useEffect, useMemo } from "react"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
+import { createValidationMessages } from "@/shared/lib/validation"
 import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
 import { IconLoader2 } from "@tabler/icons-react"
@@ -22,12 +23,15 @@ import {
   useUpdateSupplier,
 } from "@/features/pharmacy/api/pharmacy-queries"
 
-const supplierSchema = z.object({
-  name: z.string().min(1, "required").max(200),
-  contactInfo: z.string().max(500).optional().or(z.literal("")),
-})
+function createSupplierSchema(t: (key: string, opts?: Record<string, unknown>) => string) {
+  const v = createValidationMessages(t)
+  return z.object({
+    name: z.string().min(1, v.required).max(200),
+    contactInfo: z.string().max(500).optional().or(z.literal("")),
+  })
+}
 
-type SupplierFormValues = z.infer<typeof supplierSchema>
+type SupplierFormValues = z.infer<ReturnType<typeof createSupplierSchema>>
 
 interface SupplierFormProps {
   supplier?: SupplierDto
@@ -50,6 +54,7 @@ export function SupplierForm({
   const createMutation = useCreateSupplier()
   const updateMutation = useUpdateSupplier()
 
+  const supplierSchema = useMemo(() => createSupplierSchema(tCommon), [tCommon])
   const form = useForm<SupplierFormValues>({
     resolver: zodResolver(supplierSchema),
     defaultValues: {
@@ -97,14 +102,6 @@ export function SupplierForm({
     }
   }
 
-  const getErrorMessage = (
-    error: { message?: string } | undefined,
-  ): string | undefined => {
-    if (!error?.message) return undefined
-    if (error.message === "required") return tCommon("validation.required")
-    return error.message
-  }
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
@@ -129,7 +126,7 @@ export function SupplierForm({
                   aria-invalid={fieldState.invalid || undefined}
                 />
                 {fieldState.error && (
-                  <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                  <FieldError>{fieldState.error?.message}</FieldError>
                 )}
               </Field>
             )}
@@ -150,7 +147,7 @@ export function SupplierForm({
                   aria-invalid={fieldState.invalid || undefined}
                 />
                 {fieldState.error && (
-                  <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                  <FieldError>{fieldState.error?.message}</FieldError>
                 )}
               </Field>
             )}

@@ -1,7 +1,8 @@
-import { useCallback, useState, useEffect } from "react"
+import { useCallback, useState, useEffect, useMemo } from "react"
 import { useForm, useFieldArray, Controller, useWatch } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
+import { createValidationMessages } from "@/shared/lib/validation"
 import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
 import {
@@ -27,21 +28,24 @@ import { DrugCombobox } from "@/features/pharmacy/components/DrugCombobox"
 
 // ---- Schema ----
 
-const lineSchema = z.object({
-  drugCatalogItemId: z.string().min(1, "required"),
-  drugName: z.string().min(1),
-  quantity: z.coerce.number().int().min(1, "must be >= 1"),
-  unitPrice: z.coerce.number().min(0, "must be >= 0"),
-})
+function createOtcSaleSchema(t: (key: string, opts?: Record<string, unknown>) => string) {
+  const v = createValidationMessages(t)
+  const lineSchema = z.object({
+    drugCatalogItemId: z.string().min(1, v.required),
+    drugName: z.string().min(1),
+    quantity: z.coerce.number().int().min(1, v.minValue(1)),
+    unitPrice: z.coerce.number().min(0, v.mustBeNonNegative),
+  })
 
-const otcSaleSchema = z.object({
-  isAnonymous: z.boolean(),
-  customerName: z.string().max(200).optional().or(z.literal("")),
-  notes: z.string().max(500).optional().or(z.literal("")),
-  lines: z.array(lineSchema).min(1, "At least one item required"),
-})
+  return z.object({
+    isAnonymous: z.boolean(),
+    customerName: z.string().max(200).optional().or(z.literal("")),
+    notes: z.string().max(500).optional().or(z.literal("")),
+    lines: z.array(lineSchema).min(1, v.minItems(1)),
+  })
+}
 
-type OtcSaleValues = z.infer<typeof otcSaleSchema>
+type OtcSaleValues = z.infer<ReturnType<typeof createOtcSaleSchema>>
 
 // ---- Stock warning component ----
 
@@ -250,6 +254,7 @@ export function OtcSaleForm({ onSuccess }: OtcSaleFormProps) {
   const { t: tCommon } = useTranslation("common")
   const createOtcSale = useCreateOtcSale()
 
+  const otcSaleSchema = useMemo(() => createOtcSaleSchema(tCommon), [tCommon])
   const form = useForm<OtcSaleValues>({
     resolver: zodResolver(otcSaleSchema),
     defaultValues: {
@@ -349,7 +354,6 @@ export function OtcSaleForm({ onSuccess }: OtcSaleFormProps) {
     error: { message?: string } | undefined,
   ): string | undefined => {
     if (!error?.message) return undefined
-    if (error.message === "required") return tCommon("validation.required")
     return error.message
   }
 

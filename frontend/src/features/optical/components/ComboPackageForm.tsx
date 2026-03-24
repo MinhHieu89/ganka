@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
+import { createValidationMessages } from "@/shared/lib/validation"
 import { toast } from "sonner"
 import { IconLoader2, IconTag } from "@tabler/icons-react"
 import {
@@ -34,34 +35,37 @@ import {
 
 const NONE_VALUE = "__none__"
 
-const comboSchema = z
-  .object({
-    name: z.string().min(1, "required").max(200),
-    description: z.string().max(500).optional().or(z.literal("")),
-    frameId: z.string().optional(),
-    lensCatalogItemId: z.string().optional(),
-    comboPrice: z.coerce.number().positive("Combo price must be greater than 0"),
-    originalTotalPrice: z.coerce
-      .number()
-      .positive()
-      .optional()
-      .or(z.literal(0))
-      .transform((v) => (v === 0 ? undefined : v)),
-  })
-  .refine(
-    (data) => {
-      if (data.originalTotalPrice && data.originalTotalPrice > 0) {
-        return data.comboPrice < data.originalTotalPrice
-      }
-      return true
-    },
-    {
-      message: "Combo price must be less than the original total price to show savings",
-      path: ["comboPrice"],
-    },
-  )
+function createComboSchema(t: (key: string, opts?: Record<string, unknown>) => string) {
+  const v = createValidationMessages(t)
+  return z
+    .object({
+      name: z.string().min(1, v.required).max(200),
+      description: z.string().max(500).optional().or(z.literal("")),
+      frameId: z.string().optional(),
+      lensCatalogItemId: z.string().optional(),
+      comboPrice: z.coerce.number().positive(v.mustBePositive),
+      originalTotalPrice: z.coerce
+        .number()
+        .positive()
+        .optional()
+        .or(z.literal(0))
+        .transform((val) => (val === 0 ? undefined : val)),
+    })
+    .refine(
+      (data) => {
+        if (data.originalTotalPrice && data.originalTotalPrice > 0) {
+          return data.comboPrice < data.originalTotalPrice
+        }
+        return true
+      },
+      {
+        message: "Combo price must be less than the original total price to show savings",
+        path: ["comboPrice"],
+      },
+    )
+}
 
-type ComboFormValues = z.infer<typeof comboSchema>
+type ComboFormValues = z.infer<ReturnType<typeof createComboSchema>>
 
 interface ComboPackageFormProps {
   combo?: ComboPackageDto
@@ -77,6 +81,7 @@ export function ComboPackageForm({
   onSuccess,
 }: ComboPackageFormProps) {
   const { t } = useTranslation("optical")
+  const { t: tCommon } = useTranslation("common")
   const isEdit = !!combo
 
   const createMutation = useCreateComboPackage()
@@ -87,6 +92,7 @@ export function ComboPackageForm({
 
   const frames = framesResult?.items ?? []
 
+  const comboSchema = useMemo(() => createComboSchema(tCommon), [tCommon])
   const form = useForm<ComboFormValues>({
     resolver: zodResolver(comboSchema),
     defaultValues: {
@@ -184,12 +190,6 @@ export function ComboPackageForm({
     }
   }
 
-  const getErrorMessage = (error: { message?: string } | undefined): string | undefined => {
-    if (!error?.message) return undefined
-    if (error.message === "required") return "This field is required"
-    return error.message
-  }
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg">
@@ -214,7 +214,7 @@ export function ComboPackageForm({
                   aria-invalid={fieldState.invalid || undefined}
                 />
                 {fieldState.error && (
-                  <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                  <FieldError>{fieldState.error?.message}</FieldError>
                 )}
               </Field>
             )}
@@ -235,7 +235,7 @@ export function ComboPackageForm({
                   aria-invalid={fieldState.invalid || undefined}
                 />
                 {fieldState.error && (
-                  <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                  <FieldError>{fieldState.error?.message}</FieldError>
                 )}
               </Field>
             )}
@@ -270,7 +270,7 @@ export function ComboPackageForm({
                   </SelectContent>
                 </Select>
                 {fieldState.error && (
-                  <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                  <FieldError>{fieldState.error?.message}</FieldError>
                 )}
               </Field>
             )}
@@ -308,7 +308,7 @@ export function ComboPackageForm({
                   </SelectContent>
                 </Select>
                 {fieldState.error && (
-                  <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                  <FieldError>{fieldState.error?.message}</FieldError>
                 )}
               </Field>
             )}
@@ -331,7 +331,7 @@ export function ComboPackageForm({
                     aria-invalid={fieldState.invalid || undefined}
                   />
                   {fieldState.error && (
-                    <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                    <FieldError>{fieldState.error?.message}</FieldError>
                   )}
                 </Field>
               )}
@@ -361,7 +361,7 @@ export function ComboPackageForm({
                     aria-invalid={fieldState.invalid || undefined}
                   />
                   {fieldState.error && (
-                    <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                    <FieldError>{fieldState.error?.message}</FieldError>
                   )}
                 </Field>
               )}

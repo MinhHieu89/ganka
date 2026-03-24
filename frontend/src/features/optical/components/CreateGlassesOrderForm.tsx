@@ -1,8 +1,9 @@
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useMemo, useCallback } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm, Controller, useFieldArray } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
+import { createValidationMessages } from "@/shared/lib/validation"
 import { toast } from "sonner"
 import {
   IconLoader2,
@@ -37,26 +38,31 @@ import { usePatientList } from "@/features/patient/api/patient-api"
 import { useCreateGlassesOrder, useComboPackages, useFrames, useLensCatalog } from "@/features/optical/api/optical-queries"
 import { useActiveVisits } from "@/features/clinical/api/clinical-api"
 
-const orderItemSchema = z.object({
-  frameId: z.string().nullable().optional(),
-  lensCatalogItemId: z.string().nullable().optional(),
-  description: z.string().min(1, "Description is required"),
-  unitPrice: z.coerce.number().min(0, "Price must be non-negative"),
-  quantity: z.coerce.number().int().min(1, "Quantity must be at least 1"),
-})
+function createOrderSchemas(t: (key: string, opts?: Record<string, unknown>) => string) {
+  const v = createValidationMessages(t)
+  const orderItemSchema = z.object({
+    frameId: z.string().nullable().optional(),
+    lensCatalogItemId: z.string().nullable().optional(),
+    description: z.string().min(1, v.required),
+    unitPrice: z.coerce.number().min(0, v.mustBeNonNegative),
+    quantity: z.coerce.number().int().min(1, v.minValue(1)),
+  })
 
-const createOrderSchema = z.object({
-  patientId: z.string().min(1, "Patient is required"),
-  visitId: z.string().min(1, "Visit is required"),
-  opticalPrescriptionId: z.string().min(1, "Optical prescription is required"),
-  processingType: z.number({ required_error: "Processing type is required" }),
-  estimatedDeliveryDate: z.date().nullable().optional(),
-  comboPackageId: z.string().nullable().optional(),
-  notes: z.string().nullable().optional(),
-  items: z.array(orderItemSchema).min(1, "At least one item is required"),
-})
+  const orderSchema = z.object({
+    patientId: z.string().min(1, v.required),
+    visitId: z.string().min(1, v.required),
+    opticalPrescriptionId: z.string().min(1, v.required),
+    processingType: z.number({ required_error: v.required }),
+    estimatedDeliveryDate: z.date().nullable().optional(),
+    comboPackageId: z.string().nullable().optional(),
+    notes: z.string().nullable().optional(),
+    items: z.array(orderItemSchema).min(1, v.minItems(1)),
+  })
 
-type CreateOrderFormValues = z.infer<typeof createOrderSchema>
+  return orderSchema
+}
+
+type CreateOrderFormValues = z.infer<ReturnType<typeof createOrderSchemas>>
 
 interface CreateGlassesOrderFormProps {
   open: boolean
@@ -65,6 +71,7 @@ interface CreateGlassesOrderFormProps {
 
 export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrderFormProps) {
   const { t } = useTranslation("optical")
+  const { t: tCommon } = useTranslation("common")
   const [patientSearch, setPatientSearch] = useState("")
   const [frameSearch, setFrameSearch] = useState("")
   const [selectedPatientId, setSelectedPatientId] = useState<string | undefined>()
@@ -83,8 +90,9 @@ export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrde
   const { data: lenses } = useLensCatalog()
   const { data: combos } = useComboPackages()
 
+  const orderSchema = useMemo(() => createOrderSchemas(tCommon), [tCommon])
   const form = useForm<CreateOrderFormValues>({
-    resolver: zodResolver(createOrderSchema),
+    resolver: zodResolver(orderSchema),
     defaultValues: {
       patientId: "",
       visitId: "",

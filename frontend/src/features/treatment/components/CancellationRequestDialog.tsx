@@ -1,7 +1,8 @@
-import { useMemo } from "react"
+import { useMemo, useCallback } from "react"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
+import { createValidationMessages } from "@/shared/lib/validation"
 import { toast } from "sonner"
 import { useTranslation } from "react-i18next"
 import { IconLoader2, IconAlertTriangle } from "@tabler/icons-react"
@@ -24,11 +25,14 @@ import type { TreatmentPackageDto } from "@/features/treatment/api/treatment-typ
 
 // -- Schema --
 
-const cancellationSchema = z.object({
-  reason: z.string().min(1, "Ly do la bat buoc"),
-})
+function createCancellationSchema(t: (key: string, opts?: Record<string, unknown>) => string) {
+  const v = createValidationMessages(t)
+  return z.object({
+    reason: z.string().min(1, v.reasonRequired),
+  })
+}
 
-type CancellationFormValues = z.infer<typeof cancellationSchema>
+type CancellationFormValues = z.infer<ReturnType<typeof createCancellationSchema>>
 
 // -- Treatment type badge styles --
 
@@ -52,8 +56,10 @@ export function CancellationRequestDialog({
   package: pkg,
 }: CancellationRequestDialogProps) {
   const { t } = useTranslation("treatment")
+  const { t: tCommon } = useTranslation("common")
   const requestMutation = useRequestCancellation()
 
+  const cancellationSchema = useMemo(() => createCancellationSchema(tCommon), [tCommon])
   const form = useForm<CancellationFormValues>({
     resolver: zodResolver(cancellationSchema),
     defaultValues: {

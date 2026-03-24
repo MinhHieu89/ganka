@@ -2,6 +2,7 @@ import { useEffect, useCallback, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm, Controller } from "react-hook-form"
 import { z } from "zod"
+import { createValidationMessages } from "@/shared/lib/validation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import {
   Dialog,
@@ -85,12 +86,14 @@ export function DrugPrescriptionForm({
   patientAllergies,
 }: DrugPrescriptionFormProps) {
   const { t, i18n } = useTranslation("clinical")
+  const { t: tCommon } = useTranslation("common")
 
   const schema = useMemo(
-    () =>
-      z.object({
+    () => {
+      const v = createValidationMessages(tCommon)
+      return z.object({
         drugCatalogItemId: z.string().nullable(),
-        drugName: z.string().min(1, t("prescription.drugName") + " required"),
+        drugName: z.string().min(1, v.required),
         genericName: z.string().nullable(),
         strength: z.string().nullable(),
         form: z.number(),
@@ -99,12 +102,13 @@ export function DrugPrescriptionForm({
         frequency: z.string(),
         durationDays: z.union([z.number().int().positive(), z.nan()]).nullable(),
         dosageOverride: z.string().nullable(),
-        quantity: z.number().int().positive(t("prescription.quantity") + " > 0"),
-        unit: z.string().min(1, t("prescription.unit") + " required"),
+        quantity: z.number().int().positive(v.mustBePositive),
+        unit: z.string().min(1, v.required),
         isOffCatalog: z.boolean(),
         hasAllergyWarning: z.boolean(),
-      }),
-    [t],
+      })
+    },
+    [tCommon],
   )
 
   type FormValues = z.infer<typeof schema>

@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
+import { createValidationMessages } from "@/shared/lib/validation"
 import { toast } from "sonner"
 import { IconLoader2, IconAlertTriangle, IconInfoCircle, IconShieldCheck } from "@tabler/icons-react"
 import { format, differenceInDays } from "date-fns"
@@ -46,17 +47,19 @@ const RESOLUTION_TYPE_MAP: Record<ResolutionType, number> = {
   Discount: 2,
 }
 
-const warrantyClaimSchema = z
-  .object({
-    glassesOrderId: z.string().min(1, "Please select a glasses order"),
-    resolutionType: z.enum(["Replace", "Repair", "Discount"] as const),
-    assessmentNotes: z
-      .string()
-      .min(10, "Assessment notes must be at least 10 characters")
-      .max(2000, "Assessment notes too long"),
-    discountAmount: z.number().positive("Discount amount must be positive").optional().nullable(),
-  })
-  .refine(
+function createWarrantyClaimSchema(t: (key: string, opts?: Record<string, unknown>) => string) {
+  const v = createValidationMessages(t)
+  return z
+    .object({
+      glassesOrderId: z.string().min(1, v.selectRequired),
+      resolutionType: z.enum(["Replace", "Repair", "Discount"] as const),
+      assessmentNotes: z
+        .string()
+        .min(10, v.minLength(10))
+        .max(2000, v.maxLength(2000)),
+      discountAmount: z.number().positive(v.mustBePositive).optional().nullable(),
+    })
+    .refine(
     (data) => {
       if (data.resolutionType === "Discount") {
         return data.discountAmount != null && data.discountAmount > 0
@@ -64,12 +67,13 @@ const warrantyClaimSchema = z
       return true
     },
     {
-      message: "Discount amount is required when resolution is Discount",
+      message: v.required,
       path: ["discountAmount"],
     },
   )
+}
 
-type WarrantyClaimFormValues = z.infer<typeof warrantyClaimSchema>
+type WarrantyClaimFormValues = z.infer<ReturnType<typeof createWarrantyClaimSchema>>
 
 interface WarrantyClaimFormProps {
   open: boolean
@@ -135,11 +139,13 @@ function WarrantyInfoPanel({
 
 export function WarrantyClaimForm({ open, onOpenChange }: WarrantyClaimFormProps) {
   const { t } = useTranslation("optical")
+  const { t: tCommon } = useTranslation("common")
   const { data: deliveredOrders = EMPTY_ORDERS, isLoading: ordersLoading } = useDeliveredOrders()
   const createMutation = useCreateWarrantyClaim()
 
   const [selectedOrder, setSelectedOrder] = useState<DeliveredOrderSummaryDto | undefined>()
 
+  const warrantyClaimSchema = useMemo(() => createWarrantyClaimSchema(tCommon), [tCommon])
   const form = useForm<WarrantyClaimFormValues>({
     resolver: zodResolver(warrantyClaimSchema),
     defaultValues: {
@@ -188,12 +194,6 @@ export function WarrantyClaimForm({ open, onOpenChange }: WarrantyClaimFormProps
     }
   }
 
-  const getErrorMessage = (error: { message?: string } | undefined): string | undefined => {
-    if (!error?.message) return undefined
-    if (error.message === "required") return "This field is required"
-    return error.message
-  }
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg">
@@ -240,7 +240,7 @@ export function WarrantyClaimForm({ open, onOpenChange }: WarrantyClaimFormProps
                   </SelectContent>
                 </Select>
                 {fieldState.error && (
-                  <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                  <FieldError>{fieldState.error?.message}</FieldError>
                 )}
               </Field>
             )}
@@ -289,7 +289,7 @@ export function WarrantyClaimForm({ open, onOpenChange }: WarrantyClaimFormProps
                   ))}
                 </RadioGroup>
                 {fieldState.error && (
-                  <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                  <FieldError>{fieldState.error?.message}</FieldError>
                 )}
               </Field>
             )}
@@ -321,7 +321,7 @@ export function WarrantyClaimForm({ open, onOpenChange }: WarrantyClaimFormProps
                     aria-invalid={fieldState.invalid || undefined}
                   />
                   {fieldState.error && (
-                    <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                    <FieldError>{fieldState.error?.message}</FieldError>
                   )}
                 </Field>
               )}
@@ -341,7 +341,7 @@ export function WarrantyClaimForm({ open, onOpenChange }: WarrantyClaimFormProps
                   aria-invalid={fieldState.invalid || undefined}
                 />
                 {fieldState.error && (
-                  <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                  <FieldError>{fieldState.error?.message}</FieldError>
                 )}
               </Field>
             )}

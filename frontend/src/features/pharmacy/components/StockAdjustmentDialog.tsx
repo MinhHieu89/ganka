@@ -1,7 +1,8 @@
-import { useEffect } from "react"
+import { useEffect, useMemo } from "react"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
+import { createValidationMessages } from "@/shared/lib/validation"
 import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
 import { IconLoader2, IconArrowRight } from "@tabler/icons-react"
@@ -52,16 +53,19 @@ interface StockAdjustmentDialogProps {
 
 // ---- Schema ----
 
-const adjustmentSchema = z.object({
-  quantityChange: z.coerce
-    .number()
-    .int("Must be a whole number")
-    .refine((v) => v !== 0, { message: "Change cannot be zero" }),
-  reason: z.coerce.number().int(),
-  notes: z.string().max(500).optional().or(z.literal("")),
-})
+function createAdjustmentSchema(t: (key: string, opts?: Record<string, unknown>) => string) {
+  const v = createValidationMessages(t)
+  return z.object({
+    quantityChange: z.coerce
+      .number()
+      .int(v.mustBeInteger)
+      .refine((val) => val !== 0, { message: v.cannotBeZero }),
+    reason: z.coerce.number().int(),
+    notes: z.string().max(500).optional().or(z.literal("")),
+  })
+}
 
-type AdjustmentValues = z.infer<typeof adjustmentSchema>
+type AdjustmentValues = z.infer<ReturnType<typeof createAdjustmentSchema>>
 
 // ---- Dialog component ----
 
@@ -74,6 +78,7 @@ export function StockAdjustmentDialog({
   const { t: tCommon } = useTranslation("common")
   const adjustStock = useAdjustStock()
 
+  const adjustmentSchema = useMemo(() => createAdjustmentSchema(tCommon), [tCommon])
   const form = useForm<AdjustmentValues>({
     resolver: zodResolver(adjustmentSchema),
     defaultValues: {
@@ -119,14 +124,6 @@ export function StockAdjustmentDialog({
     } catch {
       // onError in mutation handles toast
     }
-  }
-
-  const getErrorMessage = (
-    error: { message?: string } | undefined,
-  ): string | undefined => {
-    if (!error?.message) return undefined
-    if (error.message === "required") return tCommon("validation.required")
-    return error.message
   }
 
   if (!batch) return null
@@ -185,7 +182,7 @@ export function StockAdjustmentDialog({
                   {t("stockAdjust.quantityChangeHint")}
                 </p>
                 {fieldState.error && (
-                  <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                  <FieldError>{fieldState.error?.message}</FieldError>
                 )}
               </Field>
             )}
@@ -224,7 +221,7 @@ export function StockAdjustmentDialog({
                   </SelectContent>
                 </Select>
                 {fieldState.error && (
-                  <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                  <FieldError>{fieldState.error?.message}</FieldError>
                 )}
               </Field>
             )}
@@ -244,7 +241,7 @@ export function StockAdjustmentDialog({
                   aria-invalid={fieldState.invalid || undefined}
                 />
                 {fieldState.error && (
-                  <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                  <FieldError>{fieldState.error?.message}</FieldError>
                 )}
               </Field>
             )}

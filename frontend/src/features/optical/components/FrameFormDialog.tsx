@@ -1,8 +1,9 @@
-import { useEffect } from "react"
+import { useEffect, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
+import { createValidationMessages } from "@/shared/lib/validation"
 import { toast } from "sonner"
 import { IconLoader2 } from "@tabler/icons-react"
 import {
@@ -36,43 +37,46 @@ import {
 } from "@/features/optical/api/optical-queries"
 import { useQueryClient } from "@tanstack/react-query"
 
-const frameFormSchema = z.object({
-  brand: z.string().min(1, "required").max(100),
-  model: z.string().min(1, "required").max(100),
-  color: z.string().min(1, "required").max(100),
-  lensWidth: z
-    .number({ invalid_type_error: "required" })
-    .int()
-    .min(40, "Must be between 40 and 65")
-    .max(65, "Must be between 40 and 65"),
-  bridgeWidth: z
-    .number({ invalid_type_error: "required" })
-    .int()
-    .min(12, "Must be between 12 and 24")
-    .max(24, "Must be between 12 and 24"),
-  templeLength: z
-    .number({ invalid_type_error: "required" })
-    .int()
-    .min(120, "Must be between 120 and 155")
-    .max(155, "Must be between 120 and 155"),
-  material: z.number({ invalid_type_error: "required" }).min(0),
-  frameType: z.number({ invalid_type_error: "required" }).min(0),
-  gender: z.number({ invalid_type_error: "required" }).min(0),
-  sellingPrice: z
-    .number({ invalid_type_error: "required" })
-    .positive("Must be greater than 0"),
-  costPrice: z
-    .number({ invalid_type_error: "required" })
-    .positive("Must be greater than 0"),
-  barcode: z
-    .string()
-    .regex(/^\d{13}$/, "Barcode must be exactly 13 digits")
-    .optional()
-    .or(z.literal("")),
-  stockQuantity: z.number().int().min(0).optional(),
-})
+function createFrameFormSchema(t: (key: string, opts?: Record<string, unknown>) => string) {
+  const v = createValidationMessages(t)
+  return z.object({
+    brand: z.string().min(1, v.required).max(100),
+    model: z.string().min(1, v.required).max(100),
+    color: z.string().min(1, v.required).max(100),
+    lensWidth: z
+      .number({ invalid_type_error: v.required })
+      .int()
+      .min(40, v.between(40, 65))
+      .max(65, v.between(40, 65)),
+    bridgeWidth: z
+      .number({ invalid_type_error: v.required })
+      .int()
+      .min(12, v.between(12, 24))
+      .max(24, v.between(12, 24)),
+    templeLength: z
+      .number({ invalid_type_error: v.required })
+      .int()
+      .min(120, v.between(120, 155))
+      .max(155, v.between(120, 155)),
+    material: z.number({ invalid_type_error: v.required }).min(0),
+    frameType: z.number({ invalid_type_error: v.required }).min(0),
+    gender: z.number({ invalid_type_error: v.required }).min(0),
+    sellingPrice: z
+      .number({ invalid_type_error: v.required })
+      .positive(v.mustBePositive),
+    costPrice: z
+      .number({ invalid_type_error: v.required })
+      .positive(v.mustBePositive),
+    barcode: z
+      .string()
+      .regex(/^\d{13}$/, v.exactDigits(13))
+      .optional()
+      .or(z.literal("")),
+    stockQuantity: z.number().int().min(0).optional(),
+  })
+}
 
-type FrameFormValues = z.infer<typeof frameFormSchema>
+type FrameFormValues = z.infer<ReturnType<typeof createFrameFormSchema>>
 
 interface FrameFormDialogProps {
   mode: "create" | "edit"
@@ -89,11 +93,13 @@ export function FrameFormDialog({
 }: FrameFormDialogProps) {
   const queryClient = useQueryClient()
   const { t } = useTranslation("optical")
+  const { t: tCommon } = useTranslation("common")
   const createMutation = useCreateFrame()
   const updateMutation = useUpdateFrame()
 
+  const schema = useMemo(() => createFrameFormSchema(tCommon), [tCommon])
   const form = useForm<FrameFormValues>({
-    resolver: zodResolver(frameFormSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
       brand: "",
       model: "",
@@ -181,14 +187,6 @@ export function FrameFormDialog({
     }
   }
 
-  const getErrorMessage = (
-    error: { message?: string } | undefined,
-  ): string | undefined => {
-    if (!error?.message) return undefined
-    if (error.message === "required") return "This field is required"
-    return error.message
-  }
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -213,7 +211,7 @@ export function FrameFormDialog({
                     aria-invalid={fieldState.invalid || undefined}
                   />
                   {fieldState.error && (
-                    <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                    <FieldError>{fieldState.error?.message}</FieldError>
                   )}
                 </Field>
               )}
@@ -231,7 +229,7 @@ export function FrameFormDialog({
                     aria-invalid={fieldState.invalid || undefined}
                   />
                   {fieldState.error && (
-                    <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                    <FieldError>{fieldState.error?.message}</FieldError>
                   )}
                 </Field>
               )}
@@ -251,7 +249,7 @@ export function FrameFormDialog({
                   aria-invalid={fieldState.invalid || undefined}
                 />
                 {fieldState.error && (
-                  <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                  <FieldError>{fieldState.error?.message}</FieldError>
                 )}
               </Field>
             )}
@@ -275,7 +273,7 @@ export function FrameFormDialog({
                       aria-invalid={fieldState.invalid || undefined}
                     />
                     {fieldState.error && (
-                      <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                      <FieldError>{fieldState.error?.message}</FieldError>
                     )}
                   </Field>
                 )}
@@ -295,7 +293,7 @@ export function FrameFormDialog({
                       aria-invalid={fieldState.invalid || undefined}
                     />
                     {fieldState.error && (
-                      <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                      <FieldError>{fieldState.error?.message}</FieldError>
                     )}
                   </Field>
                 )}
@@ -315,7 +313,7 @@ export function FrameFormDialog({
                       aria-invalid={fieldState.invalid || undefined}
                     />
                     {fieldState.error && (
-                      <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                      <FieldError>{fieldState.error?.message}</FieldError>
                     )}
                   </Field>
                 )}
@@ -347,7 +345,7 @@ export function FrameFormDialog({
                     </SelectContent>
                   </Select>
                   {fieldState.error && (
-                    <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                    <FieldError>{fieldState.error?.message}</FieldError>
                   )}
                 </Field>
               )}
@@ -375,7 +373,7 @@ export function FrameFormDialog({
                     </SelectContent>
                   </Select>
                   {fieldState.error && (
-                    <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                    <FieldError>{fieldState.error?.message}</FieldError>
                   )}
                 </Field>
               )}
@@ -403,7 +401,7 @@ export function FrameFormDialog({
                     </SelectContent>
                   </Select>
                   {fieldState.error && (
-                    <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                    <FieldError>{fieldState.error?.message}</FieldError>
                   )}
                 </Field>
               )}
@@ -425,7 +423,7 @@ export function FrameFormDialog({
                     aria-invalid={fieldState.invalid || undefined}
                   />
                   {fieldState.error && (
-                    <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                    <FieldError>{fieldState.error?.message}</FieldError>
                   )}
                 </Field>
               )}
@@ -444,7 +442,7 @@ export function FrameFormDialog({
                     aria-invalid={fieldState.invalid || undefined}
                   />
                   {fieldState.error && (
-                    <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                    <FieldError>{fieldState.error?.message}</FieldError>
                   )}
                 </Field>
               )}
@@ -469,7 +467,7 @@ export function FrameFormDialog({
                     aria-invalid={fieldState.invalid || undefined}
                   />
                   {fieldState.error && (
-                    <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                    <FieldError>{fieldState.error?.message}</FieldError>
                   )}
                 </Field>
               )}
@@ -488,7 +486,7 @@ export function FrameFormDialog({
                     aria-invalid={fieldState.invalid || undefined}
                   />
                   {fieldState.error && (
-                    <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                    <FieldError>{fieldState.error?.message}</FieldError>
                   )}
                 </Field>
               )}

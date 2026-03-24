@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
+import { useTranslation } from "react-i18next"
+import { createValidationMessages } from "@/shared/lib/validation"
 import { toast } from "sonner"
 import { IconLoader2, IconArrowRight } from "@tabler/icons-react"
 import {
@@ -40,16 +42,19 @@ const ADJUSTMENT_REASON = {
 // Must match backend ConsumableTrackingMode enum
 const TRACKING_MODE_EXPIRY = 0
 
-const adjustmentSchema = z.object({
-  quantity: z.coerce
-    .number()
-    .int("Phải là số nguyên")
-    .refine((v) => v !== 0, { message: "Số lượng không được bằng 0" }),
-  reason: z.coerce.number().int(),
-  notes: z.string().max(500).optional().or(z.literal("")),
-})
+function createConsumableAdjustSchema(t: (key: string, opts?: Record<string, unknown>) => string) {
+  const v = createValidationMessages(t)
+  return z.object({
+    quantity: z.coerce
+      .number()
+      .int(v.mustBeInteger)
+      .refine((val) => val !== 0, { message: v.cannotBeZero }),
+    reason: z.coerce.number().int(),
+    notes: z.string().max(500).optional().or(z.literal("")),
+  })
+}
 
-type AdjustmentValues = z.infer<typeof adjustmentSchema>
+type AdjustmentValues = z.infer<ReturnType<typeof createConsumableAdjustSchema>>
 
 interface ConsumableAdjustDialogProps {
   item: ConsumableItemDto | null
@@ -62,6 +67,7 @@ export function ConsumableAdjustDialog({
   open,
   onOpenChange,
 }: ConsumableAdjustDialogProps) {
+  const { t: tCommon } = useTranslation("common")
   const adjustStock = useAdjustConsumableStock()
   const isExpiryTracked = item?.trackingMode === TRACKING_MODE_EXPIRY
   const { data: batches } = useConsumableBatches(
@@ -72,6 +78,7 @@ export function ConsumableAdjustDialog({
 
   const selectedBatch = batches?.find((b) => b.id === selectedBatchId)
 
+  const adjustmentSchema = useMemo(() => createConsumableAdjustSchema(tCommon), [tCommon])
   const form = useForm<AdjustmentValues>({
     resolver: zodResolver(adjustmentSchema),
     defaultValues: {

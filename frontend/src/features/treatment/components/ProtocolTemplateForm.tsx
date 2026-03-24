@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
+import { createValidationMessages } from "@/shared/lib/validation"
 import { toast } from "sonner"
 import { IconLoader2 } from "@tabler/icons-react"
 import {
@@ -37,33 +38,35 @@ import {
 
 // -- Zod schema --
 
-const protocolTemplateSchema = z.object({
-  name: z.string().min(1, "Name is required").max(200, "Name must be at most 200 characters"),
-  treatmentType: z.string().min(1, "Treatment type is required"),
+function createProtocolTemplateSchema(t: (key: string, opts?: Record<string, unknown>) => string) {
+  const v = createValidationMessages(t)
+  return z.object({
+  name: z.string().min(1, v.required).max(200, v.maxLength(200)),
+  treatmentType: z.string().min(1, v.required),
   defaultSessionCount: z
-    .number({ invalid_type_error: "Required" })
+    .number({ invalid_type_error: v.required })
     .int()
-    .min(1, "Must be between 1 and 6")
-    .max(6, "Must be between 1 and 6"),
-  pricingMode: z.string().min(1, "Pricing mode is required"),
+    .min(1, v.between(1, 6))
+    .max(6, v.between(1, 6)),
+  pricingMode: z.string().min(1, v.required),
   defaultPackagePrice: z
-    .number({ invalid_type_error: "Required" })
-    .min(0, "Must be >= 0"),
+    .number({ invalid_type_error: v.required })
+    .min(0, v.mustBeNonNegative),
   defaultSessionPrice: z
-    .number({ invalid_type_error: "Required" })
-    .min(0, "Must be >= 0"),
+    .number({ invalid_type_error: v.required })
+    .min(0, v.mustBeNonNegative),
   minIntervalDays: z
-    .number({ invalid_type_error: "Required" })
+    .number({ invalid_type_error: v.required })
     .int()
-    .min(1, "Must be >= 1"),
+    .min(1, v.minValue(1)),
   maxIntervalDays: z
-    .number({ invalid_type_error: "Required" })
+    .number({ invalid_type_error: v.required })
     .int()
-    .min(1, "Must be >= 1"),
+    .min(1, v.minValue(1)),
   cancellationDeductionPercent: z
-    .number({ invalid_type_error: "Required" })
-    .min(10, "Must be between 10 and 20")
-    .max(20, "Must be between 10 and 20"),
+    .number({ invalid_type_error: v.required })
+    .min(10, v.between(10, 20))
+    .max(20, v.between(10, 20)),
   description: z.string().optional(),
   // IPL parameters
   iplEnergy: z.number().optional(),
@@ -79,12 +82,13 @@ const protocolTemplateSchema = z.object({
   lidCareProcedureSteps: z.array(z.object({ value: z.string() })).optional(),
   lidCareProducts: z.array(z.object({ value: z.string() })).optional(),
   lidCareDuration: z.number().optional(),
-}).refine((data) => data.maxIntervalDays >= data.minIntervalDays, {
-  message: "Max interval must be >= min interval",
-  path: ["maxIntervalDays"],
-})
+  }).refine((data) => data.maxIntervalDays >= data.minIntervalDays, {
+    message: v.mustBeNonNegative,
+    path: ["maxIntervalDays"],
+  })
+}
 
-type ProtocolTemplateFormValues = z.infer<typeof protocolTemplateSchema>
+type ProtocolTemplateFormValues = z.infer<ReturnType<typeof createProtocolTemplateSchema>>
 
 // -- Type maps --
 
@@ -116,6 +120,7 @@ export function ProtocolTemplateForm({
   initialData,
 }: ProtocolTemplateFormProps) {
   const { t } = useTranslation("treatment")
+  const { t: tCommon } = useTranslation("common")
   const isEdit = !!initialData
   const createMutation = useCreateProtocolTemplate()
   const updateMutation = useUpdateProtocolTemplate()
@@ -147,6 +152,7 @@ export function ProtocolTemplateForm({
     [],
   )
 
+  const protocolTemplateSchema = useMemo(() => createProtocolTemplateSchema(tCommon), [tCommon])
   const form = useForm<ProtocolTemplateFormValues>({
     resolver: zodResolver(protocolTemplateSchema),
     defaultValues,
@@ -227,14 +233,6 @@ export function ProtocolTemplateForm({
     }
   }
 
-  const getErrorMessage = (
-    error: { message?: string } | undefined,
-  ): string | undefined => {
-    if (!error?.message) return undefined
-    if (error.message === "required") return "This field is required"
-    return error.message
-  }
-
   // Bridge between shared component and react-hook-form
   const paramValues = form.watch() as unknown as Record<string, unknown>
 
@@ -270,7 +268,7 @@ export function ProtocolTemplateForm({
                   aria-invalid={fieldState.invalid || undefined}
                 />
                 {fieldState.error && (
-                  <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                  <FieldError>{fieldState.error?.message}</FieldError>
                 )}
               </Field>
             )}
@@ -297,7 +295,7 @@ export function ProtocolTemplateForm({
                     </SelectContent>
                   </Select>
                   {fieldState.error && (
-                    <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                    <FieldError>{fieldState.error?.message}</FieldError>
                   )}
                 </Field>
               )}
@@ -320,7 +318,7 @@ export function ProtocolTemplateForm({
                     aria-invalid={fieldState.invalid || undefined}
                   />
                   {fieldState.error && (
-                    <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                    <FieldError>{fieldState.error?.message}</FieldError>
                   )}
                 </Field>
               )}
@@ -348,7 +346,7 @@ export function ProtocolTemplateForm({
                     </SelectContent>
                   </Select>
                   {fieldState.error && (
-                    <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                    <FieldError>{fieldState.error?.message}</FieldError>
                   )}
                 </Field>
               )}
@@ -370,7 +368,7 @@ export function ProtocolTemplateForm({
                     aria-invalid={fieldState.invalid || undefined}
                   />
                   {fieldState.error && (
-                    <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                    <FieldError>{fieldState.error?.message}</FieldError>
                   )}
                 </Field>
               )}
@@ -392,7 +390,7 @@ export function ProtocolTemplateForm({
                     aria-invalid={fieldState.invalid || undefined}
                   />
                   {fieldState.error && (
-                    <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                    <FieldError>{fieldState.error?.message}</FieldError>
                   )}
                 </Field>
               )}
@@ -417,7 +415,7 @@ export function ProtocolTemplateForm({
                     aria-invalid={fieldState.invalid || undefined}
                   />
                   {fieldState.error && (
-                    <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                    <FieldError>{fieldState.error?.message}</FieldError>
                   )}
                 </Field>
               )}
@@ -439,7 +437,7 @@ export function ProtocolTemplateForm({
                     aria-invalid={fieldState.invalid || undefined}
                   />
                   {fieldState.error && (
-                    <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                    <FieldError>{fieldState.error?.message}</FieldError>
                   )}
                 </Field>
               )}
@@ -466,7 +464,7 @@ export function ProtocolTemplateForm({
                   aria-invalid={fieldState.invalid || undefined}
                 />
                 {fieldState.error && (
-                  <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                  <FieldError>{fieldState.error?.message}</FieldError>
                 )}
               </Field>
             )}
@@ -486,7 +484,7 @@ export function ProtocolTemplateForm({
                   aria-invalid={fieldState.invalid || undefined}
                 />
                 {fieldState.error && (
-                  <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                  <FieldError>{fieldState.error?.message}</FieldError>
                 )}
               </Field>
             )}

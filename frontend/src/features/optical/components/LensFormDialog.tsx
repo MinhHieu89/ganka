@@ -1,8 +1,9 @@
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
+import { createValidationMessages } from "@/shared/lib/validation"
 import { toast } from "sonner"
 import { IconLoader2 } from "@tabler/icons-react"
 import {
@@ -41,44 +42,50 @@ import {
 
 // ---- Catalog Item schema ----
 
-const catalogSchema = z.object({
-  brand: z.string().min(1, "required").max(100),
-  name: z.string().min(1, "required").max(200),
-  lensType: z.string().min(1, "required"),
-  material: z.number().min(0),
-  availableCoatings: z.number().min(0),
-  sellingPrice: z.number().positive("must be > 0"),
-  costPrice: z.number().positive("must be > 0"),
-  preferredSupplierId: z.string().nullable().optional(),
-})
+function createCatalogSchema(t: (key: string, opts?: Record<string, unknown>) => string) {
+  const v = createValidationMessages(t)
+  return z.object({
+    brand: z.string().min(1, v.required).max(100),
+    name: z.string().min(1, v.required).max(200),
+    lensType: z.string().min(1, v.required),
+    material: z.number().min(0),
+    availableCoatings: z.number().min(0),
+    sellingPrice: z.number().positive(v.mustBePositive),
+    costPrice: z.number().positive(v.mustBePositive),
+    preferredSupplierId: z.string().nullable().optional(),
+  })
+}
 
-type CatalogFormValues = z.infer<typeof catalogSchema>
+type CatalogFormValues = z.infer<ReturnType<typeof createCatalogSchema>>
 
 // ---- Stock Adjustment schema ----
 
-const stockSchema = z.object({
-  sph: z
-    .number()
-    .min(-20, "min −20.00")
-    .max(20, "max +20.00")
-    .refine((v) => Math.abs((v * 4) % 1) < 0.01, "must be a 0.25 step"),
-  cyl: z
-    .number()
-    .min(-10, "min −10.00")
-    .max(0, "max 0.00")
-    .refine((v) => Math.abs((v * 4) % 1) < 0.01, "must be a 0.25 step"),
-  add: z
-    .number()
-    .min(0, "min 0.00")
-    .max(4, "max +4.00")
-    .refine((v) => Math.abs((v * 4) % 1) < 0.01, "must be a 0.25 step")
-    .nullable()
-    .optional(),
-  quantityChange: z.number().int("must be integer").refine((v) => v !== 0, "cannot be zero"),
-  minStockLevel: z.number().int("must be integer").min(0, "min 0"),
-})
+function createStockSchema(t: (key: string, opts?: Record<string, unknown>) => string) {
+  const v = createValidationMessages(t)
+  return z.object({
+    sph: z
+      .number()
+      .min(-20, v.between(-20, 20))
+      .max(20, v.between(-20, 20))
+      .refine((val) => Math.abs((val * 4) % 1) < 0.01, v.mustBeNonNegative),
+    cyl: z
+      .number()
+      .min(-10, v.between(-10, 0))
+      .max(0, v.between(-10, 0))
+      .refine((val) => Math.abs((val * 4) % 1) < 0.01, v.mustBeNonNegative),
+    add: z
+      .number()
+      .min(0, v.between(0, 4))
+      .max(4, v.between(0, 4))
+      .refine((val) => Math.abs((val * 4) % 1) < 0.01, v.mustBeNonNegative)
+      .nullable()
+      .optional(),
+    quantityChange: z.number().int(v.mustBeInteger).refine((val) => val !== 0, v.cannotBeZero),
+    minStockLevel: z.number().int(v.mustBeInteger).min(0, v.mustBeNonNegative),
+  })
+}
 
-type StockFormValues = z.infer<typeof stockSchema>
+type StockFormValues = z.infer<ReturnType<typeof createStockSchema>>
 
 // ---- Props ----
 
@@ -87,14 +94,6 @@ interface LensFormDialogProps {
   lens?: LensCatalogItemDto
   open: boolean
   onOpenChange: (open: boolean) => void
-}
-
-// ---- Helpers ----
-
-function getErrorMessage(error: { message?: string } | undefined, tRequired = "Required"): string | undefined {
-  if (!error?.message) return undefined
-  if (error.message === "required") return tRequired
-  return error.message
 }
 
 // ---- Catalog Item Form ----
@@ -109,9 +108,11 @@ function CatalogItemForm({
   onClose: () => void
 }) {
   const { t } = useTranslation("optical")
+  const { t: tCommon } = useTranslation("common")
   const createMutation = useCreateLensCatalogItem()
   const updateMutation = useUpdateLensCatalogItem()
 
+  const catalogSchema = useMemo(() => createCatalogSchema(tCommon), [tCommon])
   const form = useForm<CatalogFormValues>({
     resolver: zodResolver(catalogSchema),
     defaultValues: lens
@@ -195,7 +196,7 @@ function CatalogItemForm({
               <FieldLabel htmlFor={field.name}>{t("lenses.brand")}</FieldLabel>
               <Input {...field} id={field.name} aria-invalid={fieldState.invalid || undefined} />
               {fieldState.error && (
-                <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                <FieldError>{fieldState.error?.message}</FieldError>
               )}
             </Field>
           )}
@@ -209,7 +210,7 @@ function CatalogItemForm({
               <FieldLabel htmlFor={field.name}>{t("lenses.name")}</FieldLabel>
               <Input {...field} id={field.name} aria-invalid={fieldState.invalid || undefined} />
               {fieldState.error && (
-                <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                <FieldError>{fieldState.error?.message}</FieldError>
               )}
             </Field>
           )}
@@ -236,7 +237,7 @@ function CatalogItemForm({
                 </SelectContent>
               </Select>
               {fieldState.error && (
-                <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                <FieldError>{fieldState.error?.message}</FieldError>
               )}
             </Field>
           )}
@@ -264,7 +265,7 @@ function CatalogItemForm({
                 </SelectContent>
               </Select>
               {fieldState.error && (
-                <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                <FieldError>{fieldState.error?.message}</FieldError>
               )}
             </Field>
           )}
@@ -304,7 +305,7 @@ function CatalogItemForm({
                 aria-invalid={fieldState.invalid || undefined}
               />
               {fieldState.error && (
-                <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                <FieldError>{fieldState.error?.message}</FieldError>
               )}
             </Field>
           )}
@@ -324,7 +325,7 @@ function CatalogItemForm({
                 aria-invalid={fieldState.invalid || undefined}
               />
               {fieldState.error && (
-                <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                <FieldError>{fieldState.error?.message}</FieldError>
               )}
             </Field>
           )}
@@ -408,7 +409,7 @@ function DioptrField({
               aria-invalid={fieldState.invalid || undefined}
             />
             {fieldState.error && (
-              <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+              <FieldError>{fieldState.error?.message}</FieldError>
             )}
           </Field>
         )
@@ -427,8 +428,10 @@ function StockAdjustmentForm({
   onClose: () => void
 }) {
   const { t } = useTranslation("optical")
+  const { t: tCommon } = useTranslation("common")
   const adjustMutation = useAdjustLensStock()
 
+  const stockSchema = useMemo(() => createStockSchema(tCommon), [tCommon])
   const form = useForm<StockFormValues>({
     resolver: zodResolver(stockSchema),
     defaultValues: {
@@ -490,7 +493,7 @@ function StockAdjustmentForm({
                 aria-invalid={fieldState.invalid || undefined}
               />
               {fieldState.error && (
-                <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                <FieldError>{fieldState.error?.message}</FieldError>
               )}
             </Field>
           )}
@@ -510,7 +513,7 @@ function StockAdjustmentForm({
                 aria-invalid={fieldState.invalid || undefined}
               />
               {fieldState.error && (
-                <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                <FieldError>{fieldState.error?.message}</FieldError>
               )}
             </Field>
           )}

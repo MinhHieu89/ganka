@@ -1,7 +1,9 @@
+import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
+import { createValidationMessages } from "@/shared/lib/validation"
 import { toast } from "sonner"
 import { IconPlus, IconLoader2 } from "@tabler/icons-react"
 import { Button } from "@/shared/components/Button"
@@ -20,12 +22,15 @@ import { RoleTable } from "./RoleTable"
 import { PermissionMatrix } from "./PermissionMatrix"
 import { useRoles } from "@/features/admin/hooks/useRoles"
 
-const createRoleSchema = z.object({
-  name: z.string().min(1, "required"),
-  description: z.string().min(1, "required"),
-})
+function createRoleSchemaFactory(t: (key: string, opts?: Record<string, unknown>) => string) {
+  const v = createValidationMessages(t)
+  return z.object({
+    name: z.string().min(1, v.required),
+    description: z.string().min(1, v.required),
+  })
+}
 
-type CreateRoleFormValues = z.infer<typeof createRoleSchema>
+type CreateRoleFormValues = z.infer<ReturnType<typeof createRoleSchemaFactory>>
 
 export function RoleManagementPage() {
   const { t } = useTranslation("auth")
@@ -45,6 +50,7 @@ export function RoleManagementPage() {
     isUpdatingPermissions,
   } = useRoles()
 
+  const createRoleSchema = useMemo(() => createRoleSchemaFactory(tCommon), [tCommon])
   const form = useForm<CreateRoleFormValues>({
     resolver: zodResolver(createRoleSchema),
     defaultValues: {

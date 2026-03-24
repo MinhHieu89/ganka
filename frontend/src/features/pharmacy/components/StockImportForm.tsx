@@ -1,7 +1,8 @@
-import { useCallback } from "react"
+import { useCallback, useMemo } from "react"
 import { useForm, useFieldArray, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
+import { createValidationMessages } from "@/shared/lib/validation"
 import { useTranslation } from "react-i18next"
 import { format } from "date-fns"
 import { toast } from "sonner"
@@ -30,24 +31,27 @@ import { DrugCombobox } from "@/features/pharmacy/components/DrugCombobox"
 
 // ---- Schema ----
 
-const lineSchema = z.object({
-  drugCatalogItemId: z.string().min(1, "required"),
-  drugName: z.string().min(1),
-  batchNumber: z.string().min(1, "required").max(100),
-  expiryDate: z.date({ required_error: "required" }),
-  quantity: z.coerce.number().int().min(1, "must be >= 1"),
-  purchasePrice: z.coerce.number().min(0, "must be >= 0"),
-})
+function createStockImportSchema(t: (key: string, opts?: Record<string, unknown>) => string) {
+  const v = createValidationMessages(t)
+  const lineSchema = z.object({
+    drugCatalogItemId: z.string().min(1, v.required),
+    drugName: z.string().min(1),
+    batchNumber: z.string().min(1, v.required).max(100),
+    expiryDate: z.date({ required_error: v.required }),
+    quantity: z.coerce.number().int().min(1, v.minValue(1)),
+    purchasePrice: z.coerce.number().min(0, v.mustBeNonNegative),
+  })
 
-const stockImportSchema = z.object({
-  supplierId: z.string().min(1, "required"),
-  invoiceNumber: z.string().max(100).optional().or(z.literal("")),
-  importDate: z.date({ required_error: "required" }),
-  notes: z.string().max(500).optional().or(z.literal("")),
-  lines: z.array(lineSchema).min(1, "At least one line item required"),
-})
+  return z.object({
+    supplierId: z.string().min(1, v.required),
+    invoiceNumber: z.string().max(100).optional().or(z.literal("")),
+    importDate: z.date({ required_error: v.required }),
+    notes: z.string().max(500).optional().or(z.literal("")),
+    lines: z.array(lineSchema).min(1, v.minItems(1)),
+  })
+}
 
-type StockImportValues = z.infer<typeof stockImportSchema>
+type StockImportValues = z.infer<ReturnType<typeof createStockImportSchema>>
 
 // ---- Main form ----
 
@@ -61,6 +65,7 @@ export function StockImportForm({ onSuccess }: StockImportFormProps) {
   const { data: suppliers } = useSuppliers()
   const createImport = useCreateStockImport()
 
+  const stockImportSchema = useMemo(() => createStockImportSchema(tCommon), [tCommon])
   const form = useForm<StockImportValues>({
     resolver: zodResolver(stockImportSchema),
     defaultValues: {
@@ -124,7 +129,6 @@ export function StockImportForm({ onSuccess }: StockImportFormProps) {
     error: { message?: string } | undefined,
   ): string | undefined => {
     if (!error?.message) return undefined
-    if (error.message === "required") return tCommon("validation.required")
     return error.message
   }
 

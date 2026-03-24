@@ -1,7 +1,8 @@
-import { useEffect } from "react"
+import { useEffect, useMemo } from "react"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
+import { createValidationMessages } from "@/shared/lib/validation"
 import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
 import { IconLoader2 } from "@tabler/icons-react"
@@ -33,18 +34,21 @@ import {
   useUpdateDrugCatalogItem,
 } from "@/features/pharmacy/api/pharmacy-queries"
 
-const drugFormSchema = z.object({
-  name: z.string().min(1, "required").max(200),
-  nameVi: z.string().min(1, "required").max(200),
-  genericName: z.string().min(1, "required").max(200),
-  form: z.number().min(0),
-  strength: z.string().max(50).optional().or(z.literal("")),
-  route: z.number().min(0),
-  unit: z.string().min(1, "required").max(50),
-  defaultDosageTemplate: z.string().max(500).optional().or(z.literal("")),
-})
+function createDrugFormSchema(t: (key: string, opts?: Record<string, unknown>) => string) {
+  const v = createValidationMessages(t)
+  return z.object({
+    name: z.string().min(1, v.required).max(200),
+    nameVi: z.string().min(1, v.required).max(200),
+    genericName: z.string().min(1, v.required).max(200),
+    form: z.number().min(0),
+    strength: z.string().max(50).optional().or(z.literal("")),
+    route: z.number().min(0),
+    unit: z.string().min(1, v.required).max(50),
+    defaultDosageTemplate: z.string().max(500).optional().or(z.literal("")),
+  })
+}
 
-type DrugFormValues = z.infer<typeof drugFormSchema>
+type DrugFormValues = z.infer<ReturnType<typeof createDrugFormSchema>>
 
 interface DrugFormDialogProps {
   mode: "create" | "edit"
@@ -65,6 +69,7 @@ export function DrugFormDialog({
   const createMutation = useCreateDrugCatalogItem()
   const updateMutation = useUpdateDrugCatalogItem()
 
+  const drugFormSchema = useMemo(() => createDrugFormSchema(tCommon), [tCommon])
   const form = useForm<DrugFormValues>({
     resolver: zodResolver(drugFormSchema),
     defaultValues: {
@@ -133,14 +138,6 @@ export function DrugFormDialog({
     }
   }
 
-  const getErrorMessage = (
-    error: { message?: string } | undefined,
-  ): string | undefined => {
-    if (!error?.message) return undefined
-    if (error.message === "required") return tCommon("validation.required")
-    return error.message
-  }
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg">
@@ -168,7 +165,7 @@ export function DrugFormDialog({
                   aria-invalid={fieldState.invalid || undefined}
                 />
                 {fieldState.error && (
-                  <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                  <FieldError>{fieldState.error?.message}</FieldError>
                 )}
               </Field>
             )}
@@ -188,7 +185,7 @@ export function DrugFormDialog({
                   aria-invalid={fieldState.invalid || undefined}
                 />
                 {fieldState.error && (
-                  <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                  <FieldError>{fieldState.error?.message}</FieldError>
                 )}
               </Field>
             )}
@@ -208,7 +205,7 @@ export function DrugFormDialog({
                   aria-invalid={fieldState.invalid || undefined}
                 />
                 {fieldState.error && (
-                  <FieldError>{getErrorMessage(fieldState.error)}</FieldError>
+                  <FieldError>{fieldState.error?.message}</FieldError>
                 )}
               </Field>
             )}
@@ -238,7 +235,7 @@ export function DrugFormDialog({
                   </Select>
                   {fieldState.error && (
                     <FieldError>
-                      {getErrorMessage(fieldState.error)}
+                      {fieldState.error?.message}
                     </FieldError>
                   )}
                 </Field>
@@ -268,7 +265,7 @@ export function DrugFormDialog({
                   </Select>
                   {fieldState.error && (
                     <FieldError>
-                      {getErrorMessage(fieldState.error)}
+                      {fieldState.error?.message}
                     </FieldError>
                   )}
                 </Field>
@@ -292,7 +289,7 @@ export function DrugFormDialog({
                   />
                   {fieldState.error && (
                     <FieldError>
-                      {getErrorMessage(fieldState.error)}
+                      {fieldState.error?.message}
                     </FieldError>
                   )}
                 </Field>
@@ -314,7 +311,7 @@ export function DrugFormDialog({
                   />
                   {fieldState.error && (
                     <FieldError>
-                      {getErrorMessage(fieldState.error)}
+                      {fieldState.error?.message}
                     </FieldError>
                   )}
                 </Field>
@@ -338,7 +335,7 @@ export function DrugFormDialog({
                 />
                 {fieldState.error && (
                   <FieldError>
-                    {getErrorMessage(fieldState.error)}
+                    {fieldState.error?.message}
                   </FieldError>
                 )}
               </Field>

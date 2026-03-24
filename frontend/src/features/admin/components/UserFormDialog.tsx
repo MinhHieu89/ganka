@@ -1,7 +1,8 @@
-import { useEffect } from "react"
+import { useEffect, useMemo } from "react"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
+import { createValidationMessages } from "@/shared/lib/validation"
 import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
 import { IconLoader2 } from "@tabler/icons-react"
@@ -25,21 +26,26 @@ import {
   type UpdateUserCommand,
 } from "@/features/admin/api/admin-api"
 
-const createSchema = z.object({
-  email: z.string().min(1, "required").email("invalidEmail"),
-  fullName: z.string().min(1, "required"),
-  password: z.string().min(8, "minLength"),
-  roleIds: z.array(z.string()).min(1, "required"),
-})
+function createUserSchemas(t: (key: string, opts?: Record<string, unknown>) => string) {
+  const v = createValidationMessages(t)
+  const createSchema = z.object({
+    email: z.string().min(1, v.required).email(v.invalidEmail),
+    fullName: z.string().min(1, v.required),
+    password: z.string().min(8, v.minLength(8)),
+    roleIds: z.array(z.string()).min(1, v.required),
+  })
 
-const editSchema = z.object({
-  fullName: z.string().min(1, "required"),
-  isActive: z.boolean(),
-  roleIds: z.array(z.string()).min(1, "required"),
-})
+  const editSchema = z.object({
+    fullName: z.string().min(1, v.required),
+    isActive: z.boolean(),
+    roleIds: z.array(z.string()).min(1, v.required),
+  })
 
-type CreateFormValues = z.infer<typeof createSchema>
-type EditFormValues = z.infer<typeof editSchema>
+  return { createSchema, editSchema }
+}
+
+type CreateFormValues = z.infer<ReturnType<typeof createUserSchemas>["createSchema"]>
+type EditFormValues = z.infer<ReturnType<typeof createUserSchemas>["editSchema"]>
 
 interface UserFormDialogProps {
   open: boolean
@@ -64,6 +70,8 @@ export function UserFormDialog({
   const roles = rolesQuery.data ?? []
 
   const isEditMode = editingUser !== null
+
+  const { createSchema, editSchema } = useMemo(() => createUserSchemas(tCommon), [tCommon])
 
   // Create mode form
   const createForm = useForm<CreateFormValues>({
@@ -174,11 +182,6 @@ export function UserFormDialog({
     error: { message?: string } | undefined,
   ): string | undefined => {
     if (!error?.message) return undefined
-    if (error.message === "required") return tCommon("validation.required")
-    if (error.message === "invalidEmail")
-      return tCommon("validation.invalidEmail")
-    if (error.message === "minLength")
-      return tCommon("validation.minLength", { min: 8 })
     return error.message
   }
 

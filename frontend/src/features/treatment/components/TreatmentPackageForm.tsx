@@ -1,7 +1,8 @@
-import { useState, useEffect, useCallback, useDeferredValue } from "react"
+import { useState, useEffect, useCallback, useDeferredValue, useMemo } from "react"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
+import { createValidationMessages } from "@/shared/lib/validation"
 import { toast } from "sonner"
 import { useTranslation } from "react-i18next"
 import { IconLoader2, IconSearch, IconUser } from "@tabler/icons-react"
@@ -47,9 +48,11 @@ const PRICING_MODE_PER_PACKAGE = 1
 
 // -- Schema --
 
-const packageFormSchema = z.object({
-  protocolTemplateId: z.string().min(1, "Vui lòng chọn phác đồ mẫu"),
-  patientId: z.string().min(1, "Vui lòng chọn bệnh nhân"),
+function createPackageFormSchema(t: (key: string, opts?: Record<string, unknown>) => string) {
+  const v = createValidationMessages(t)
+  return z.object({
+    protocolTemplateId: z.string().min(1, v.selectRequired),
+    patientId: z.string().min(1, v.selectRequired),
   patientName: z.string().min(1),
   totalSessions: z.coerce.number().int().min(1).max(6).nullable().optional(),
   pricingMode: z.coerce.number().int().min(0).max(1).nullable().optional(),
@@ -57,10 +60,11 @@ const packageFormSchema = z.object({
   sessionPrice: z.coerce.number().min(0).nullable().optional(),
   minIntervalDays: z.coerce.number().int().min(1).nullable().optional(),
   parametersJson: z.string().nullable().optional(),
-  visitId: z.string().nullable().optional(),
-})
+    visitId: z.string().nullable().optional(),
+  })
+}
 
-type PackageFormValues = z.infer<typeof packageFormSchema>
+type PackageFormValues = z.infer<ReturnType<typeof createPackageFormSchema>>
 
 // -- Props --
 
@@ -82,6 +86,7 @@ export function TreatmentPackageForm({
   patientName: presetPatientName,
 }: TreatmentPackageFormProps) {
   const { t } = useTranslation("treatment")
+  const { t: tCommon } = useTranslation("common")
   const { data: templates = [] } = useProtocolTemplates()
   const createMutation = useCreateTreatmentPackage()
 
@@ -104,6 +109,7 @@ export function TreatmentPackageForm({
     code: string
   } | null>(null)
 
+  const packageFormSchema = useMemo(() => createPackageFormSchema(tCommon), [tCommon])
   const form = useForm<PackageFormValues>({
     resolver: zodResolver(packageFormSchema),
     defaultValues: {
