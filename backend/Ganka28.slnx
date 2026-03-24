@@ -85,5 +85,6 @@
     <Project Path="tests/Billing.Unit.Tests/Billing.Unit.Tests.csproj" />
     <Project Path="tests/Optical.Unit.Tests/Optical.Unit.Tests.csproj" />
     <Project Path="tests/Treatment.Unit.Tests/Treatment.Unit.Tests.csproj" />
+    <Project Path="tests/Billing.Integration.Tests/Billing.Integration.Tests.csproj" />
   </Folder>
 </Solution>
