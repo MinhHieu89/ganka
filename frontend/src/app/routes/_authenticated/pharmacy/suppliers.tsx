@@ -10,13 +10,19 @@ import {
   useReactTable,
   type SortingState,
 } from "@tanstack/react-table"
-import { IconPlus, IconEdit, IconToggleRight, IconToggleLeft } from "@tabler/icons-react"
+import { IconPlus, IconEdit, IconDotsVertical, IconToggleRight, IconToggleLeft } from "@tabler/icons-react"
 import { toast } from "sonner"
 import { Button } from "@/shared/components/Button"
 import { Input } from "@/shared/components/Input"
 import { Badge } from "@/shared/components/Badge"
 import { DataTable } from "@/shared/components/DataTable"
 import { Skeleton } from "@/shared/components/Skeleton"
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/shared/components/DropdownMenu"
 import { SupplierForm } from "@/features/pharmacy/components/SupplierForm"
 import type { SupplierDto } from "@/features/pharmacy/api/pharmacy-api"
 import {
@@ -103,33 +109,32 @@ function SuppliersPage() {
         cell: ({ row }) => {
           const supplier = row.original
           return (
-            <div className="flex items-center gap-1 justify-end">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  openEdit(supplier)
-                }}
-                title={t("supplier.editSupplier")}
-              >
-                <IconEdit className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  handleToggleActive(supplier)
-                }}
-                title={supplier.isActive ? t("supplier.deactivate") : t("supplier.activate")}
-              >
-                {supplier.isActive ? (
-                  <IconToggleRight className="h-4 w-4 text-green-600" />
-                ) : (
-                  <IconToggleLeft className="h-4 w-4 text-muted-foreground" />
-                )}
-              </Button>
+            <div className="flex items-center justify-end">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <IconDotsVertical className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => openEdit(supplier)}>
+                    <IconEdit className="h-4 w-4 mr-2" />
+                    {t("supplier.editSupplier")}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleToggleActive(supplier)}>
+                    {supplier.isActive ? (
+                      <IconToggleLeft className="h-4 w-4 mr-2 text-muted-foreground" />
+                    ) : (
+                      <IconToggleRight className="h-4 w-4 mr-2 text-green-600" />
+                    )}
+                    {supplier.isActive ? t("supplier.deactivate") : t("supplier.activate")}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           )
         },
