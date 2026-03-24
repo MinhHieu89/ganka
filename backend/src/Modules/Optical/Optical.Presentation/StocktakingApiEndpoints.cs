@@ -33,7 +33,7 @@ public static class StocktakingApiEndpoints
             var result = await bus.InvokeAsync<Result<PagedStocktakingSessionsResult>>(
                 new GetStocktakingSessionsQuery(p.Page ?? 1, p.PageSize ?? 20), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Optical.View);
 
         // GET /api/optical/stocktaking/{id} -- get session with all scanned items
         group.MapGet("/stocktaking/{id:guid}", async (Guid id, IMessageBus bus, CancellationToken ct) =>
@@ -41,7 +41,7 @@ public static class StocktakingApiEndpoints
             var result = await bus.InvokeAsync<Result<StocktakingSessionDetailDto>>(
                 new GetStocktakingSessionByIdQuery(id), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Optical.View);
 
         // GET /api/optical/stocktaking/{id}/report -- discrepancy report for completed session
         group.MapGet("/stocktaking/{id:guid}/report", async (Guid id, IMessageBus bus, CancellationToken ct) =>
@@ -49,14 +49,14 @@ public static class StocktakingApiEndpoints
             var result = await bus.InvokeAsync<Result<DiscrepancyReportDto>>(
                 new GetDiscrepancyReportQuery(id), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Optical.View);
 
         // POST /api/optical/stocktaking -- start a new stocktaking session
         group.MapPost("/stocktaking", async (StartStocktakingSessionCommand command, IMessageBus bus, CancellationToken ct) =>
         {
             var result = await bus.InvokeAsync<Result<Guid>>(command, ct);
             return result.ToCreatedHttpResult("/api/optical/stocktaking");
-        });
+        }).RequirePermissions(Permissions.Optical.Create);
 
         // POST /api/optical/stocktaking/{id}/scan -- record barcode scan with physical count
         group.MapPost("/stocktaking/{id:guid}/scan", async (Guid id, RecordStocktakingItemCommand command, IMessageBus bus, CancellationToken ct) =>
@@ -64,7 +64,7 @@ public static class StocktakingApiEndpoints
             var enriched = new RecordStocktakingItemCommand(id, command.Barcode, command.PhysicalCount);
             var result = await bus.InvokeAsync<Result<StocktakingItemDto>>(enriched, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Optical.Update);
 
         // PUT /api/optical/stocktaking/{id}/complete -- complete the stocktaking session
         group.MapPut("/stocktaking/{id:guid}/complete", async (Guid id, CompleteStocktakingCommand command, IMessageBus bus, CancellationToken ct) =>

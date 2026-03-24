@@ -41,7 +41,7 @@ public static class BillingApiEndpoints
         {
             var result = await bus.InvokeAsync<Result<InvoiceDto>>(command, ct);
             return result.ToCreatedHttpResult("/api/billing/invoices");
-        });
+        }).RequirePermissions(Permissions.Billing.Create);
 
         // GET /api/billing/invoices -- get all invoices with optional filters
         group.MapGet("/invoices", async (int? status, string? search, int? page, int? pageSize,
@@ -50,7 +50,7 @@ public static class BillingApiEndpoints
             var result = await bus.InvokeAsync<Result<PaginatedInvoicesResult>>(
                 new GetAllInvoicesQuery(status, search, page ?? 1, pageSize ?? 20), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Billing.View);
 
         // GET /api/billing/invoices/{invoiceId} -- get invoice by ID with full details
         group.MapGet("/invoices/{invoiceId:guid}",
@@ -59,7 +59,7 @@ public static class BillingApiEndpoints
             var result = await bus.InvokeAsync<Result<InvoiceDto>>(
                 new GetInvoiceByIdQuery(invoiceId), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Billing.View);
 
         // GET /api/billing/invoices/by-visit/{visitId} -- get all invoices for a visit (summary list)
         group.MapGet("/invoices/by-visit/{visitId:guid}",
@@ -68,7 +68,7 @@ public static class BillingApiEndpoints
             var result = await bus.InvokeAsync<Result<List<InvoiceSummaryDto>>>(
                 new GetInvoicesByVisitQuery(visitId), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Billing.View);
 
         // GET /api/billing/invoices/visit/{visitId} -- get single invoice by visit (cross-module)
         group.MapGet("/invoices/visit/{visitId:guid}",
@@ -77,7 +77,7 @@ public static class BillingApiEndpoints
             var result = await bus.InvokeAsync<Result<InvoiceDto>>(
                 new GetVisitInvoiceQuery(visitId), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Billing.View);
 
         // GET /api/billing/invoices/pending -- get pending invoices for cashier dashboard
         group.MapGet("/invoices/pending",
@@ -86,7 +86,7 @@ public static class BillingApiEndpoints
             var result = await bus.InvokeAsync<Result<List<InvoiceDto>>>(
                 new GetPendingInvoicesQuery(cashierShiftId), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Billing.View);
 
         // POST /api/billing/invoices/{invoiceId}/line-items -- add line item to invoice
         group.MapPost("/invoices/{invoiceId:guid}/line-items",
@@ -98,7 +98,7 @@ public static class BillingApiEndpoints
                 command.SourceId, command.SourceType);
             var result = await bus.InvokeAsync<Result<InvoiceDto>>(enriched, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Billing.Create);
 
         // DELETE /api/billing/invoices/{invoiceId}/line-items/{lineItemId} -- remove line item from draft invoice
         group.MapDelete("/invoices/{invoiceId:guid}/line-items/{lineItemId:guid}",
@@ -107,7 +107,7 @@ public static class BillingApiEndpoints
             var result = await bus.InvokeAsync<Result<InvoiceDto>>(
                 new RemoveInvoiceLineItemCommand(invoiceId, lineItemId), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Billing.Create);
 
         // POST /api/billing/invoices/{invoiceId}/finalize -- finalize a paid invoice
         group.MapPost("/invoices/{invoiceId:guid}/finalize",
@@ -116,7 +116,7 @@ public static class BillingApiEndpoints
             var enriched = new FinalizeInvoiceCommand(invoiceId, command.CashierShiftId);
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Billing.Create);
     }
 
     private static void MapPaymentEndpoints(RouteGroupBuilder group)
@@ -126,7 +126,7 @@ public static class BillingApiEndpoints
         {
             var result = await bus.InvokeAsync<Result<PaymentDto>>(command, ct);
             return result.ToCreatedHttpResult("/api/billing/payments");
-        });
+        }).RequirePermissions(Permissions.Billing.Create);
 
         // GET /api/billing/payments/invoice/{invoiceId} -- get all payments for an invoice
         group.MapGet("/payments/invoice/{invoiceId:guid}",
@@ -135,7 +135,7 @@ public static class BillingApiEndpoints
             var payments = await bus.InvokeAsync<List<PaymentDto>>(
                 new GetPaymentsByInvoiceQuery(invoiceId), ct);
             return Results.Ok(payments);
-        });
+        }).RequirePermissions(Permissions.Billing.View);
     }
 
     private static void MapDiscountEndpoints(RouteGroupBuilder group)
@@ -145,7 +145,7 @@ public static class BillingApiEndpoints
         {
             var result = await bus.InvokeAsync<Result<DiscountDto>>(command, ct);
             return result.ToCreatedHttpResult("/api/billing/discounts");
-        });
+        }).RequirePermissions(Permissions.Billing.Create);
 
         // POST /api/billing/discounts/{discountId}/approve -- approve a pending discount
         group.MapPost("/discounts/{discountId:guid}/approve",
@@ -155,7 +155,7 @@ public static class BillingApiEndpoints
                 command.InvoiceId, discountId, command.ManagerId);
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Billing.Manage);
 
         // POST /api/billing/discounts/{discountId}/reject -- reject a pending discount
         group.MapPost("/discounts/{discountId:guid}/reject",
@@ -166,7 +166,7 @@ public static class BillingApiEndpoints
                 command.ManagerId);
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Billing.Manage);
     }
 
     private static void MapRefundEndpoints(RouteGroupBuilder group)
@@ -176,7 +176,7 @@ public static class BillingApiEndpoints
         {
             var result = await bus.InvokeAsync<Result<RefundDto>>(command, ct);
             return result.ToCreatedHttpResult("/api/billing/refunds");
-        });
+        }).RequirePermissions(Permissions.Billing.Create);
 
         // POST /api/billing/refunds/{refundId}/approve -- approve a requested refund
         group.MapPost("/refunds/{refundId:guid}/approve",
@@ -186,7 +186,7 @@ public static class BillingApiEndpoints
                 command.InvoiceId, refundId, command.ManagerId);
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Billing.Manage);
 
         // POST /api/billing/refunds/{refundId}/process -- process an approved refund
         group.MapPost("/refunds/{refundId:guid}/process",
@@ -196,7 +196,7 @@ public static class BillingApiEndpoints
                 command.InvoiceId, refundId, command.RefundMethod, command.Notes);
             var result = await bus.InvokeAsync<Result<RefundDto>>(enriched, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Billing.Manage);
     }
 
     private static void MapShiftEndpoints(RouteGroupBuilder group)
@@ -206,14 +206,14 @@ public static class BillingApiEndpoints
         {
             var result = await bus.InvokeAsync<Result<CashierShiftDto>>(command, ct);
             return result.ToCreatedHttpResult("/api/billing/shifts");
-        });
+        }).RequirePermissions(Permissions.Billing.Create);
 
         // POST /api/billing/shifts/close -- close the current cashier shift
         group.MapPost("/shifts/close", async (CloseShiftCommand command, IMessageBus bus, CancellationToken ct) =>
         {
             var result = await bus.InvokeAsync<Result<CashierShiftDto>>(command, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Billing.Create);
 
         // GET /api/billing/shifts/current -- get the current open shift
         group.MapGet("/shifts/current", async (IMessageBus bus, CancellationToken ct) =>
@@ -221,7 +221,7 @@ public static class BillingApiEndpoints
             var result = await bus.InvokeAsync<Result<CashierShiftDto?>>(
                 new GetCurrentShiftQuery(), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Billing.View);
 
         // GET /api/billing/shifts/{shiftId}/report -- get shift report with revenue breakdown
         group.MapGet("/shifts/{shiftId:guid}/report",
@@ -230,7 +230,7 @@ public static class BillingApiEndpoints
             var result = await bus.InvokeAsync<Result<ShiftReportDto>>(
                 new GetShiftReportQuery(shiftId), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Billing.View);
 
         // GET /api/billing/shifts -- get closed shift history with pagination
         group.MapGet("/shifts", async (int? page, int? pageSize, IMessageBus bus, CancellationToken ct) =>
@@ -238,7 +238,7 @@ public static class BillingApiEndpoints
             var result = await bus.InvokeAsync<Result<ShiftHistoryResult>>(
                 new GetShiftHistoryQuery(page ?? 1, pageSize ?? 20), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Billing.View);
 
         // GET /api/billing/shifts/templates -- get active shift templates for current branch
         group.MapGet("/shifts/templates", async (IMessageBus bus, CancellationToken ct) =>
@@ -246,7 +246,7 @@ public static class BillingApiEndpoints
             var result = await bus.InvokeAsync<Result<List<ShiftTemplateDto>>>(
                 new GetShiftTemplatesQuery(), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Billing.View);
 
         // GET /api/billing/shifts/{shiftId}/report/pdf -- print shift report as PDF
         group.MapGet("/shifts/{shiftId:guid}/report/pdf",
@@ -254,7 +254,7 @@ public static class BillingApiEndpoints
         {
             var pdf = await docs.GenerateShiftReportPdfAsync(shiftId, ct);
             return Results.File(pdf, "application/pdf", $"shift-report-{shiftId}.pdf");
-        });
+        }).RequirePermissions(Permissions.Billing.View);
     }
 
     private static void MapServiceCatalogEndpoints(RouteGroupBuilder group)
@@ -284,7 +284,7 @@ public static class BillingApiEndpoints
             var result = await bus.InvokeAsync<Result<List<ServiceCatalogItemDto>>>(
                 new GetServiceCatalogItemsQuery(includeInactive ?? false), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Billing.View);
 
         // GET /api/billing/service-catalog/by-code/{code} -- get service by code
         group.MapGet("/service-catalog/by-code/{code}",
@@ -293,7 +293,7 @@ public static class BillingApiEndpoints
             var result = await bus.InvokeAsync<Result<ServiceCatalogItemDto?>>(
                 new GetServiceCatalogItemByCodeQuery(code), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Billing.View);
     }
 
     private static void MapPrintEndpoints(RouteGroupBuilder group)
@@ -304,7 +304,7 @@ public static class BillingApiEndpoints
         {
             var pdf = await docs.GenerateInvoicePdfAsync(invoiceId, ct);
             return Results.File(pdf, "application/pdf", $"invoice-{invoiceId}.pdf");
-        });
+        }).RequirePermissions(Permissions.Billing.View);
 
         // GET /api/billing/print/{invoiceId}/receipt -- print receipt PDF
         group.MapGet("/print/{invoiceId:guid}/receipt",
@@ -312,7 +312,7 @@ public static class BillingApiEndpoints
         {
             var pdf = await docs.GenerateReceiptPdfAsync(invoiceId, ct);
             return Results.File(pdf, "application/pdf", $"receipt-{invoiceId}.pdf");
-        });
+        }).RequirePermissions(Permissions.Billing.View);
 
         // GET /api/billing/print/{invoiceId}/e-invoice -- print e-invoice PDF
         group.MapGet("/print/{invoiceId:guid}/e-invoice",
@@ -320,7 +320,7 @@ public static class BillingApiEndpoints
         {
             var pdf = await docs.GenerateEInvoicePdfAsync(invoiceId, ct);
             return Results.File(pdf, "application/pdf", $"e-invoice-{invoiceId}.pdf");
-        });
+        }).RequirePermissions(Permissions.Billing.View);
     }
 
     private static void MapExportEndpoints(RouteGroupBuilder group)
@@ -331,7 +331,7 @@ public static class BillingApiEndpoints
         {
             var json = await docs.ExportEInvoiceJsonAsync(invoiceId, ct);
             return Results.Content(json, "application/json");
-        });
+        }).RequirePermissions(Permissions.Billing.Export);
 
         // GET /api/billing/export/{invoiceId}/e-invoice/xml -- export e-invoice as XML
         group.MapGet("/export/{invoiceId:guid}/e-invoice/xml",
@@ -339,6 +339,6 @@ public static class BillingApiEndpoints
         {
             var xml = await docs.ExportEInvoiceXmlAsync(invoiceId, ct);
             return Results.Content(xml, "application/xml");
-        });
+        }).RequirePermissions(Permissions.Billing.Export);
     }
 }

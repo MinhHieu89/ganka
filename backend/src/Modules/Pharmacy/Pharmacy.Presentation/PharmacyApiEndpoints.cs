@@ -42,7 +42,7 @@ public static class PharmacyApiEndpoints
             var results = await bus.InvokeAsync<List<DrugCatalogItemDto>>(
                 new SearchDrugCatalogQuery(p.Term ?? ""), ct);
             return Results.Ok(results);
-        });
+        }).RequirePermissions(Permissions.Pharmacy.View);
 
         // GET /api/pharmacy/drugs?page=1&pageSize=20&search=term -- paginated drug catalog (admin)
         group.MapGet("/drugs", async ([AsParameters] PaginatedDrugCatalogParams p, IMessageBus bus, CancellationToken ct) =>
@@ -50,21 +50,21 @@ public static class PharmacyApiEndpoints
             var result = await bus.InvokeAsync<Result<PaginatedDrugCatalogResult>>(
                 new PaginatedDrugCatalogQuery(p.Page ?? 1, p.PageSize ?? 20, p.Search), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Pharmacy.View);
 
         // GET /api/pharmacy/drugs/{id}/available-stock -- available stock for OTC inline check
         group.MapGet("/drugs/{id:guid}/available-stock", async (Guid id, IMessageBus bus, CancellationToken ct) =>
         {
             var stock = await bus.InvokeAsync<int>(new GetDrugAvailableStockQuery(id), ct);
             return Results.Ok(new { availableStock = stock });
-        });
+        }).RequirePermissions(Permissions.Pharmacy.View);
 
         // POST /api/pharmacy/drugs -- create drug catalog item (admin)
         group.MapPost("/drugs", async (CreateDrugCatalogItemCommand command, IMessageBus bus, CancellationToken ct) =>
         {
             var result = await bus.InvokeAsync<Result<Guid>>(command, ct);
             return result.ToCreatedHttpResult("/api/pharmacy/drugs");
-        });
+        }).RequirePermissions(Permissions.Pharmacy.Create);
 
         // PUT /api/pharmacy/drugs/{id} -- update drug catalog item (admin)
         group.MapPut("/drugs/{id:guid}", async (Guid id, UpdateDrugCatalogItemCommand command, IMessageBus bus, CancellationToken ct) =>
@@ -75,7 +75,7 @@ public static class PharmacyApiEndpoints
                 command.Unit, command.DefaultDosageTemplate);
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Pharmacy.Update);
 
         // POST /api/pharmacy/drugs/import/preview -- parse Excel file and return preview
         group.MapPost("/drugs/import/preview", async (HttpRequest request, IMessageBus bus, CancellationToken ct) =>
@@ -96,14 +96,14 @@ public static class PharmacyApiEndpoints
             var result = await bus.InvokeAsync<Result<DrugCatalogImportPreview>>(
                 new ImportDrugCatalogFromExcelCommand(stream, file.FileName), ct);
             return result.ToHttpResult();
-        }).DisableAntiforgery();
+        }).RequirePermissions(Permissions.Pharmacy.Create).DisableAntiforgery();
 
         // POST /api/pharmacy/drugs/import/confirm -- confirm and persist valid rows
         group.MapPost("/drugs/import/confirm", async (ConfirmDrugCatalogImportCommand command, IMessageBus bus, CancellationToken ct) =>
         {
             var result = await bus.InvokeAsync<Result<int>>(command, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Pharmacy.Create);
 
         // GET /api/pharmacy/drugs/import/template -- download Excel template
         group.MapGet("/drugs/import/template", (IMessageBus bus) =>
@@ -111,7 +111,7 @@ public static class PharmacyApiEndpoints
             var bytes = GetDrugCatalogTemplateHandler.Handle(new GetDrugCatalogTemplateQuery());
             return Results.File(bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 "drug-catalog-template.xlsx");
-        });
+        }).RequirePermissions(Permissions.Pharmacy.View);
     }
 
     private static void MapSupplierEndpoints(RouteGroupBuilder group)
@@ -121,14 +121,14 @@ public static class PharmacyApiEndpoints
         {
             var results = await bus.InvokeAsync<List<SupplierDto>>(new GetSuppliersQuery(), ct);
             return Results.Ok(results);
-        });
+        }).RequirePermissions(Permissions.Pharmacy.View);
 
         // POST /api/pharmacy/suppliers -- create supplier
         group.MapPost("/suppliers", async (CreateSupplierCommand command, IMessageBus bus, CancellationToken ct) =>
         {
             var result = await bus.InvokeAsync<Result<Guid>>(command, ct);
             return result.ToCreatedHttpResult("/api/pharmacy/suppliers");
-        });
+        }).RequirePermissions(Permissions.Pharmacy.Create);
 
         // PUT /api/pharmacy/suppliers/{id} -- update supplier
         group.MapPut("/suppliers/{id:guid}", async (Guid id, UpdateSupplierCommand command, IMessageBus bus, CancellationToken ct) =>
@@ -136,14 +136,14 @@ public static class PharmacyApiEndpoints
             var enriched = new UpdateSupplierCommand(id, command.Name, command.ContactInfo, command.Phone, command.Email);
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Pharmacy.Update);
 
         // PATCH /api/pharmacy/suppliers/{id}/toggle-active -- toggle supplier active/inactive status
         group.MapPatch("/suppliers/{id:guid}/toggle-active", async (Guid id, IMessageBus bus, CancellationToken ct) =>
         {
             var result = await bus.InvokeAsync<Result>(new ToggleSupplierActiveCommand(id), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Pharmacy.Update);
     }
 
     private static void MapInventoryEndpoints(RouteGroupBuilder group)
@@ -154,7 +154,7 @@ public static class PharmacyApiEndpoints
             var result = await bus.InvokeAsync<Result<List<DrugInventoryDto>>>(
                 new GetDrugInventoryQuery(p.ExpiryAlertDays ?? 30), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Pharmacy.View);
 
         // GET /api/pharmacy/inventory/{drugId}/batches -- batches for a specific drug
         group.MapGet("/inventory/{drugId:guid}/batches", async (Guid drugId, IMessageBus bus, CancellationToken ct) =>
@@ -162,7 +162,7 @@ public static class PharmacyApiEndpoints
             var result = await bus.InvokeAsync<Result<List<DrugBatchDto>>>(
                 new GetDrugBatchesQuery(drugId), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Pharmacy.View);
 
         // PUT /api/pharmacy/inventory/{drugId}/pricing -- update drug pricing and min stock level
         group.MapPut("/inventory/{drugId:guid}/pricing", async (Guid drugId, UpdateDrugCatalogPricingCommand command, IMessageBus bus, CancellationToken ct) =>
@@ -170,14 +170,14 @@ public static class PharmacyApiEndpoints
             var enriched = new UpdateDrugCatalogPricingCommand(drugId, command.SellingPrice, command.MinStockLevel);
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Pharmacy.Update);
 
         // POST /api/pharmacy/inventory/adjust -- manual stock adjustment
         group.MapPost("/inventory/adjust", async (AdjustStockCommand command, IMessageBus bus, CancellationToken ct) =>
         {
             var result = await bus.InvokeAsync<Result<Guid>>(command, ct);
             return result.ToCreatedHttpResult("/api/pharmacy/inventory/adjustments");
-        });
+        }).RequirePermissions(Permissions.Pharmacy.Update);
     }
 
     private static void MapStockImportEndpoints(RouteGroupBuilder group)
@@ -188,14 +188,14 @@ public static class PharmacyApiEndpoints
             var result = await bus.InvokeAsync<Result<PagedStockImportsResult>>(
                 new GetStockImportsQuery(p.Page ?? 1, p.PageSize ?? 20), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Pharmacy.View);
 
         // POST /api/pharmacy/stock-imports -- create stock import from supplier invoice
         group.MapPost("/stock-imports", async (CreateStockImportCommand command, IMessageBus bus, CancellationToken ct) =>
         {
             var result = await bus.InvokeAsync<Result<Guid>>(command, ct);
             return result.ToCreatedHttpResult("/api/pharmacy/stock-imports");
-        });
+        }).RequirePermissions(Permissions.Pharmacy.Create);
 
         // POST /api/pharmacy/stock-imports/excel -- parse Excel file and return preview (no save)
         group.MapPost("/stock-imports/excel", async (HttpRequest request, IMessageBus bus, CancellationToken ct) =>
@@ -215,7 +215,7 @@ public static class PharmacyApiEndpoints
             var result = await bus.InvokeAsync<Result<ExcelImportPreview>>(
                 new ImportStockFromExcelCommand(stream, supplierId, file.FileName), ct);
             return result.ToHttpResult();
-        }).DisableAntiforgery();
+        }).RequirePermissions(Permissions.Pharmacy.Create).DisableAntiforgery();
     }
 
     private static void MapAlertEndpoints(RouteGroupBuilder group)
@@ -226,7 +226,7 @@ public static class PharmacyApiEndpoints
             var results = await bus.InvokeAsync<List<ExpiryAlertDto>>(
                 new GetExpiryAlertsQuery(p.Days ?? 90), ct);
             return Results.Ok(results);
-        });
+        }).RequirePermissions(Permissions.Pharmacy.View);
 
         // GET /api/pharmacy/alerts/low-stock -- drugs below minimum stock level
         group.MapGet("/alerts/low-stock", async (IMessageBus bus, CancellationToken ct) =>
@@ -234,7 +234,7 @@ public static class PharmacyApiEndpoints
             var results = await bus.InvokeAsync<List<LowStockAlertDto>>(
                 new GetLowStockAlertsQuery(), ct);
             return Results.Ok(results);
-        });
+        }).RequirePermissions(Permissions.Pharmacy.View);
     }
 }
 

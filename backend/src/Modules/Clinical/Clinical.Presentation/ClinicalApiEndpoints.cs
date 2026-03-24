@@ -39,46 +39,46 @@ public static class ClinicalApiEndpoints
         {
             var result = await bus.InvokeAsync<Result<Guid>>(command, ct);
             return result.ToCreatedHttpResult("/api/clinical");
-        });
+        }).RequirePermissions(Permissions.Clinical.Create);
 
         group.MapGet("/{visitId:guid}", async (Guid visitId, IMessageBus bus, CancellationToken ct) =>
         {
             var dto = await bus.InvokeAsync<VisitDetailDto?>(new GetVisitByIdQuery(visitId), ct);
             return dto is not null ? Results.Ok(dto) : Results.NotFound();
-        });
+        }).RequirePermissions(Permissions.Clinical.View);
 
         group.MapGet("/active", async (IMessageBus bus, CancellationToken ct) =>
         {
             var visits = await bus.InvokeAsync<List<ActiveVisitDto>>(new GetActiveVisitsQuery(), ct);
             return Results.Ok(visits);
-        });
+        }).RequirePermissions(Permissions.Clinical.View);
 
         group.MapPut("/{visitId:guid}/sign-off", async (Guid visitId, SignOffVisitCommand? command, IMessageBus bus, CancellationToken ct) =>
         {
             var enriched = new SignOffVisitCommand(visitId, command?.FieldChangesJson);
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Clinical.Update);
 
         group.MapPost("/{visitId:guid}/cancel", async (Guid visitId, IMessageBus bus, CancellationToken ct) =>
         {
             var result = await bus.InvokeAsync<Result>(new CancelVisitCommand(visitId), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Clinical.Update);
 
         group.MapPost("/{visitId:guid}/amend", async (Guid visitId, AmendVisitCommand command, IMessageBus bus, CancellationToken ct) =>
         {
             var enriched = new AmendVisitCommand(visitId, command.Reason, command.FieldChangesJson);
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Clinical.Update);
 
         group.MapPut("/{visitId:guid}/stage", async (Guid visitId, AdvanceWorkflowStageCommand command, IMessageBus bus, CancellationToken ct) =>
         {
             var enriched = new AdvanceWorkflowStageCommand(visitId, command.NewStage);
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Clinical.Update);
     }
 
     private static void MapVisitDataEndpoints(RouteGroupBuilder group)
@@ -88,7 +88,7 @@ public static class ClinicalApiEndpoints
             var enriched = new UpdateVisitNotesCommand(visitId, command.Notes);
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Clinical.Update);
 
         group.MapPut("/{visitId:guid}/refraction", async (Guid visitId, UpdateRefractionCommand command, IMessageBus bus, CancellationToken ct) =>
         {
@@ -101,7 +101,7 @@ public static class ClinicalApiEndpoints
                 command.AxialLengthOd, command.AxialLengthOs);
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Clinical.Update);
 
         group.MapPost("/{visitId:guid}/diagnoses", async (Guid visitId, AddVisitDiagnosisCommand command, IMessageBus bus, CancellationToken ct) =>
         {
@@ -110,13 +110,13 @@ public static class ClinicalApiEndpoints
                 command.Laterality, command.Role, command.SortOrder);
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Clinical.Update);
 
         group.MapDelete("/{visitId:guid}/diagnoses/{diagnosisId:guid}", async (Guid visitId, Guid diagnosisId, IMessageBus bus, CancellationToken ct) =>
         {
             var result = await bus.InvokeAsync<Result>(new RemoveVisitDiagnosisCommand(visitId, diagnosisId), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Clinical.Delete);
 
         group.MapPut("/{visitId:guid}/diagnoses/{diagnosisId:guid}/set-primary",
             async (Guid visitId, Guid diagnosisId, IMessageBus bus, CancellationToken ct) =>
@@ -124,7 +124,7 @@ public static class ClinicalApiEndpoints
             var result = await bus.InvokeAsync<Result>(
                 new SetPrimaryDiagnosisCommand(visitId, diagnosisId), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Clinical.Update);
     }
 
     private static void MapIcd10Endpoints(RouteGroupBuilder group)
@@ -136,20 +136,20 @@ public static class ClinicalApiEndpoints
             var results = await bus.InvokeAsync<List<Icd10SearchResultDto>>(
                 new SearchIcd10CodesQuery(term, parsedDoctorId), ct);
             return Results.Ok(results);
-        });
+        }).RequirePermissions(Permissions.Clinical.View);
 
         group.MapPost("/icd10/favorites/toggle", async (ToggleIcd10FavoriteCommand command, IMessageBus bus, CancellationToken ct) =>
         {
             var result = await bus.InvokeAsync<Result>(command, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Clinical.Update);
 
         group.MapGet("/icd10/favorites", async (Guid doctorId, IMessageBus bus, CancellationToken ct) =>
         {
             var results = await bus.InvokeAsync<List<Icd10SearchResultDto>>(
                 new GetDoctorFavoritesQuery(doctorId), ct);
             return Results.Ok(results);
-        });
+        }).RequirePermissions(Permissions.Clinical.View);
     }
 
     private static void MapDryEyeEndpoints(RouteGroupBuilder group)
@@ -165,41 +165,41 @@ public static class ClinicalApiEndpoints
                 command.OdStaining, command.OsStaining);
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Clinical.Update);
 
         group.MapGet("/osdi-history/{patientId:guid}", async (Guid patientId, IMessageBus bus, CancellationToken ct) =>
         {
             var result = await bus.InvokeAsync<OsdiHistoryResponse>(new GetOsdiHistoryQuery(patientId), ct);
             return Results.Ok(result);
-        });
+        }).RequirePermissions(Permissions.Clinical.View);
 
         group.MapGet("/dry-eye-comparison", async (Guid patientId, Guid visitId1, Guid visitId2, IMessageBus bus, CancellationToken ct) =>
         {
             var result = await bus.InvokeAsync<Result<DryEyeComparisonDto>>(
                 new GetDryEyeComparisonQuery(patientId, visitId1, visitId2), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Clinical.View);
 
         group.MapPost("/{visitId:guid}/osdi-link", async (Guid visitId, IMessageBus bus, CancellationToken ct) =>
         {
             var result = await bus.InvokeAsync<Result<OsdiLinkResponse>>(
                 new GenerateOsdiLinkCommand(visitId), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Clinical.Update);
 
         group.MapGet("/patients/{patientId:guid}/dry-eye/metric-history", async (Guid patientId, string? timeRange, IMessageBus bus, CancellationToken ct) =>
         {
             var result = await bus.InvokeAsync<DryEyeMetricHistoryResponse>(
                 new GetDryEyeMetricHistoryQuery(patientId, timeRange ?? "all"), ct);
             return Results.Ok(result);
-        });
+        }).RequirePermissions(Permissions.Clinical.View);
 
         group.MapGet("/visits/{visitId:guid}/osdi-answers", async (Guid visitId, IMessageBus bus, CancellationToken ct) =>
         {
             var result = await bus.InvokeAsync<OsdiAnswersResponse?>(
                 new GetOsdiAnswersQuery(visitId), ct);
             return result is not null ? Results.Ok(result) : Results.NotFound();
-        });
+        }).RequirePermissions(Permissions.Clinical.View);
     }
 
     private static void MapMedicalImageEndpoints(RouteGroupBuilder group)
@@ -212,27 +212,27 @@ public static class ClinicalApiEndpoints
                 uploadParams.ImageType, uploadParams.EyeTag);
             var result = await bus.InvokeAsync<Result<Guid>>(command, ct);
             return result.ToCreatedHttpResult($"/api/clinical/{visitId}/images");
-        }).DisableAntiforgery();
+        }).RequirePermissions(Permissions.Clinical.Update).DisableAntiforgery();
 
         group.MapGet("/{visitId:guid}/images", async (Guid visitId, IMessageBus bus, CancellationToken ct) =>
         {
             var images = await bus.InvokeAsync<List<MedicalImageDto>>(
                 new GetVisitImagesQuery(visitId), ct);
             return Results.Ok(images);
-        });
+        }).RequirePermissions(Permissions.Clinical.View);
 
         group.MapDelete("/images/{imageId:guid}", async (Guid imageId, IMessageBus bus, CancellationToken ct) =>
         {
             var result = await bus.InvokeAsync<Result>(new DeleteMedicalImageCommand(imageId), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Clinical.Delete);
 
         group.MapGet("/image-comparison", async (Guid patientId, Guid visitId1, Guid visitId2, int imageType, IMessageBus bus, CancellationToken ct) =>
         {
             var result = await bus.InvokeAsync<Result<ImageComparisonResponse>>(
                 new GetImageComparisonQuery(patientId, visitId1, visitId2, imageType), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Clinical.View);
     }
     private static void MapPrescriptionEndpoints(RouteGroupBuilder group)
     {
@@ -242,20 +242,20 @@ public static class ClinicalApiEndpoints
             var enriched = new AddDrugPrescriptionCommand(visitId, command.Notes, command.Items);
             var result = await bus.InvokeAsync<Result<Guid>>(enriched, ct);
             return result.ToCreatedHttpResult($"/api/clinical/{visitId}/drug-prescriptions");
-        });
+        }).RequirePermissions(Permissions.Clinical.Update);
 
         group.MapPut("/{visitId:guid}/drug-prescriptions/{prescriptionId:guid}", async (Guid visitId, Guid prescriptionId, UpdateDrugPrescriptionCommand command, IMessageBus bus, CancellationToken ct) =>
         {
             var enriched = new UpdateDrugPrescriptionCommand(visitId, prescriptionId, command.Notes);
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Clinical.Update);
 
         group.MapDelete("/{visitId:guid}/drug-prescriptions/{prescriptionId:guid}", async (Guid visitId, Guid prescriptionId, IMessageBus bus, CancellationToken ct) =>
         {
             var result = await bus.InvokeAsync<Result>(new RemoveDrugPrescriptionCommand(visitId, prescriptionId), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Clinical.Delete);
 
         // Allergy check
         group.MapGet("/{visitId:guid}/check-drug-allergy", async ([AsParameters] CheckDrugAllergyParams p, IMessageBus bus, CancellationToken ct) =>
@@ -263,7 +263,7 @@ public static class ClinicalApiEndpoints
             var query = new CheckDrugAllergyQuery(p.PatientId, p.DrugName ?? "", p.GenericName);
             var matches = await bus.InvokeAsync<List<AllergyDto>>(query, ct);
             return Results.Ok(matches);
-        });
+        }).RequirePermissions(Permissions.Clinical.View);
 
         // Optical prescription endpoints
         group.MapPost("/{visitId:guid}/optical-prescription", async (Guid visitId, AddOpticalPrescriptionCommand command, IMessageBus bus, CancellationToken ct) =>
@@ -278,7 +278,7 @@ public static class ClinicalApiEndpoints
                 command.LensType, command.Notes);
             var result = await bus.InvokeAsync<Result<Guid>>(enriched, ct);
             return result.ToCreatedHttpResult($"/api/clinical/{visitId}/optical-prescription");
-        });
+        }).RequirePermissions(Permissions.Clinical.Update);
 
         group.MapPut("/{visitId:guid}/optical-prescription/{prescriptionId:guid}", async (Guid visitId, Guid prescriptionId, UpdateOpticalPrescriptionCommand command, IMessageBus bus, CancellationToken ct) =>
         {
@@ -292,7 +292,7 @@ public static class ClinicalApiEndpoints
                 command.LensType, command.Notes);
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Clinical.Update);
     }
 
     private static void MapPrintEndpoints(RouteGroupBuilder group)
@@ -301,31 +301,31 @@ public static class ClinicalApiEndpoints
         {
             var pdf = await docs.GenerateDrugPrescriptionAsync(visitId, ct);
             return Results.File(pdf, "application/pdf", $"drug-rx-{visitId}.pdf");
-        });
+        }).RequirePermissions(Permissions.Clinical.View);
 
         group.MapGet("/{visitId:guid}/print/optical-rx", async (Guid visitId, IDocumentService docs, CancellationToken ct) =>
         {
             var pdf = await docs.GenerateOpticalPrescriptionAsync(visitId, ct);
             return Results.File(pdf, "application/pdf", $"optical-rx-{visitId}.pdf");
-        });
+        }).RequirePermissions(Permissions.Clinical.View);
 
         group.MapGet("/{visitId:guid}/print/referral-letter", async (Guid visitId, string reason, string to, IDocumentService docs, CancellationToken ct) =>
         {
             var pdf = await docs.GenerateReferralLetterAsync(visitId, reason, to, ct);
             return Results.File(pdf, "application/pdf", $"referral-{visitId}.pdf");
-        });
+        }).RequirePermissions(Permissions.Clinical.View);
 
         group.MapGet("/{visitId:guid}/print/consent-form", async (Guid visitId, string procedureType, IDocumentService docs, CancellationToken ct) =>
         {
             var pdf = await docs.GenerateConsentFormAsync(visitId, procedureType, ct);
             return Results.File(pdf, "application/pdf", $"consent-{visitId}.pdf");
-        });
+        }).RequirePermissions(Permissions.Clinical.View);
 
         group.MapGet("/prescription-items/{itemId:guid}/print/label", async (Guid itemId, IDocumentService docs, CancellationToken ct) =>
         {
             var pdf = await docs.GeneratePharmacyLabelAsync(itemId, ct);
             return Results.File(pdf, "application/pdf", $"label-{itemId}.pdf");
-        });
+        }).RequirePermissions(Permissions.Clinical.View);
 
         group.MapGet("/prescriptions/{prescriptionId:guid}/labels/batch", async (Guid prescriptionId, IDocumentService docs, CancellationToken ct) =>
         {
@@ -338,7 +338,7 @@ public static class ClinicalApiEndpoints
             {
                 return Results.NotFound();
             }
-        });
+        }).RequirePermissions(Permissions.Clinical.View);
     }
 }
 

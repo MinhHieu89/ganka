@@ -3,106 +3,93 @@ using FluentAssertions;
 namespace Ganka28.ArchitectureTests;
 
 /// <summary>
-/// Architecture tests that verify all API endpoint files have proper permission
-/// enforcement via RequirePermissions calls using Permissions.* constants.
-///
-/// These tests scan source files directly (not compiled assemblies) to ensure
-/// every non-public endpoint file includes at least one RequirePermissions call.
+/// Architecture tests that verify all API endpoint files have proper
+/// permission enforcement via RequirePermissions() calls.
+/// Created as part of 11-00 (RED) and satisfied by 11-01 (GREEN).
 /// </summary>
 public class PermissionEnforcementTests
 {
     /// <summary>
-    /// Endpoint files that are intentionally public (no auth required).
+    /// Files that are intentionally public and should NOT have RequirePermissions.
     /// </summary>
-    private static readonly HashSet<string> ExcludedFiles = new(StringComparer.OrdinalIgnoreCase)
-    {
+    private static readonly string[] ExcludedFiles =
+    [
         "PublicBookingEndpoints.cs",
         "PublicOsdiEndpoints.cs"
-    };
+    ];
 
-    /// <summary>
-    /// Resolves the backend/src directory by navigating up from the test assembly location.
-    /// </summary>
-    private static string GetBackendSrcDirectory()
+    private static string GetBackendSrcPath()
     {
-        // Test runs from bin/Debug/net10.0/ — navigate up to repo root
-        var assemblyDir = AppContext.BaseDirectory;
-        var dir = new DirectoryInfo(assemblyDir);
-
-        // Walk up until we find the backend directory
-        while (dir != null && !Directory.Exists(Path.Combine(dir.FullName, "backend", "src")))
-        {
-            dir = dir.Parent;
-        }
-
-        dir.Should().NotBeNull("Could not find repo root containing backend/src from {0}", assemblyDir);
-        return Path.Combine(dir!.FullName, "backend", "src");
+        // Navigate from bin/Debug/net10.0 up to the repo root, then into backend/src
+        var assemblyDir = Path.GetDirectoryName(typeof(PermissionEnforcementTests).Assembly.Location)!;
+        // Path: bin/Debug/net10.0 -> (3 up) Ganka28.ArchitectureTests -> (1 up) tests -> (1 up) backend
+        var backendDir = Path.GetFullPath(Path.Combine(assemblyDir, "..", "..", "..", "..", ".."));
+        return Path.Combine(backendDir, "src");
     }
 
-    /// <summary>
-    /// Finds all *Endpoints.cs files under backend/src/ that are not in the exclusion list.
-    /// </summary>
-    private static List<(string FilePath, string FileName)> GetNonPublicEndpointFiles()
+    private static IEnumerable<string> GetEndpointFiles()
     {
-        var srcDir = GetBackendSrcDirectory();
-        var endpointFiles = Directory.GetFiles(srcDir, "*Endpoints.cs", SearchOption.AllDirectories);
+        var srcPath = GetBackendSrcPath();
+        var modulesPath = Path.Combine(srcPath, "Modules");
+        var sharedPath = Path.Combine(srcPath, "Shared");
 
-        return endpointFiles
-            .Select(f => (FilePath: f, FileName: Path.GetFileName(f)))
-            .Where(f => !ExcludedFiles.Contains(f.FileName))
-            .ToList();
+        var files = new List<string>();
+        if (Directory.Exists(modulesPath))
+            files.AddRange(Directory.GetFiles(modulesPath, "*ApiEndpoints.cs", SearchOption.AllDirectories));
+        if (Directory.Exists(sharedPath))
+            files.AddRange(Directory.GetFiles(sharedPath, "*ApiEndpoints.cs", SearchOption.AllDirectories));
+
+        return files;
     }
 
     [Fact]
     public void AllNonPublicEndpointFiles_MustContain_RequirePermissionsCalls()
     {
-        // Arrange
-        var endpointFiles = GetNonPublicEndpointFiles();
-        endpointFiles.Should().NotBeEmpty("there should be at least one non-public endpoint file");
+        var endpointFiles = GetEndpointFiles().ToList();
 
-        var filesWithoutPermissions = new List<string>();
+        endpointFiles.Should().NotBeEmpty("there should be endpoint files in the codebase");
 
-        // Act
-        foreach (var (filePath, fileName) in endpointFiles)
+        var failures = new List<string>();
+
+        foreach (var file in endpointFiles)
         {
-            var content = File.ReadAllText(filePath);
+            var fileName = Path.GetFileName(file);
+            if (ExcludedFiles.Contains(fileName))
+                continue;
+
+            var content = File.ReadAllText(file);
             if (!content.Contains("RequirePermissions(Permissions."))
             {
-                filesWithoutPermissions.Add(fileName);
+                failures.Add(fileName);
             }
         }
 
-        // Assert — this test is expected to FAIL (RED) until Wave 1 adds permissions
-        filesWithoutPermissions.Should().BeEmpty(
-            "all non-public endpoint files must call RequirePermissions(Permissions.*) " +
-            "but the following files are missing permission enforcement: {0}",
-            string.Join(", ", filesWithoutPermissions));
+        failures.Should().BeEmpty(
+            "all non-public endpoint files must contain RequirePermissions(Permissions.*) calls, " +
+            $"but these files are missing them: {string.Join(", ", failures)}");
     }
 
     [Fact]
     public void NoEndpointFile_ShouldUse_StringLiteralPermissions()
     {
-        // Arrange
-        var endpointFiles = GetNonPublicEndpointFiles();
-        endpointFiles.Should().NotBeEmpty("there should be at least one non-public endpoint file");
+        var endpointFiles = GetEndpointFiles().ToList();
 
-        var filesWithStringLiterals = new List<string>();
+        endpointFiles.Should().NotBeEmpty("there should be endpoint files in the codebase");
 
-        // Act
-        foreach (var (filePath, fileName) in endpointFiles)
+        var violations = new List<string>();
+
+        foreach (var file in endpointFiles)
         {
-            var content = File.ReadAllText(filePath);
-            // Check for RequirePermissions("..." — string literal instead of Permissions.* constant
+            var content = File.ReadAllText(file);
+            // Check for RequirePermissions("..." -- string literal instead of Permissions.* constant
             if (content.Contains("RequirePermissions(\""))
             {
-                filesWithStringLiterals.Add(fileName);
+                violations.Add(Path.GetFileName(file));
             }
         }
 
-        // Assert
-        filesWithStringLiterals.Should().BeEmpty(
-            "endpoint files must use Permissions.* constants, not string literals. " +
-            "Files using string literals: {0}",
-            string.Join(", ", filesWithStringLiterals));
+        violations.Should().BeEmpty(
+            "no endpoint file should use string literal permissions -- use Permissions.* constants instead, " +
+            $"but these files have string literals: {string.Join(", ", violations)}");
     }
 }

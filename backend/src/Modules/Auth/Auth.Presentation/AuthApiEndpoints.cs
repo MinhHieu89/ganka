@@ -182,25 +182,25 @@ public static class AuthApiEndpoints
         {
             var response = await bus.InvokeAsync<GetUsersResponse>(new GetUsersQuery(page, pageSize), ct);
             return Results.Ok(new { data = response.Users, totalCount = response.TotalCount, page = response.Page, pageSize = response.PageSize });
-        });
+        }).RequirePermissions(Permissions.Auth.View);
 
         adminGroup.MapPost("/users", async (CreateUserCommand command, IMessageBus bus, CancellationToken ct = default) =>
         {
             var result = await bus.InvokeAsync<Result<Guid>>(command, ct);
             return result.ToCreatedHttpResult("/api/admin/users");
-        });
+        }).RequirePermissions(Permissions.Auth.Create);
 
         adminGroup.MapPut("/users/{id}", async (Guid id, UpdateUserCommand command, IMessageBus bus, CancellationToken ct = default) =>
         {
             var result = await bus.InvokeAsync<Result>(command with { UserId = id }, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Auth.Update);
 
         adminGroup.MapPut("/users/{id}/roles", async (Guid id, AssignRolesCommand command, IMessageBus bus, CancellationToken ct = default) =>
         {
             var result = await bus.InvokeAsync<Result>(command with { UserId = id }, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Auth.Update);
     }
 
     private static void MapAdminRoleEndpoints(RouteGroupBuilder adminGroup)
@@ -209,19 +209,19 @@ public static class AuthApiEndpoints
         {
             var roles = await bus.InvokeAsync<List<RoleDto>>(new GetRolesQuery(), ct);
             return Results.Ok(roles);
-        });
+        }).RequirePermissions(Permissions.Auth.View);
 
         adminGroup.MapPost("/roles", async (CreateRoleCommand command, IMessageBus bus, CancellationToken ct = default) =>
         {
             var result = await bus.InvokeAsync<Result<Guid>>(command, ct);
             return result.ToCreatedHttpResult("/api/admin/roles");
-        });
+        }).RequirePermissions(Permissions.Auth.Create);
 
         adminGroup.MapPut("/roles/{id}/permissions", async (Guid id, UpdateRolePermissionsCommand command, IMessageBus bus, CancellationToken ct = default) =>
         {
             var result = await bus.InvokeAsync<Result>(command with { RoleId = id }, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Auth.Update);
     }
 
     private static void MapAdminPermissionEndpoints(RouteGroupBuilder adminGroup)
@@ -230,6 +230,6 @@ public static class AuthApiEndpoints
         {
             var permissions = await bus.InvokeAsync<List<PermissionGroupDto>>(new GetPermissionsQuery(), ct);
             return Results.Ok(permissions);
-        });
+        }).RequirePermissions(Permissions.Auth.View);
     }
 }

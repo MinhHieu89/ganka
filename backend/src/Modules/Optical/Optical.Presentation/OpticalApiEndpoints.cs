@@ -44,7 +44,7 @@ public static class OpticalApiEndpoints
             var result = await bus.InvokeAsync<Result<PagedFramesResult>>(
                 new GetFramesQuery(p.IncludeInactive ?? false, p.Page ?? 1, p.PageSize ?? 20), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Optical.View);
 
         // GET /api/optical/frames/search?searchTerm=xxx&material=0&frameType=0&gender=2&page=1&pageSize=20
         group.MapGet("/frames/search", async ([AsParameters] SearchFramesParams p, IMessageBus bus, CancellationToken ct) =>
@@ -52,21 +52,21 @@ public static class OpticalApiEndpoints
             var result = await bus.InvokeAsync<Result<FrameSearchResult>>(
                 new SearchFramesQuery(p.SearchTerm, p.Material, p.FrameType, p.Gender, p.Page ?? 1, p.PageSize ?? 20), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Optical.View);
 
         // GET /api/optical/frames/{id} -- single frame detail
         group.MapGet("/frames/{id:guid}", async (Guid id, IMessageBus bus, CancellationToken ct) =>
         {
             var result = await bus.InvokeAsync<Result<FrameDto>>(new GetFrameByIdQuery(id), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Optical.View);
 
         // POST /api/optical/frames -- create frame in inventory
         group.MapPost("/frames", async (CreateFrameCommand command, IMessageBus bus, CancellationToken ct) =>
         {
             var result = await bus.InvokeAsync<Result<Guid>>(command, ct);
             return result.ToCreatedHttpResult("/api/optical/frames");
-        });
+        }).RequirePermissions(Permissions.Optical.Create);
 
         // PUT /api/optical/frames/{id} -- update frame details
         group.MapPut("/frames/{id:guid}", async (Guid id, UpdateFrameCommand command, IMessageBus bus, CancellationToken ct) =>
@@ -79,14 +79,14 @@ public static class OpticalApiEndpoints
                 command.StockQuantity, command.IsActive);
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Optical.Update);
 
         // POST /api/optical/frames/{id}/generate-barcode -- auto-generate EAN-13 barcode
         group.MapPost("/frames/{id:guid}/generate-barcode", async (Guid id, IMessageBus bus, CancellationToken ct) =>
         {
             var result = await bus.InvokeAsync<Result<string>>(new GenerateBarcodeCommand(id), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Optical.Update);
     }
 
     private static void MapLensEndpoints(RouteGroupBuilder group)
@@ -97,14 +97,14 @@ public static class OpticalApiEndpoints
             var result = await bus.InvokeAsync<Result<List<LensCatalogItemDto>>>(
                 new GetLensCatalogQuery(p.IncludeInactive ?? false), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Optical.View);
 
         // POST /api/optical/lenses -- create lens catalog item
         group.MapPost("/lenses", async (CreateLensCatalogItemCommand command, IMessageBus bus, CancellationToken ct) =>
         {
             var result = await bus.InvokeAsync<Result<Guid>>(command, ct);
             return result.ToCreatedHttpResult("/api/optical/lenses");
-        });
+        }).RequirePermissions(Permissions.Optical.Create);
 
         // PUT /api/optical/lenses/{id} -- update lens catalog item
         group.MapPut("/lenses/{id:guid}", async (Guid id, UpdateLensCatalogItemCommand command, IMessageBus bus, CancellationToken ct) =>
@@ -116,14 +116,14 @@ public static class OpticalApiEndpoints
                 command.PreferredSupplierId, command.IsActive);
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Optical.Update);
 
         // POST /api/optical/lenses/stock-adjust -- adjust per-power lens stock
         group.MapPost("/lenses/stock-adjust", async (AdjustLensStockCommand command, IMessageBus bus, CancellationToken ct) =>
         {
             var result = await bus.InvokeAsync<Result>(command, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Optical.Update);
 
         // GET /api/optical/lenses/alerts -- lens stock entries below minimum
         group.MapGet("/lenses/alerts", async (IMessageBus bus, CancellationToken ct) =>
@@ -131,7 +131,7 @@ public static class OpticalApiEndpoints
             var result = await bus.InvokeAsync<Result<List<LowLensStockAlertDto>>>(
                 new GetLowLensStockAlertsQuery(), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Optical.View);
     }
 
     private static void MapOrderEndpoints(RouteGroupBuilder group)
@@ -142,7 +142,7 @@ public static class OpticalApiEndpoints
             var result = await bus.InvokeAsync<Result<PagedGlassesOrdersResult>>(
                 new GetGlassesOrdersQuery(p.StatusFilter, p.Page ?? 1, p.PageSize ?? 20), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Optical.View);
 
         // GET /api/optical/orders/overdue -- orders past estimated delivery date
         // Registered before {id:guid} to ensure literal route takes precedence
@@ -151,7 +151,7 @@ public static class OpticalApiEndpoints
             var result = await bus.InvokeAsync<Result<List<GlassesOrderSummaryDto>>>(
                 new GetOverdueOrdersQuery(), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Optical.View);
 
         // GET /api/optical/orders/{id} -- single glasses order with full item details
         group.MapGet("/orders/{id:guid}", async (Guid id, IMessageBus bus, CancellationToken ct) =>
@@ -159,14 +159,14 @@ public static class OpticalApiEndpoints
             var result = await bus.InvokeAsync<Result<GlassesOrderDto>>(
                 new GetGlassesOrderByIdQuery(id), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Optical.View);
 
         // POST /api/optical/orders -- create glasses order from optical Rx
         group.MapPost("/orders", async (CreateGlassesOrderCommand command, IMessageBus bus, CancellationToken ct) =>
         {
             var result = await bus.InvokeAsync<Result<Guid>>(command, ct);
             return result.ToCreatedHttpResult("/api/optical/orders");
-        });
+        }).RequirePermissions(Permissions.Optical.Create);
 
         // PUT /api/optical/orders/{id}/status -- update order status (OPT-04 payment gate enforced)
         group.MapPut("/orders/{id:guid}/status", async (Guid id, UpdateOrderStatusCommand command, IMessageBus bus, CancellationToken ct) =>
@@ -174,7 +174,7 @@ public static class OpticalApiEndpoints
             var enriched = new UpdateOrderStatusCommand(id, command.NewStatus, command.Notes);
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Optical.Update);
     }
 
     private static void MapComboEndpoints(RouteGroupBuilder group)
@@ -185,14 +185,14 @@ public static class OpticalApiEndpoints
             var result = await bus.InvokeAsync<Result<List<ComboPackageDto>>>(
                 new GetComboPackagesQuery(p.IncludeInactive ?? false), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Optical.View);
 
         // POST /api/optical/combos -- create preset combo package (admin)
         group.MapPost("/combos", async (CreateComboPackageCommand command, IMessageBus bus, CancellationToken ct) =>
         {
             var result = await bus.InvokeAsync<Result<Guid>>(command, ct);
             return result.ToCreatedHttpResult("/api/optical/combos");
-        });
+        }).RequirePermissions(Permissions.Optical.Create);
 
         // PUT /api/optical/combos/{id} -- update combo package
         group.MapPut("/combos/{id:guid}", async (Guid id, UpdateComboPackageCommand command, IMessageBus bus, CancellationToken ct) =>
@@ -203,7 +203,7 @@ public static class OpticalApiEndpoints
                 command.ComboPrice, command.OriginalTotalPrice, command.IsActive);
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Optical.Update);
     }
 
     private static void MapPrescriptionEndpoints(RouteGroupBuilder group)
@@ -214,7 +214,7 @@ public static class OpticalApiEndpoints
             var result = await bus.InvokeAsync<Result<List<Optical.Contracts.Queries.OpticalPrescriptionHistoryDto>>>(
                 new GetPatientPrescriptionHistoryQuery(patientId), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Optical.View);
 
         // GET /api/optical/prescriptions/compare?patientId=xxx&id1=xxx&id2=xxx -- year-over-year comparison
         group.MapGet("/prescriptions/compare", async ([AsParameters] GetPrescriptionComparisonParams p, IMessageBus bus, CancellationToken ct) =>
@@ -225,7 +225,7 @@ public static class OpticalApiEndpoints
             var result = await bus.InvokeAsync<Result<PrescriptionComparisonDto>>(
                 new GetPrescriptionComparisonQuery(p.PatientId, p.Id1, p.Id2), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Optical.View);
     }
 }
 

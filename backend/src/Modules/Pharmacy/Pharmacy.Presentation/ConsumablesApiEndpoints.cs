@@ -27,14 +27,14 @@ public static class ConsumablesApiEndpoints
             var result = await bus.InvokeAsync<Result<List<ConsumableItemDto>>>(
                 new GetConsumableItemsQuery(), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Pharmacy.View);
 
         // POST /api/consumables -- create a new consumable item
         group.MapPost("/", async (CreateConsumableItemCommand command, IMessageBus bus, CancellationToken ct) =>
         {
             var result = await bus.InvokeAsync<Result<Guid>>(command, ct);
             return result.ToCreatedHttpResult("/api/consumables");
-        });
+        }).RequirePermissions(Permissions.Pharmacy.Create);
 
         // PUT /api/consumables/{id} -- update consumable item metadata
         group.MapPut("/{id:guid}", async (Guid id, UpdateConsumableItemCommand command, IMessageBus bus, CancellationToken ct) =>
@@ -48,7 +48,7 @@ public static class ConsumablesApiEndpoints
                 command.MinStockLevel);
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Pharmacy.Update);
 
         // GET /api/consumables/{id}/batches -- all batches for an ExpiryTracked consumable
         group.MapGet("/{id:guid}/batches", async (Guid id, IMessageBus bus, CancellationToken ct) =>
@@ -56,7 +56,7 @@ public static class ConsumablesApiEndpoints
             var result = await bus.InvokeAsync<Result<List<ConsumableBatchDto>>>(
                 new GetConsumableBatchesQuery(id), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Pharmacy.View);
 
         // POST /api/consumables/{id}/stock -- add stock to a consumable item
         group.MapPost("/{id:guid}/stock", async (Guid id, AddConsumableStockCommand command, IMessageBus bus, CancellationToken ct) =>
@@ -69,7 +69,7 @@ public static class ConsumablesApiEndpoints
                 command.Notes);
             var result = await bus.InvokeAsync<Result<Guid>>(enriched, ct);
             return result.ToCreatedHttpResult($"/api/consumables/{id}/stock");
-        });
+        }).RequirePermissions(Permissions.Pharmacy.Create);
 
         // POST /api/consumables/{id}/adjust -- manually adjust stock quantity
         group.MapPost("/{id:guid}/adjust", async (Guid id, AdjustConsumableStockCommand command, IMessageBus bus, CancellationToken ct) =>
@@ -82,7 +82,7 @@ public static class ConsumablesApiEndpoints
                 command.Notes);
             var result = await bus.InvokeAsync<Result<Guid>>(enriched, ct);
             return result.ToCreatedHttpResult($"/api/consumables/{id}/adjustments");
-        });
+        }).RequirePermissions(Permissions.Pharmacy.Update);
 
         // GET /api/consumables/alerts -- consumables below minimum stock level
         group.MapGet("/alerts", async (IMessageBus bus, CancellationToken ct) =>
@@ -90,7 +90,7 @@ public static class ConsumablesApiEndpoints
             var results = await bus.InvokeAsync<List<ConsumableItemDto>>(
                 new GetConsumableAlertsQuery(), ct);
             return Results.Ok(results);
-        });
+        }).RequirePermissions(Permissions.Pharmacy.View);
 
         return app;
     }
