@@ -177,16 +177,16 @@ export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrde
 
   const handlePatientChange = (patientId: string) => {
     setSelectedPatientId(patientId)
-    form.setValue("patientId", patientId)
-    form.setValue("visitId", "")
-    form.setValue("opticalPrescriptionId", "")
+    form.setValue("patientId", patientId, { shouldValidate: true })
+    form.setValue("visitId", "", { shouldValidate: true })
+    form.setValue("opticalPrescriptionId", "", { shouldValidate: true })
     setSelectedVisitId(undefined)
   }
 
   const handleVisitChange = (visitId: string) => {
     setSelectedVisitId(visitId)
-    form.setValue("visitId", visitId)
-    form.setValue("opticalPrescriptionId", "")
+    form.setValue("visitId", visitId, { shouldValidate: true })
+    form.setValue("opticalPrescriptionId", "", { shouldValidate: true })
   }
 
   const handleComboSelect = (comboId: string) => {
@@ -263,10 +263,19 @@ export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrde
               <div className="space-y-2">
                 <Input
                   value={patientSearch}
-                  onChange={(e) => setPatientSearch(e.target.value)}
+                  onChange={(e) => {
+                    setPatientSearch(e.target.value)
+                    if (selectedPatientId) {
+                      setSelectedPatientId(undefined)
+                      form.setValue("patientId", "", { shouldValidate: true })
+                      form.setValue("visitId", "", { shouldValidate: true })
+                      form.setValue("opticalPrescriptionId", "", { shouldValidate: true })
+                      setSelectedVisitId(undefined)
+                    }
+                  }}
                   placeholder={t("orders.searchPatient")}
                 />
-                {patients.length > 0 && patientSearch.length >= 2 && (
+                {patients.length > 0 && patientSearch.length >= 2 && !selectedPatientId && (
                   <div className="border rounded-md max-h-40 overflow-y-auto">
                     {patients.map((p) => (
                       <button
