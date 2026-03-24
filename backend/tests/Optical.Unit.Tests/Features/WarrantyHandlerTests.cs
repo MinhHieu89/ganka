@@ -19,6 +19,7 @@ namespace Optical.Unit.Tests.Features;
 public class WarrantyHandlerTests
 {
     private readonly IWarrantyClaimRepository _warrantyRepo = Substitute.For<IWarrantyClaimRepository>();
+    private readonly IGlassesOrderRepository _orderRepo = Substitute.For<IGlassesOrderRepository>();
     private readonly IUnitOfWork _unitOfWork = Substitute.For<IUnitOfWork>();
 
     private static readonly Guid DefaultBranchId = Guid.Parse("00000000-0000-0000-0000-000000000001");
@@ -54,7 +55,7 @@ public class WarrantyHandlerTests
         var query = new GetWarrantyClaimsQuery(ApprovalStatusFilter: null, Page: 1, PageSize: 20);
 
         // Act
-        var result = await GetWarrantyClaimsHandler.Handle(query, _warrantyRepo, CancellationToken.None);
+        var result = await GetWarrantyClaimsHandler.Handle(query, _warrantyRepo, _orderRepo, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -83,7 +84,7 @@ public class WarrantyHandlerTests
         var query = new GetWarrantyClaimsQuery(ApprovalStatusFilter: pendingStatusFilter, Page: 1, PageSize: 20);
 
         // Act
-        var result = await GetWarrantyClaimsHandler.Handle(query, _warrantyRepo, CancellationToken.None);
+        var result = await GetWarrantyClaimsHandler.Handle(query, _warrantyRepo, _orderRepo, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -105,7 +106,7 @@ public class WarrantyHandlerTests
         var query = new GetWarrantyClaimsQuery(ApprovalStatusFilter: null, Page: 1, PageSize: 20);
 
         // Act
-        var result = await GetWarrantyClaimsHandler.Handle(query, _warrantyRepo, CancellationToken.None);
+        var result = await GetWarrantyClaimsHandler.Handle(query, _warrantyRepo, _orderRepo, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -126,7 +127,7 @@ public class WarrantyHandlerTests
         var query = new GetWarrantyClaimsQuery(ApprovalStatusFilter: null, Page: 1, PageSize: 20);
 
         // Act
-        var result = await GetWarrantyClaimsHandler.Handle(query, _warrantyRepo, CancellationToken.None);
+        var result = await GetWarrantyClaimsHandler.Handle(query, _warrantyRepo, _orderRepo, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -150,7 +151,7 @@ public class WarrantyHandlerTests
         var query = new GetWarrantyClaimsQuery(ApprovalStatusFilter: null, Page: 1, PageSize: 20);
 
         // Act
-        var result = await GetWarrantyClaimsHandler.Handle(query, _warrantyRepo, CancellationToken.None);
+        var result = await GetWarrantyClaimsHandler.Handle(query, _warrantyRepo, _orderRepo, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
