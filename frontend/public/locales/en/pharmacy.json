@@ -255,6 +255,14 @@
     "excelSuccess": "Excel import completed",
     "excelNoFile": "Please select a file",
     "excelNoSupplier": "Please select a supplier",
-    "importLink": "Stock Import"
+    "importLink": "Stock Import",
+    "detailTitle": "Import Details",
+    "detailDrug": "Drug",
+    "detailBatch": "Batch No.",
+    "detailExpiry": "Expiry",
+    "detailQty": "Qty",
+    "detailPrice": "Unit Price",
+    "detailSubtotal": "Subtotal",
+    "detailTotal": "Total"
   }
 }

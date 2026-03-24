@@ -255,6 +255,14 @@
     "excelSuccess": "Nhập Excel thành công",
     "excelNoFile": "Vui lòng chọn file",
     "excelNoSupplier": "Vui lòng chọn nhà cung cấp",
-    "importLink": "Nhập kho"
+    "importLink": "Nhập kho",
+    "detailTitle": "Chi tiết nhập kho",
+    "detailDrug": "Thuốc",
+    "detailBatch": "Số lô",
+    "detailExpiry": "Hạn dùng",
+    "detailQty": "SL",
+    "detailPrice": "Đơn giá",
+    "detailSubtotal": "Thành tiền",
+    "detailTotal": "Tổng cộng"
   }
 }

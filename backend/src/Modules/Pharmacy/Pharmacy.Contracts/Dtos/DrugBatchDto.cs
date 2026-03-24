@@ -51,7 +51,14 @@ public sealed record StockImportDto(
     string? InvoiceNumber,
     DateTime ImportedAt,
     string? Notes,
-    List<StockImportLineDto> Lines);
+    List<StockImportLineDto> Lines)
+{
+    /// <summary>Computed: number of lines in this import.</summary>
+    public int LineCount => Lines.Count;
+
+    /// <summary>Computed: sum of Quantity * PurchasePrice across all lines.</summary>
+    public decimal TotalAmount => Lines.Sum(l => l.Quantity * l.PurchasePrice);
+}
 
 /// <summary>
 /// Cross-module DTO for a single line in a stock import.

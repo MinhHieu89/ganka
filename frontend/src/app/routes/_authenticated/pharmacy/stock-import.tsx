@@ -17,6 +17,7 @@ import { Skeleton } from "@/shared/components/Skeleton"
 import { Badge } from "@/shared/components/Badge"
 import { StockImportForm } from "@/features/pharmacy/components/StockImportForm"
 import { ExcelImportDialog } from "@/features/pharmacy/components/ExcelImportDialog"
+import { StockImportDetailDialog } from "@/features/pharmacy/components/StockImportDetailDialog"
 import type { StockImportDto } from "@/features/pharmacy/api/pharmacy-api"
 import { useStockImports } from "@/features/pharmacy/api/pharmacy-queries"
 
@@ -32,6 +33,8 @@ function StockImportPage() {
   const { data: imports, isLoading } = useStockImports()
   const [sorting, setSorting] = useState<SortingState>([])
   const [excelDialogOpen, setExcelDialogOpen] = useState(false)
+  const [selectedImport, setSelectedImport] = useState<StockImportDto | null>(null)
+  const [detailOpen, setDetailOpen] = useState(false)
 
   const columns = useMemo(
     () => [
@@ -49,7 +52,7 @@ function StockImportPage() {
         ),
         enableSorting: false,
       }),
-      columnHelper.accessor("importDate", {
+      columnHelper.accessor("importedAt", {
         header: () => t("stockImport.historyDate"),
         cell: (info) => (
           <span className="text-sm">
@@ -136,10 +139,24 @@ function StockImportPage() {
               table={table}
               columns={columns}
               emptyMessage={t("stockImport.historyEmpty")}
+              onRowClick={(row) => {
+                setSelectedImport(row)
+                setDetailOpen(true)
+              }}
             />
           )}
         </TabsContent>
       </Tabs>
+
+      {/* Import detail dialog */}
+      <StockImportDetailDialog
+        importRecord={selectedImport}
+        open={detailOpen}
+        onOpenChange={(open) => {
+          setDetailOpen(open)
+          if (!open) setSelectedImport(null)
+        }}
+      />
 
       {/* Excel import dialog */}
       <ExcelImportDialog

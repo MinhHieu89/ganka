@@ -69,10 +69,12 @@ export interface StockImportDto {
   supplierId: string
   supplierName: string
   invoiceNumber: string | null
-  importDate: string
+  importedAt: string
   totalAmount: number
   lineCount: number
   importSource: number
+  notes: string | null
+  lines: StockImportLineDto[]
 }
 
 export interface StockImportLineDto {
@@ -410,7 +412,10 @@ export async function getStockImports(
     params: { query: { page, pageSize } },
   } as never)
   if (error) throw new Error("Failed to fetch stock imports")
-  return (data as StockImportDto[]) ?? []
+  // Backend returns PagedStockImportsResult { items, totalCount, ... }
+  const result = data as { items: StockImportDto[]; totalCount: number } | StockImportDto[] | undefined
+  if (result && "items" in result) return result.items ?? []
+  return (result as StockImportDto[]) ?? []
 }
 
 export async function createStockImport(
