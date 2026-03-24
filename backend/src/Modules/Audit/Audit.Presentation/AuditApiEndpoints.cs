@@ -2,6 +2,7 @@ using Audit.Application.Features;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Shared.Domain;
 using Shared.Presentation;
 using Wolverine;
 
@@ -26,21 +27,21 @@ public static class AuditApiEndpoints
         {
             var result = await bus.InvokeAsync<GetAuditLogsResponse>(query);
             return Results.Ok(result);
-        });
+        }).RequirePermissions(Permissions.Audit.View);
 
         // Audit logs: export as CSV file download
         adminGroup.MapGet("/audit-logs/export", async ([AsParameters] ExportAuditLogsQuery query, IMessageBus bus) =>
         {
             var result = await bus.InvokeAsync<ExportAuditLogsResponse>(query);
             return Results.File(result.FileContents, "text/csv", result.FileName);
-        });
+        }).RequirePermissions(Permissions.Audit.Export);
 
         // Access logs: query with filtering and cursor-based pagination
         adminGroup.MapGet("/access-logs", async ([AsParameters] GetAccessLogsQuery query, IMessageBus bus) =>
         {
             var result = await bus.InvokeAsync<GetAccessLogsResponse>(query);
             return Results.Ok(result);
-        });
+        }).RequirePermissions(Permissions.Audit.View);
 
         return app;
     }

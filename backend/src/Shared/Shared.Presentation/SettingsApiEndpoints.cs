@@ -33,7 +33,7 @@ public static class SettingsApiEndpoints
         {
             var settings = await service.GetCurrentAsync(ct);
             return settings is not null ? Results.Ok(settings) : Results.NotFound();
-        });
+        }).RequirePermissions(Permissions.Settings.View);
 
         // PUT /api/settings/clinic
         group.MapPut("/clinic", async (
@@ -43,7 +43,7 @@ public static class SettingsApiEndpoints
         {
             var result = await service.CreateOrUpdateAsync(command, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Settings.Update);
 
         // POST /api/settings/clinic/logo
         group.MapPost("/clinic/logo", async (
@@ -58,7 +58,7 @@ public static class SettingsApiEndpoints
             var result = await UploadClinicLogoHandler.Handle(
                 command, blobService, settingsService, branchContext, ct);
             return result.ToHttpResult();
-        }).DisableAntiforgery();
+        }).RequirePermissions(Permissions.Settings.Update).DisableAntiforgery();
 
         return app;
     }

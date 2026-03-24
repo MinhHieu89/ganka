@@ -38,32 +38,32 @@ public static class PatientApiEndpoints
         {
             var result = await bus.InvokeAsync<Result<Guid>>(command, ct);
             return result.ToCreatedHttpResult("/api/patients");
-        });
+        }).RequirePermissions(Permissions.Patient.Create);
 
         group.MapGet("/{patientId:guid}", async (Guid patientId, IMessageBus bus, CancellationToken ct) =>
         {
             var result = await bus.InvokeAsync<Result<PatientDto>>(new GetPatientByIdQuery(patientId), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Patient.View);
 
         group.MapPut("/{patientId:guid}", async (Guid patientId, UpdatePatientCommand command, IMessageBus bus, CancellationToken ct) =>
         {
             var enriched = command with { PatientId = patientId };
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Patient.Update);
 
         group.MapPost("/{patientId:guid}/deactivate", async (Guid patientId, IMessageBus bus, CancellationToken ct) =>
         {
             var result = await bus.InvokeAsync<Result>(new DeactivatePatientCommand(patientId), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Patient.Update);
 
         group.MapPost("/{patientId:guid}/reactivate", async (Guid patientId, IMessageBus bus, CancellationToken ct) =>
         {
             var result = await bus.InvokeAsync<Result>(new ReactivatePatientCommand(patientId), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Patient.Update);
 
         group.MapGet("/", async (
             [AsParameters] GetPatientListQuery query,
@@ -72,14 +72,14 @@ public static class PatientApiEndpoints
         {
             var result = await bus.InvokeAsync<Result<PagedResult<PatientDto>>>(query, ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Patient.View);
 
         group.MapGet("/recent", async (int? count, IMessageBus bus, CancellationToken ct) =>
         {
             var result = await bus.InvokeAsync<Result<List<PatientSearchResult>>>(
                 new GetRecentPatientsQuery(count ?? 10), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Patient.View);
     }
 
     private static void MapAllergyEndpoints(RouteGroupBuilder group)
@@ -89,13 +89,13 @@ public static class PatientApiEndpoints
             var enriched = command with { PatientId = patientId };
             var result = await bus.InvokeAsync<Result<Guid>>(enriched, ct);
             return result.ToCreatedHttpResult($"/api/patients/{patientId}/allergies");
-        });
+        }).RequirePermissions(Permissions.Patient.Update);
 
         group.MapDelete("/{patientId:guid}/allergies/{allergyId:guid}", async (Guid patientId, Guid allergyId, IMessageBus bus, CancellationToken ct) =>
         {
             var result = await bus.InvokeAsync<Result>(new RemoveAllergyCommand(patientId, allergyId), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Patient.Update);
     }
 
     private static void MapSearchEndpoints(RouteGroupBuilder group)
@@ -105,7 +105,7 @@ public static class PatientApiEndpoints
             var result = await bus.InvokeAsync<Result<List<PatientSearchResult>>>(
                 new SearchPatientsQuery(term ?? string.Empty), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Patient.View);
     }
 
     private static void MapPhotoEndpoints(RouteGroupBuilder group)
@@ -116,7 +116,7 @@ public static class PatientApiEndpoints
             var command = new UploadPatientPhotoCommand(patientId, stream, file.FileName);
             var result = await bus.InvokeAsync<Result<string>>(command, ct);
             return result.ToHttpResult();
-        }).DisableAntiforgery();
+        }).RequirePermissions(Permissions.Patient.Update).DisableAntiforgery();
     }
 
     private static void MapValidationEndpoints(RouteGroupBuilder group)
@@ -126,7 +126,7 @@ public static class PatientApiEndpoints
             var result = await bus.InvokeAsync<Result<PatientFieldValidationResult>>(
                 new ValidatePatientFieldsQuery(patientId), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Patient.View);
     }
 
     private static void MapDashboardEndpoints(IEndpointRouteBuilder app)
