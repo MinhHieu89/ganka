@@ -601,4 +601,9 @@ Plans:
   5. PRT-03 verified: invoice print (A4) and receipt print (A5) endpoints return valid PDF, UI buttons trigger correctly
   6. Phase 05 VERIFICATION.md created with PRT-03 status
 
-Plans: TBD
+**Plans:** 3 plans in 2 waves
+
+Plans:
+- [ ] 12-01-PLAN.md — Fix Optical.Unit.Tests build failure and Scheduling.Unit.Tests UTC assertions
+- [ ] 12-02-PLAN.md — Fix Auth.Integration.Tests Wolverine startup in WebApplicationFactory
+- [ ] 12-03-PLAN.md — PRT-03 integration tests for invoice/receipt print endpoints + VERIFICATION.md
