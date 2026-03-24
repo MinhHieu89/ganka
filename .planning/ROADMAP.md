@@ -21,6 +21,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 7: Billing & Finance** - Unified invoicing, payment processing, and shift management (completed 2026-03-17)
 - [x] **Phase 8: Optical Center** - Frame/lens inventory, glasses order tracking, warranty, and stocktaking (completed 2026-03-08)
 - [ ] **Phase 9: Treatment Protocols** - IPL/LLLT/lid care packages with session tracking and OSDI monitoring
+- [ ] **Phase 11: Granular Permission Enforcement** - Add granular permission authorization policies to all API endpoints and frontend route guards (gap closure)
+- [ ] **Phase 12: Fix Test Failures & Verify PRT-03** - Fix broken test suites and verify invoice/receipt printing (gap closure)
 
 ## Phase Details
 
@@ -563,3 +565,35 @@ Plans:
 - [x] 10.1-08-PLAN.md -- Investigation fixes: medication import, cashier timestamps, dispensing, service catalog (TASK-15, TASK-19, TASK-29, TASK-30)
 - [ ] 10.1-09-PLAN.md -- Gap closure: wire dashboard stats cross-module queries (TASK-17)
 - [ ] 10.1-10-PLAN.md -- Gap closure: investigate and fix dispensing confirmation (TASK-29)
+
+
+### Phase 11: Granular Permission Enforcement (INSERTED — Gap Closure)
+
+**Goal:** All API endpoints enforce granular permission-based authorization policies (not just JWT authentication), and all frontend routes have `beforeLoad` permission guards matching their backend counterparts
+**Depends on:** Phase 1, Phase 10.1
+**Requirements:** AUTH-04, AUTH-05
+**Gap Closure:** Closes AUTH-04/AUTH-05 partial gaps and admin route integration gap from v1.0 audit
+**Success Criteria** (what must be TRUE):
+  1. Every module API endpoint group has a granular permission authorization policy (e.g., `Auth.Manage`, `Patient.Read`, `Billing.Write`)
+  2. Every frontend authenticated route has a `beforeLoad` guard checking the required permission from the auth store
+  3. A user without the required permission gets 403 on backend and redirect on frontend
+  4. Treatment routes and audit-logs (already guarded) remain working as reference
+
+Plans: TBD
+
+
+### Phase 12: Fix Test Failures & Verify PRT-03 (INSERTED — Gap Closure)
+
+**Goal:** All test suites compile and pass; PRT-03 (invoice/receipt printing) formally verified
+**Depends on:** Phase 11
+**Requirements:** OPT-07, PRT-03
+**Gap Closure:** Closes OPT-07 test build failure, PRT-03 verification gap, and test debt from v1.0 audit
+**Success Criteria** (what must be TRUE):
+  1. Optical.Unit.Tests build and pass — WarrantyHandlerTests updated with correct parameter count
+  2. Clinical.Unit.Tests build and pass — SubmitOsdiQuestionnaireHandler tests updated with IOsdiNotificationService
+  3. Auth.Integration.Tests pass — Wolverine initialization resolved in test host
+  4. Scheduling.Unit.Tests pass — DateTimeKind.Utc enforced in appointment projections
+  5. PRT-03 verified: invoice print (A4) and receipt print (A5) endpoints return valid PDF, UI buttons trigger correctly
+  6. Phase 05 VERIFICATION.md created with PRT-03 status
+
+Plans: TBD

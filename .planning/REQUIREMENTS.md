@@ -12,8 +12,8 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **AUTH-01**: Staff can log in with credentials and receive JWT token with role-based claims
 - [x] **AUTH-02**: System supports roles: Doctor, Technician, Nurse, Cashier, Optical Staff, Manager, Accountant
 - [x] **AUTH-03**: Admin can configure granular permissions per role (CRUD per entity/action)
-- [x] **AUTH-04**: User session persists with token refresh, times out after inactivity, supports logout
-- [x] **AUTH-05**: System logs all login attempts, record access, and data views (access logging)
+- [ ] **AUTH-04**: User session persists with token refresh, times out after inactivity, supports logout
+- [ ] **AUTH-05**: System logs all login attempts, record access, and data views (access logging)
 
 ### Patient Management
 
@@ -233,8 +233,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUTH-01 | Phase 1 | Complete |
 | AUTH-02 | Phase 1 | Complete |
 | AUTH-03 | Phase 1 | Complete |
-| AUTH-04 | Phase 1 | Complete |
-| AUTH-05 | Phase 1 | Complete |
+| AUTH-04 | Phase 11 | Pending |
+| AUTH-05 | Phase 11 | Pending |
 | PAT-01 | Phase 2 | Complete |
 | PAT-02 | Phase 2 | Complete |
 | PAT-03 | Phase 2 | Complete |
@@ -295,7 +295,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | OPT-04 | Phase 8 | Complete |
 | OPT-05 | Phase 8 | Complete |
 | OPT-06 | Phase 8 | Complete |
-| OPT-07 | Phase 8 | Complete |
+| OPT-07 | Phase 12 | Pending |
 | OPT-08 | Phase 8 | Complete |
 | OPT-09 | Phase 8 | Complete |
 | FIN-01 | Phase 7 | Complete |
@@ -310,7 +310,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FIN-10 | Phase 7 | Complete |
 | PRT-01 | Phase 5 | Complete |
 | PRT-02 | Phase 5 | Complete |
-| PRT-03 | Phase 5 | Pending |
+| PRT-03 | Phase 12 | Pending |
 | PRT-04 | Phase 5 | Complete |
 | PRT-05 | Phase 5 | Complete |
 | PRT-06 | Phase 5 | Complete |
