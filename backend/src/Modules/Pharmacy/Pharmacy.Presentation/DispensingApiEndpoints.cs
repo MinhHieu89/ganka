@@ -35,7 +35,7 @@ public static class DispensingApiEndpoints
             var result = await bus.InvokeAsync<Result<List<Pharmacy.Contracts.Dtos.PendingPrescriptionDto>>>(
                 new GetPendingPrescriptionsQuery(p.PatientId), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Pharmacy.View);
 
         // GET /api/pharmacy/dispensing/pending/count -- count of pending prescriptions (sidebar badge)
         group.MapGet("/dispensing/pending/count", async (IMessageBus bus, CancellationToken ct) =>
@@ -47,14 +47,14 @@ public static class DispensingApiEndpoints
 
             var nonExpired = result.Value?.Count(p => !p.IsExpired) ?? 0;
             return Results.Ok(new { Count = nonExpired });
-        });
+        }).RequirePermissions(Permissions.Pharmacy.View);
 
         // POST /api/pharmacy/dispensing -- dispense drugs against a prescription
         group.MapPost("/dispensing", async (DispenseDrugsCommand command, IMessageBus bus, CancellationToken ct) =>
         {
             var result = await bus.InvokeAsync<Result<Guid>>(command, ct);
             return result.ToCreatedHttpResult("/api/pharmacy/dispensing");
-        });
+        }).RequirePermissions(Permissions.Pharmacy.Create);
 
         // GET /api/pharmacy/dispensing/history?page=1&pageSize=20&patientId=xxx -- paginated dispensing history
         group.MapGet("/dispensing/history", async ([AsParameters] GetDispensingHistoryParams p, IMessageBus bus, CancellationToken ct) =>
@@ -62,7 +62,7 @@ public static class DispensingApiEndpoints
             var result = await bus.InvokeAsync<Result<DispensingHistoryDto>>(
                 new GetDispensingHistoryQuery(p.Page ?? 1, p.PageSize ?? 20, p.PatientId), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Pharmacy.View);
     }
 
     private static void MapOtcSaleEndpoints(RouteGroupBuilder group)
@@ -72,7 +72,7 @@ public static class DispensingApiEndpoints
         {
             var result = await bus.InvokeAsync<Result<Guid>>(command, ct);
             return result.ToCreatedHttpResult("/api/pharmacy/otc-sales");
-        });
+        }).RequirePermissions(Permissions.Pharmacy.Create);
 
         // GET /api/pharmacy/otc-sales?page=1&pageSize=20 -- paginated OTC sale history
         group.MapGet("/otc-sales", async ([AsParameters] GetOtcSalesParams p, IMessageBus bus, CancellationToken ct) =>
@@ -80,7 +80,7 @@ public static class DispensingApiEndpoints
             var result = await bus.InvokeAsync<Result<OtcSalesPagedResult>>(
                 new GetOtcSalesQuery(p.Page ?? 1, p.PageSize ?? 20), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Pharmacy.View);
     }
 }
 

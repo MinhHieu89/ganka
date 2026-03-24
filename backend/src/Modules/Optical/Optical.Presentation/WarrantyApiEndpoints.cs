@@ -32,14 +32,14 @@ public static class WarrantyApiEndpoints
             var result = await bus.InvokeAsync<Result<PagedWarrantyClaimsResult>>(
                 new GetWarrantyClaimsQuery(p.ApprovalStatusFilter, p.Page ?? 1, p.PageSize ?? 20), ct);
             return result.ToHttpResult();
-        });
+        }).RequirePermissions(Permissions.Optical.View);
 
         // POST /api/optical/warranty -- file a new warranty claim
         group.MapPost("/warranty", async (CreateWarrantyClaimCommand command, IMessageBus bus, CancellationToken ct) =>
         {
             var result = await bus.InvokeAsync<Result<Guid>>(command, ct);
             return result.ToCreatedHttpResult("/api/optical/warranty");
-        });
+        }).RequirePermissions(Permissions.Optical.Create);
 
         // PUT /api/optical/warranty/{id}/approve -- manager approves or rejects claim (Replace resolution only)
         group.MapPut("/warranty/{id:guid}/approve", async (Guid id, ApproveWarrantyClaimCommand command, IMessageBus bus, CancellationToken ct) =>
@@ -72,7 +72,7 @@ public static class WarrantyApiEndpoints
             var result = await bus.InvokeAsync<Result<string>>(
                 new UploadWarrantyDocumentCommand(id, stream, file.FileName), ct);
             return result.ToHttpResult();
-        }).DisableAntiforgery();
+        }).RequirePermissions(Permissions.Optical.Update).DisableAntiforgery();
     }
 }
 
