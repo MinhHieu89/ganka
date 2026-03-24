@@ -579,12 +579,13 @@ Plans:
   3. A user without the required permission gets 403 on backend and redirect on frontend
   4. Treatment routes and audit-logs (already guarded) remain working as reference
 
-**Plans:** 3 plans in 2 waves
+**Plans:** 4 plans in 3 waves
 
 Plans:
-- [ ] 11-01-PLAN.md — Backend: add RequirePermissions() to all 13 API endpoint files
+- [ ] 11-00-PLAN.md — TDD RED: failing architecture test for permission enforcement coverage
+- [ ] 11-01-PLAN.md — Backend: add RequirePermissions() to all 13 API endpoint files (TDD GREEN)
 - [ ] 11-02-PLAN.md — Frontend: permission guard utility + beforeLoad guards on ~27 routes + sidebar filtering
-- [ ] 11-03-PLAN.md — Architecture test + human verification checkpoint
+- [ ] 11-03-PLAN.md — Regression validation + human verification checkpoint
 
 
 ### Phase 12: Fix Test Failures & Verify PRT-03 (INSERTED — Gap Closure)
