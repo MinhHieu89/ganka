@@ -5,10 +5,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Auth.Infrastructure;
+using Auth.Infrastructure.Seeding;
 using Auth.Infrastructure.Services;
 using Auth.Domain.Entities;
 using Shared.Domain;
+using Shared.Infrastructure.Interceptors;
 
 namespace Auth.Integration.Tests;
 
@@ -17,6 +20,11 @@ namespace Auth.Integration.Tests;
 /// Uses a dedicated test database (LocalDB) with a unique name per test run
 /// to avoid polluting the development database.
 /// Seeds a test user for login/refresh/logout endpoint testing.
+///
+/// Key design decisions:
+/// - Removes DomainEventDispatcherInterceptor to avoid WolverineHasNotStartedException
+///   during host startup (AuthDataSeeder calls SaveChangesAsync before Wolverine initializes).
+/// - Removes AuthDataSeeder and seeds data manually in InitializeAsync to control timing.
 /// </summary>
 public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
@@ -37,7 +45,23 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
 
         builder.ConfigureTestServices(services =>
         {
-            // Remove all DbContext registrations
+            // Remove AuthDataSeeder hosted service — we seed test data manually in InitializeAsync
+            // to avoid WolverineHasNotStartedException (seeder runs SaveChangesAsync during startup
+            // before Wolverine's hosted service has initialized the message bus).
+            var seederDescriptor = services.SingleOrDefault(
+                d => d.ImplementationType == typeof(AuthDataSeeder));
+            if (seederDescriptor != null)
+                services.Remove(seederDescriptor);
+
+            // Remove DomainEventDispatcherInterceptor — Wolverine is not reliably started
+            // during test host initialization, and domain event dispatch is not needed for
+            // auth integration tests.
+            var interceptorDescriptor = services.SingleOrDefault(
+                d => d.ServiceType == typeof(DomainEventDispatcherInterceptor));
+            if (interceptorDescriptor != null)
+                services.Remove(interceptorDescriptor);
+
+            // Remove all DbContext registrations (including option configurations with interceptors)
             RemoveDbContextServices<AuthDbContext>(services);
             RemoveDbContextServices<Audit.Infrastructure.AuditDbContext>(services);
             RemoveDbContextServices<Shared.Infrastructure.ReferenceDbContext>(services);
@@ -49,7 +73,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
             RemoveDbContextServices<Billing.Infrastructure.BillingDbContext>(services);
             RemoveDbContextServices<Treatment.Infrastructure.TreatmentDbContext>(services);
 
-            // Re-register all DbContexts with test database (no AuditInterceptor)
+            // Re-register all DbContexts with test database (no interceptors)
             services.AddDbContext<AuthDbContext>(options =>
                 options.UseSqlServer(connectionString));
             services.AddDbContext<Audit.Infrastructure.AuditDbContext>(options =>
@@ -80,7 +104,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
     }
 
     /// <summary>
-    /// Create all tables before the host starts so that hosted services (AuthDataSeeder, etc.) can access them.
+    /// Create all tables before the host starts so that hosted services can access them.
     /// Uses EnsureCreated for the first context (creates the DB), then CreateTables for subsequent contexts
     /// since EnsureCreated is a no-op once the database exists.
     /// </summary>
@@ -120,7 +144,12 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
 
     public async Task InitializeAsync()
     {
-        // Access Services to trigger host startup (seeders will run)
+        // Force the host to fully start by creating a client.
+        // This triggers CreateHost -> BuildAsync -> StartAsync, ensuring Wolverine
+        // and all hosted services are initialized before we seed test data.
+        _ = CreateClient();
+
+        // Seed test data after the host is fully started
         using var scope = Services.CreateScope();
         var authDb = scope.ServiceProvider.GetRequiredService<AuthDbContext>();
 
@@ -156,7 +185,8 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
             .Where(d =>
                 d.ServiceType == typeof(DbContextOptions<TContext>) ||
                 d.ServiceType == typeof(DbContextOptions) ||
-                d.ServiceType == typeof(TContext))
+                d.ServiceType == typeof(TContext) ||
+                d.ServiceType == typeof(IDbContextOptionsConfiguration<TContext>))
             .ToList();
 
         foreach (var descriptor in descriptors)
