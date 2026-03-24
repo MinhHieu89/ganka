@@ -77,7 +77,19 @@
     "required": "Required",
     "invalidEmail": "Invalid email address",
     "minLength": "Minimum {{min}} characters",
-    "maxLength": "Maximum {{max}} characters"
+    "maxLength": "Maximum {{max}} characters",
+    "mustBePositive": "Must be greater than 0",
+    "mustBeInteger": "Must be a whole number",
+    "mustBeNonNegative": "Must be >= 0",
+    "minValue": "Must be at least {{min}}",
+    "maxValue": "Must be at most {{max}}",
+    "between": "Must be between {{min}} and {{max}}",
+    "exactDigits": "Must be exactly {{count}} digits",
+    "minItems": "At least {{min}} item(s) required",
+    "selectRequired": "Please select an option",
+    "cannotBeZero": "Cannot be zero",
+    "reasonRequired": "Reason is required",
+    "percentMax100": "Percentage must not exceed 100"
   },
   "status": {
     "loading": "Loading...",

@@ -77,7 +77,19 @@
     "required": "Bắt buộc",
     "invalidEmail": "Email không hợp lệ",
     "minLength": "Tối thiểu {{min}} ký tự",
-    "maxLength": "Tối đa {{max}} ký tự"
+    "maxLength": "Tối đa {{max}} ký tự",
+    "mustBePositive": "Phải lớn hơn 0",
+    "mustBeInteger": "Phải là số nguyên",
+    "mustBeNonNegative": "Phải >= 0",
+    "minValue": "Phải ít nhất {{min}}",
+    "maxValue": "Phải nhiều nhất {{max}}",
+    "between": "Phải từ {{min}} đến {{max}}",
+    "exactDigits": "Phải đúng {{count}} chữ số",
+    "minItems": "Cần ít nhất {{min}} mục",
+    "selectRequired": "Vui lòng chọn",
+    "cannotBeZero": "Không thể bằng 0",
+    "reasonRequired": "Lý do là bắt buộc",
+    "percentMax100": "Phần trăm không được vượt quá 100"
   },
   "status": {
     "loading": "Đang tải...",
