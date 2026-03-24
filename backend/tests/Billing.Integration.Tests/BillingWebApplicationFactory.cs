@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Auth.Infrastructure;
 using Auth.Infrastructure.Services;
 using Auth.Domain.Entities;
+using Auth.Domain.Enums;
 using Billing.Domain.Entities;
 using Billing.Domain.Enums;
 using Billing.Infrastructure;
@@ -109,7 +110,11 @@ public class BillingWebApplicationFactory : WebApplicationFactory<Program>, IAsy
         CreateTablesIfNotExist<Shared.Infrastructure.ReferenceDbContext>(connectionString);
         CreateTablesIfNotExist<Patient.Infrastructure.PatientDbContext>(connectionString);
         CreateTablesIfNotExist<Scheduling.Infrastructure.SchedulingDbContext>(connectionString);
+        CreateTablesIfNotExist<Pharmacy.Infrastructure.PharmacyDbContext>(connectionString);
+        CreateTablesIfNotExist<Optical.Infrastructure.OpticalDbContext>(connectionString);
+        CreateTablesIfNotExist<Clinical.Infrastructure.ClinicalDbContext>(connectionString);
         CreateTablesIfNotExist<BillingDbContext>(connectionString);
+        CreateTablesIfNotExist<Treatment.Infrastructure.TreatmentDbContext>(connectionString);
     }
 
     private static void CreateTablesIfNotExist<TContext>(string connectionString) where TContext : DbContext
@@ -142,14 +147,55 @@ public class BillingWebApplicationFactory : WebApplicationFactory<Program>, IAsy
         var authDb = scope.ServiceProvider.GetRequiredService<AuthDbContext>();
         var billingDb = scope.ServiceProvider.GetRequiredService<BillingDbContext>();
 
-        // Seed test user
         var branchId = new BranchId(Guid.Parse("00000000-0000-0000-0000-000000000001"));
+
+        // Seed permissions (all Module x Action combinations)
+        if (!await authDb.Permissions.AnyAsync())
+        {
+            var permissions = new List<Permission>();
+            foreach (var module in Enum.GetValues<PermissionModule>())
+            {
+                foreach (var action in Enum.GetValues<PermissionAction>())
+                {
+                    permissions.Add(new Permission(module, action, $"{action} access to {module}"));
+                }
+            }
+            authDb.Permissions.AddRange(permissions);
+            await authDb.SaveChangesAsync();
+        }
+
+        // Seed Admin role with all permissions
+        if (!await authDb.Roles.AnyAsync())
+        {
+            var allPerms = await authDb.Permissions.ToListAsync();
+            var adminRole = new Role("Admin", "Full system administrator", true, branchId);
+            adminRole.UpdatePermissions(allPerms);
+            authDb.Roles.Add(adminRole);
+            await authDb.SaveChangesAsync();
+        }
+
+        // Seed system settings for token lifetimes
+        if (!await authDb.SystemSettings.AnyAsync())
+        {
+            authDb.SystemSettings.AddRange(
+                new SystemSetting("AccessTokenLifetimeMinutes", "15", "JWT access token lifetime"),
+                new SystemSetting("RefreshTokenLifetimeDays", "7", "Refresh token lifetime"),
+                new SystemSetting("RememberMeRefreshTokenLifetimeDays", "30", "Remember me token lifetime"),
+                new SystemSetting("SessionTimeoutMinutes", "30", "Session timeout"));
+            await authDb.SaveChangesAsync();
+        }
+
+        // Seed test user with Admin role
         User? user;
         if (!await authDb.Users.AnyAsync(u => u.Email == TestUserEmail))
         {
             var passwordHasher = new PasswordHasher();
             var passwordHash = passwordHasher.HashPassword(TestUserPassword);
             user = User.Create(TestUserEmail, TestUserFullName, passwordHash, branchId);
+
+            var role = await authDb.Roles.FirstAsync(r => r.Name == "Admin");
+            user.AssignRole(role);
+
             authDb.Users.Add(user);
             await authDb.SaveChangesAsync();
         }
