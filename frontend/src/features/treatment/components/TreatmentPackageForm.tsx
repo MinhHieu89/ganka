@@ -263,7 +263,7 @@ export function TreatmentPackageForm({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
-                <FieldLabel htmlFor="protocolTemplateId">
+                <FieldLabel required htmlFor="protocolTemplateId">
                   {t("packageForm.selectTemplate")}
                 </FieldLabel>
                 <Select

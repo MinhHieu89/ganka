@@ -171,7 +171,7 @@ export function SwitchTreatmentDialog({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
-                <FieldLabel htmlFor="newProtocolTemplateId">
+                <FieldLabel required htmlFor="newProtocolTemplateId">
                   {t("switch.newProtocol")}
                 </FieldLabel>
                 <Select
@@ -231,7 +231,7 @@ export function SwitchTreatmentDialog({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
-                <FieldLabel htmlFor="reason">
+                <FieldLabel required htmlFor="reason">
                   {t("switch.reasonLabel")}
                 </FieldLabel>
                 <AutoResizeTextarea

@@ -117,7 +117,7 @@ export function SupplierForm({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
-                <FieldLabel htmlFor={field.name}>
+                <FieldLabel required htmlFor={field.name}>
                   {t("supplier.name")}
                 </FieldLabel>
                 <Input

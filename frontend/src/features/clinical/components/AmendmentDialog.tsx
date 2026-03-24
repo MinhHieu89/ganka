@@ -121,7 +121,7 @@ export function AmendmentDialog({ visitId, visit, open, onClose }: AmendmentDial
 
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
           <Field data-invalid={form.formState.errors.reason ? true : undefined}>
-            <FieldLabel>{t("visit.amendReason")}</FieldLabel>
+            <FieldLabel required>{t("visit.amendReason")}</FieldLabel>
             <AutoResizeTextarea
               className="min-h-[100px]"
               {...form.register("reason")}

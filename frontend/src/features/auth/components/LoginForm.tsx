@@ -61,7 +61,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
         control={form.control}
         render={({ field, fieldState }) => (
           <Field data-invalid={fieldState.invalid || undefined}>
-            <FieldLabel htmlFor={field.name}>
+            <FieldLabel required htmlFor={field.name}>
               {t("login.username")}
             </FieldLabel>
             <Input
@@ -84,7 +84,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
         control={form.control}
         render={({ field, fieldState }) => (
           <Field data-invalid={fieldState.invalid || undefined}>
-            <FieldLabel htmlFor={field.name}>
+            <FieldLabel required htmlFor={field.name}>
               {t("login.password")}
             </FieldLabel>
             <div className="relative">

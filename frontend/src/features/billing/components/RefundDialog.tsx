@@ -217,7 +217,7 @@ export function RefundDialog({
               control={form.control}
               render={({ field }) => (
                 <Field>
-                  <FieldLabel>{t("scope")}</FieldLabel>
+                  <FieldLabel required>{t("scope")}</FieldLabel>
                   <RadioGroup
                     value={field.value}
                     onValueChange={field.onChange}
@@ -274,7 +274,7 @@ export function RefundDialog({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>{t("refundAmount")}</FieldLabel>
+                  <FieldLabel required htmlFor={field.name}>{t("refundAmount")}</FieldLabel>
                   <div className="relative">
                     <Input
                       {...field}
@@ -302,7 +302,7 @@ export function RefundDialog({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>{t("refundReason")}</FieldLabel>
+                  <FieldLabel required htmlFor={field.name}>{t("refundReason")}</FieldLabel>
                   <Input
                     {...field}
                     id={field.name}

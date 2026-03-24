@@ -197,7 +197,7 @@ export function ConsumableAdjustDialog({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
-                <FieldLabel htmlFor={field.name}>Thay đổi số lượng</FieldLabel>
+                <FieldLabel required htmlFor={field.name}>Thay đổi số lượng</FieldLabel>
                 <Input
                   {...field}
                   id={field.name}
@@ -221,7 +221,7 @@ export function ConsumableAdjustDialog({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
-                <FieldLabel>Lý do điều chỉnh</FieldLabel>
+                <FieldLabel required>Lý do điều chỉnh</FieldLabel>
                 <Select
                   value={String(field.value)}
                   onValueChange={(v) => field.onChange(Number(v))}

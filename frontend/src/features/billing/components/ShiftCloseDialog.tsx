@@ -146,7 +146,7 @@ export function ShiftCloseDialog({
           </div>
 
           <Field data-invalid={!!errors.actualCashCount}>
-            <FieldLabel>{t("actualCashCount")}</FieldLabel>
+            <FieldLabel required>{t("actualCashCount")}</FieldLabel>
             <Controller
               control={control}
               name="actualCashCount"

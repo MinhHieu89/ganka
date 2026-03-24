@@ -23,6 +23,7 @@ import { Input } from "@/shared/components/Input"
 import { Label } from "@/shared/components/Label"
 import { AutoResizeTextarea } from "@/shared/components/AutoResizeTextarea"
 import { Skeleton } from "@/shared/components/Skeleton"
+import { Field, FieldLabel, FieldError } from "@/shared/components/Field"
 import {
   useClinicSettings,
   useUpdateClinicSettings,
@@ -228,122 +229,117 @@ export function ClinicSettingsPage() {
 
             {/* Clinic Name Fields */}
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="clinicName">
-                  {t("clinicSettings.clinicName", "Clinic Name (EN)")} *
-                </Label>
+              <Field data-invalid={!!errors.clinicName || undefined}>
+                <FieldLabel required htmlFor="clinicName">
+                  {t("clinicSettings.clinicName", "Clinic Name (EN)")}
+                </FieldLabel>
                 <Input
                   id="clinicName"
                   {...register("clinicName")}
-                  aria-invalid={!!errors.clinicName}
+                  aria-invalid={!!errors.clinicName || undefined}
                 />
                 {errors.clinicName && (
-                  <p className="text-sm text-destructive">
-                    {errors.clinicName.message}
-                  </p>
+                  <FieldError>{errors.clinicName.message}</FieldError>
                 )}
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="clinicNameVi">
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="clinicNameVi">
                   {t("clinicSettings.clinicNameVi", "Clinic Name (VI)")}
-                </Label>
+                </FieldLabel>
                 <Input
                   id="clinicNameVi"
                   {...register("clinicNameVi")}
                 />
-              </div>
+              </Field>
             </div>
 
             {/* Address */}
-            <div className="space-y-2">
-              <Label htmlFor="address">
-                {t("clinicSettings.address", "Address")} *
-              </Label>
+            <Field data-invalid={!!errors.address || undefined}>
+              <FieldLabel required htmlFor="address">
+                {t("clinicSettings.address", "Address")}
+              </FieldLabel>
               <Input
                 id="address"
                 {...register("address")}
-                aria-invalid={!!errors.address}
+                aria-invalid={!!errors.address || undefined}
               />
               {errors.address && (
-                <p className="text-sm text-destructive">
-                  {errors.address.message}
-                </p>
+                <FieldError>{errors.address.message}</FieldError>
               )}
-            </div>
+            </Field>
 
             {/* Contact Info */}
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="phone">
+              <Field>
+                <FieldLabel htmlFor="phone">
                   {t("clinicSettings.phone", "Phone")}
-                </Label>
+                </FieldLabel>
                 <Input
                   id="phone"
                   type="tel"
                   {...register("phone")}
                 />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="fax">
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="fax">
                   {t("clinicSettings.fax", "Fax")}
-                </Label>
+                </FieldLabel>
                 <Input
                   id="fax"
                   type="tel"
                   {...register("fax")}
                 />
-              </div>
+              </Field>
             </div>
 
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="email">
+              <Field data-invalid={!!errors.email || undefined}>
+                <FieldLabel htmlFor="email">
                   {t("clinicSettings.email", "Email")}
-                </Label>
+                </FieldLabel>
                 <Input
                   id="email"
                   type="email"
                   {...register("email")}
+                  aria-invalid={!!errors.email || undefined}
                 />
                 {errors.email && (
-                  <p className="text-sm text-destructive">
-                    {errors.email.message}
-                  </p>
+                  <FieldError>{errors.email.message}</FieldError>
                 )}
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="website">
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="website">
                   {t("clinicSettings.website", "Website")}
-                </Label>
+                </FieldLabel>
                 <Input
                   id="website"
                   {...register("website")}
                 />
-              </div>
+              </Field>
             </div>
 
             {/* License Number */}
-            <div className="space-y-2">
-              <Label htmlFor="licenseNumber">
+            <Field>
+              <FieldLabel htmlFor="licenseNumber">
                 {t("clinicSettings.licenseNumber", "License Number (So GPHN)")}
-              </Label>
+              </FieldLabel>
               <Input
                 id="licenseNumber"
                 {...register("licenseNumber")}
               />
-            </div>
+            </Field>
 
             {/* Tagline */}
-            <div className="space-y-2">
-              <Label htmlFor="tagline">
+            <Field>
+              <FieldLabel htmlFor="tagline">
                 {t("clinicSettings.tagline", "Tagline")}
-              </Label>
+              </FieldLabel>
               <AutoResizeTextarea
                 id="tagline"
                 rows={2}
                 {...register("tagline")}
               />
-            </div>
+            </Field>
 
             {/* Save Button */}
             <div className="flex justify-end">

@@ -220,8 +220,8 @@ export function ModifyPackageDialog({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
-                <FieldLabel htmlFor="reason">
-                  {t("modify.changeReason")} *
+                <FieldLabel required htmlFor="reason">
+                  {t("modify.changeReason")}
                 </FieldLabel>
                 <AutoResizeTextarea
                   {...field}

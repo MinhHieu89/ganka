@@ -208,7 +208,7 @@ export function WarrantyClaimForm({ open, onOpenChange }: WarrantyClaimFormProps
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
-                <FieldLabel>{t("warranty.order")}</FieldLabel>
+                <FieldLabel required>{t("warranty.order")}</FieldLabel>
                 <Select
                   value={field.value}
                   onValueChange={field.onChange}
@@ -266,7 +266,7 @@ export function WarrantyClaimForm({ open, onOpenChange }: WarrantyClaimFormProps
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
-                <FieldLabel>{t("warranty.resolution")}</FieldLabel>
+                <FieldLabel required>{t("warranty.resolution")}</FieldLabel>
                 <RadioGroup
                   value={field.value}
                   onValueChange={field.onChange}

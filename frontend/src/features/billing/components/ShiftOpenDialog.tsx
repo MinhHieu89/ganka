@@ -126,7 +126,7 @@ export function ShiftOpenDialog({
           </Field>
 
           <Field data-invalid={!!errors.openingBalance}>
-            <FieldLabel>{t("openingBalance")}</FieldLabel>
+            <FieldLabel required>{t("openingBalance")}</FieldLabel>
             <Controller
               control={control}
               name="openingBalance"

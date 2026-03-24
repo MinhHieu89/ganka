@@ -199,7 +199,7 @@ export function AppointmentBookingDialog({
 
           {/* Patient search */}
           <Field>
-            <FieldLabel>{t("patient")}</FieldLabel>
+            <FieldLabel required>{t("patient")}</FieldLabel>
             <Popover open={patientPopoverOpen} onOpenChange={setPatientPopoverOpen}>
               <PopoverTrigger asChild>
                 <Button
@@ -262,7 +262,7 @@ export function AppointmentBookingDialog({
 
           {/* Doctor */}
           <Field>
-            <FieldLabel>{t("doctor")}</FieldLabel>
+            <FieldLabel required>{t("doctor")}</FieldLabel>
             <Controller
               control={form.control}
               name="doctorId"
@@ -286,7 +286,7 @@ export function AppointmentBookingDialog({
 
           {/* Appointment Type */}
           <Field>
-            <FieldLabel>
+            <FieldLabel required>
               {t("appointmentType")}
               {selectedType && (
                 <span className="ml-2 text-xs text-muted-foreground font-normal">
@@ -325,7 +325,7 @@ export function AppointmentBookingDialog({
 
           {/* Date */}
           <Field>
-            <FieldLabel>{t("date")}</FieldLabel>
+            <FieldLabel required>{t("date")}</FieldLabel>
             <Controller
               control={form.control}
               name="startDate"
@@ -346,7 +346,7 @@ export function AppointmentBookingDialog({
 
           {/* Time */}
           <Field>
-            <FieldLabel>{t("time")}</FieldLabel>
+            <FieldLabel required>{t("time")}</FieldLabel>
             <Controller
               control={form.control}
               name="startTime"

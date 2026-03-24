@@ -261,7 +261,7 @@ export function ProtocolTemplateForm({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
-                <FieldLabel htmlFor={field.name}>{t("fields.name")}</FieldLabel>
+                <FieldLabel required htmlFor={field.name}>{t("fields.name")}</FieldLabel>
                 <Input
                   {...field}
                   id={field.name}
@@ -281,7 +281,7 @@ export function ProtocolTemplateForm({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel>{t("fields.treatmentType")}</FieldLabel>
+                  <FieldLabel required>{t("fields.treatmentType")}</FieldLabel>
                   <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger>
                       <SelectValue />
@@ -306,7 +306,7 @@ export function ProtocolTemplateForm({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>{t("fields.sessionCount")} (1-6)</FieldLabel>
+                  <FieldLabel required htmlFor={field.name}>{t("fields.sessionCount")} (1-6)</FieldLabel>
                   <Input
                     {...field}
                     id={field.name}
@@ -332,7 +332,7 @@ export function ProtocolTemplateForm({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel>{t("fields.pricingMode")}</FieldLabel>
+                  <FieldLabel required>{t("fields.pricingMode")}</FieldLabel>
                   <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger>
                       <SelectValue />
@@ -357,7 +357,7 @@ export function ProtocolTemplateForm({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>{t("fields.packagePrice")} (VND)</FieldLabel>
+                  <FieldLabel required htmlFor={field.name}>{t("fields.packagePrice")} (VND)</FieldLabel>
                   <Input
                     {...field}
                     id={field.name}
@@ -379,7 +379,7 @@ export function ProtocolTemplateForm({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>{t("fields.sessionPrice")} (VND)</FieldLabel>
+                  <FieldLabel required htmlFor={field.name}>{t("fields.sessionPrice")} (VND)</FieldLabel>
                   <Input
                     {...field}
                     id={field.name}
@@ -404,7 +404,7 @@ export function ProtocolTemplateForm({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>{t("fields.minInterval")}</FieldLabel>
+                  <FieldLabel required htmlFor={field.name}>{t("fields.minInterval")}</FieldLabel>
                   <Input
                     {...field}
                     id={field.name}
@@ -426,7 +426,7 @@ export function ProtocolTemplateForm({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>{t("fields.maxInterval")}</FieldLabel>
+                  <FieldLabel required htmlFor={field.name}>{t("fields.maxInterval")}</FieldLabel>
                   <Input
                     {...field}
                     id={field.name}
@@ -450,7 +450,7 @@ export function ProtocolTemplateForm({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
-                <FieldLabel htmlFor={field.name}>
+                <FieldLabel required htmlFor={field.name}>
                   {t("fields.deductionPercent")} (10-20)
                 </FieldLabel>
                 <Input

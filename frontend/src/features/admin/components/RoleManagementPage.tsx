@@ -133,7 +133,7 @@ export function RoleManagementPage() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>{t("admin.name")}</FieldLabel>
+                  <FieldLabel required htmlFor={field.name}>{t("admin.name")}</FieldLabel>
                   <Input
                     {...field}
                     id={field.name}
@@ -151,7 +151,7 @@ export function RoleManagementPage() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>{t("admin.description")}</FieldLabel>
+                  <FieldLabel required htmlFor={field.name}>{t("admin.description")}</FieldLabel>
                   <Input
                     {...field}
                     id={field.name}

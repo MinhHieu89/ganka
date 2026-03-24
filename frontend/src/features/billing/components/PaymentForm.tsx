@@ -212,7 +212,7 @@ export function PaymentForm({
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
           {/* Payment Method Selector */}
           <Field>
-            <FieldLabel>{t("paymentMethod")} *</FieldLabel>
+            <FieldLabel required>{t("paymentMethod")}</FieldLabel>
             <Controller
               name="method"
               control={control}
@@ -231,7 +231,7 @@ export function PaymentForm({
 
           {/* Amount */}
           <Field>
-            <FieldLabel>{t("amountVnd")} *</FieldLabel>
+            <FieldLabel required>{t("amountVnd")}</FieldLabel>
             <Controller
               name="amount"
               control={control}
@@ -268,7 +268,7 @@ export function PaymentForm({
           {/* Reference Number -- shown for BankTransfer, QR methods */}
           {selectedMethod != null && methodRequiresReference(selectedMethod) && (
             <Field>
-              <FieldLabel>{t("referenceNumber")} *</FieldLabel>
+              <FieldLabel required>{t("referenceNumber")}</FieldLabel>
               <Controller
                 name="referenceNumber"
                 control={control}
@@ -290,7 +290,7 @@ export function PaymentForm({
           {selectedMethod != null && methodIsCard(selectedMethod) && (
             <>
               <Field>
-                <FieldLabel>{t("cardLast4Label")} *</FieldLabel>
+                <FieldLabel required>{t("cardLast4Label")}</FieldLabel>
                 <Controller
                   name="cardLast4"
                   control={control}
@@ -396,7 +396,7 @@ export function PaymentForm({
 
               {isSplitPayment && (
                 <Field>
-                  <FieldLabel>{t("splitSequence")} *</FieldLabel>
+                  <FieldLabel required>{t("splitSequence")}</FieldLabel>
                   <Controller
                     name="splitSequence"
                     control={control}

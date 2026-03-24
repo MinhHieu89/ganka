@@ -142,7 +142,7 @@ export function StockImportForm({ onSuccess }: StockImportFormProps) {
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid || undefined}>
-              <FieldLabel>{t("stockImport.supplier")}</FieldLabel>
+              <FieldLabel required>{t("stockImport.supplier")}</FieldLabel>
               <Select value={field.value} onValueChange={field.onChange}>
                 <SelectTrigger>
                   <SelectValue placeholder={t("stockImport.selectSupplier")} />
@@ -189,7 +189,7 @@ export function StockImportForm({ onSuccess }: StockImportFormProps) {
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid || undefined}>
-              <FieldLabel>{t("stockImport.importDate")}</FieldLabel>
+              <FieldLabel required>{t("stockImport.importDate")}</FieldLabel>
               <DatePicker
                 value={field.value}
                 onChange={field.onChange}

@@ -156,7 +156,7 @@ export function DrugFormDialog({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
-                <FieldLabel htmlFor={field.name}>
+                <FieldLabel required htmlFor={field.name}>
                   {t("catalog.name")}
                 </FieldLabel>
                 <Input
@@ -176,7 +176,7 @@ export function DrugFormDialog({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
-                <FieldLabel htmlFor={field.name}>
+                <FieldLabel required htmlFor={field.name}>
                   {t("catalog.nameVi")}
                 </FieldLabel>
                 <Input
@@ -196,7 +196,7 @@ export function DrugFormDialog({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
-                <FieldLabel htmlFor={field.name}>
+                <FieldLabel required htmlFor={field.name}>
                   {t("catalog.genericName")}
                 </FieldLabel>
                 <Input
@@ -217,7 +217,7 @@ export function DrugFormDialog({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel>{t("catalog.form")}</FieldLabel>
+                  <FieldLabel required>{t("catalog.form")}</FieldLabel>
                   <Select
                     value={String(field.value)}
                     onValueChange={(v) => field.onChange(Number(v))}
@@ -247,7 +247,7 @@ export function DrugFormDialog({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel>{t("catalog.route")}</FieldLabel>
+                  <FieldLabel required>{t("catalog.route")}</FieldLabel>
                   <Select
                     value={String(field.value)}
                     onValueChange={(v) => field.onChange(Number(v))}
@@ -301,7 +301,7 @@ export function DrugFormDialog({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>
+                  <FieldLabel required htmlFor={field.name}>
                     {t("catalog.unit")}
                   </FieldLabel>
                   <Input

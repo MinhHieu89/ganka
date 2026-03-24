@@ -212,7 +212,7 @@ export function UserFormDialog({
               control={createForm.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>{t("admin.email")}</FieldLabel>
+                  <FieldLabel required htmlFor={field.name}>{t("admin.email")}</FieldLabel>
                   <Input
                     {...field}
                     id={field.name}
@@ -233,7 +233,7 @@ export function UserFormDialog({
               control={editForm.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>{t("admin.fullName")}</FieldLabel>
+                  <FieldLabel required htmlFor={field.name}>{t("admin.fullName")}</FieldLabel>
                   <Input
                     {...field}
                     id={field.name}
@@ -251,7 +251,7 @@ export function UserFormDialog({
               control={createForm.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>{t("admin.fullName")}</FieldLabel>
+                  <FieldLabel required htmlFor={field.name}>{t("admin.fullName")}</FieldLabel>
                   <Input
                     {...field}
                     id={field.name}
@@ -271,7 +271,7 @@ export function UserFormDialog({
               control={createForm.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>{t("admin.password")}</FieldLabel>
+                  <FieldLabel required htmlFor={field.name}>{t("admin.password")}</FieldLabel>
                   <Input
                     {...field}
                     id={field.name}
@@ -306,7 +306,7 @@ export function UserFormDialog({
           )}
 
           <Field data-invalid={currentErrors.roleIds ? true : undefined}>
-            <FieldLabel>{t("admin.selectRoles")}</FieldLabel>
+            <FieldLabel required>{t("admin.selectRoles")}</FieldLabel>
             <div className="border p-3 space-y-2 max-h-48 overflow-y-auto">
               {roles.map((role) => (
                 <div key={role.id} className="flex items-center space-x-2">

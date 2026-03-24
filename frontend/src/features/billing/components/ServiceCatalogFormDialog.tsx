@@ -145,7 +145,7 @@ export function ServiceCatalogFormDialog({
 
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <Field>
-            <FieldLabel>{t("serviceCatalog.code")}</FieldLabel>
+            <FieldLabel required>{t("serviceCatalog.code")}</FieldLabel>
             <Input
               {...form.register("code")}
               disabled={isEdit}
@@ -154,19 +154,19 @@ export function ServiceCatalogFormDialog({
           </Field>
 
           <Field>
-            <FieldLabel>{t("serviceCatalog.name")}</FieldLabel>
+            <FieldLabel required>{t("serviceCatalog.name")}</FieldLabel>
             <Input {...form.register("name")} />
             <FieldError>{form.formState.errors.name?.message}</FieldError>
           </Field>
 
           <Field>
-            <FieldLabel>{t("serviceCatalog.nameVi")}</FieldLabel>
+            <FieldLabel required>{t("serviceCatalog.nameVi")}</FieldLabel>
             <Input {...form.register("nameVi")} />
             <FieldError>{form.formState.errors.nameVi?.message}</FieldError>
           </Field>
 
           <Field>
-            <FieldLabel>{t("serviceCatalog.price")}</FieldLabel>
+            <FieldLabel required>{t("serviceCatalog.price")}</FieldLabel>
             <Input
               type="number"
               {...form.register("price", { valueAsNumber: true })}

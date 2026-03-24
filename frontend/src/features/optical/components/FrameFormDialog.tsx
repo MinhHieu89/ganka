@@ -204,7 +204,7 @@ export function FrameFormDialog({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>{t("frames.brand")}</FieldLabel>
+                  <FieldLabel required htmlFor={field.name}>{t("frames.brand")}</FieldLabel>
                   <Input
                     {...field}
                     id={field.name}
@@ -222,7 +222,7 @@ export function FrameFormDialog({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>{t("frames.model")}</FieldLabel>
+                  <FieldLabel required htmlFor={field.name}>{t("frames.model")}</FieldLabel>
                   <Input
                     {...field}
                     id={field.name}
@@ -242,7 +242,7 @@ export function FrameFormDialog({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
-                <FieldLabel htmlFor={field.name}>{t("frames.color")}</FieldLabel>
+                <FieldLabel required htmlFor={field.name}>{t("frames.color")}</FieldLabel>
                 <Input
                   {...field}
                   id={field.name}
@@ -264,7 +264,7 @@ export function FrameFormDialog({
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid || undefined}>
-                    <FieldLabel htmlFor={field.name}>{t("frames.lensWidth")}</FieldLabel>
+                    <FieldLabel required htmlFor={field.name}>{t("frames.lensWidth")}</FieldLabel>
                     <NumberInput
                       {...field}
                       id={field.name}
@@ -284,7 +284,7 @@ export function FrameFormDialog({
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid || undefined}>
-                    <FieldLabel htmlFor={field.name}>{t("frames.bridgeWidth")}</FieldLabel>
+                    <FieldLabel required htmlFor={field.name}>{t("frames.bridgeWidth")}</FieldLabel>
                     <NumberInput
                       {...field}
                       id={field.name}
@@ -304,7 +304,7 @@ export function FrameFormDialog({
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid || undefined}>
-                    <FieldLabel htmlFor={field.name}>{t("frames.templeLength")}</FieldLabel>
+                    <FieldLabel required htmlFor={field.name}>{t("frames.templeLength")}</FieldLabel>
                     <NumberInput
                       {...field}
                       id={field.name}
@@ -328,7 +328,7 @@ export function FrameFormDialog({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel>{t("frames.material")}</FieldLabel>
+                  <FieldLabel required>{t("frames.material")}</FieldLabel>
                   <Select
                     value={String(field.value)}
                     onValueChange={(v) => field.onChange(Number(v))}
@@ -356,7 +356,7 @@ export function FrameFormDialog({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel>{t("frames.frameType")}</FieldLabel>
+                  <FieldLabel required>{t("frames.frameType")}</FieldLabel>
                   <Select
                     value={String(field.value)}
                     onValueChange={(v) => field.onChange(Number(v))}
@@ -384,7 +384,7 @@ export function FrameFormDialog({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel>{t("frames.gender")}</FieldLabel>
+                  <FieldLabel required>{t("frames.gender")}</FieldLabel>
                   <Select
                     value={String(field.value)}
                     onValueChange={(v) => field.onChange(Number(v))}
@@ -415,7 +415,7 @@ export function FrameFormDialog({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>{t("frames.sellingPrice")} (VND)</FieldLabel>
+                  <FieldLabel required htmlFor={field.name}>{t("frames.sellingPrice")} (VND)</FieldLabel>
                   <NumberInput
                     {...field}
                     id={field.name}
@@ -434,7 +434,7 @@ export function FrameFormDialog({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>{t("frames.costPrice")} (VND)</FieldLabel>
+                  <FieldLabel required htmlFor={field.name}>{t("frames.costPrice")} (VND)</FieldLabel>
                   <NumberInput
                     {...field}
                     id={field.name}

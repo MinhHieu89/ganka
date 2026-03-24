@@ -259,7 +259,7 @@ export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrde
           {/* Patient selection */}
           <div className="grid grid-cols-2 gap-4">
             <Field>
-              <FieldLabel>{t("orders.patient")} *</FieldLabel>
+              <FieldLabel required>{t("orders.patient")}</FieldLabel>
               <div className="space-y-2">
                 <Input
                   value={patientSearch}
@@ -293,7 +293,7 @@ export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrde
             </Field>
 
             <Field>
-              <FieldLabel>{t("orders.visitId")} *</FieldLabel>
+              <FieldLabel required>{t("orders.visitId")}</FieldLabel>
               <Controller
                 control={form.control}
                 name="visitId"
@@ -334,7 +334,7 @@ export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrde
 
           {/* Optical Prescription */}
           <Field>
-            <FieldLabel>{t("orders.prescription")} *</FieldLabel>
+            <FieldLabel required>{t("orders.prescription")}</FieldLabel>
             <Controller
               control={form.control}
               name="opticalPrescriptionId"
@@ -361,7 +361,7 @@ export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrde
 
           {/* Processing type */}
           <Field>
-            <FieldLabel>{t("orders.processingType")} *</FieldLabel>
+            <FieldLabel required>{t("orders.processingType")}</FieldLabel>
             <Controller
               control={form.control}
               name="processingType"
@@ -539,7 +539,7 @@ export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrde
                 </div>
 
                 <Field>
-                  <FieldLabel>{t("combos.description")} *</FieldLabel>
+                  <FieldLabel required>{t("combos.description")}</FieldLabel>
                   <Controller
                     control={form.control}
                     name={`items.${index}.description`}
@@ -554,7 +554,7 @@ export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrde
 
                 <div className="grid grid-cols-3 gap-3 items-end">
                   <Field>
-                    <FieldLabel>{t("common.price")} (VND) *</FieldLabel>
+                    <FieldLabel required>{t("common.price")} (VND)</FieldLabel>
                     <Controller
                       control={form.control}
                       name={`items.${index}.unitPrice`}
@@ -569,7 +569,7 @@ export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrde
                   </Field>
 
                   <Field>
-                    <FieldLabel>{t("common.quantity")} *</FieldLabel>
+                    <FieldLabel required>{t("common.quantity")}</FieldLabel>
                     <Controller
                       control={form.control}
                       name={`items.${index}.quantity`}

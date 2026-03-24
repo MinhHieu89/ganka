@@ -141,7 +141,7 @@ export function ConsumableItemForm({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
-                <FieldLabel htmlFor={field.name}>Tên (Tiếng Việt)</FieldLabel>
+                <FieldLabel required htmlFor={field.name}>Tên (Tiếng Việt)</FieldLabel>
                 <Input
                   {...field}
                   id={field.name}
@@ -160,7 +160,7 @@ export function ConsumableItemForm({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
-                <FieldLabel htmlFor={field.name}>Tên (Tiếng Anh)</FieldLabel>
+                <FieldLabel required htmlFor={field.name}>Tên (Tiếng Anh)</FieldLabel>
                 <Input
                   {...field}
                   id={field.name}
@@ -180,7 +180,7 @@ export function ConsumableItemForm({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>Đơn vị</FieldLabel>
+                  <FieldLabel required htmlFor={field.name}>Đơn vị</FieldLabel>
                   <Input
                     {...field}
                     id={field.name}
@@ -199,7 +199,7 @@ export function ConsumableItemForm({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>Tồn kho tối thiểu</FieldLabel>
+                  <FieldLabel required htmlFor={field.name}>Tồn kho tối thiểu</FieldLabel>
                   <Input
                     {...field}
                     id={field.name}
@@ -223,7 +223,7 @@ export function ConsumableItemForm({
               control={form.control}
               render={({ field }) => (
                 <Field>
-                  <FieldLabel>Phương thức theo dõi</FieldLabel>
+                  <FieldLabel required>Phương thức theo dõi</FieldLabel>
                   <RadioGroup
                     value={String(field.value)}
                     onValueChange={(v) => field.onChange(Number(v))}

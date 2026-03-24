@@ -206,7 +206,7 @@ export function ComboPackageForm({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
-                <FieldLabel htmlFor={field.name}>{t("combos.name")}</FieldLabel>
+                <FieldLabel required htmlFor={field.name}>{t("combos.name")}</FieldLabel>
                 <Input
                   {...field}
                   id={field.name}
@@ -322,7 +322,7 @@ export function ComboPackageForm({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>{t("combos.comboPrice")} (₫)</FieldLabel>
+                  <FieldLabel required htmlFor={field.name}>{t("combos.comboPrice")} (₫)</FieldLabel>
                   <NumberInput
                     {...field}
                     id={field.name}

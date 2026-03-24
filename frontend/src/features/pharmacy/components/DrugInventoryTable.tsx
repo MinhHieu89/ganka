@@ -110,7 +110,7 @@ function EditPricingDialog({ drug, open, onOpenChange }: EditPricingDialogProps)
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
-                <FieldLabel htmlFor={field.name}>{t("inventory.sellingPrice")}</FieldLabel>
+                <FieldLabel required htmlFor={field.name}>{t("inventory.sellingPrice")}</FieldLabel>
                 <Input
                   {...field}
                   id={field.name}
@@ -130,7 +130,7 @@ function EditPricingDialog({ drug, open, onOpenChange }: EditPricingDialogProps)
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
-                <FieldLabel htmlFor={field.name}>{t("inventory.minStockLevel")}</FieldLabel>
+                <FieldLabel required htmlFor={field.name}>{t("inventory.minStockLevel")}</FieldLabel>
                 <Input
                   {...field}
                   id={field.name}

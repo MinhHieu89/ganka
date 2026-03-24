@@ -193,7 +193,7 @@ export function DiscountDialog({
               control={form.control}
               render={({ field }) => (
                 <Field>
-                  <FieldLabel>{t("scope")}</FieldLabel>
+                  <FieldLabel required>{t("scope")}</FieldLabel>
                   <RadioGroup
                     value={field.value}
                     onValueChange={field.onChange}
@@ -250,7 +250,7 @@ export function DiscountDialog({
               control={form.control}
               render={({ field }) => (
                 <Field>
-                  <FieldLabel>{t("discountType")}</FieldLabel>
+                  <FieldLabel required>{t("discountType")}</FieldLabel>
                   <div className="flex gap-1 rounded-md border p-1">
                     <button
                       type="button"
@@ -285,7 +285,7 @@ export function DiscountDialog({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>{t("value")}</FieldLabel>
+                  <FieldLabel required htmlFor={field.name}>{t("value")}</FieldLabel>
                   <div className="relative">
                     <Input
                       {...field}
@@ -332,7 +332,7 @@ export function DiscountDialog({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid || undefined}>
-                  <FieldLabel htmlFor={field.name}>{t("discountReason")}</FieldLabel>
+                  <FieldLabel required htmlFor={field.name}>{t("discountReason")}</FieldLabel>
                   <Input
                     {...field}
                     id={field.name}

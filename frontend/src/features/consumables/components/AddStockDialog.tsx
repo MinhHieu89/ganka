@@ -104,7 +104,7 @@ function SimpleStockForm({
         control={form.control}
         render={({ field, fieldState }) => (
           <Field data-invalid={fieldState.invalid || undefined}>
-            <FieldLabel htmlFor={field.name}>Số lượng</FieldLabel>
+            <FieldLabel required htmlFor={field.name}>Số lượng</FieldLabel>
             <Input
               {...field}
               id={field.name}
@@ -213,7 +213,7 @@ function ExpiryTrackedForm({
         control={form.control}
         render={({ field, fieldState }) => (
           <Field data-invalid={fieldState.invalid || undefined}>
-            <FieldLabel htmlFor={field.name}>Số lô</FieldLabel>
+            <FieldLabel required htmlFor={field.name}>Số lô</FieldLabel>
             <Input
               {...field}
               id={field.name}
@@ -232,7 +232,7 @@ function ExpiryTrackedForm({
         control={form.control}
         render={({ field, fieldState }) => (
           <Field data-invalid={fieldState.invalid || undefined}>
-            <FieldLabel>Hạn sử dụng</FieldLabel>
+            <FieldLabel required>Hạn sử dụng</FieldLabel>
             <DatePicker
               value={field.value}
               onChange={field.onChange}
@@ -254,7 +254,7 @@ function ExpiryTrackedForm({
         control={form.control}
         render={({ field, fieldState }) => (
           <Field data-invalid={fieldState.invalid || undefined}>
-            <FieldLabel htmlFor={field.name}>Số lượng</FieldLabel>
+            <FieldLabel required htmlFor={field.name}>Số lượng</FieldLabel>
             <Input
               {...field}
               id={field.name}

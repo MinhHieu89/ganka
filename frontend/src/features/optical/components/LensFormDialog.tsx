@@ -193,7 +193,7 @@ function CatalogItemForm({
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid || undefined}>
-              <FieldLabel htmlFor={field.name}>{t("lenses.brand")}</FieldLabel>
+              <FieldLabel required htmlFor={field.name}>{t("lenses.brand")}</FieldLabel>
               <Input {...field} id={field.name} aria-invalid={fieldState.invalid || undefined} />
               {fieldState.error && (
                 <FieldError>{fieldState.error?.message}</FieldError>
@@ -207,7 +207,7 @@ function CatalogItemForm({
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid || undefined}>
-              <FieldLabel htmlFor={field.name}>{t("lenses.name")}</FieldLabel>
+              <FieldLabel required htmlFor={field.name}>{t("lenses.name")}</FieldLabel>
               <Input {...field} id={field.name} aria-invalid={fieldState.invalid || undefined} />
               {fieldState.error && (
                 <FieldError>{fieldState.error?.message}</FieldError>
@@ -223,7 +223,7 @@ function CatalogItemForm({
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid || undefined}>
-              <FieldLabel>{t("lenses.lensType")}</FieldLabel>
+              <FieldLabel required>{t("lenses.lensType")}</FieldLabel>
               <Select value={field.value} onValueChange={field.onChange}>
                 <SelectTrigger>
                   <SelectValue />
@@ -248,7 +248,7 @@ function CatalogItemForm({
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid || undefined}>
-              <FieldLabel>{t("lenses.material")}</FieldLabel>
+              <FieldLabel required>{t("lenses.material")}</FieldLabel>
               <Select
                 value={String(field.value)}
                 onValueChange={(v) => field.onChange(Number(v))}
@@ -296,7 +296,7 @@ function CatalogItemForm({
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid || undefined}>
-              <FieldLabel htmlFor={field.name}>{t("lenses.sellingPrice")}</FieldLabel>
+              <FieldLabel required htmlFor={field.name}>{t("lenses.sellingPrice")}</FieldLabel>
               <NumberInput
                 {...field}
                 id={field.name}
@@ -316,7 +316,7 @@ function CatalogItemForm({
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid || undefined}>
-              <FieldLabel htmlFor={field.name}>{t("lenses.costPrice")}</FieldLabel>
+              <FieldLabel required htmlFor={field.name}>{t("lenses.costPrice")}</FieldLabel>
               <NumberInput
                 {...field}
                 id={field.name}
@@ -482,7 +482,7 @@ function StockAdjustmentForm({
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid || undefined}>
-              <FieldLabel htmlFor={field.name}>
+              <FieldLabel required htmlFor={field.name}>
                 {t("lenses.quantityChange")}
                 <span className="text-xs text-muted-foreground ml-1">({t("lenses.quantityChangeHint")})</span>
               </FieldLabel>
@@ -504,7 +504,7 @@ function StockAdjustmentForm({
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid || undefined}>
-              <FieldLabel htmlFor={field.name}>{t("lenses.minStock")}</FieldLabel>
+              <FieldLabel required htmlFor={field.name}>{t("lenses.minStock")}</FieldLabel>
               <NumberInput
                 {...field}
                 id={field.name}

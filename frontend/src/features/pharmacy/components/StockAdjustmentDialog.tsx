@@ -170,7 +170,7 @@ export function StockAdjustmentDialog({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
-                <FieldLabel htmlFor={field.name}>{t("stockAdjust.quantityChange")}</FieldLabel>
+                <FieldLabel required htmlFor={field.name}>{t("stockAdjust.quantityChange")}</FieldLabel>
                 <Input
                   {...field}
                   id={field.name}
@@ -194,7 +194,7 @@ export function StockAdjustmentDialog({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
-                <FieldLabel>{t("stockAdjust.reason")}</FieldLabel>
+                <FieldLabel required>{t("stockAdjust.reason")}</FieldLabel>
                 <Select
                   value={String(field.value)}
                   onValueChange={(v) => field.onChange(Number(v))}

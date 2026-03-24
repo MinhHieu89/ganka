@@ -136,7 +136,7 @@ export function AllergyForm({ open, onClose, patientId }: AllergyFormProps) {
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid || undefined}>
-                <FieldLabel>{t("allergyName")}</FieldLabel>
+                <FieldLabel required>{t("allergyName")}</FieldLabel>
                 <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
                   <PopoverTrigger asChild>
                     <div>
@@ -236,7 +236,7 @@ export function AllergyForm({ open, onClose, patientId }: AllergyFormProps) {
             control={form.control}
             render={({ field }) => (
               <Field>
-                <FieldLabel>{t("severity")}</FieldLabel>
+                <FieldLabel required>{t("severity")}</FieldLabel>
                 <Select value={field.value} onValueChange={field.onChange}>
                   <SelectTrigger>
                     <SelectValue placeholder={t("severity")} />
