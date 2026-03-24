@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router"
+import { requirePermission } from "@/shared/utils/permission-guard"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { IconHistory, IconChevronDown, IconChevronRight } from "@tabler/icons-react"
@@ -10,6 +11,7 @@ import { useDispensingHistory } from "@/features/pharmacy/api/pharmacy-queries"
 import type { DispensingRecordDto } from "@/features/pharmacy/api/pharmacy-api"
 
 export const Route = createFileRoute("/_authenticated/pharmacy/dispensing-history")({
+  beforeLoad: () => requirePermission("Pharmacy.View"),
   component: DispensingHistoryPage,
 })
 

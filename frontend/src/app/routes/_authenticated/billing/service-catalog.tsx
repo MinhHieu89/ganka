@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react"
 import { createFileRoute } from "@tanstack/react-router"
+import { requirePermission } from "@/shared/utils/permission-guard"
 import { useTranslation } from "react-i18next"
 import { IconPlus } from "@tabler/icons-react"
 import { Button } from "@/shared/components/Button"
@@ -12,6 +13,7 @@ import { ServiceCatalogTable } from "@/features/billing/components/ServiceCatalo
 import { ServiceCatalogFormDialog } from "@/features/billing/components/ServiceCatalogFormDialog"
 
 export const Route = createFileRoute("/_authenticated/billing/service-catalog")({
+  beforeLoad: () => requirePermission("Billing.Manage"),
   component: ServiceCatalogPage,
 })
 

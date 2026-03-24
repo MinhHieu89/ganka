@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router"
+import { requirePermission } from "@/shared/utils/permission-guard"
 import { useState, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import {
@@ -21,6 +22,7 @@ import type { OtcSaleDto } from "@/features/pharmacy/api/pharmacy-api"
 import { useOtcSales } from "@/features/pharmacy/api/pharmacy-queries"
 
 export const Route = createFileRoute("/_authenticated/pharmacy/otc-sales")({
+  beforeLoad: () => requirePermission("Pharmacy.View"),
   component: OtcSalesPage,
 })
 

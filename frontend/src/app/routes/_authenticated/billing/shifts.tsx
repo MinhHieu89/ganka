@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react"
 import { createFileRoute } from "@tanstack/react-router"
+import { requirePermission } from "@/shared/utils/permission-guard"
 import { useTranslation } from "react-i18next"
 import {
   type ColumnDef,
@@ -36,6 +37,7 @@ import { ShiftCloseDialog } from "@/features/billing/components/ShiftCloseDialog
 import { ShiftReportView } from "@/features/billing/components/ShiftReportView"
 
 export const Route = createFileRoute("/_authenticated/billing/shifts")({
+  beforeLoad: () => requirePermission("Billing.View"),
   component: ShiftsPage,
 })
 

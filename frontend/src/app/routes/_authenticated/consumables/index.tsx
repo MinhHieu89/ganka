@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { createFileRoute } from "@tanstack/react-router"
+import { requirePermission } from "@/shared/utils/permission-guard"
 import { IconPlus } from "@tabler/icons-react"
 import { Button } from "@/shared/components/Button"
 import { ConsumableAlertBanner } from "@/features/consumables/components/ConsumableAlertBanner"
@@ -7,6 +8,7 @@ import { ConsumableItemTable } from "@/features/consumables/components/Consumabl
 import { ConsumableItemForm } from "@/features/consumables/components/ConsumableItemForm"
 
 export const Route = createFileRoute("/_authenticated/consumables/")({
+  beforeLoad: () => requirePermission("Pharmacy.View"),
   component: ConsumablesPage,
 })
 

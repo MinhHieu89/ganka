@@ -3,8 +3,10 @@ import { useTranslation } from "react-i18next"
 import { IconArrowLeft } from "@tabler/icons-react"
 import { Button } from "@/shared/components/Button"
 import { InvoiceHistoryPage } from "@/features/billing/components/InvoiceHistoryPage"
+import { requirePermission } from "@/shared/utils/permission-guard"
 
 export const Route = createFileRoute("/_authenticated/billing/invoices/")({
+  beforeLoad: () => requirePermission("Billing.View"),
   component: InvoiceHistoryRoute,
 })
 

@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router"
+import { requirePermission } from "@/shared/utils/permission-guard"
 import { useTranslation } from "react-i18next"
 import { IconBuildingWarehouse, IconMedicineSyrup, IconTruck } from "@tabler/icons-react"
 import { Button } from "@/shared/components/Button"
@@ -9,6 +10,7 @@ import { DrugInventoryTable } from "@/features/pharmacy/components/DrugInventory
 import { useDrugInventory } from "@/features/pharmacy/api/pharmacy-queries"
 
 export const Route = createFileRoute("/_authenticated/pharmacy/")({
+  beforeLoad: () => requirePermission("Pharmacy.View"),
   component: PharmacyInventoryPage,
 })
 

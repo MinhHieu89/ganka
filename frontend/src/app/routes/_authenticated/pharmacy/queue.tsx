@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router"
+import { requirePermission } from "@/shared/utils/permission-guard"
 import { useTranslation } from "react-i18next"
 import { IconClock, IconRefresh } from "@tabler/icons-react"
 import { Badge } from "@/shared/components/Badge"
@@ -6,6 +7,7 @@ import { PharmacyQueueTable } from "@/features/pharmacy/components/PharmacyQueue
 import { usePendingPrescriptions } from "@/features/pharmacy/api/pharmacy-queries"
 
 export const Route = createFileRoute("/_authenticated/pharmacy/queue")({
+  beforeLoad: () => requirePermission("Pharmacy.View"),
   component: PharmacyQueuePage,
 })
 

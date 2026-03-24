@@ -73,15 +73,17 @@ export function AppSidebar({ ...sidebarProps }: ComponentProps<typeof Sidebar>) 
   const user = useAuthStore((s) => s.user)
   const { data: pendingCount } = usePendingCount()
 
-  // Check if user has admin permissions
-  const hasAdminAccess =
-    user?.permissions?.some(
-      (p) =>
-        p.startsWith("Auth.Manage") ||
-        p.startsWith("Auth.View") ||
-        p === "Auth.Manage" ||
-        p === "Auth.View",
-    ) ?? false
+  // Permission-based access checks for sidebar filtering
+  const hasPatientAccess = user?.permissions?.includes("Patient.View") ?? false
+  const hasSchedulingAccess = user?.permissions?.includes("Scheduling.View") ?? false
+  const hasClinicalAccess = user?.permissions?.includes("Clinical.View") ?? false
+  const hasPharmacyAccess = user?.permissions?.includes("Pharmacy.View") ?? false
+  const hasBillingAccess = user?.permissions?.includes("Billing.View") ?? false
+  const hasOpticalAccess = user?.permissions?.includes("Optical.View") ?? false
+  const hasTreatmentAccess = user?.permissions?.includes("Treatment.View") ?? false
+  const hasAuditAccess = user?.permissions?.includes("Audit.View") ?? false
+  const hasSettingsAccess = user?.permissions?.includes("Settings.View") ?? false
+  const hasAdminAccess = user?.permissions?.includes("Auth.View") ?? false
 
   const mainItems: NavItem[] = [
     {
@@ -198,6 +200,30 @@ export function AppSidebar({ ...sidebarProps }: ComponentProps<typeof Sidebar>) 
       icon: IconBuilding,
     },
   ]
+
+  // Filter nav items by user permissions
+  const filteredClinicItems = clinicItems.filter((item) => {
+    if (item.to === "/patients") return hasPatientAccess
+    if (item.to === "/appointments") return hasSchedulingAccess
+    if (item.to === "/clinical") return hasClinicalAccess
+    return true // disabled/placeholder items show as-is
+  })
+
+  const filteredOperationsItems = operationsItems.filter((item) => {
+    if (item.to === "/pharmacy") return hasPharmacyAccess
+    if (item.to === "/consumables") return hasPharmacyAccess
+    if (item.to === "/billing") return hasBillingAccess
+    if (item.to === "/optical") return hasOpticalAccess
+    if (item.to === "/treatments") return hasTreatmentAccess
+    return true
+  })
+
+  const filteredAdminItems = adminItems.filter((item) => {
+    if (item.to === "/admin/users" || item.to === "/admin/roles") return hasAdminAccess
+    if (item.to === "/admin/audit-logs") return hasAuditAccess
+    if (item.to === "/admin/clinic-settings") return hasSettingsAccess
+    return true
+  })
 
   const renderNavItems = (items: NavItem[]) =>
     items.map((item) => {
@@ -320,28 +346,32 @@ export function AppSidebar({ ...sidebarProps }: ComponentProps<typeof Sidebar>) 
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* Clinic group -- placeholder items for future phases */}
-        <SidebarGroup>
-          <SidebarGroupLabel>{t("sidebar.clinic")}</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>{renderNavItems(clinicItems)}</SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {/* Clinic group -- filtered by permission */}
+        {filteredClinicItems.length > 0 && (
+          <SidebarGroup>
+            <SidebarGroupLabel>{t("sidebar.clinic")}</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>{renderNavItems(filteredClinicItems)}</SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
 
-        {/* Operations group -- placeholder items for future phases */}
-        <SidebarGroup>
-          <SidebarGroupLabel>{t("sidebar.operations")}</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>{renderNavItems(operationsItems)}</SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {/* Operations group -- filtered by permission */}
+        {filteredOperationsItems.length > 0 && (
+          <SidebarGroup>
+            <SidebarGroupLabel>{t("sidebar.operations")}</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>{renderNavItems(filteredOperationsItems)}</SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
 
-        {/* Admin group -- conditional on permissions */}
-        {hasAdminAccess && (
+        {/* Admin group -- filtered by permission */}
+        {filteredAdminItems.length > 0 && (
           <SidebarGroup>
             <SidebarGroupLabel>{t("sidebar.admin")}</SidebarGroupLabel>
             <SidebarGroupContent>
-              <SidebarMenu>{renderNavItems(adminItems)}</SidebarMenu>
+              <SidebarMenu>{renderNavItems(filteredAdminItems)}</SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
         )}

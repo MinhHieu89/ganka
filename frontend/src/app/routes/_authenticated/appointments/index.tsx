@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react"
 import { createFileRoute } from "@tanstack/react-router"
+import { requirePermission } from "@/shared/utils/permission-guard"
 import { useTranslation } from "react-i18next"
 import type { DateSelectArg, EventClickArg } from "@fullcalendar/core"
 import { IconPlus, IconCalendar } from "@tabler/icons-react"
@@ -14,6 +15,7 @@ import { Badge } from "@/shared/components/Badge"
 import { usePendingSelfBookings } from "@/features/scheduling/api/scheduling-api"
 
 export const Route = createFileRoute("/_authenticated/appointments/")({
+  beforeLoad: () => requirePermission("Scheduling.View"),
   component: AppointmentsPage,
 })
 
