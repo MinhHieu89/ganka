@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Milestone complete
-stopped_at: Phase 13 UI-SPEC approved
-last_updated: "2026-03-25T05:03:36.642Z"
+stopped_at: Completed 13-06-PLAN.md
+last_updated: "2026-03-25T07:10:30.899Z"
 progress:
   total_phases: 22
-  completed_phases: 18
-  total_plans: 300
-  completed_plans: 297
+  completed_phases: 19
+  total_plans: 306
+  completed_plans: 303
 ---
 
 # Project State
@@ -19,11 +19,11 @@ progress:
 See: .planning/PROJECT.md (updated 2026-02-28)
 
 **Core value:** Doctors can manage chronic eye disease patients (Dry Eye, Myopia Control) with structured data tracking, image comparison across visits, and treatment progress reporting
-**Current focus:** Phase 12 — fix-test-failures-verify-prt03
+**Current focus:** Phase 13 — clinical-workflow-overhaul-walk-in-visits-kanban-table-view-status-progression-visit-lifecycle-and-patient-visit-history
 
 ## Current Position
 
-Phase: 12
+Phase: 13
 Plan: Not started
 
 ## Performance Metrics
@@ -293,6 +293,12 @@ Plan: Not started
 | Phase 12 P01 | 4min | 2 tasks | 2 files |
 | Phase 12 P02 | 15min | 1 tasks | 1 files |
 | Phase 12 P03 | 10min | 2 tasks | 5 files |
+| Phase 13 P01 | 9min | 2 tasks | 16 files |
+| Phase 13 P05 | 2min | 2 tasks | 5 files |
+| Phase 13 P02 | 6min | 2 tasks | 15 files |
+| Phase 13 P04 | 6min | 2 tasks | 10 files |
+| Phase 13 P03 | 3min | 2 tasks | 6 files |
+| Phase 13 P06 | 4 | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -816,6 +822,13 @@ Recent decisions affecting current work:
 - [Phase 12]: Remove AuthDataSeeder and DomainEventDispatcherInterceptor from test host to prevent Wolverine startup race condition
 - [Phase 12]: Seed full permission set + Admin role in BillingWebApplicationFactory for authenticated integration tests
 - [Phase 12]: Create all module DB tables in test database to prevent hosted service startup failures
+- [Phase 13]: Domain allowed-transitions table pattern for stage reversal with mandatory reason
+- [Phase 13]: Sign-off auto-advance to next sequential stage in same transaction (D-11)
+- [Phase 13]: Patient name links use stopPropagation to separate click from drag in kanban cards
+- [Phase 13]: Built complete WorkflowTableView in Task 1 to satisfy TS compilation; used shadcn ToggleGroup for view toggle
+- [Phase 13]: Used disabled prop on existing section components for read-only rendering in visit history detail
+- [Phase 13]: Used Select dropdown for stages with multiple reversal targets
+- [Phase 13]: Vietnamese user stories follow Phase 09 format convention for consistency
 
 ### Roadmap Evolution
 
@@ -849,6 +862,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-25T05:03:36.635Z
-Stopped at: Phase 13 UI-SPEC approved
-Resume file: .planning/phases/13-clinical-workflow-overhaul-walk-in-visits-kanban-table-view-status-progression-visit-lifecycle-and-patient-visit-history/13-UI-SPEC.md
+Last session: 2026-03-25T06:52:08.129Z
+Stopped at: Completed 13-06-PLAN.md
+Resume file: None
