@@ -433,14 +433,13 @@ export function useRecordSession(packageId: string) {
       command: Omit<RecordTreatmentSessionCommand, "packageId">,
     ) => recordSession(packageId, command),
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: treatmentKeys.package(packageId),
-      })
-      queryClient.invalidateQueries({
-        queryKey: treatmentKeys.sessions(packageId),
-      })
-      queryClient.invalidateQueries({ queryKey: treatmentKeys.dueSoon() })
-      queryClient.invalidateQueries({ queryKey: treatmentKeys.packages() })
+      // Invalidate all treatment queries so every view updates:
+      // - package detail (treatmentKeys.package)
+      // - patient treatments tab (treatmentKeys.patientPackages)
+      // - active treatments list (treatmentKeys.packages)
+      // - due soon section (treatmentKeys.dueSoon)
+      // - session list (treatmentKeys.sessions)
+      queryClient.invalidateQueries({ queryKey: treatmentKeys.all })
     },
   })
 }
