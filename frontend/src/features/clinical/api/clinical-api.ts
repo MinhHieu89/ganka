@@ -1153,3 +1153,53 @@ export function usePatientVisitHistory(patientId: string | undefined) {
     enabled: !!patientId,
   })
 }
+
+// -- Stage Reversal --
+
+/** Allowed backward transitions (mirrors backend ReverseWorkflowStageHandler) */
+export const ALLOWED_REVERSALS: Record<number, number[]> = {
+  1: [0],       // RefractionVA -> Reception
+  2: [1],       // DoctorExam -> RefractionVA
+  3: [2],       // Diagnostics -> DoctorExam
+  4: [3, 2],    // DoctorReads -> Diagnostics, DoctorExam
+  5: [2, 4],    // Rx -> DoctorExam, DoctorReads
+}
+
+export function isReversalAllowed(currentStage: number, targetStage: number): boolean {
+  return ALLOWED_REVERSALS[currentStage]?.includes(targetStage) ?? false
+}
+
+async function reverseWorkflowStage(
+  visitId: string,
+  targetStage: number,
+  reason: string,
+): Promise<void> {
+  const { error, response } = await api.PUT(
+    `/api/clinical/${visitId}/reverse-stage` as never,
+    {
+      body: { visitId, targetStage, reason } as never,
+    } as never,
+  )
+  if (!response.ok) {
+    const err = error as Record<string, unknown> | undefined
+    throw new Error((err?.detail as string) ?? "Failed to reverse stage")
+  }
+}
+
+export function useReverseStage() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({
+      visitId,
+      targetStage,
+      reason,
+    }: {
+      visitId: string
+      targetStage: number
+      reason: string
+    }) => reverseWorkflowStage(visitId, targetStage, reason),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: clinicalKeys.all })
+    },
+  })
+}

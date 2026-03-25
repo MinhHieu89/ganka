@@ -37,6 +37,16 @@
         "description": "Try adjusting your filters or create a new visit"
       },
       "allStages": "All Stages"
+    },
+    "reversal": {
+      "title": "Reverse Workflow Stage",
+      "reasonLabel": "Reason for reversal",
+      "reasonPlaceholder": "Explain why this visit needs to return to a previous stage...",
+      "confirm": "Reverse Stage",
+      "cancel": "Keep Current Stage",
+      "success": "Visit moved back to {{stage}}",
+      "error": "Failed to reverse stage. Please try again.",
+      "minLength": "Reason must be at least {{min}} characters"
     }
   },
   "visit": {

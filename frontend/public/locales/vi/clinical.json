@@ -37,6 +37,16 @@
         "description": "Thử điều chỉnh bộ lọc hoặc tạo lượt khám mới"
       },
       "allStages": "Tất cả giai đoạn"
+    },
+    "reversal": {
+      "title": "Quay lại giai đoạn",
+      "reasonLabel": "Lý do quay lại",
+      "reasonPlaceholder": "Giải thích lý do cần quay lại giai đoạn trước...",
+      "confirm": "Quay lại",
+      "cancel": "Giữ giai đoạn hiện tại",
+      "success": "Đã chuyển về giai đoạn {{stage}}",
+      "error": "Không thể quay lại giai đoạn. Vui lòng thử lại.",
+      "minLength": "Lý do phải có ít nhất {{min}} ký tự"
     }
   },
   "visit": {
