@@ -1458,3 +1458,65 @@ export function useReverseStage() {
     },
   })
 }
+
+// -- Skip Refraction --
+
+async function skipRefraction(
+  visitId: string,
+  reason: number,
+  freeTextNote?: string | null,
+): Promise<void> {
+  const { error, response } = await api.PUT(
+    `/api/clinical/${visitId}/skip-refraction` as never,
+    {
+      body: { visitId, reason, freeTextNote: freeTextNote ?? null },
+    } as never,
+  )
+  if (error || !response.ok) {
+    const err = error as Record<string, unknown> | undefined
+    if (err?.errors) throw new Error(JSON.stringify(err))
+    throw new Error("Failed to skip refraction")
+  }
+}
+
+export function useSkipRefraction() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({
+      visitId,
+      reason,
+      freeTextNote,
+    }: {
+      visitId: string
+      reason: number
+      freeTextNote?: string | null
+    }) => skipRefraction(visitId, reason, freeTextNote),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: clinicalKeys.activeVisits() })
+      queryClient.invalidateQueries({ queryKey: clinicalKeys.all })
+    },
+  })
+}
+
+async function undoRefractionSkip(visitId: string): Promise<void> {
+  const { error, response } = await api.PUT(
+    `/api/clinical/${visitId}/undo-refraction-skip` as never,
+    {} as never,
+  )
+  if (error || !response.ok) {
+    const err = error as Record<string, unknown> | undefined
+    if (err?.errors) throw new Error(JSON.stringify(err))
+    throw new Error("Failed to undo refraction skip")
+  }
+}
+
+export function useUndoRefractionSkip() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (visitId: string) => undoRefractionSkip(visitId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: clinicalKeys.activeVisits() })
+      queryClient.invalidateQueries({ queryKey: clinicalKeys.all })
+    },
+  })
+}
