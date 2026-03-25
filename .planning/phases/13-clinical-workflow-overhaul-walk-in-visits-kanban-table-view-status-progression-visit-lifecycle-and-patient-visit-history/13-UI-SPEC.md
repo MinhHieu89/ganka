@@ -53,9 +53,11 @@ Exceptions:
 | Role | Size | Weight | Line Height |
 |------|------|--------|-------------|
 | Body | 14px | 400 (regular) | 1.5 |
-| Label / Caption | 12px | 500 (medium) | 1.4 |
+| Label / Caption | 12px | 400 (regular) | 1.4 |
 | Heading (section) | 16px | 600 (semibold) | 1.3 |
 | Display (page title) | 20px | 600 (semibold) | 1.2 |
+
+2 weights only: 400 (regular) for body text, labels, and captions; 600 (semibold) for headings and display text.
 
 Source: Matches existing codebase patterns (`text-sm` = 14px body, `text-xs` = 12px labels, `font-semibold` headings).
 
@@ -76,6 +78,8 @@ Accent reserved for:
 - Drag-over ring highlight on kanban columns (existing: `ring-primary/30`)
 - Toggle button active state (kanban/table view switch)
 - Stage advance button (primary variant)
+
+Primary focal point: the `New Visit` button in the WorkflowToolbar is the primary action anchor, positioned at the right end of the toolbar for immediate visibility. Column accent top-borders serve as secondary visual differentiators for stage identity across the kanban board.
 
 ### Kanban Column Accent Colors (per-stage top border)
 
@@ -152,7 +156,7 @@ Source: Existing `STATUS_MAP` in `VisitDetailPage.tsx`.
 - **Drag and drop**: Existing @dnd-kit/core pattern. Drag a PatientCard between columns to advance or (where allowed) reverse stage.
 - **Forward drag**: Any column to any later column (stage skipping allowed per D-12).
 - **Backward drag**: Only to allowed previous stages. If drag target is not an allowed backward transition, drop is rejected (card snaps back).
-- **Backward transition**: Opens StageReversalDialog with mandatory reason textarea before confirming. Cancel returns card to original column.
+- **Backward transition**: Opens StageReversalDialog with mandatory reason textarea before confirming. "Keep Current Stage" dismisses and returns card to original column.
 - **Done column**: Shows visits completed today (filtered by visitDate = today). Cards in Done are not draggable.
 - **Column header**: Stage name (translated) + visit count badge.
 
@@ -177,8 +181,9 @@ Source: Existing `STATUS_MAP` in `VisitDetailPage.tsx`.
 
 - **Trigger**: Backward drag-and-drop on kanban, or backward arrow button in table view.
 - **Content**: Current stage label, target stage label, mandatory reason textarea (minimum 10 characters).
-- **Actions**: "Reverse Stage" (primary, disabled until reason meets minimum length) and "Cancel" (outline).
+- **Actions**: "Reverse Stage" (primary, disabled until reason meets minimum length) and "Keep Current Stage" (outline).
 - **On confirm**: Calls backend ReverseWorkflowStage endpoint. Shows toast on success. Closes dialog.
+- **On dismiss**: "Keep Current Stage" button or Escape key closes dialog. Card returns to original column (no backend call).
 
 ### Patient Visit History Tab (D-13, D-14, D-15, D-16)
 
@@ -231,6 +236,7 @@ All copy must be provided in both English and Vietnamese (UI-01, UI-02). English
 | Stage reversal reason label | "Reason for reversal" | `workflow.reversal.reasonLabel` |
 | Stage reversal reason placeholder | "Explain why this visit needs to return to a previous stage..." | `workflow.reversal.reasonPlaceholder` |
 | Stage reversal confirm button | "Reverse Stage" | `workflow.reversal.confirm` |
+| Stage reversal dismiss button | "Keep Current Stage" | `workflow.reversal.cancel` |
 | Stage reversal success toast | "Visit moved back to {stage}" | `workflow.reversal.success` |
 | Stage reversal error toast | "Failed to reverse stage. Please try again." | `workflow.reversal.error` |
 | Visit history tab label | "Visit History" | `patient.visitHistory.tab` |
@@ -249,7 +255,7 @@ All copy must be provided in both English and Vietnamese (UI-01, UI-02). English
 
 | Action | Confirmation Approach |
 |--------|----------------------|
-| Stage reversal | StageReversalDialog with mandatory reason (minimum 10 chars). Not a destructive-styled button -- uses primary variant since reversal is a controlled clinical action, not data deletion. |
+| Stage reversal | StageReversalDialog with mandatory reason (minimum 10 chars). Not a destructive-styled button -- uses primary variant since reversal is a controlled clinical action, not data deletion. Dismiss button reads "Keep Current Stage" (not generic "Cancel"). |
 
 No other destructive actions in this phase. Visit cancellation is not in scope.
 
