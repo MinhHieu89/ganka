@@ -11,6 +11,9 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src'),
     },
   },
+  optimizeDeps: {
+    include: ['react/jsx-runtime', 'react/jsx-dev-runtime', 'react-dom/client'],
+  },
   plugins: [
     viteTsConfigPaths(),
     tailwindcss(),
