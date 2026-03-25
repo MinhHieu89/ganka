@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next"
+import i18n from "i18next"
 import { IconStethoscope, IconClipboardHeart } from "@tabler/icons-react"
 import { Card } from "@/shared/components/Card"
 import { Badge } from "@/shared/components/Badge"
@@ -26,8 +27,9 @@ interface VisitTimelineCardProps {
 }
 
 function formatVisitDate(dateStr: string): string {
+  const locale = i18n.language === "vi" ? "vi-VN" : "en-US"
   const date = new Date(dateStr)
-  return date.toLocaleDateString(undefined, {
+  return date.toLocaleDateString(locale, {
     day: "2-digit",
     month: "short",
     year: "numeric",

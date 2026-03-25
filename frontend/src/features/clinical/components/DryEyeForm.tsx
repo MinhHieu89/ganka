@@ -165,11 +165,9 @@ export function DryEyeForm({ visitId, data, disabled }: DryEyeFormProps) {
           }}
           onBlur={handleBlur}
         />
-        {field.unit && (
-          <span className="text-xs text-muted-foreground whitespace-nowrap">
-            {field.unit}
-          </span>
-        )}
+        <span className="text-xs text-muted-foreground whitespace-nowrap min-w-10 text-right">
+          {field.unit ?? ""}
+        </span>
       </div>
     )
   }

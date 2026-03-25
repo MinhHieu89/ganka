@@ -180,11 +180,9 @@ function NumberInput({
             handleBlur?.()
           }}
         />
-        {field.unit && (
-          <span className="text-xs text-muted-foreground whitespace-nowrap">
-            {field.unit}
-          </span>
-        )}
+        <span className="text-xs text-muted-foreground whitespace-nowrap min-w-[2.5rem] text-right">
+          {field.unit ?? ""}
+        </span>
       </div>
       {fieldError && (
         <p className="text-xs text-destructive mt-0.5">{fieldError.message}</p>

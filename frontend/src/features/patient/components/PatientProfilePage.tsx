@@ -115,15 +115,6 @@ export function PatientProfilePage({ patientId, initialTab }: PatientProfilePage
 
   return (
     <div className="space-y-6">
-      {/* Back link */}
-      <Link
-        to={"/patients" as string}
-        className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors"
-      >
-        <IconArrowLeft className="h-4 w-4 mr-1" />
-        {t("title")}
-      </Link>
-
       {/* Header */}
       <PatientProfileHeader
         patient={patient}
@@ -135,13 +126,13 @@ export function PatientProfilePage({ patientId, initialTab }: PatientProfilePage
       <Tabs defaultValue={initialTab || "overview"} onValueChange={handleTabChange}>
         <TabsList>
           <TabsTrigger value="overview">{t("overview")}</TabsTrigger>
+          <TabsTrigger value="visit-history">{tClinical("patient.visitHistory.tab")}</TabsTrigger>
           <TabsTrigger value="allergies">{t("allergies")}</TabsTrigger>
           <TabsTrigger value="appointments">{t("appointments")}</TabsTrigger>
           <TabsTrigger value="prescriptions">{tPharmacy("queue.prescriptions.tab")}</TabsTrigger>
           <TabsTrigger value="dry-eye">{tClinical("dryEye.tab")}</TabsTrigger>
           <TabsTrigger value="optical-history">{tOptical("prescriptionHistory.tab")}</TabsTrigger>
           <TabsTrigger value="treatments">{"\u0110i\u1EC1u tr\u1ECB"}</TabsTrigger>
-          <TabsTrigger value="visit-history">{tClinical("patient.visitHistory.tab")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="mt-4">

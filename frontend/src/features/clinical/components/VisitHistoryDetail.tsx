@@ -1,18 +1,13 @@
 import { useTranslation } from "react-i18next"
+import i18n from "i18next"
 import {
   IconCalendar,
   IconStethoscope,
-  IconEye,
-  IconClipboardHeart,
-  IconPill,
-  IconGlasses,
-  IconNotes,
   IconCheck,
-  IconDroplets,
   IconFileOff,
 } from "@tabler/icons-react"
 import { Badge } from "@/shared/components/Badge"
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card"
+import { Card, CardContent } from "@/shared/components/Card"
 import { ScrollArea } from "@/shared/components/ScrollArea"
 import { Separator } from "@/shared/components/Separator"
 import { Skeleton } from "@/shared/components/Skeleton"
@@ -23,6 +18,7 @@ import { DiagnosisSection } from "./DiagnosisSection"
 import { DrugPrescriptionSection } from "./DrugPrescriptionSection"
 import { OpticalPrescriptionSection } from "./OpticalPrescriptionSection"
 import { ExaminationNotesSection } from "./ExaminationNotesSection"
+import { MedicalImagesSection } from "./MedicalImagesSection"
 
 const STATUS_VARIANT: Record<number, "outline" | "default" | "secondary" | "destructive"> = {
   0: "outline",
@@ -38,8 +34,12 @@ const STATUS_KEY: Record<number, string> = {
   3: "cancelled",
 }
 
+function getLocale(): string {
+  return i18n.language === "vi" ? "vi-VN" : "en-US"
+}
+
 function formatFullDate(dateStr: string): string {
-  return new Date(dateStr).toLocaleDateString(undefined, {
+  return new Date(dateStr).toLocaleDateString(getLocale(), {
     weekday: "long",
     year: "numeric",
     month: "long",
@@ -48,7 +48,7 @@ function formatFullDate(dateStr: string): string {
 }
 
 function formatDateTime(dateStr: string): string {
-  return new Date(dateStr).toLocaleString(undefined, {
+  return new Date(dateStr).toLocaleString(getLocale(), {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -99,7 +99,7 @@ export function VisitHistoryDetail({ visitId }: VisitHistoryDetailProps) {
 
   return (
     <ScrollArea className="h-full">
-      <div className="space-y-4 p-4">
+      <div className="space-y-4 p-4 pt-0">
         {/* Visit Header Card */}
         <Card>
           <CardContent className="p-4">
@@ -125,76 +125,51 @@ export function VisitHistoryDetail({ visitId }: VisitHistoryDetailProps) {
 
         <Separator />
 
-        {/* Clinical Sections wrapped in Cards */}
-        <SectionWrapper
-          icon={<IconEye className="h-4 w-4" />}
-          title={t("visit.sections.refraction")}
-        >
-          <RefractionSection
-            visitId={visit.id}
-            refractions={visit.refractions}
-            disabled
-          />
-        </SectionWrapper>
+        {/* Clinical Sections — each component has its own header */}
+        <RefractionSection
+          visitId={visit.id}
+          refractions={visit.refractions}
+          disabled
+        />
 
-        <SectionWrapper
-          icon={<IconDroplets className="h-4 w-4" />}
-          title={t("visit.sections.dryEye")}
-        >
-          <DryEyeSection
-            visitId={visit.id}
-            patientId={visit.patientId}
-            dryEyeAssessments={visit.dryEyeAssessments ?? []}
-            disabled
-          />
-        </SectionWrapper>
+        <DryEyeSection
+          visitId={visit.id}
+          patientId={visit.patientId}
+          dryEyeAssessments={visit.dryEyeAssessments ?? []}
+          disabled
+        />
 
-        <SectionWrapper
-          icon={<IconNotes className="h-4 w-4" />}
-          title={t("visit.sections.examinationNotes")}
-        >
-          <ExaminationNotesSection
-            visitId={visit.id}
-            initialNotes={visit.examinationNotes}
-            disabled
-          />
-        </SectionWrapper>
+        <ExaminationNotesSection
+          visitId={visit.id}
+          initialNotes={visit.examinationNotes}
+          disabled
+        />
 
-        <SectionWrapper
-          icon={<IconClipboardHeart className="h-4 w-4" />}
-          title={t("visit.sections.diagnosis")}
-        >
-          <DiagnosisSection
-            visitId={visit.id}
-            diagnoses={visit.diagnoses}
-            doctorId={visit.doctorId}
-            disabled
-          />
-        </SectionWrapper>
+        <DiagnosisSection
+          visitId={visit.id}
+          diagnoses={visit.diagnoses}
+          doctorId={visit.doctorId}
+          disabled
+        />
 
-        <SectionWrapper
-          icon={<IconPill className="h-4 w-4" />}
-          title={t("visit.sections.drugPrescription")}
-        >
-          <DrugPrescriptionSection
-            visitId={visit.id}
-            patientId={visit.patientId}
-            prescriptions={visit.drugPrescriptions ?? []}
-            disabled
-          />
-        </SectionWrapper>
+        <DrugPrescriptionSection
+          visitId={visit.id}
+          patientId={visit.patientId}
+          prescriptions={visit.drugPrescriptions ?? []}
+          disabled
+        />
 
-        <SectionWrapper
-          icon={<IconGlasses className="h-4 w-4" />}
-          title={t("visit.sections.opticalPrescription")}
-        >
-          <OpticalPrescriptionSection
-            visitId={visit.id}
-            prescriptions={visit.opticalPrescriptions ?? []}
-            refractions={visit.refractions}
-            disabled
-          />
-        </SectionWrapper>
+        <OpticalPrescriptionSection
+          visitId={visit.id}
+          prescriptions={visit.opticalPrescriptions ?? []}
+          refractions={visit.refractions}
+          disabled
+        />
+
+        <MedicalImagesSection
+          visitId={visit.id}
+          patientId={visit.patientId}
+        />
 
         {/* Signed at footer */}
         {visit.signedAt && (
@@ -211,30 +186,5 @@ export function VisitHistoryDetail({ visitId }: VisitHistoryDetailProps) {
         )}
       </div>
     </ScrollArea>
-  )
-}
-
-/** Wrapper that provides a Card with icon + title header for each clinical section */
-function SectionWrapper({
-  icon,
-  title,
-  children,
-}: {
-  icon: React.ReactNode
-  title: string
-  children: React.ReactNode
-}) {
-  return (
-    <Card>
-      <CardHeader className="pb-2 pt-3 px-4">
-        <CardTitle className="text-sm font-medium flex items-center gap-2 text-muted-foreground">
-          {icon}
-          <span>{title}</span>
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="px-4 pb-4 pt-0">
-        {children}
-      </CardContent>
-    </Card>
   )
 }

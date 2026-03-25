@@ -92,7 +92,7 @@ export function OsdiSection({ visitId, patientId, assessment, disabled }: OsdiSe
   )
 
   return (
-    <div className="space-y-4 border-t pt-4">
+    <div className="space-y-4 pt-8">
       <div className="flex items-center justify-between">
         <h4 className="text-sm font-semibold">{t("osdi.title")}</h4>
         <div className="flex items-center gap-2">

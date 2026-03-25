@@ -35,7 +35,7 @@ export function VisitSection({
   return (
     <Collapsible defaultOpen={defaultOpen} open={open} onOpenChange={onOpenChange}>
       <Card className={cn(className)}>
-        <CardHeader className="flex flex-row items-center justify-between py-3">
+        <CardHeader className="flex flex-row items-center justify-between py-3 pb-2">
           <CollapsibleTrigger asChild>
             <div className="flex items-center gap-2 cursor-pointer flex-1">
               <CardTitle className="text-base">{title}</CardTitle>
@@ -45,7 +45,7 @@ export function VisitSection({
           {headerExtra}
         </CardHeader>
         <CollapsibleContent>
-          <CardContent className="pt-0">{children}</CardContent>
+          <CardContent className="pt-1">{children}</CardContent>
         </CollapsibleContent>
       </Card>
     </Collapsible>

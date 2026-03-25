@@ -23,13 +23,13 @@ export function VisitTimeline({
 
   if (isLoading) {
     return (
-      <div className="relative pl-8 space-y-3">
+      <div className="relative pl-7 space-y-3">
         {/* Skeleton timeline line */}
-        <div className="absolute left-3 top-2 bottom-2 w-0.5 bg-border" />
+        <div className="absolute left-3.5 top-0 bottom-0 w-0.5 bg-border" />
         {[1, 2, 3].map((i) => (
           <div key={i} className="relative">
             {/* Skeleton dot */}
-            <div className="absolute left-[-20px] top-4 w-3 h-3 rounded-full bg-muted border-2 border-background" />
+            <div className="absolute -left-4.75 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-muted border-2 border-background" />
             <Skeleton className="h-20 w-full" />
           </div>
         ))}
@@ -49,19 +49,19 @@ export function VisitTimeline({
 
   return (
     <ScrollArea className="h-full">
-      <div className="relative pl-8 pr-2" role="listbox" aria-label="Visit history">
-        {/* Vertical timeline connector line */}
-        <div className="absolute left-3 top-2 bottom-2 w-0.5 bg-border" />
+      <div className="relative pl-7 pr-2 py-1" role="listbox" aria-label="Visit history">
+        {/* Vertical timeline connector line — centered at left 14.5px (left-[14px] + half of w-0.5) */}
+        <div className="absolute left-[14px] top-0 bottom-0 w-0.5 bg-border" />
 
         <div className="space-y-2">
           {visits.map((visit) => {
             const isSelected = visit.visitId === selectedVisitId
             return (
               <div key={visit.visitId} className="relative transition-all duration-200">
-                {/* Timeline dot */}
+                {/* Timeline dot — centered on line and vertically centered on card */}
                 <div
                   className={cn(
-                    "absolute left-[-20px] top-4 w-3 h-3 rounded-full border-2 border-background z-10",
+                    "absolute left-[-19px] top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 border-background z-10",
                     isSelected ? "bg-primary" : "bg-muted-foreground/40",
                   )}
                 />
