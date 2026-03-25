@@ -21,6 +21,14 @@ public class ClinicalDbContext : DbContext
     public DbSet<DrugPrescription> DrugPrescriptions => Set<DrugPrescription>();
     public DbSet<PrescriptionItem> PrescriptionItems => Set<PrescriptionItem>();
     public DbSet<OpticalPrescription> OpticalPrescriptions => Set<OpticalPrescription>();
+    public DbSet<ImagingRequest> ImagingRequests => Set<ImagingRequest>();
+    public DbSet<ImagingService> ImagingServices => Set<ImagingService>();
+    public DbSet<StageSkip> StageSkips => Set<StageSkip>();
+    public DbSet<VisitPayment> VisitPayments => Set<VisitPayment>();
+    public DbSet<PharmacyDispensing> PharmacyDispensings => Set<PharmacyDispensing>();
+    public DbSet<DispensingLineItem> DispensingLineItems => Set<DispensingLineItem>();
+    public DbSet<OpticalOrder> OpticalOrders => Set<OpticalOrder>();
+    public DbSet<HandoffChecklist> HandoffChecklists => Set<HandoffChecklist>();
 
     public ClinicalDbContext(DbContextOptions<ClinicalDbContext> options) : base(options)
     {

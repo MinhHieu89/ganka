@@ -106,6 +106,69 @@ public class VisitConfiguration : IEntityTypeConfiguration<Visit>
         builder.Navigation(v => v.OpticalPrescriptions)
             .UsePropertyAccessMode(PropertyAccessMode.Field);
 
+        // Imaging requests navigation
+        builder.HasMany(v => v.ImagingRequests)
+            .WithOne()
+            .HasForeignKey(ir => ir.VisitId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Navigation(v => v.ImagingRequests)
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
+
+        // Stage skips navigation
+        builder.HasMany(v => v.StageSkips)
+            .WithOne()
+            .HasForeignKey(s => s.VisitId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Navigation(v => v.StageSkips)
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
+
+        // Visit payments navigation
+        builder.HasMany(v => v.VisitPayments)
+            .WithOne()
+            .HasForeignKey(vp => vp.VisitId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Navigation(v => v.VisitPayments)
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
+
+        // Pharmacy dispensings navigation
+        builder.HasMany(v => v.PharmacyDispensings)
+            .WithOne()
+            .HasForeignKey(pd => pd.VisitId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Navigation(v => v.PharmacyDispensings)
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
+
+        // Optical orders navigation
+        builder.HasMany(v => v.OpticalOrders)
+            .WithOne()
+            .HasForeignKey(oo => oo.VisitId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Navigation(v => v.OpticalOrders)
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
+
+        // Handoff checklists navigation
+        builder.HasMany(v => v.HandoffChecklists)
+            .WithOne()
+            .HasForeignKey(hc => hc.VisitId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Navigation(v => v.HandoffChecklists)
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
+
+        // Workflow branching properties
+        builder.Property(v => v.DrugTrackStatus)
+            .IsRequired()
+            .HasConversion<int>();
+
+        builder.Property(v => v.GlassesTrackStatus)
+            .IsRequired()
+            .HasConversion<int>();
+
         // Performance indexes
         builder.HasIndex(v => v.PatientId);
         builder.HasIndex(v => v.DoctorId);
