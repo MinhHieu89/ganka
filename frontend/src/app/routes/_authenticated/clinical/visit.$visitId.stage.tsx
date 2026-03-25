@@ -1,12 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { IconLoader2 } from "@tabler/icons-react"
-import { useVisitById } from "@/features/clinical/api/clinical-api"
+import { useVisitById, useActiveVisits } from "@/features/clinical/api/clinical-api"
 import { Stage2RefractionView } from "@/features/clinical/components/stage-views/Stage2RefractionView"
 import { Stage3DoctorExamView } from "@/features/clinical/components/stage-views/Stage3DoctorExamView"
 import { Stage4aImagingView } from "@/features/clinical/components/stage-views/Stage4aImagingView"
 import { Stage4bDoctorReviewView } from "@/features/clinical/components/stage-views/Stage4bDoctorReviewView"
 import { Stage5PrescriptionView } from "@/features/clinical/components/stage-views/Stage5PrescriptionView"
 import { PostSigningLockedView } from "@/features/clinical/components/stage-views/PostSigningLockedView"
+import { Stage6CashierView } from "@/features/clinical/components/stage-views/Stage6CashierView"
+import { PostPaymentSuccessView } from "@/features/clinical/components/stage-views/PostPaymentSuccessView"
 import { requirePermission } from "@/shared/utils/permission-guard"
 
 export const Route = createFileRoute(
@@ -35,6 +37,7 @@ const STAGE_LABELS: Record<number, string> = {
 function StageRoute() {
   const { visitId } = Route.useParams()
   const { data: visit, isLoading, error } = useVisitById(visitId)
+  const { data: activeVisits } = useActiveVisits()
 
   if (isLoading) {
     return (
@@ -71,6 +74,28 @@ function StageRoute() {
         return <PostSigningLockedView visit={visit} />
       }
       return <Stage5PrescriptionView visit={visit} />
+
+    case 6: { // Cashier
+      // Find active visit to get track statuses
+      const activeVisit = activeVisits?.find((v) => v.id === visit.id)
+      // If visit already past stage 6 (payment confirmed), show post-payment view
+      if (visit.signedAt && activeVisit && visit.currentStage >= 6) {
+        // Check if payment was already confirmed by looking at stage progression
+        // When currentStage > 6, payment is done; when currentStage === 6,
+        // we show the cashier view for payment collection
+        const isPaid = visit.currentStage > 6
+        if (isPaid) {
+          return (
+            <PostPaymentSuccessView
+              visit={visit}
+              drugTrackStatus={activeVisit.drugTrackStatus}
+              glassesTrackStatus={activeVisit.glassesTrackStatus}
+            />
+          )
+        }
+      }
+      return <Stage6CashierView visit={visit} />
+    }
 
     default: {
       // Placeholder for stages not yet implemented
