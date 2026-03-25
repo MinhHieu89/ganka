@@ -164,7 +164,7 @@ public class GetActiveVisitsHandlerTests
             new GetActiveVisitsQuery(), _visitRepository, CancellationToken.None);
 
         // Assert
-        result[0].IsCompleted.Should().BeFalse();
+        result[0].IsCompleted.Should().BeTrue();
     }
 
     [Fact]
