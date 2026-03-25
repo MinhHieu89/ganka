@@ -172,7 +172,7 @@ public sealed class VisitRepository : IVisitRepository
             .Where(v => !v.IsDeleted &&
                 (v.Status == VisitStatus.Draft ||
                  v.Status == VisitStatus.Amended ||
-                 (v.CurrentStage == WorkflowStage.PharmacyOptical &&
+                 (v.CurrentStage == WorkflowStage.Done &&
                   v.VisitDate >= todayStartUtc && v.VisitDate < todayEndUtc)))
             .OrderBy(v => v.VisitDate)
             .ToListAsync(ct);
