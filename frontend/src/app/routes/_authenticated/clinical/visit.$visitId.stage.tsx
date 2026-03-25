@@ -12,6 +12,7 @@ import { PostPaymentSuccessView } from "@/features/clinical/components/stage-vie
 import { Stage7aPharmacyView } from "@/features/clinical/components/stage-views/Stage7aPharmacyView"
 import { Stage7bOpticalCenterView } from "@/features/clinical/components/stage-views/Stage7bOpticalCenterView"
 import { Stage9OpticalLabView } from "@/features/clinical/components/stage-views/Stage9OpticalLabView"
+import { Stage10ReturnGlassesView } from "@/features/clinical/components/stage-views/Stage10ReturnGlassesView"
 import { requirePermission } from "@/shared/utils/permission-guard"
 
 export const Route = createFileRoute(
@@ -103,6 +104,23 @@ function StageRoute() {
 
     case 9: // OpticalLab
       return <Stage9OpticalLabView visit={visit} />
+
+    case 10: // ReturnGlasses
+      return <Stage10ReturnGlassesView visit={visit} />
+
+    case 99: // Done — redirect to kanban
+      return (
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center text-muted-foreground">
+            <p className="text-lg font-medium">{`L\u01B0\u1EE3t kh\u00E1m \u0111\u00E3 ho\u00E0n t\u1EA5t`}</p>
+            <p className="text-sm mt-1">
+              <a href="/clinical" className="text-primary hover:underline">
+                {`Quay l\u1EA1i danh s\u00E1ch`}
+              </a>
+            </p>
+          </div>
+        </div>
+      )
 
     default: {
       // Placeholder for stages not yet implemented
