@@ -26,6 +26,15 @@ public class Visit : AggregateRoot, IAuditable
     public Guid? SignedById { get; private set; }
     public byte[] RowVersion { get; private set; } = [];
 
+    // Parallel track statuses (post-Cashier)
+    public TrackStatus DrugTrackStatus { get; private set; } = TrackStatus.NotApplicable;
+    public TrackStatus GlassesTrackStatus { get; private set; } = TrackStatus.NotApplicable;
+
+    // Branching flags
+    public bool ImagingRequested { get; private set; }
+    public bool RefractionSkipped { get; private set; }
+    public bool HasGlassesPrescription { get; private set; }
+
     private readonly List<Refraction> _refractions = [];
     public IReadOnlyCollection<Refraction> Refractions => _refractions.AsReadOnly();
 
@@ -43,6 +52,25 @@ public class Visit : AggregateRoot, IAuditable
 
     private readonly List<OpticalPrescription> _opticalPrescriptions = [];
     public IReadOnlyCollection<OpticalPrescription> OpticalPrescriptions => _opticalPrescriptions.AsReadOnly();
+
+    // New child entity collections for workflow
+    private readonly List<ImagingRequest> _imagingRequests = [];
+    public IReadOnlyCollection<ImagingRequest> ImagingRequests => _imagingRequests.AsReadOnly();
+
+    private readonly List<StageSkip> _stageSkips = [];
+    public IReadOnlyCollection<StageSkip> StageSkips => _stageSkips.AsReadOnly();
+
+    private readonly List<VisitPayment> _visitPayments = [];
+    public IReadOnlyCollection<VisitPayment> VisitPayments => _visitPayments.AsReadOnly();
+
+    private readonly List<PharmacyDispensing> _pharmacyDispensings = [];
+    public IReadOnlyCollection<PharmacyDispensing> PharmacyDispensings => _pharmacyDispensings.AsReadOnly();
+
+    private readonly List<OpticalOrder> _opticalOrders = [];
+    public IReadOnlyCollection<OpticalOrder> OpticalOrders => _opticalOrders.AsReadOnly();
+
+    private readonly List<HandoffChecklist> _handoffChecklists = [];
+    public IReadOnlyCollection<HandoffChecklist> HandoffChecklists => _handoffChecklists.AsReadOnly();
 
     private Visit() { }
 
@@ -80,29 +108,63 @@ public class Visit : AggregateRoot, IAuditable
 
     /// <summary>
     /// Advances the visit to a new workflow stage.
-    /// Validates that the new stage is a valid progression.
+    /// Validates branching logic for imaging loop, glasses flow, and parallel tracks.
+    /// Enum values do NOT match flow order (e.g., OpticalCenter(8) -> Cashier(6) is valid).
     /// </summary>
     public void AdvanceStage(WorkflowStage newStage)
     {
-        if (newStage <= CurrentStage)
-            throw new InvalidOperationException(
-                $"Cannot move to stage {newStage}. Current stage is {CurrentStage}.");
-
+        ValidateStageTransition(newStage);
         CurrentStage = newStage;
         SetUpdatedAt();
     }
 
+    private void ValidateStageTransition(WorkflowStage newStage)
+    {
+        switch (CurrentStage)
+        {
+            case WorkflowStage.DoctorExam:
+                // Branching: if imaging requested -> must go to Imaging, else -> Prescription
+                if (ImagingRequested && newStage == WorkflowStage.Prescription)
+                    throw new InvalidOperationException(
+                        "Cannot skip to Prescription when imaging has been requested. Must go through Imaging -> DoctorReviewsResults first.");
+                if (!ImagingRequested && newStage == WorkflowStage.Imaging)
+                    throw new InvalidOperationException(
+                        "Cannot advance to Imaging when no imaging has been requested.");
+                if (newStage != WorkflowStage.Imaging && newStage != WorkflowStage.Prescription)
+                    ValidateForwardProgression(newStage);
+                break;
+
+            case WorkflowStage.OpticalCenter:
+                // OpticalCenter(8) -> Cashier(6) is a valid "backward" jump in enum values
+                if (newStage == WorkflowStage.Cashier)
+                    break; // Allow this specific transition
+                ValidateForwardProgression(newStage);
+                break;
+
+            default:
+                ValidateForwardProgression(newStage);
+                break;
+        }
+    }
+
+    private void ValidateForwardProgression(WorkflowStage newStage)
+    {
+        if (newStage <= CurrentStage)
+            throw new InvalidOperationException(
+                $"Cannot move to stage {newStage}. Current stage is {CurrentStage}.");
+    }
+
     /// <summary>
     /// Allowed stage reversal transitions per D-07.
-    /// Cashier(6) and PharmacyOptical(7) have NO entries, so they always fail.
+    /// Cashier(6) and Pharmacy(7) have NO entries, so they always fail.
     /// </summary>
     private static readonly Dictionary<WorkflowStage, HashSet<WorkflowStage>> AllowedReversals = new()
     {
         [WorkflowStage.RefractionVA] = [WorkflowStage.Reception],
         [WorkflowStage.DoctorExam] = [WorkflowStage.RefractionVA],
-        [WorkflowStage.Diagnostics] = [WorkflowStage.DoctorExam],
-        [WorkflowStage.DoctorReads] = [WorkflowStage.Diagnostics, WorkflowStage.DoctorExam],
-        [WorkflowStage.Rx] = [WorkflowStage.DoctorExam, WorkflowStage.DoctorReads],
+        [WorkflowStage.Imaging] = [WorkflowStage.DoctorExam],
+        [WorkflowStage.DoctorReviewsResults] = [WorkflowStage.Imaging, WorkflowStage.DoctorExam],
+        [WorkflowStage.Prescription] = [WorkflowStage.DoctorExam, WorkflowStage.DoctorReviewsResults],
     };
 
     private static bool IsReversalAllowed(WorkflowStage current, WorkflowStage target)
@@ -111,7 +173,7 @@ public class Visit : AggregateRoot, IAuditable
     /// <summary>
     /// Reverses the visit to an earlier workflow stage with a mandatory reason.
     /// Only certain reversals are allowed per the AllowedReversals table (D-07).
-    /// Cashier and PharmacyOptical stages cannot be reversed.
+    /// Cashier and post-Cashier stages cannot be reversed.
     /// </summary>
     public void ReverseStage(WorkflowStage targetStage, string reason)
     {
@@ -297,6 +359,100 @@ public class Visit : AggregateRoot, IAuditable
         _amendments.Add(amendment);
         SetUpdatedAt();
     }
+
+    // ===================== Imaging Request =====================
+
+    /// <summary>
+    /// Requests imaging during DoctorExam stage. Sets ImagingRequested flag and creates an ImagingRequest entity.
+    /// </summary>
+    public void RequestImaging(Guid doctorId, string? note, List<string> serviceNames)
+    {
+        if (CurrentStage != WorkflowStage.DoctorExam)
+            throw new InvalidOperationException("Imaging can only be requested during DoctorExam stage.");
+
+        ImagingRequested = true;
+        var request = ImagingRequest.Create(Id, doctorId, note, serviceNames);
+        _imagingRequests.Add(request);
+        SetUpdatedAt();
+    }
+
+    // ===================== Refraction Skip =====================
+
+    /// <summary>
+    /// Skips the RefractionVA stage with a mandatory reason.
+    /// Creates a StageSkip audit entity.
+    /// </summary>
+    public void SkipRefraction(SkipReason reason, string? freeTextNote, Guid actorId, string actorName)
+    {
+        if (CurrentStage != WorkflowStage.RefractionVA)
+            throw new InvalidOperationException("Can only skip refraction when at RefractionVA stage.");
+
+        RefractionSkipped = true;
+        var skip = StageSkip.Create(Id, WorkflowStage.RefractionVA, reason, freeTextNote, actorId, actorName);
+        _stageSkips.Add(skip);
+        SetUpdatedAt();
+    }
+
+    /// <summary>
+    /// Undoes a refraction skip. Marks the latest StageSkip as undone.
+    /// </summary>
+    public void UndoRefractionSkip()
+    {
+        if (!RefractionSkipped)
+            throw new InvalidOperationException("Refraction has not been skipped.");
+        if (CurrentStage != WorkflowStage.RefractionVA)
+            throw new InvalidOperationException("Can only undo refraction skip when at RefractionVA stage.");
+
+        RefractionSkipped = false;
+        var latestSkip = _stageSkips
+            .Where(s => s.Stage == WorkflowStage.RefractionVA && !s.IsUndone)
+            .OrderByDescending(s => s.SkippedAt)
+            .FirstOrDefault();
+        latestSkip?.MarkUndone();
+        SetUpdatedAt();
+    }
+
+    // ===================== Post-Payment Tracks =====================
+
+    /// <summary>
+    /// Activates post-payment tracks after Cashier payment.
+    /// Sets DrugTrackStatus and GlassesTrackStatus based on what was prescribed.
+    /// </summary>
+    public void ActivatePostPaymentTracks(bool hasDrugs, bool hasGlasses)
+    {
+        if (CurrentStage != WorkflowStage.Cashier)
+            throw new InvalidOperationException("Can only activate post-payment tracks at Cashier stage.");
+
+        DrugTrackStatus = hasDrugs ? TrackStatus.Pending : TrackStatus.NotApplicable;
+        GlassesTrackStatus = hasGlasses ? TrackStatus.Pending : TrackStatus.NotApplicable;
+        SetUpdatedAt();
+    }
+
+    /// <summary>
+    /// Marks the drug dispensing track as completed.
+    /// </summary>
+    public void CompleteDrugTrack()
+    {
+        DrugTrackStatus = TrackStatus.Completed;
+        SetUpdatedAt();
+    }
+
+    /// <summary>
+    /// Marks the glasses processing track as completed.
+    /// </summary>
+    public void CompleteGlassesTrack()
+    {
+        GlassesTrackStatus = TrackStatus.Completed;
+        SetUpdatedAt();
+    }
+
+    /// <summary>
+    /// Returns true when all active tracks are completed (or not applicable).
+    /// A visit is complete when there's nothing left to do post-payment.
+    /// </summary>
+    public bool IsComplete =>
+        (DrugTrackStatus is TrackStatus.Completed or TrackStatus.NotApplicable) &&
+        (GlassesTrackStatus is TrackStatus.Completed or TrackStatus.NotApplicable);
 
     /// <summary>
     /// Guard method: throws if the visit is signed and not in amendment mode.

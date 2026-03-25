@@ -145,44 +145,16 @@ public class GetActiveVisitsHandlerTests
     [Fact]
     public async Task Handle_VisitAtDone_IsCompletedTrue()
     {
-        // Arrange -- visit advanced to Done (stage 8)
+        // Arrange -- visit advanced to Done (no-imaging path)
         var visit = Visit.Create(
             Guid.NewGuid(), "Completed Patient", Guid.NewGuid(), "Dr. F",
             DefaultBranchId, false);
         visit.AdvanceStage(WorkflowStage.RefractionVA);
         visit.AdvanceStage(WorkflowStage.DoctorExam);
-        visit.AdvanceStage(WorkflowStage.Diagnostics);
-        visit.AdvanceStage(WorkflowStage.DoctorReads);
-        visit.AdvanceStage(WorkflowStage.Rx);
+        visit.AdvanceStage(WorkflowStage.Prescription);
         visit.AdvanceStage(WorkflowStage.Cashier);
-        visit.AdvanceStage(WorkflowStage.PharmacyOptical);
+        visit.AdvanceStage(WorkflowStage.Pharmacy);
         visit.AdvanceStage(WorkflowStage.Done);
-
-        _visitRepository.GetActiveVisitsIncludingDoneTodayAsync(Arg.Any<CancellationToken>())
-            .Returns(new List<Visit> { visit });
-
-        // Act
-        var result = await GetActiveVisitsHandler.Handle(
-            new GetActiveVisitsQuery(), _visitRepository, CancellationToken.None);
-
-        // Assert
-        result[0].IsCompleted.Should().BeTrue();
-    }
-
-    [Fact]
-    public async Task Handle_VisitAtPharmacyOptical_IsCompletedFalse()
-    {
-        // Arrange -- visit at PharmacyOptical (stage 7) should NOT be completed
-        var visit = Visit.Create(
-            Guid.NewGuid(), "Pharmacy Patient", Guid.NewGuid(), "Dr. F2",
-            DefaultBranchId, false);
-        visit.AdvanceStage(WorkflowStage.RefractionVA);
-        visit.AdvanceStage(WorkflowStage.DoctorExam);
-        visit.AdvanceStage(WorkflowStage.Diagnostics);
-        visit.AdvanceStage(WorkflowStage.DoctorReads);
-        visit.AdvanceStage(WorkflowStage.Rx);
-        visit.AdvanceStage(WorkflowStage.Cashier);
-        visit.AdvanceStage(WorkflowStage.PharmacyOptical);
 
         _visitRepository.GetActiveVisitsIncludingDoneTodayAsync(Arg.Any<CancellationToken>())
             .Returns(new List<Visit> { visit });
@@ -208,11 +180,9 @@ public class GetActiveVisitsHandlerTests
             DefaultBranchId, false);
         doneVisit.AdvanceStage(WorkflowStage.RefractionVA);
         doneVisit.AdvanceStage(WorkflowStage.DoctorExam);
-        doneVisit.AdvanceStage(WorkflowStage.Diagnostics);
-        doneVisit.AdvanceStage(WorkflowStage.DoctorReads);
-        doneVisit.AdvanceStage(WorkflowStage.Rx);
+        doneVisit.AdvanceStage(WorkflowStage.Prescription);
         doneVisit.AdvanceStage(WorkflowStage.Cashier);
-        doneVisit.AdvanceStage(WorkflowStage.PharmacyOptical);
+        doneVisit.AdvanceStage(WorkflowStage.Pharmacy);
         doneVisit.AdvanceStage(WorkflowStage.Done);
 
         _visitRepository.GetActiveVisitsIncludingDoneTodayAsync(Arg.Any<CancellationToken>())

@@ -13,16 +13,40 @@ public class VisitReverseStageTests
 {
     private static readonly BranchId DefaultBranchId = new(Guid.Parse("00000000-0000-0000-0000-000000000001"));
 
+    /// <summary>
+    /// Advances a visit through the no-imaging path to reach the desired stage.
+    /// For Imaging/DoctorReviewsResults stages, uses the imaging path.
+    /// </summary>
     private static Visit CreateVisitAtStage(WorkflowStage stage)
     {
+        if (stage is WorkflowStage.Imaging or WorkflowStage.DoctorReviewsResults)
+        {
+            var imgVisit = Visit.Create(Guid.NewGuid(), "Test Patient", Guid.NewGuid(), "Dr. Test",
+                DefaultBranchId, false);
+            imgVisit.AdvanceStage(WorkflowStage.RefractionVA);
+            imgVisit.AdvanceStage(WorkflowStage.DoctorExam);
+            imgVisit.RequestImaging(Guid.NewGuid(), null, new List<string> { "OCT" });
+            imgVisit.AdvanceStage(WorkflowStage.Imaging);
+            if (stage == WorkflowStage.DoctorReviewsResults)
+                imgVisit.AdvanceStage(WorkflowStage.DoctorReviewsResults);
+            return imgVisit;
+        }
+
         var visit = Visit.Create(
             Guid.NewGuid(), "Test Patient", Guid.NewGuid(), "Dr. Test",
             DefaultBranchId, false);
 
-        // Advance to the desired stage step by step
-        for (var s = WorkflowStage.RefractionVA; s <= stage; s++)
+        // No-imaging path: DoctorExam -> Prescription (skips Imaging/DoctorReviewsResults)
+        WorkflowStage[] noImagingPath =
+        [
+            WorkflowStage.RefractionVA, WorkflowStage.DoctorExam,
+            WorkflowStage.Prescription, WorkflowStage.Cashier, WorkflowStage.Pharmacy
+        ];
+
+        foreach (var s in noImagingPath)
         {
             visit.AdvanceStage(s);
+            if (s == stage) break;
         }
 
         return visit;
@@ -55,10 +79,10 @@ public class VisitReverseStageTests
     }
 
     [Fact]
-    public void ReverseStage_FromDoctorReads_ToDoctorExam_Succeeds()
+    public void ReverseStage_FromDoctorReviewsResults_ToDoctorExam_Succeeds()
     {
         // Arrange
-        var visit = CreateVisitAtStage(WorkflowStage.DoctorReads);
+        var visit = CreateVisitAtStage(WorkflowStage.DoctorReviewsResults);
 
         // Act
         visit.ReverseStage(WorkflowStage.DoctorExam, "Need additional exam");
@@ -68,16 +92,16 @@ public class VisitReverseStageTests
     }
 
     [Fact]
-    public void ReverseStage_FromRx_ToDoctorReads_Succeeds()
+    public void ReverseStage_FromPrescription_ToDoctorReviewsResults_Succeeds()
     {
         // Arrange
-        var visit = CreateVisitAtStage(WorkflowStage.Rx);
+        var visit = CreateVisitAtStage(WorkflowStage.Prescription);
 
         // Act
-        visit.ReverseStage(WorkflowStage.DoctorReads, "Need re-read");
+        visit.ReverseStage(WorkflowStage.DoctorReviewsResults, "Need re-read");
 
         // Assert
-        visit.CurrentStage.Should().Be(WorkflowStage.DoctorReads);
+        visit.CurrentStage.Should().Be(WorkflowStage.DoctorReviewsResults);
     }
 
     [Fact]
@@ -93,13 +117,13 @@ public class VisitReverseStageTests
     }
 
     [Fact]
-    public void ReverseStage_FromPharmacyOptical_ToAnyStage_ThrowsNotAllowed()
+    public void ReverseStage_FromPharmacy_ToAnyStage_ThrowsNotAllowed()
     {
         // Arrange
-        var visit = CreateVisitAtStage(WorkflowStage.PharmacyOptical);
+        var visit = CreateVisitAtStage(WorkflowStage.Pharmacy);
 
         // Act & Assert
-        var act = () => visit.ReverseStage(WorkflowStage.Rx, "Some reason");
+        var act = () => visit.ReverseStage(WorkflowStage.Prescription, "Some reason");
         act.Should().Throw<InvalidOperationException>()
             .WithMessage("*not allowed*");
     }
@@ -159,7 +183,7 @@ public class VisitReverseStageTests
         var visit = CreateVisitAtStage(WorkflowStage.DoctorExam);
 
         // Act & Assert
-        var act = () => visit.ReverseStage(WorkflowStage.Diagnostics, "Some reason");
+        var act = () => visit.ReverseStage(WorkflowStage.Imaging, "Some reason");
         act.Should().Throw<InvalidOperationException>()
             .WithMessage("*earlier*");
     }

@@ -30,22 +30,42 @@ public class SignOffVisitAutoAdvanceTests
 
     private static Visit CreateVisitAtStage(WorkflowStage stage)
     {
+        if (stage is WorkflowStage.DoctorReviewsResults)
+        {
+            var imgVisit = Visit.Create(Guid.NewGuid(), "Test Patient", Guid.NewGuid(), "Dr. Test",
+                DefaultBranchId, false);
+            imgVisit.AdvanceStage(WorkflowStage.RefractionVA);
+            imgVisit.AdvanceStage(WorkflowStage.DoctorExam);
+            imgVisit.RequestImaging(Guid.NewGuid(), null, new List<string> { "OCT" });
+            imgVisit.AdvanceStage(WorkflowStage.Imaging);
+            imgVisit.AdvanceStage(WorkflowStage.DoctorReviewsResults);
+            return imgVisit;
+        }
+
         var visit = Visit.Create(
             Guid.NewGuid(), "Test Patient", Guid.NewGuid(), "Dr. Test",
             DefaultBranchId, false);
 
-        for (var s = WorkflowStage.RefractionVA; s <= stage; s++)
+        // No-imaging path
+        WorkflowStage[] noImagingPath =
+        [
+            WorkflowStage.RefractionVA, WorkflowStage.DoctorExam,
+            WorkflowStage.Prescription, WorkflowStage.Cashier, WorkflowStage.Pharmacy
+        ];
+
+        foreach (var s in noImagingPath)
         {
             visit.AdvanceStage(s);
+            if (s == stage) break;
         }
 
         return visit;
     }
 
     [Fact]
-    public async Task Handle_SignOffAtDoctorExam_AutoAdvancesToDiagnostics()
+    public async Task Handle_SignOffAtDoctorExam_NoImaging_AutoAdvancesToPrescription()
     {
-        // Arrange
+        // Arrange - no imaging requested, so auto-advance goes to Prescription
         var visit = CreateVisitAtStage(WorkflowStage.DoctorExam);
         _visitRepository.GetByIdWithDetailsAsync(visit.Id, Arg.Any<CancellationToken>()).Returns(visit);
         var command = new SignOffVisitCommand(visit.Id);
@@ -56,14 +76,14 @@ public class SignOffVisitAutoAdvanceTests
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        visit.CurrentStage.Should().Be(WorkflowStage.Diagnostics);
+        visit.CurrentStage.Should().Be(WorkflowStage.Prescription);
     }
 
     [Fact]
-    public async Task Handle_SignOffAtDoctorReads_AutoAdvancesToRx()
+    public async Task Handle_SignOffAtDoctorReviewsResults_AutoAdvancesToPrescription()
     {
         // Arrange
-        var visit = CreateVisitAtStage(WorkflowStage.DoctorReads);
+        var visit = CreateVisitAtStage(WorkflowStage.DoctorReviewsResults);
         _visitRepository.GetByIdWithDetailsAsync(visit.Id, Arg.Any<CancellationToken>()).Returns(visit);
         var command = new SignOffVisitCommand(visit.Id);
 
@@ -73,14 +93,14 @@ public class SignOffVisitAutoAdvanceTests
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        visit.CurrentStage.Should().Be(WorkflowStage.Rx);
+        visit.CurrentStage.Should().Be(WorkflowStage.Prescription);
     }
 
     [Fact]
-    public async Task Handle_SignOffAtPharmacyOptical_DoesNotAdvance()
+    public async Task Handle_SignOffAtPharmacy_DoesNotAdvance()
     {
         // Arrange
-        var visit = CreateVisitAtStage(WorkflowStage.PharmacyOptical);
+        var visit = CreateVisitAtStage(WorkflowStage.Pharmacy);
         _visitRepository.GetByIdWithDetailsAsync(visit.Id, Arg.Any<CancellationToken>()).Returns(visit);
         var command = new SignOffVisitCommand(visit.Id);
 
@@ -90,6 +110,6 @@ public class SignOffVisitAutoAdvanceTests
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        visit.CurrentStage.Should().Be(WorkflowStage.PharmacyOptical);
+        visit.CurrentStage.Should().Be(WorkflowStage.Pharmacy);
     }
 }

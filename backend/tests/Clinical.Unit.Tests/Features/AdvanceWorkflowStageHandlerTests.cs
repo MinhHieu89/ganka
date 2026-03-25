@@ -18,13 +18,26 @@ public class AdvanceWorkflowStageHandlerTests
 
     private static Visit CreateVisitAtStage(WorkflowStage stage = WorkflowStage.Reception)
     {
+        if (stage == WorkflowStage.Reception)
+            return Visit.Create(Guid.NewGuid(), "Patient A", Guid.NewGuid(), "Dr. A",
+                DefaultBranchId, false);
+
         var visit = Visit.Create(
             Guid.NewGuid(), "Patient A", Guid.NewGuid(), "Dr. A",
             DefaultBranchId, false);
 
-        // Advance to the desired stage sequentially
-        for (var s = WorkflowStage.Reception + 1; s <= stage; s++)
+        // No-imaging path: DoctorExam -> Prescription (skips Imaging/DoctorReviewsResults)
+        WorkflowStage[] noImagingPath =
+        [
+            WorkflowStage.RefractionVA, WorkflowStage.DoctorExam,
+            WorkflowStage.Prescription, WorkflowStage.Cashier, WorkflowStage.Pharmacy
+        ];
+
+        foreach (var s in noImagingPath)
+        {
             visit.AdvanceStage(s);
+            if (s == stage) break;
+        }
 
         return visit;
     }
@@ -47,11 +60,12 @@ public class AdvanceWorkflowStageHandlerTests
     }
 
     [Fact]
-    public async Task Handle_DoctorExamToDiagnostics_StageUpdated()
+    public async Task Handle_DoctorExamToImaging_StageUpdated()
     {
-        // Arrange
+        // Arrange - must request imaging before advancing to Imaging
         var visit = CreateVisitAtStage(WorkflowStage.DoctorExam);
-        var command = new AdvanceWorkflowStageCommand(visit.Id, (int)WorkflowStage.Diagnostics);
+        visit.RequestImaging(Guid.NewGuid(), null, new List<string> { "OCT" });
+        var command = new AdvanceWorkflowStageCommand(visit.Id, (int)WorkflowStage.Imaging);
         _visitRepository.GetByIdAsync(visit.Id, Arg.Any<CancellationToken>()).Returns(visit);
 
         // Act
@@ -60,7 +74,7 @@ public class AdvanceWorkflowStageHandlerTests
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        visit.CurrentStage.Should().Be(WorkflowStage.Diagnostics);
+        visit.CurrentStage.Should().Be(WorkflowStage.Imaging);
     }
 
     [Fact]

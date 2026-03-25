@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Milestone complete
-stopped_at: Completed 13-06-PLAN.md
-last_updated: "2026-03-25T07:10:30.899Z"
+status: Ready to execute
+stopped_at: Completed 13-09-PLAN.md
+last_updated: "2026-03-25T10:17:02.210Z"
 progress:
   total_phases: 22
-  completed_phases: 19
-  total_plans: 306
+  completed_phases: 18
+  total_plans: 318
   completed_plans: 303
 ---
 
@@ -23,8 +23,8 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 
 ## Current Position
 
-Phase: 13
-Plan: Not started
+Phase: 13 (clinical-workflow-overhaul-walk-in-visits-kanban-table-view-status-progression-visit-lifecycle-and-patient-visit-history) — EXECUTING
+Plan: 3 of 18
 
 ## Performance Metrics
 
@@ -299,6 +299,8 @@ Plan: Not started
 | Phase 13 P04 | 6min | 2 tasks | 10 files |
 | Phase 13 P03 | 3min | 2 tasks | 6 files |
 | Phase 13 P06 | 4 | 1 tasks | 1 files |
+| Phase 13 P07 | 5min | 2 tasks | 8 files |
+| Phase 13 P09 | 13min | 2 tasks | 25 files |
 
 ## Accumulated Context
 
@@ -829,6 +831,11 @@ Recent decisions affecting current work:
 - [Phase 13]: Used disabled prop on existing section components for read-only rendering in visit history detail
 - [Phase 13]: Used Select dropdown for stages with multiple reversal targets
 - [Phase 13]: Vietnamese user stories follow Phase 09 format convention for consistency
+- [Phase 13]: Done=8 enum requires no DB migration (EF Core integer storage)
+- [Phase 13]: SignOffVisit auto-advance caps at PharmacyOptical; Done is explicit manual step
+- [Phase 13]: WorkflowStage enum values NOT sequential with flow order - OpticalCenter(8) routes to Cashier(6) via branching
+- [Phase 13]: No CashierGlasses stage - single combined payment at Cashier
+- [Phase 13]: SignOffVisit auto-advance uses branching-aware next-stage routing
 
 ### Roadmap Evolution
 
@@ -862,6 +869,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-25T06:52:08.129Z
-Stopped at: Completed 13-06-PLAN.md
+Last session: 2026-03-25T10:17:02.204Z
+Stopped at: Completed 13-09-PLAN.md
 Resume file: None

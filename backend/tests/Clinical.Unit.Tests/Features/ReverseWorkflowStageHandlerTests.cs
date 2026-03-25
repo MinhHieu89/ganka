@@ -65,15 +65,13 @@ public class ReverseWorkflowStageHandlerTests
     [Fact]
     public async Task Handle_InvalidReversal_CashierToDoctorExam_ReturnsValidationError()
     {
-        // Arrange -- visit at Cashier
+        // Arrange -- visit at Cashier (no-imaging path)
         var visit = Visit.Create(
             Guid.NewGuid(), "Patient B", Guid.NewGuid(), "Dr. B",
             DefaultBranchId, false);
         visit.AdvanceStage(WorkflowStage.RefractionVA);
         visit.AdvanceStage(WorkflowStage.DoctorExam);
-        visit.AdvanceStage(WorkflowStage.Diagnostics);
-        visit.AdvanceStage(WorkflowStage.DoctorReads);
-        visit.AdvanceStage(WorkflowStage.Rx);
+        visit.AdvanceStage(WorkflowStage.Prescription);
         visit.AdvanceStage(WorkflowStage.Cashier);
 
         _visitRepository.GetByIdAsync(visit.Id, Arg.Any<CancellationToken>()).Returns(visit);

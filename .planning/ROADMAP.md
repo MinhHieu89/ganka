@@ -615,7 +615,7 @@ Plans:
 **Goal:** Staff can track the full 12-stage clinical visit workflow (reception through prescription, payment, pharmacy, optical, and handoff) on a kanban board with parallel drug/glasses tracks, conditional column visibility, stage detail views with Vietnamese labels, skip path for refraction, imaging loop, sign-off confirmation, and payment with auto-routing
 **Requirements**: CLN-03, CLN-04
 **Depends on:** Phase 12
-**Plans:** 18 plans (6 complete + 2 gap closure + 10 spec update)
+**Plans:** 6/18 plans executed
 
 Plans:
 - [x] 13-01-PLAN.md -- Backend TDD: stage reversal, sign-off auto-advance, done-today filter, visit history query
