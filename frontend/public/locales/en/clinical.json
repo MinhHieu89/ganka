@@ -56,6 +56,15 @@
     "refraction": "Refraction",
     "examinationNotes": "Examination Notes",
     "diagnosis": "Diagnosis",
+    "diagnoses": "Diagnoses",
+    "sections": {
+      "refraction": "Refraction",
+      "dryEye": "Dry Eye Assessment",
+      "examinationNotes": "Examination Notes",
+      "diagnosis": "Diagnosis",
+      "drugPrescription": "Drug Prescription",
+      "opticalPrescription": "Optical Prescription"
+    },
     "signOff": "Sign Off",
     "signOffTitle": "Sign Off Visit",
     "signOffConfirm": "This will lock the record. Corrections will require an amendment.",
@@ -381,7 +390,10 @@
   },
   "patient": {
     "visitHistory": {
+      "title": "Visit History",
       "tab": "Visit History",
+      "visit": "visit",
+      "visits": "visits",
       "empty": {
         "title": "No visit history",
         "description": "This patient has no recorded visits yet"

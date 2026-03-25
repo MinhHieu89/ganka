@@ -56,6 +56,15 @@
     "refraction": "Khúc xạ",
     "examinationNotes": "Ghi chú khám",
     "diagnosis": "Chẩn đoán",
+    "diagnoses": "Chẩn đoán",
+    "sections": {
+      "refraction": "Khúc xạ",
+      "dryEye": "Đánh giá khô mắt",
+      "examinationNotes": "Ghi chú khám",
+      "diagnosis": "Chẩn đoán",
+      "drugPrescription": "Đơn thuốc",
+      "opticalPrescription": "Đơn kính"
+    },
     "signOff": "Ký duyệt",
     "signOffTitle": "Ký duyệt lượt khám",
     "signOffConfirm": "Thao tác này sẽ khóa hồ sơ. Chỉnh sửa sau đó sẽ cần tạo bản sửa đổi.",
@@ -381,7 +390,10 @@
   },
   "patient": {
     "visitHistory": {
+      "title": "Lịch sử khám",
       "tab": "Lịch sử khám",
+      "visit": "lượt khám",
+      "visits": "lượt khám",
       "empty": {
         "title": "Chưa có lịch sử khám",
         "description": "Bệnh nhân chưa có lượt khám nào"
