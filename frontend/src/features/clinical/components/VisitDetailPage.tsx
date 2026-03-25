@@ -80,7 +80,14 @@ export function VisitDetailPage({ visitId }: VisitDetailPageProps) {
             </Button>
           </Link>
           <h1 className="text-xl font-semibold">
-            {t("visit.title", { name: visit.patientName })}
+            {t("visit.titlePrefix")}{" "}
+            <Link
+              to="/patients/$patientId"
+              params={{ patientId: visit.patientId }}
+              className="text-primary hover:underline"
+            >
+              {visit.patientName}
+            </Link>
           </h1>
           <Badge variant={statusInfo.variant}>
             {t(`visit.status.${statusInfo.key}`)}

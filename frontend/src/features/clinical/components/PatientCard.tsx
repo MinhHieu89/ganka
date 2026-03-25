@@ -1,6 +1,6 @@
 import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
-import { useNavigate } from "@tanstack/react-router"
+import { Link, useNavigate } from "@tanstack/react-router"
 import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
 import { IconAlertTriangle, IconChevronRight } from "@tabler/icons-react"
@@ -116,9 +116,14 @@ export function PatientCard({
       >
         {/* Patient name + allergy warning */}
         <div className="flex items-center gap-1.5">
-          <span className="font-semibold text-sm leading-tight truncate flex-1">
+          <Link
+            to="/patients/$patientId"
+            params={{ patientId: visit.patientId }}
+            className="font-semibold text-sm leading-tight truncate flex-1 text-primary hover:underline cursor-pointer"
+            onClick={(e: React.MouseEvent) => e.stopPropagation()}
+          >
             {visit.patientName}
-          </span>
+          </Link>
           {visit.hasAllergies && (
             <Tooltip>
               <TooltipTrigger asChild>

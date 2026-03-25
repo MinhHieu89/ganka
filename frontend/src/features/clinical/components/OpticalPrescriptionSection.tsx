@@ -56,7 +56,7 @@ export function OpticalPrescriptionSection({
   const { t } = useTranslation("clinical")
   const [showForm, setShowForm] = useState(false)
   const [editMode, setEditMode] = useState(false)
-  const [sectionOpen, setSectionOpen] = useState(true)
+  const [sectionOpen, setSectionOpen] = useState(prescriptions.length > 0)
 
   const addMutation = useAddOpticalPrescription()
   const updateMutation = useUpdateOpticalPrescription()

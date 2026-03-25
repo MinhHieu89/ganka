@@ -41,6 +41,7 @@
   },
   "visit": {
     "title": "Lượt khám - {{name}}",
+    "titlePrefix": "Lượt khám -",
     "patientInfo": "Thông tin bệnh nhân",
     "refraction": "Khúc xạ",
     "examinationNotes": "Ghi chú khám",
