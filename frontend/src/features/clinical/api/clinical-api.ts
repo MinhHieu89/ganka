@@ -194,6 +194,15 @@ export interface CreateVisitCommand {
   appointmentId?: string | null
 }
 
+export interface PatientVisitHistoryDto {
+  visitId: string
+  visitDate: string
+  doctorName: string
+  status: number // 0=Draft, 1=Signed, 2=Amended, 3=Cancelled
+  primaryDiagnosisText: string | null
+  currentStage: number
+}
+
 // -- Query key factory --
 
 // -- Medical Image types --
@@ -323,6 +332,8 @@ export const clinicalKeys = {
     [...clinicalKeys.all, "dry-eye-metric-history", patientId, timeRange] as const,
   osdiAnswers: (visitId: string) =>
     [...clinicalKeys.all, "osdi-answers", visitId] as const,
+  patientVisitHistory: (patientId: string) =>
+    [...clinicalKeys.all, "patient-visit-history", patientId] as const,
 }
 
 // -- API functions --
@@ -1118,5 +1129,25 @@ export function useOsdiAnswers(visitId: string | undefined) {
     queryKey: clinicalKeys.osdiAnswers(visitId ?? ""),
     queryFn: () => getOsdiAnswers(visitId!),
     enabled: !!visitId,
+  })
+}
+
+// -- Patient Visit History API --
+
+async function getPatientVisitHistory(
+  patientId: string,
+): Promise<PatientVisitHistoryDto[]> {
+  const { data, error } = await api.GET(
+    `/api/clinical/patients/${patientId}/visit-history` as never,
+  )
+  if (error) throw new Error("Failed to load visit history")
+  return (data as PatientVisitHistoryDto[]) ?? []
+}
+
+export function usePatientVisitHistory(patientId: string | undefined) {
+  return useQuery({
+    queryKey: clinicalKeys.patientVisitHistory(patientId ?? ""),
+    queryFn: () => getPatientVisitHistory(patientId!),
+    enabled: !!patientId,
   })
 }
