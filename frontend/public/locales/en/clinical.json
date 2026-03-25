@@ -8,13 +8,16 @@
     "done": "Done",
     "stages": {
       "reception": "Reception",
-      "refractionVa": "Refraction/VA",
-      "doctorExam": "Doctor Exam",
-      "diagnostics": "Diagnostics",
-      "doctorReads": "Doctor Reads",
-      "rx": "Rx",
+      "refractionVa": "Refraction / Visual Acuity",
+      "doctorExam": "Doctor Examination",
+      "imaging": "Imaging & Diagnostics",
+      "doctorReviewsResults": "Doctor Reviews Results",
+      "prescription": "Prescription",
       "cashier": "Cashier",
-      "pharmacyOptical": "Pharmacy/Optical"
+      "pharmacy": "Pharmacy",
+      "opticalCenter": "Optical Center",
+      "opticalLab": "Optical Lab",
+      "returnGlasses": "Return Glasses"
     },
     "totalPatients": "Total patients",
     "noActivePatients": "No active patients in the workflow",

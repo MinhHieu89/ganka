@@ -8,13 +8,16 @@
     "done": "Hoàn tất",
     "stages": {
       "reception": "Tiếp nhận",
-      "refractionVa": "Đo khúc xạ/TL",
+      "refractionVa": "Đo khúc xạ / Thị lực",
       "doctorExam": "Bác sĩ khám",
-      "diagnostics": "Chẩn đoán hình ảnh",
-      "doctorReads": "Bác sĩ đọc KQ",
-      "rx": "Kê đơn",
+      "imaging": "Chẩn đoán hình ảnh",
+      "doctorReviewsResults": "Bác sĩ đọc KQ",
+      "prescription": "Kê đơn",
       "cashier": "Thu ngân",
-      "pharmacyOptical": "Nhà thuốc/Kính"
+      "pharmacy": "Nhà thuốc",
+      "opticalCenter": "Trung tâm kính",
+      "opticalLab": "Kỹ thuật mài lắp",
+      "returnGlasses": "Trả kính"
     },
     "totalPatients": "Tổng bệnh nhân",
     "noActivePatients": "Không có bệnh nhân đang trong quy trình",

@@ -14,6 +14,10 @@ export interface ActiveVisitDto {
   waitMinutes: number
   isCompleted: boolean
   status: number // 0=Draft, 1=Signed, 2=Amended, 3=Cancelled
+  drugTrackStatus: number // 0=NotApplicable, 1=Pending, 2=InProgress, 3=Completed
+  glassesTrackStatus: number // 0=NotApplicable, 1=Pending, 2=InProgress, 3=Completed
+  imagingRequested: boolean
+  refractionSkipped: boolean
 }
 
 export interface RefractionDto {
@@ -1154,15 +1158,266 @@ export function usePatientVisitHistory(patientId: string | undefined) {
   })
 }
 
+// -- New Workflow Command Types --
+
+export interface SkipRefractionCommand {
+  reason: number
+  freeTextNote?: string
+}
+
+export interface RequestImagingCommand {
+  note?: string
+  services: string[]
+}
+
+export interface ConfirmVisitPaymentCommand {
+  amount: number
+  paymentMethod: number
+  amountReceived: number
+  splitGlasses: boolean
+}
+
+export interface DispensePharmacyCommand {
+  dispensedItems: { drugName: string; quantity: number; isDispensed: boolean }[]
+  note?: string
+}
+
+export interface ConfirmOpticalOrderCommand {
+  lensType: string
+  frameCode: string
+  lensCost: number
+  frameCost: number
+  totalPrice: number
+}
+
+export interface CompleteOpticalLabCommand {
+  qualityChecklist: string[]
+}
+
+export interface CompleteHandoffCommand {
+  prescriptionVerified: boolean
+  frameCorrect: boolean
+  patientConfirmedFit: boolean
+}
+
+// -- New Workflow API functions --
+
+async function skipRefraction(visitId: string, command: SkipRefractionCommand): Promise<void> {
+  const { error, response } = await api.PUT(
+    `/api/clinical/${visitId}/skip-refraction` as never,
+    { body: { visitId, ...command } } as never,
+  )
+  if (error || !response.ok) {
+    const err = error as Record<string, unknown> | undefined
+    if (err?.errors) throw new Error(JSON.stringify(err))
+    throw new Error("Failed to skip refraction")
+  }
+}
+
+async function undoRefractionSkip(visitId: string): Promise<void> {
+  const { error, response } = await api.PUT(
+    `/api/clinical/${visitId}/undo-skip-refraction` as never,
+    { body: { visitId } } as never,
+  )
+  if (error || !response.ok) {
+    const err = error as Record<string, unknown> | undefined
+    if (err?.errors) throw new Error(JSON.stringify(err))
+    throw new Error("Failed to undo refraction skip")
+  }
+}
+
+async function requestImaging(visitId: string, command: RequestImagingCommand): Promise<void> {
+  const { error, response } = await api.POST(
+    `/api/clinical/${visitId}/request-imaging` as never,
+    { body: { visitId, ...command } } as never,
+  )
+  if (error || !response.ok) {
+    const err = error as Record<string, unknown> | undefined
+    if (err?.errors) throw new Error(JSON.stringify(err))
+    throw new Error("Failed to request imaging")
+  }
+}
+
+async function completeImaging(visitId: string): Promise<void> {
+  const { error, response } = await api.PUT(
+    `/api/clinical/${visitId}/complete-imaging` as never,
+    { body: { visitId } } as never,
+  )
+  if (error || !response.ok) {
+    const err = error as Record<string, unknown> | undefined
+    if (err?.errors) throw new Error(JSON.stringify(err))
+    throw new Error("Failed to complete imaging")
+  }
+}
+
+async function confirmVisitPayment(visitId: string, command: ConfirmVisitPaymentCommand): Promise<void> {
+  const { error, response } = await api.POST(
+    `/api/clinical/${visitId}/confirm-payment` as never,
+    { body: { visitId, ...command } } as never,
+  )
+  if (error || !response.ok) {
+    const err = error as Record<string, unknown> | undefined
+    if (err?.errors) throw new Error(JSON.stringify(err))
+    throw new Error("Failed to confirm visit payment")
+  }
+}
+
+async function dispensePharmacy(visitId: string, command: DispensePharmacyCommand): Promise<void> {
+  const { error, response } = await api.POST(
+    `/api/clinical/${visitId}/dispense-pharmacy` as never,
+    { body: { visitId, ...command } } as never,
+  )
+  if (error || !response.ok) {
+    const err = error as Record<string, unknown> | undefined
+    if (err?.errors) throw new Error(JSON.stringify(err))
+    throw new Error("Failed to dispense pharmacy")
+  }
+}
+
+async function confirmOpticalOrder(visitId: string, command: ConfirmOpticalOrderCommand): Promise<void> {
+  const { error, response } = await api.POST(
+    `/api/clinical/${visitId}/confirm-optical-order` as never,
+    { body: { visitId, ...command } } as never,
+  )
+  if (error || !response.ok) {
+    const err = error as Record<string, unknown> | undefined
+    if (err?.errors) throw new Error(JSON.stringify(err))
+    throw new Error("Failed to confirm optical order")
+  }
+}
+
+async function completeOpticalLab(visitId: string, command: CompleteOpticalLabCommand): Promise<void> {
+  const { error, response } = await api.PUT(
+    `/api/clinical/${visitId}/complete-optical-lab` as never,
+    { body: { visitId, ...command } } as never,
+  )
+  if (error || !response.ok) {
+    const err = error as Record<string, unknown> | undefined
+    if (err?.errors) throw new Error(JSON.stringify(err))
+    throw new Error("Failed to complete optical lab")
+  }
+}
+
+async function completeHandoff(visitId: string, command: CompleteHandoffCommand): Promise<void> {
+  const { error, response } = await api.PUT(
+    `/api/clinical/${visitId}/complete-handoff` as never,
+    { body: { visitId, ...command } } as never,
+  )
+  if (error || !response.ok) {
+    const err = error as Record<string, unknown> | undefined
+    if (err?.errors) throw new Error(JSON.stringify(err))
+    throw new Error("Failed to complete handoff")
+  }
+}
+
+// -- New Workflow Mutation Hooks --
+
+export function useSkipRefraction() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ visitId, ...command }: { visitId: string } & SkipRefractionCommand) =>
+      skipRefraction(visitId, command),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: clinicalKeys.activeVisits() })
+    },
+  })
+}
+
+export function useUndoRefractionSkip() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (visitId: string) => undoRefractionSkip(visitId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: clinicalKeys.activeVisits() })
+    },
+  })
+}
+
+export function useRequestImaging() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ visitId, ...command }: { visitId: string } & RequestImagingCommand) =>
+      requestImaging(visitId, command),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: clinicalKeys.activeVisits() })
+    },
+  })
+}
+
+export function useCompleteImaging() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (visitId: string) => completeImaging(visitId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: clinicalKeys.activeVisits() })
+    },
+  })
+}
+
+export function useConfirmVisitPayment() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ visitId, ...command }: { visitId: string } & ConfirmVisitPaymentCommand) =>
+      confirmVisitPayment(visitId, command),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: clinicalKeys.activeVisits() })
+    },
+  })
+}
+
+export function useDispensePharmacy() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ visitId, ...command }: { visitId: string } & DispensePharmacyCommand) =>
+      dispensePharmacy(visitId, command),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: clinicalKeys.activeVisits() })
+    },
+  })
+}
+
+export function useConfirmOpticalOrder() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ visitId, ...command }: { visitId: string } & ConfirmOpticalOrderCommand) =>
+      confirmOpticalOrder(visitId, command),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: clinicalKeys.activeVisits() })
+    },
+  })
+}
+
+export function useCompleteOpticalLab() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ visitId, ...command }: { visitId: string } & CompleteOpticalLabCommand) =>
+      completeOpticalLab(visitId, command),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: clinicalKeys.activeVisits() })
+    },
+  })
+}
+
+export function useCompleteHandoff() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ visitId, ...command }: { visitId: string } & CompleteHandoffCommand) =>
+      completeHandoff(visitId, command),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: clinicalKeys.activeVisits() })
+    },
+  })
+}
+
 // -- Stage Reversal --
 
 /** Allowed backward transitions (mirrors backend ReverseWorkflowStageHandler) */
 export const ALLOWED_REVERSALS: Record<number, number[]> = {
   1: [0],       // RefractionVA -> Reception
   2: [1],       // DoctorExam -> RefractionVA
-  3: [2],       // Diagnostics -> DoctorExam
-  4: [3, 2],    // DoctorReads -> Diagnostics, DoctorExam
-  5: [2, 4],    // Rx -> DoctorExam, DoctorReads
+  3: [2],       // Imaging -> DoctorExam
+  4: [3, 2],    // DoctorReviewsResults -> Imaging, DoctorExam
+  5: [2, 4],    // Prescription -> DoctorExam, DoctorReviewsResults
 }
 
 export function isReversalAllowed(currentStage: number, targetStage: number): boolean {
