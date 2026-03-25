@@ -38,7 +38,8 @@
     "status": {
       "draft": "Bản nháp",
       "signed": "Đã ký",
-      "amended": "Đã sửa đổi"
+      "amended": "Đã sửa đổi",
+      "cancelled": "Đã hủy"
     },
     "backToClinical": "Quay lại lâm sàng",
     "notesAutoSaved": "Đã lưu ghi chú",
@@ -346,5 +347,15 @@
     "subconjunctival": "Tiêm dưới kết mạc",
     "intravitreal": "Tiêm nội nhãn",
     "periocular": "Tiêm cạnh nhãn cầu"
+  },
+  "patient": {
+    "visitHistory": {
+      "tab": "Lịch sử khám",
+      "empty": {
+        "title": "Chưa có lịch sử khám",
+        "description": "Bệnh nhân chưa có lượt khám nào"
+      },
+      "selectVisit": "Chọn lượt khám để xem chi tiết"
+    }
   }
 }
