@@ -104,6 +104,8 @@ public static class GetVisitByIdHandler
             )).ToList(),
             visit.SignedAt,
             visit.SignedById,
-            visit.AppointmentId);
+            visit.AppointmentId,
+            visit.ImagingRequested,
+            visit.RefractionSkipped);
     }
 }

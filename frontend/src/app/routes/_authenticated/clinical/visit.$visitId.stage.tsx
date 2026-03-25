@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router"
 import { IconLoader2 } from "@tabler/icons-react"
 import { useVisitById } from "@/features/clinical/api/clinical-api"
 import { Stage2RefractionView } from "@/features/clinical/components/stage-views/Stage2RefractionView"
+import { Stage3DoctorExamView } from "@/features/clinical/components/stage-views/Stage3DoctorExamView"
 import { requirePermission } from "@/shared/utils/permission-guard"
 
 export const Route = createFileRoute(
@@ -51,6 +52,9 @@ function StageRoute() {
   switch (visit.currentStage) {
     case 1: // RefractionVA
       return <Stage2RefractionView visit={visit} />
+
+    case 2: // DoctorExam
+      return <Stage3DoctorExamView visit={visit} />
 
     default: {
       // Placeholder for stages not yet implemented

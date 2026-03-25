@@ -180,6 +180,8 @@ export interface VisitDetailDto {
   signedAt: string | null
   signedById: string | null
   appointmentId: string | null
+  imagingRequested: boolean
+  refractionSkipped: boolean
 }
 
 export interface Icd10SearchResultDto {

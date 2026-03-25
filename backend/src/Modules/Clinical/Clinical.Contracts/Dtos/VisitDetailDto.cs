@@ -22,4 +22,6 @@ public record VisitDetailDto(
     List<OpticalPrescriptionDto> OpticalPrescriptions,
     DateTime? SignedAt,
     Guid? SignedById,
-    Guid? AppointmentId);
+    Guid? AppointmentId,
+    bool ImagingRequested,
+    bool RefractionSkipped);
