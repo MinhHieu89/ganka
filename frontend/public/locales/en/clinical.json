@@ -58,7 +58,8 @@
     "status": {
       "draft": "Draft",
       "signed": "Signed",
-      "amended": "Amended"
+      "amended": "Amended",
+      "cancelled": "Cancelled"
     },
     "backToClinical": "Back to Clinical",
     "notesAutoSaved": "Notes saved",
@@ -366,5 +367,15 @@
     "subconjunctival": "Subconjunctival",
     "intravitreal": "Intravitreal",
     "periocular": "Periocular"
+  },
+  "patient": {
+    "visitHistory": {
+      "tab": "Visit History",
+      "empty": {
+        "title": "No visit history",
+        "description": "This patient has no recorded visits yet"
+      },
+      "selectVisit": "Select a visit to view details"
+    }
   }
 }

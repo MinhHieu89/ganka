@@ -15,6 +15,7 @@ import { PatientDryEyeTab } from "@/features/patient/components/PatientDryEyeTab
 import { PatientPrescriptionsTab } from "@/features/pharmacy/components/PatientPrescriptionsTab"
 import { PrescriptionHistoryTab } from "@/features/optical/components/PrescriptionHistoryTab"
 import { PatientTreatmentsTab } from "@/features/treatment/components/PatientTreatmentsTab"
+import { VisitHistoryTab } from "@/features/clinical/components/VisitHistoryTab"
 
 interface PatientProfilePageProps {
   patientId: string
@@ -140,6 +141,7 @@ export function PatientProfilePage({ patientId, initialTab }: PatientProfilePage
           <TabsTrigger value="dry-eye">{tClinical("dryEye.tab")}</TabsTrigger>
           <TabsTrigger value="optical-history">{tOptical("prescriptionHistory.tab")}</TabsTrigger>
           <TabsTrigger value="treatments">{"\u0110i\u1EC1u tr\u1ECB"}</TabsTrigger>
+          <TabsTrigger value="visit-history">{tClinical("patient.visitHistory.tab")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="mt-4">
@@ -172,6 +174,10 @@ export function PatientProfilePage({ patientId, initialTab }: PatientProfilePage
 
         <TabsContent value="treatments" className="mt-4">
           <PatientTreatmentsTab patientId={patient.id} patientName={patient.fullName} />
+        </TabsContent>
+
+        <TabsContent value="visit-history" className="mt-4">
+          <VisitHistoryTab patientId={patient.id} />
         </TabsContent>
       </Tabs>
     </div>
