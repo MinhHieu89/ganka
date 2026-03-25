@@ -150,6 +150,34 @@ public sealed class VisitRepository : IVisitRepository
         return results.Select(x => (x.Prescription, x.Visit)).ToList();
     }
 
+    public async Task<List<Visit>> GetVisitsByPatientIdAsync(Guid patientId, CancellationToken ct = default)
+    {
+        return await _dbContext.Visits
+            .AsNoTracking()
+            .Include(v => v.Diagnoses)
+            .Where(v => v.PatientId == patientId && !v.IsDeleted)
+            .OrderByDescending(v => v.VisitDate)
+            .ToListAsync(ct);
+    }
+
+    public async Task<List<Visit>> GetActiveVisitsIncludingDoneTodayAsync(CancellationToken ct = default)
+    {
+        var vietnamTz = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+        var nowVietnam = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vietnamTz);
+        var todayStartUtc = TimeZoneInfo.ConvertTimeToUtc(nowVietnam.Date, vietnamTz);
+        var todayEndUtc = todayStartUtc.AddDays(1);
+
+        return await _dbContext.Visits
+            .AsNoTracking()
+            .Where(v => !v.IsDeleted &&
+                (v.Status == VisitStatus.Draft ||
+                 v.Status == VisitStatus.Amended ||
+                 (v.CurrentStage == WorkflowStage.PharmacyOptical &&
+                  v.VisitDate >= todayStartUtc && v.VisitDate < todayEndUtc)))
+            .OrderBy(v => v.VisitDate)
+            .ToListAsync(ct);
+    }
+
     public async Task<List<(DryEyeAssessment Assessment, DateTime VisitDate)>> GetMetricHistoryAsync(
         Guid patientId,
         DateTime? since,

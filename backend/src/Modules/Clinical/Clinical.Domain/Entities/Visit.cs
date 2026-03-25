@@ -93,6 +93,40 @@ public class Visit : AggregateRoot, IAuditable
     }
 
     /// <summary>
+    /// Allowed stage reversal transitions per D-07.
+    /// Cashier(6) and PharmacyOptical(7) have NO entries, so they always fail.
+    /// </summary>
+    private static readonly Dictionary<WorkflowStage, HashSet<WorkflowStage>> AllowedReversals = new()
+    {
+        [WorkflowStage.RefractionVA] = [WorkflowStage.Reception],
+        [WorkflowStage.DoctorExam] = [WorkflowStage.RefractionVA],
+        [WorkflowStage.Diagnostics] = [WorkflowStage.DoctorExam],
+        [WorkflowStage.DoctorReads] = [WorkflowStage.Diagnostics, WorkflowStage.DoctorExam],
+        [WorkflowStage.Rx] = [WorkflowStage.DoctorExam, WorkflowStage.DoctorReads],
+    };
+
+    private static bool IsReversalAllowed(WorkflowStage current, WorkflowStage target)
+        => AllowedReversals.TryGetValue(current, out var allowed) && allowed.Contains(target);
+
+    /// <summary>
+    /// Reverses the visit to an earlier workflow stage with a mandatory reason.
+    /// Only certain reversals are allowed per the AllowedReversals table (D-07).
+    /// Cashier and PharmacyOptical stages cannot be reversed.
+    /// </summary>
+    public void ReverseStage(WorkflowStage targetStage, string reason)
+    {
+        if (targetStage >= CurrentStage)
+            throw new InvalidOperationException("Target stage must be earlier than current stage.");
+        if (string.IsNullOrWhiteSpace(reason))
+            throw new InvalidOperationException("Reason is required for stage reversal.");
+        if (!IsReversalAllowed(CurrentStage, targetStage))
+            throw new InvalidOperationException($"Reversal from {CurrentStage} to {targetStage} is not allowed.");
+
+        CurrentStage = targetStage;
+        SetUpdatedAt();
+    }
+
+    /// <summary>
     /// Signs off the visit, making it immutable.
     /// Only a doctor can sign off a visit.
     /// </summary>

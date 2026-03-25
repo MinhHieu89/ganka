@@ -111,6 +111,17 @@ public interface IVisitRepository
         CancellationToken ct = default);
 
     /// <summary>
+    /// Gets all visits for a patient, including diagnoses for primary diagnosis text.
+    /// Used for patient visit history query (D-13/D-15).
+    /// </summary>
+    Task<List<Visit>> GetVisitsByPatientIdAsync(Guid patientId, CancellationToken ct = default);
+
+    /// <summary>
+    /// Gets active visits (Draft/Amended) plus completed-today visits for the done column (D-04/D-10).
+    /// </summary>
+    Task<List<Visit>> GetActiveVisitsIncludingDoneTodayAsync(CancellationToken ct = default);
+
+    /// <summary>
     /// Gets dry eye assessments with their visit dates for a patient, ordered by visit date ascending.
     /// Joins DryEyeAssessments with Visits in a single query to avoid N+1.
     /// Optionally filters to visits on or after the specified cutoff date.

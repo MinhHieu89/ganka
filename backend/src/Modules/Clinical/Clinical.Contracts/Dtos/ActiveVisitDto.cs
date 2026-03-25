@@ -12,4 +12,5 @@ public record ActiveVisitDto(
     int CurrentStage,
     DateTime VisitDate,
     bool HasAllergies,
-    int WaitMinutes);
+    int WaitMinutes,
+    bool IsCompleted);

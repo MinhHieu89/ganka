@@ -188,3 +188,13 @@ public record CheckDrugAllergyQuery(
 /// Handled by Clinical.Application.
 /// </summary>
 public record GetActiveVisitCountQuery();
+
+/// <summary>
+/// Command to reverse a visit to an earlier workflow stage with a mandatory reason (D-07/D-09).
+/// </summary>
+public record ReverseWorkflowStageCommand(Guid VisitId, int TargetStage, string Reason);
+
+/// <summary>
+/// Query to get patient visit history ordered by date descending (D-13/D-15).
+/// </summary>
+public record GetPatientVisitHistoryQuery(Guid PatientId);
