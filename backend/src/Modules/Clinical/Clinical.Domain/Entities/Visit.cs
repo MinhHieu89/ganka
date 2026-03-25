@@ -454,6 +454,54 @@ public class Visit : AggregateRoot, IAuditable
         (DrugTrackStatus is TrackStatus.Completed or TrackStatus.NotApplicable) &&
         (GlassesTrackStatus is TrackStatus.Completed or TrackStatus.NotApplicable);
 
+    // ===================== Workflow Child Entity Additions =====================
+
+    /// <summary>
+    /// Adds a payment record to the visit. Used by the ConfirmVisitPayment handler.
+    /// </summary>
+    public void AddVisitPayment(VisitPayment payment)
+    {
+        _visitPayments.Add(payment);
+        SetUpdatedAt();
+    }
+
+    /// <summary>
+    /// Adds a pharmacy dispensing record to the visit.
+    /// </summary>
+    public void AddPharmacyDispensing(PharmacyDispensing dispensing)
+    {
+        _pharmacyDispensings.Add(dispensing);
+        SetUpdatedAt();
+    }
+
+    /// <summary>
+    /// Adds an optical order to the visit.
+    /// </summary>
+    public void AddOpticalOrder(OpticalOrder order)
+    {
+        _opticalOrders.Add(order);
+        SetUpdatedAt();
+    }
+
+    /// <summary>
+    /// Adds a handoff checklist to the visit.
+    /// </summary>
+    public void AddHandoffChecklist(HandoffChecklist checklist)
+    {
+        _handoffChecklists.Add(checklist);
+        SetUpdatedAt();
+    }
+
+    /// <summary>
+    /// Sets HasGlassesPrescription flag when an optical prescription is set.
+    /// Used by SignOffVisit to determine post-prescription routing.
+    /// </summary>
+    public void SetHasGlassesPrescription(bool value)
+    {
+        HasGlassesPrescription = value;
+        SetUpdatedAt();
+    }
+
     /// <summary>
     /// Guard method: throws if the visit is signed and not in amendment mode.
     /// Must be called before any mutation operation.

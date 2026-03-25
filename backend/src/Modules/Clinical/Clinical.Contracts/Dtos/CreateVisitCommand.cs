@@ -198,3 +198,84 @@ public record ReverseWorkflowStageCommand(Guid VisitId, int TargetStage, string 
 /// Query to get patient visit history ordered by date descending (D-13/D-15).
 /// </summary>
 public record GetPatientVisitHistoryQuery(Guid PatientId);
+
+// ===================== Workflow Action Commands =====================
+
+/// <summary>
+/// Command to skip refraction (RefractionVA) stage for a visit.
+/// </summary>
+public record SkipRefractionCommand(
+    Guid VisitId,
+    int Reason,
+    string? FreeTextNote);
+
+/// <summary>
+/// Command to undo a refraction skip.
+/// </summary>
+public record UndoRefractionSkipCommand(Guid VisitId);
+
+/// <summary>
+/// Command to request imaging during DoctorExam stage.
+/// </summary>
+public record RequestImagingCommand(
+    Guid VisitId,
+    string? Note,
+    List<string> Services);
+
+/// <summary>
+/// Command to complete all imaging services for a visit.
+/// </summary>
+public record CompleteImagingServicesCommand(Guid VisitId);
+
+/// <summary>
+/// Command to confirm visit payment at Cashier.
+/// </summary>
+public record ConfirmVisitPaymentCommand(
+    Guid VisitId,
+    decimal Amount,
+    int PaymentMethod,
+    decimal AmountReceived,
+    bool SplitGlasses);
+
+/// <summary>
+/// Command to dispense pharmacy drugs for a visit.
+/// </summary>
+public record DispensePharmacyCommand(
+    Guid VisitId,
+    List<DispenseItemInput> DispensedItems,
+    string? Note);
+
+/// <summary>
+/// Input for a single dispensed drug item.
+/// </summary>
+public record DispenseItemInput(
+    string DrugName,
+    int Quantity,
+    string Instruction);
+
+/// <summary>
+/// Command to confirm optical order at OpticalCenter.
+/// </summary>
+public record ConfirmOpticalOrderCommand(
+    Guid VisitId,
+    string LensType,
+    string FrameCode,
+    decimal LensCost,
+    decimal FrameCost,
+    decimal TotalPrice);
+
+/// <summary>
+/// Command to complete optical lab processing.
+/// </summary>
+public record CompleteOpticalLabCommand(
+    Guid VisitId,
+    List<string> QualityChecklist);
+
+/// <summary>
+/// Command to complete handoff (glasses return to patient).
+/// </summary>
+public record CompleteHandoffCommand(
+    Guid VisitId,
+    bool PrescriptionVerified,
+    bool FrameCorrect,
+    bool PatientConfirmedFit);

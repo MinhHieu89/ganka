@@ -47,8 +47,9 @@ public static class SignOffVisitHandler
         }
 
         // Auto-advance to next workflow stage after sign-off (D-11)
-        // Uses branching-aware logic: DoctorExam branches based on ImagingRequested
-        var nextStage = GetNextStage(visit.CurrentStage, visit.ImagingRequested);
+        // Uses branching-aware logic: DoctorExam branches on ImagingRequested,
+        // Prescription branches on HasGlassesPrescription (OpticalCenter vs Cashier)
+        var nextStage = GetNextStage(visit.CurrentStage, visit.ImagingRequested, visit.OpticalPrescriptions.Any());
         if (nextStage.HasValue)
         {
             visit.AdvanceStage(nextStage.Value);
@@ -61,8 +62,9 @@ public static class SignOffVisitHandler
     /// <summary>
     /// Determines the next workflow stage based on branching rules.
     /// Returns null if no auto-advance should occur (e.g., at Pharmacy or later).
+    /// Prescription branches: glasses -> OpticalCenter, no glasses -> Cashier.
     /// </summary>
-    private static WorkflowStage? GetNextStage(WorkflowStage current, bool imagingRequested)
+    private static WorkflowStage? GetNextStage(WorkflowStage current, bool imagingRequested, bool hasGlassesPrescription)
     {
         return current switch
         {
@@ -71,7 +73,7 @@ public static class SignOffVisitHandler
             WorkflowStage.DoctorExam => imagingRequested ? WorkflowStage.Imaging : WorkflowStage.Prescription,
             WorkflowStage.Imaging => WorkflowStage.DoctorReviewsResults,
             WorkflowStage.DoctorReviewsResults => WorkflowStage.Prescription,
-            WorkflowStage.Prescription => WorkflowStage.Cashier, // OpticalCenter routing happens elsewhere
+            WorkflowStage.Prescription => hasGlassesPrescription ? WorkflowStage.OpticalCenter : WorkflowStage.Cashier,
             _ => null // Cashier and beyond: no auto-advance (track-based)
         };
     }

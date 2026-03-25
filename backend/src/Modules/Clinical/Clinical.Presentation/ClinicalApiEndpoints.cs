@@ -24,6 +24,7 @@ public static class ClinicalApiEndpoints
 
         MapVisitLifecycleEndpoints(group);
         MapVisitDataEndpoints(group);
+        MapWorkflowActionEndpoints(group);
         MapIcd10Endpoints(group);
         MapDryEyeEndpoints(group);
         MapMedicalImageEndpoints(group);
@@ -95,6 +96,82 @@ public static class ClinicalApiEndpoints
                 new GetPatientVisitHistoryQuery(patientId), ct);
             return Results.Ok(result);
         }).RequirePermissions(Permissions.Clinical.View);
+    }
+
+    private static void MapWorkflowActionEndpoints(RouteGroupBuilder group)
+    {
+        group.MapPut("/{visitId:guid}/skip-refraction",
+            async (Guid visitId, SkipRefractionCommand command, IMessageBus bus, CancellationToken ct) =>
+        {
+            var enriched = new SkipRefractionCommand(visitId, command.Reason, command.FreeTextNote);
+            var result = await bus.InvokeAsync<Result>(enriched, ct);
+            return result.ToHttpResult();
+        }).RequirePermissions(Permissions.Clinical.Update);
+
+        group.MapPut("/{visitId:guid}/undo-refraction-skip",
+            async (Guid visitId, IMessageBus bus, CancellationToken ct) =>
+        {
+            var result = await bus.InvokeAsync<Result>(new UndoRefractionSkipCommand(visitId), ct);
+            return result.ToHttpResult();
+        }).RequirePermissions(Permissions.Clinical.Update);
+
+        group.MapPost("/{visitId:guid}/request-imaging",
+            async (Guid visitId, RequestImagingCommand command, IMessageBus bus, CancellationToken ct) =>
+        {
+            var enriched = new RequestImagingCommand(visitId, command.Note, command.Services);
+            var result = await bus.InvokeAsync<Result>(enriched, ct);
+            return result.ToHttpResult();
+        }).RequirePermissions(Permissions.Clinical.Update);
+
+        group.MapPut("/{visitId:guid}/complete-imaging",
+            async (Guid visitId, IMessageBus bus, CancellationToken ct) =>
+        {
+            var result = await bus.InvokeAsync<Result>(new CompleteImagingServicesCommand(visitId), ct);
+            return result.ToHttpResult();
+        }).RequirePermissions(Permissions.Clinical.Update);
+
+        group.MapPost("/{visitId:guid}/confirm-payment",
+            async (Guid visitId, ConfirmVisitPaymentCommand command, IMessageBus bus, CancellationToken ct) =>
+        {
+            var enriched = new ConfirmVisitPaymentCommand(
+                visitId, command.Amount, command.PaymentMethod, command.AmountReceived, command.SplitGlasses);
+            var result = await bus.InvokeAsync<Result>(enriched, ct);
+            return result.ToHttpResult();
+        }).RequirePermissions(Permissions.Clinical.Update);
+
+        group.MapPut("/{visitId:guid}/dispense-pharmacy",
+            async (Guid visitId, DispensePharmacyCommand command, IMessageBus bus, CancellationToken ct) =>
+        {
+            var enriched = new DispensePharmacyCommand(visitId, command.DispensedItems, command.Note);
+            var result = await bus.InvokeAsync<Result>(enriched, ct);
+            return result.ToHttpResult();
+        }).RequirePermissions(Permissions.Clinical.Update);
+
+        group.MapPost("/{visitId:guid}/confirm-optical-order",
+            async (Guid visitId, ConfirmOpticalOrderCommand command, IMessageBus bus, CancellationToken ct) =>
+        {
+            var enriched = new ConfirmOpticalOrderCommand(
+                visitId, command.LensType, command.FrameCode, command.LensCost, command.FrameCost, command.TotalPrice);
+            var result = await bus.InvokeAsync<Result>(enriched, ct);
+            return result.ToHttpResult();
+        }).RequirePermissions(Permissions.Clinical.Update);
+
+        group.MapPut("/{visitId:guid}/complete-optical-lab",
+            async (Guid visitId, CompleteOpticalLabCommand command, IMessageBus bus, CancellationToken ct) =>
+        {
+            var enriched = new CompleteOpticalLabCommand(visitId, command.QualityChecklist);
+            var result = await bus.InvokeAsync<Result>(enriched, ct);
+            return result.ToHttpResult();
+        }).RequirePermissions(Permissions.Clinical.Update);
+
+        group.MapPut("/{visitId:guid}/complete-handoff",
+            async (Guid visitId, CompleteHandoffCommand command, IMessageBus bus, CancellationToken ct) =>
+        {
+            var enriched = new CompleteHandoffCommand(
+                visitId, command.PrescriptionVerified, command.FrameCorrect, command.PatientConfirmedFit);
+            var result = await bus.InvokeAsync<Result>(enriched, ct);
+            return result.ToHttpResult();
+        }).RequirePermissions(Permissions.Clinical.Update);
     }
 
     private static void MapVisitDataEndpoints(RouteGroupBuilder group)
