@@ -1204,30 +1204,6 @@ export interface CompleteHandoffCommand {
 
 // -- New Workflow API functions --
 
-async function skipRefraction(visitId: string, command: SkipRefractionCommand): Promise<void> {
-  const { error, response } = await api.PUT(
-    `/api/clinical/${visitId}/skip-refraction` as never,
-    { body: { visitId, ...command } } as never,
-  )
-  if (error || !response.ok) {
-    const err = error as Record<string, unknown> | undefined
-    if (err?.errors) throw new Error(JSON.stringify(err))
-    throw new Error("Failed to skip refraction")
-  }
-}
-
-async function undoRefractionSkip(visitId: string): Promise<void> {
-  const { error, response } = await api.PUT(
-    `/api/clinical/${visitId}/undo-skip-refraction` as never,
-    { body: { visitId } } as never,
-  )
-  if (error || !response.ok) {
-    const err = error as Record<string, unknown> | undefined
-    if (err?.errors) throw new Error(JSON.stringify(err))
-    throw new Error("Failed to undo refraction skip")
-  }
-}
-
 async function requestImaging(visitId: string, command: RequestImagingCommand): Promise<void> {
   const { error, response } = await api.POST(
     `/api/clinical/${visitId}/request-imaging` as never,
@@ -1313,27 +1289,6 @@ async function completeHandoff(visitId: string, command: CompleteHandoffCommand)
 }
 
 // -- New Workflow Mutation Hooks --
-
-export function useSkipRefraction() {
-  const queryClient = useQueryClient()
-  return useMutation({
-    mutationFn: ({ visitId, ...command }: { visitId: string } & SkipRefractionCommand) =>
-      skipRefraction(visitId, command),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: clinicalKeys.activeVisits() })
-    },
-  })
-}
-
-export function useUndoRefractionSkip() {
-  const queryClient = useQueryClient()
-  return useMutation({
-    mutationFn: (visitId: string) => undoRefractionSkip(visitId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: clinicalKeys.activeVisits() })
-    },
-  })
-}
 
 export function useRequestImaging() {
   const queryClient = useQueryClient()
