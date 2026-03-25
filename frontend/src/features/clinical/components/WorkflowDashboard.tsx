@@ -17,6 +17,7 @@ import {
   useActiveVisits,
   useAdvanceStage,
   useCreateVisit,
+  isReversalAllowed,
   type ActiveVisitDto,
   type CreateVisitCommand,
 } from "@/features/clinical/api/clinical-api"
@@ -25,6 +26,7 @@ import { PatientCard } from "@/features/clinical/components/PatientCard"
 import { NewVisitDialog } from "@/features/clinical/components/NewVisitDialog"
 import { WorkflowToolbar } from "@/features/clinical/components/WorkflowToolbar"
 import { WorkflowTableView } from "@/features/clinical/components/WorkflowTableView"
+import { StageReversalDialog } from "@/features/clinical/components/StageReversalDialog"
 import { type ViewMode, getStoredViewMode, storeViewMode } from "@/features/clinical/components/ViewToggle"
 
 // -- Kanban column definitions --
@@ -71,6 +73,22 @@ export function WorkflowDashboard() {
   const [activeCard, setActiveCard] = useState<ActiveVisitDto | null>(null)
   const [newVisitOpen, setNewVisitOpen] = useState(false)
   const [viewMode, setViewMode] = useState<ViewMode>(() => getStoredViewMode())
+  const [reversalInfo, setReversalInfo] = useState<{
+    visitId: string
+    currentStage: number
+    targetStage: number
+  } | null>(null)
+
+  // Build stageLabels map for reversal dialog display
+  const stageLabels = useMemo(() => {
+    const labels: Record<number, string> = {}
+    for (const col of KANBAN_COLUMNS) {
+      if (col.stages.length > 0) {
+        labels[col.stages[0]] = t(col.titleKey)
+      }
+    }
+    return labels
+  }, [t])
 
   const handleViewModeChange = useCallback((mode: ViewMode) => {
     setViewMode(mode)
@@ -161,9 +179,25 @@ export function WorkflowDashboard() {
       if (!targetCol || targetCol.stages.length === 0) return
       const newStage = targetCol.stages[0]
 
-      advanceStageMutation.mutate({ visitId, newStage })
+      const visit = activeVisits?.find((v) => v.id === visitId)
+      if (!visit) return
+
+      if (newStage < visit.currentStage) {
+        // Backward drag: check if allowed, then open reversal dialog
+        if (isReversalAllowed(visit.currentStage, newStage)) {
+          setReversalInfo({
+            visitId,
+            currentStage: visit.currentStage,
+            targetStage: newStage,
+          })
+        }
+        // If not allowed, do nothing (card snaps back)
+      } else {
+        // Forward: advance directly
+        advanceStageMutation.mutate({ visitId, newStage })
+      }
     },
-    [findVisitColumn, advanceStageMutation],
+    [activeVisits, findVisitColumn, advanceStageMutation],
   )
 
   const handleAdvance = useCallback(
@@ -255,6 +289,9 @@ export function WorkflowDashboard() {
           visits={activeVisits}
           isLoading={isLoading}
           onAdvanceStage={(visitId, newStage) => advanceStageMutation.mutate({ visitId, newStage })}
+          onReverseStage={(visitId, currentStage, targetStage) =>
+            setReversalInfo({ visitId, currentStage, targetStage })
+          }
         />
       )}
 
@@ -264,6 +301,13 @@ export function WorkflowDashboard() {
         onOpenChange={setNewVisitOpen}
         onCreateVisit={handleCreateVisit}
         isCreating={createVisitMutation.isPending}
+      />
+
+      {/* Stage reversal dialog */}
+      <StageReversalDialog
+        reversalInfo={reversalInfo}
+        onClose={() => setReversalInfo(null)}
+        stageLabels={stageLabels}
       />
     </div>
   )

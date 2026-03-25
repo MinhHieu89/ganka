@@ -19,9 +19,10 @@ import {
   SelectValue,
 } from "@/shared/components/Select"
 import { Skeleton } from "@/shared/components/Skeleton"
-import { IconChevronRight } from "@tabler/icons-react"
+import { IconChevronRight, IconArrowLeft } from "@tabler/icons-react"
 import { Link } from "@tanstack/react-router"
 import type { ActiveVisitDto } from "../api/clinical-api"
+import { ALLOWED_REVERSALS } from "../api/clinical-api"
 
 /** Stage number to i18n key mapping */
 const STAGE_LABELS: Record<number, string> = {
@@ -58,6 +59,7 @@ interface WorkflowTableViewProps {
   visits: ActiveVisitDto[] | undefined
   isLoading: boolean
   onAdvanceStage: (visitId: string, newStage: number) => void
+  onReverseStage?: (visitId: string, currentStage: number, targetStage: number) => void
 }
 
 function formatWaitTime(minutes: number): string {
@@ -76,6 +78,7 @@ export function WorkflowTableView({
   visits,
   isLoading,
   onAdvanceStage,
+  onReverseStage,
 }: WorkflowTableViewProps) {
   const { t } = useTranslation("clinical")
   const navigate = useNavigate()
@@ -267,21 +270,74 @@ export function WorkflowTableView({
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 w-8 p-0"
-                        disabled={!canAdvance}
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          if (canAdvance) {
-                            onAdvanceStage(visit.id, visit.currentStage + 1)
-                          }
-                        }}
-                        aria-label={t("card.advanceStage")}
-                      >
-                        <IconChevronRight className="h-4 w-4" />
-                      </Button>
+                      <div className="flex items-center gap-1">
+                        {ALLOWED_REVERSALS[visit.currentStage] && !visit.isCompleted && (
+                          ALLOWED_REVERSALS[visit.currentStage].length > 1 ? (
+                            <Select
+                              onValueChange={(value) => {
+                                onReverseStage?.(
+                                  visit.id,
+                                  visit.currentStage,
+                                  parseInt(value, 10),
+                                )
+                              }}
+                            >
+                              <SelectTrigger
+                                className="h-8 w-8 p-0 border-0 bg-transparent [&>svg:last-child]:hidden"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <IconArrowLeft className="h-4 w-4" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {ALLOWED_REVERSALS[visit.currentStage].map(
+                                  (targetStage) => (
+                                    <SelectItem
+                                      key={targetStage}
+                                      value={targetStage.toString()}
+                                    >
+                                      {t(
+                                        STAGE_LABELS[targetStage] ??
+                                          "workflow.stages.reception",
+                                      )}
+                                    </SelectItem>
+                                  ),
+                                )}
+                              </SelectContent>
+                            </Select>
+                          ) : (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-8 w-8 p-0"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                onReverseStage?.(
+                                  visit.id,
+                                  visit.currentStage,
+                                  ALLOWED_REVERSALS[visit.currentStage][0],
+                                )
+                              }}
+                            >
+                              <IconArrowLeft className="h-4 w-4" />
+                            </Button>
+                          )
+                        )}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0"
+                          disabled={!canAdvance}
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            if (canAdvance) {
+                              onAdvanceStage(visit.id, visit.currentStage + 1)
+                            }
+                          }}
+                          aria-label={t("card.advanceStage")}
+                        >
+                          <IconChevronRight className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 )
