@@ -17,7 +17,27 @@
       "pharmacyOptical": "Nhà thuốc/Kính"
     },
     "totalPatients": "Tổng bệnh nhân",
-    "noActivePatients": "Không có bệnh nhân đang trong quy trình"
+    "noActivePatients": "Không có bệnh nhân đang trong quy trình",
+    "viewBoard": "Bảng",
+    "viewTable": "Bảng dữ liệu",
+    "emptyState": {
+      "title": "Không có lượt khám",
+      "description": "Tạo lượt khám mới để bắt đầu"
+    },
+    "table": {
+      "patient": "Bệnh nhân",
+      "doctor": "Bác sĩ",
+      "stage": "Giai đoạn",
+      "waitTime": "Thời gian chờ",
+      "visitTime": "Giờ khám",
+      "status": "Trạng thái",
+      "actions": "Thao tác",
+      "emptyState": {
+        "title": "Không có lượt khám phù hợp",
+        "description": "Thử điều chỉnh bộ lọc hoặc tạo lượt khám mới"
+      },
+      "allStages": "Tất cả giai đoạn"
+    }
   },
   "visit": {
     "title": "Lượt khám - {{name}}",

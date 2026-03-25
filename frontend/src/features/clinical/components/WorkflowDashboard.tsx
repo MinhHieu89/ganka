@@ -11,12 +11,6 @@ import {
   type DragStartEvent,
   type DragEndEvent,
 } from "@dnd-kit/core"
-import {
-  IconStethoscope,
-  IconPlus,
-} from "@tabler/icons-react"
-import { Badge } from "@/shared/components/Badge"
-import { Button } from "@/shared/components/Button"
 import { Skeleton } from "@/shared/components/Skeleton"
 import { Card, CardContent } from "@/shared/components/Card"
 import {
@@ -29,9 +23,12 @@ import {
 import { KanbanColumn } from "@/features/clinical/components/KanbanColumn"
 import { PatientCard } from "@/features/clinical/components/PatientCard"
 import { NewVisitDialog } from "@/features/clinical/components/NewVisitDialog"
+import { WorkflowToolbar } from "@/features/clinical/components/WorkflowToolbar"
+import { WorkflowTableView } from "@/features/clinical/components/WorkflowTableView"
+import { type ViewMode, getStoredViewMode, storeViewMode } from "@/features/clinical/components/ViewToggle"
 
 // -- Kanban column definitions --
-// Groups 8 WorkflowStage values into 5 columns
+// Each workflow stage gets its own column (8 stages + Done)
 
 interface ColumnDef {
   id: string
@@ -41,11 +38,15 @@ interface ColumnDef {
 }
 
 const KANBAN_COLUMNS: ColumnDef[] = [
-  { id: "reception", titleKey: "workflow.reception", stages: [0], colorAccent: "gray" },
-  { id: "testing", titleKey: "workflow.testing", stages: [1], colorAccent: "blue" },
-  { id: "doctor", titleKey: "workflow.doctor", stages: [2, 3, 4], colorAccent: "green" },
-  { id: "processing", titleKey: "workflow.processing", stages: [5, 6], colorAccent: "orange" },
-  { id: "done", titleKey: "workflow.done", stages: [7], colorAccent: "muted" },
+  { id: "reception", titleKey: "workflow.stages.reception", stages: [0], colorAccent: "stone" },
+  { id: "refraction-va", titleKey: "workflow.stages.refractionVa", stages: [1], colorAccent: "blue" },
+  { id: "doctor-exam", titleKey: "workflow.stages.doctorExam", stages: [2], colorAccent: "emerald" },
+  { id: "diagnostics", titleKey: "workflow.stages.diagnostics", stages: [3], colorAccent: "cyan" },
+  { id: "doctor-reads", titleKey: "workflow.stages.doctorReads", stages: [4], colorAccent: "teal" },
+  { id: "rx", titleKey: "workflow.stages.rx", stages: [5], colorAccent: "amber" },
+  { id: "cashier", titleKey: "workflow.stages.cashier", stages: [6], colorAccent: "orange" },
+  { id: "pharmacy-optical", titleKey: "workflow.stages.pharmacyOptical", stages: [7], colorAccent: "violet" },
+  { id: "done", titleKey: "workflow.done", stages: [], colorAccent: "muted" },
 ]
 
 /** Map a stage number to its column ID */
@@ -69,6 +70,12 @@ export function WorkflowDashboard() {
 
   const [activeCard, setActiveCard] = useState<ActiveVisitDto | null>(null)
   const [newVisitOpen, setNewVisitOpen] = useState(false)
+  const [viewMode, setViewMode] = useState<ViewMode>(() => getStoredViewMode())
+
+  const handleViewModeChange = useCallback((mode: ViewMode) => {
+    setViewMode(mode)
+    storeViewMode(mode)
+  }, [])
 
   // Configure drag sensors
   const sensors = useSensors(
@@ -86,10 +93,13 @@ export function WorkflowDashboard() {
     for (const col of KANBAN_COLUMNS) {
       groups[col.id] = []
     }
-    if (activeVisits) {
-      for (const visit of activeVisits) {
+    if (!activeVisits) return groups
+    for (const visit of activeVisits) {
+      if (visit.isCompleted) {
+        groups["done"].push(visit)
+      } else {
         const colId = getColumnForStage(visit.currentStage)
-        groups[colId]?.push(visit)
+        if (groups[colId]) groups[colId].push(visit)
       }
     }
     return groups
@@ -127,7 +137,6 @@ export function WorkflowDashboard() {
       const overId = over.id as string
 
       // Determine target column
-      // overId could be a column ID (droppable) or a card ID (sortable)
       let targetColumnId: string | null = null
 
       // Check if dropped on a column directly
@@ -140,13 +149,16 @@ export function WorkflowDashboard() {
 
       if (!targetColumnId) return
 
+      // Don't allow dropping into the done column
+      if (targetColumnId === "done") return
+
       // Find source column
       const sourceColumnId = findVisitColumn(visitId)
       if (sourceColumnId === targetColumnId) return
 
       // Compute new stage: first stage of target column
       const targetCol = getColumnDef(targetColumnId)
-      if (!targetCol) return
+      if (!targetCol || targetCol.stages.length === 0) return
       const newStage = targetCol.stages[0]
 
       advanceStageMutation.mutate({ visitId, newStage })
@@ -182,16 +194,18 @@ export function WorkflowDashboard() {
             <Skeleton className="h-8 w-48" />
           </div>
         </div>
-        <div className="flex gap-4 overflow-x-auto p-1">
-          {KANBAN_COLUMNS.map((col) => (
-            <Card key={col.id} className="min-w-[220px] w-[220px] shrink-0 border-t-2">
-              <CardContent className="p-3 space-y-2">
-                <Skeleton className="h-5 w-24" />
-                <Skeleton className="h-20 w-full" />
-                <Skeleton className="h-20 w-full" />
-              </CardContent>
-            </Card>
-          ))}
+        <div className="overflow-x-auto pb-4">
+          <div className="flex gap-4" style={{ minWidth: "1800px" }}>
+            {KANBAN_COLUMNS.map((col) => (
+              <Card key={col.id} className="min-w-[200px] w-[200px] shrink-0 border-t-2">
+                <CardContent className="p-3 space-y-2">
+                  <Skeleton className="h-5 w-24" />
+                  <Skeleton className="h-20 w-full" />
+                  <Skeleton className="h-20 w-full" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
       </div>
     )
@@ -199,46 +213,50 @@ export function WorkflowDashboard() {
 
   return (
     <div className="space-y-4">
-      {/* Page header */}
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <IconStethoscope className="h-6 w-6 text-primary" />
-          <h1 className="text-2xl font-semibold tracking-tight">
-            {t("workflow.title")}
-          </h1>
-          <Badge variant="secondary">{totalPatients}</Badge>
-        </div>
-        <Button onClick={() => setNewVisitOpen(true)}>
-          <IconPlus className="mr-2 h-4 w-4" />
-          {t("newVisit.title")}
-        </Button>
-      </div>
+      {/* Toolbar with title, patient count, view toggle, and new visit button */}
+      <WorkflowToolbar
+        totalPatients={totalPatients}
+        viewMode={viewMode}
+        onViewModeChange={handleViewModeChange}
+        onNewVisit={() => setNewVisitOpen(true)}
+      />
 
-      {/* Kanban board -- always render columns regardless of patient count */}
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCorners}
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
-      >
-        <div className="flex gap-4 overflow-x-auto p-1">
-          {KANBAN_COLUMNS.map((col) => (
-            <KanbanColumn
-              key={col.id}
-              id={col.id}
-              title={t(col.titleKey)}
-              visits={columnVisits[col.id] ?? []}
-              colorAccent={col.colorAccent}
-              onAdvance={handleAdvance}
-            />
-          ))}
-        </div>
-        <DragOverlay>
-          {activeCard ? (
-            <PatientCard visit={activeCard} isDragOverlay />
-          ) : null}
-        </DragOverlay>
-      </DndContext>
+      {/* Conditional rendering: kanban or table view */}
+      {viewMode === "kanban" ? (
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCorners}
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
+        >
+          <div className="overflow-x-auto pb-4">
+            <div className="flex gap-4" style={{ minWidth: "1800px" }}>
+              {KANBAN_COLUMNS.map((col) => (
+                <KanbanColumn
+                  key={col.id}
+                  id={col.id}
+                  title={t(col.titleKey)}
+                  visits={columnVisits[col.id] ?? []}
+                  colorAccent={col.colorAccent}
+                  onAdvance={handleAdvance}
+                  isDone={col.id === "done"}
+                />
+              ))}
+            </div>
+          </div>
+          <DragOverlay>
+            {activeCard ? (
+              <PatientCard visit={activeCard} isDragOverlay />
+            ) : null}
+          </DragOverlay>
+        </DndContext>
+      ) : (
+        <WorkflowTableView
+          visits={activeVisits}
+          isLoading={isLoading}
+          onAdvanceStage={(visitId, newStage) => advanceStageMutation.mutate({ visitId, newStage })}
+        />
+      )}
 
       {/* New Visit dialog */}
       <NewVisitDialog

@@ -32,12 +32,14 @@ interface PatientCardProps {
   visit: ActiveVisitDto
   onAdvance?: (visitId: string, nextStage: number) => void
   isDragOverlay?: boolean
+  isDone?: boolean
 }
 
 export function PatientCard({
   visit,
   onAdvance,
   isDragOverlay,
+  isDone = false,
 }: PatientCardProps) {
   const { t } = useTranslation("clinical")
   const navigate = useNavigate()
@@ -51,7 +53,7 @@ export function PatientCard({
     isDragging,
   } = useSortable({
     id: visit.id,
-    disabled: isDragOverlay,
+    disabled: isDragOverlay || isDone,
   })
 
   const style = useMemo(

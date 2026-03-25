@@ -10,11 +10,18 @@ import type { ActiveVisitDto } from "@/features/clinical/api/clinical-api"
 
 /** Color accent classes for the thin top border */
 const accentColors: Record<string, string> = {
-  gray: "border-t-2 border-t-muted-foreground/40",
+  stone: "border-t-2 border-t-stone-400",
   blue: "border-t-2 border-t-blue-500",
-  green: "border-t-2 border-t-green-500",
+  emerald: "border-t-2 border-t-emerald-500",
+  cyan: "border-t-2 border-t-cyan-500",
+  teal: "border-t-2 border-t-teal-500",
+  amber: "border-t-2 border-t-amber-500",
   orange: "border-t-2 border-t-orange-500",
+  violet: "border-t-2 border-t-violet-500",
   muted: "border-t-2 border-t-muted-foreground/20",
+  // Legacy colors for backward compatibility
+  gray: "border-t-2 border-t-muted-foreground/40",
+  green: "border-t-2 border-t-green-500",
 }
 
 interface KanbanColumnProps {
@@ -23,6 +30,7 @@ interface KanbanColumnProps {
   visits: ActiveVisitDto[]
   colorAccent: string
   onAdvance: (visitId: string, nextStage: number) => void
+  isDone?: boolean
 }
 
 export function KanbanColumn({
@@ -31,13 +39,14 @@ export function KanbanColumn({
   visits,
   colorAccent,
   onAdvance,
+  isDone = false,
 }: KanbanColumnProps) {
-  const { setNodeRef, isOver } = useDroppable({ id })
+  const { setNodeRef, isOver } = useDroppable({ id, disabled: isDone })
 
   return (
     <Card
-      className={`flex flex-col min-w-[220px] w-[220px] shrink-0 ${
-        accentColors[colorAccent] ?? accentColors.gray
+      className={`flex flex-col min-w-[200px] w-[200px] shrink-0 ${
+        accentColors[colorAccent] ?? accentColors.stone
       } ${isOver ? "ring-2 ring-primary/30" : ""}`}
     >
       <CardHeader className="p-3 pb-2">
@@ -61,7 +70,8 @@ export function KanbanColumn({
               <PatientCard
                 key={visit.id}
                 visit={visit}
-                onAdvance={onAdvance}
+                onAdvance={isDone ? undefined : onAdvance}
+                isDone={isDone}
               />
             ))}
           </SortableContext>

@@ -17,7 +17,27 @@
       "pharmacyOptical": "Pharmacy/Optical"
     },
     "totalPatients": "Total patients",
-    "noActivePatients": "No active patients in the workflow"
+    "noActivePatients": "No active patients in the workflow",
+    "viewBoard": "Board",
+    "viewTable": "Table",
+    "emptyState": {
+      "title": "No active visits",
+      "description": "Create a new visit to get started"
+    },
+    "table": {
+      "patient": "Patient",
+      "doctor": "Doctor",
+      "stage": "Stage",
+      "waitTime": "Wait Time",
+      "visitTime": "Visit Time",
+      "status": "Status",
+      "actions": "Actions",
+      "emptyState": {
+        "title": "No visits match your filters",
+        "description": "Try adjusting your filters or create a new visit"
+      },
+      "allStages": "All Stages"
+    }
   },
   "visit": {
     "title": "Visit - {{name}}",

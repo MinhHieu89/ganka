@@ -12,6 +12,8 @@ export interface ActiveVisitDto {
   visitDate: string
   hasAllergies: boolean
   waitMinutes: number
+  isCompleted: boolean
+  status: number // 0=Draft, 1=Signed, 2=Amended, 3=Cancelled
 }
 
 export interface RefractionDto {
