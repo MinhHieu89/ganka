@@ -9,6 +9,8 @@ import { Stage5PrescriptionView } from "@/features/clinical/components/stage-vie
 import { PostSigningLockedView } from "@/features/clinical/components/stage-views/PostSigningLockedView"
 import { Stage6CashierView } from "@/features/clinical/components/stage-views/Stage6CashierView"
 import { PostPaymentSuccessView } from "@/features/clinical/components/stage-views/PostPaymentSuccessView"
+import { Stage7aPharmacyView } from "@/features/clinical/components/stage-views/Stage7aPharmacyView"
+import { Stage7bOpticalCenterView } from "@/features/clinical/components/stage-views/Stage7bOpticalCenterView"
 import { requirePermission } from "@/shared/utils/permission-guard"
 
 export const Route = createFileRoute(
@@ -76,13 +78,8 @@ function StageRoute() {
       return <Stage5PrescriptionView visit={visit} />
 
     case 6: { // Cashier
-      // Find active visit to get track statuses
       const activeVisit = activeVisits?.find((v) => v.id === visit.id)
-      // If visit already past stage 6 (payment confirmed), show post-payment view
       if (visit.signedAt && activeVisit && visit.currentStage >= 6) {
-        // Check if payment was already confirmed by looking at stage progression
-        // When currentStage > 6, payment is done; when currentStage === 6,
-        // we show the cashier view for payment collection
         const isPaid = visit.currentStage > 6
         if (isPaid) {
           return (
@@ -96,6 +93,12 @@ function StageRoute() {
       }
       return <Stage6CashierView visit={visit} />
     }
+
+    case 7: // Pharmacy
+      return <Stage7aPharmacyView visit={visit} />
+
+    case 8: // OpticalCenter
+      return <Stage7bOpticalCenterView visit={visit} />
 
     default: {
       // Placeholder for stages not yet implemented
