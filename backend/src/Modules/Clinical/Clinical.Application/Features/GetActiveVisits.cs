@@ -14,7 +14,7 @@ public static class GetActiveVisitsHandler
         IVisitRepository visitRepository,
         CancellationToken ct)
     {
-        var visits = await visitRepository.GetActiveVisitsAsync(ct);
+        var visits = await visitRepository.GetActiveVisitsIncludingDoneTodayAsync(ct);
 
         return visits.Select(v => new ActiveVisitDto(
             v.Id,

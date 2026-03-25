@@ -79,6 +79,22 @@ public static class ClinicalApiEndpoints
             var result = await bus.InvokeAsync<Result>(enriched, ct);
             return result.ToHttpResult();
         }).RequirePermissions(Permissions.Clinical.Update);
+
+        group.MapPut("/{visitId:guid}/reverse-stage",
+            async (Guid visitId, ReverseWorkflowStageCommand command, IMessageBus bus, CancellationToken ct) =>
+        {
+            var enriched = command with { VisitId = visitId };
+            var result = await bus.InvokeAsync<Result>(enriched, ct);
+            return result.ToHttpResult();
+        }).RequirePermissions(Permissions.Clinical.Update);
+
+        group.MapGet("/patients/{patientId:guid}/visit-history",
+            async (Guid patientId, IMessageBus bus, CancellationToken ct) =>
+        {
+            var result = await bus.InvokeAsync<List<PatientVisitHistoryDto>>(
+                new GetPatientVisitHistoryQuery(patientId), ct);
+            return Results.Ok(result);
+        }).RequirePermissions(Permissions.Clinical.View);
     }
 
     private static void MapVisitDataEndpoints(RouteGroupBuilder group)

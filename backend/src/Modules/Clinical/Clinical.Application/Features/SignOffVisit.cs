@@ -3,6 +3,7 @@ using Clinical.Contracts.Dtos;
 using Clinical.Domain.Enums;
 using Shared.Application;
 using Shared.Domain;
+// Auto-advance after sign-off (D-11)
 
 namespace Clinical.Application.Features;
 
@@ -43,6 +44,13 @@ public static class SignOffVisitHandler
                 .OrderByDescending(a => a.AmendedAt)
                 .FirstOrDefault();
             latestAmendment?.UpdateFieldChanges(command.FieldChangesJson);
+        }
+
+        // Auto-advance to next workflow stage after sign-off (D-11)
+        if (visit.CurrentStage < WorkflowStage.PharmacyOptical)
+        {
+            var nextStage = (WorkflowStage)((int)visit.CurrentStage + 1);
+            visit.AdvanceStage(nextStage);
         }
 
         await unitOfWork.SaveChangesAsync(ct);
