@@ -609,12 +609,13 @@ Plans:
 - [x] 12-02-PLAN.md — Fix Auth.Integration.Tests Wolverine startup in WebApplicationFactory
 - [ ] 12-03-PLAN.md — PRT-03 integration tests for invoice/receipt print endpoints + VERIFICATION.md
 
+
 ### Phase 13: Clinical workflow overhaul: walk-in visits, kanban/table view, status progression, visit lifecycle, and patient visit history
 
-**Goal:** Staff can use an 8+1 column kanban board or table view for workflow tracking, reverse visit stages with audit trail, see auto-advance on sign-off, view patient visit history timeline, and navigate via patient name links
+**Goal:** Staff can track the full 12-stage clinical visit workflow (reception through prescription, payment, pharmacy, optical, and handoff) on a kanban board with parallel drug/glasses tracks, conditional column visibility, stage detail views with Vietnamese labels, skip path for refraction, imaging loop, sign-off confirmation, and payment with auto-routing
 **Requirements**: CLN-03, CLN-04
 **Depends on:** Phase 12
-**Plans:** 8 plans (6 complete + 2 gap closure)
+**Plans:** 18 plans (6 complete + 2 gap closure + 10 spec update)
 
 Plans:
 - [x] 13-01-PLAN.md -- Backend TDD: stage reversal, sign-off auto-advance, done-today filter, visit history query
@@ -625,3 +626,13 @@ Plans:
 - [x] 13-06-PLAN.md -- Vietnamese user stories documentation (DOC-01)
 - [ ] 13-07-PLAN.md -- Gap closure: Fix PharmacyOptical auto-advance to Done (add Done=8 enum)
 - [ ] 13-08-PLAN.md -- Gap closure: Redesign Visit History tab UI
+- [ ] 13-09-PLAN.md -- Backend domain: redesign WorkflowStage enum (12 stages + Done=99), parallel track enums, child entities
+- [ ] 13-10-PLAN.md -- Backend infrastructure: EF Core configs, migration, CQRS handlers for all workflow stages, API endpoints
+- [ ] 13-11-PLAN.md -- Frontend kanban redesign: 13 columns with conditional visibility, card anatomy, API hooks for new endpoints
+- [ ] 13-12-PLAN.md -- Stage detail infrastructure + Stage 2 Refraction view with skip path, validation, undo
+- [ ] 13-13-PLAN.md -- Stage 3 Doctor Exam (branch decision), Stage 4a Imaging, Stage 4b Doctor Review
+- [ ] 13-14-PLAN.md -- Stage 5 Prescription: drug Rx, glasses Rx, sign-off confirmation modal, post-signing locked state
+- [ ] 13-15-PLAN.md -- Stage 6 Cashier: invoice, payment flow, glasses split toggle, post-payment auto-routing
+- [ ] 13-16-PLAN.md -- Stage 7a Pharmacy, Stage 7b Optical Center, Stage 8 Glasses Payment
+- [ ] 13-17-PLAN.md -- Stage 9 Optical Lab quality checklist, Stage 10 Return Glasses handoff, visit completion
+- [ ] 13-18-PLAN.md -- Vietnamese user stories + human verification of complete 12-stage workflow
