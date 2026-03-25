@@ -3,6 +3,8 @@ import { IconLoader2 } from "@tabler/icons-react"
 import { useVisitById } from "@/features/clinical/api/clinical-api"
 import { Stage2RefractionView } from "@/features/clinical/components/stage-views/Stage2RefractionView"
 import { Stage3DoctorExamView } from "@/features/clinical/components/stage-views/Stage3DoctorExamView"
+import { Stage4aImagingView } from "@/features/clinical/components/stage-views/Stage4aImagingView"
+import { Stage4bDoctorReviewView } from "@/features/clinical/components/stage-views/Stage4bDoctorReviewView"
 import { requirePermission } from "@/shared/utils/permission-guard"
 
 export const Route = createFileRoute(
@@ -55,6 +57,12 @@ function StageRoute() {
 
     case 2: // DoctorExam
       return <Stage3DoctorExamView visit={visit} />
+
+    case 3: // Imaging
+      return <Stage4aImagingView visit={visit} />
+
+    case 4: // DoctorReviewsResults
+      return <Stage4bDoctorReviewView visit={visit} />
 
     default: {
       // Placeholder for stages not yet implemented
