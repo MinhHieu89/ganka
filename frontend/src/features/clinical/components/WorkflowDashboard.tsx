@@ -48,7 +48,7 @@ const KANBAN_COLUMNS: ColumnDef[] = [
   { id: "rx", titleKey: "workflow.stages.rx", stages: [5], colorAccent: "amber" },
   { id: "cashier", titleKey: "workflow.stages.cashier", stages: [6], colorAccent: "orange" },
   { id: "pharmacy-optical", titleKey: "workflow.stages.pharmacyOptical", stages: [7], colorAccent: "violet" },
-  { id: "done", titleKey: "workflow.done", stages: [], colorAccent: "muted" },
+  { id: "done", titleKey: "workflow.done", stages: [8], colorAccent: "muted" },
 ]
 
 /** Map a stage number to its column ID */
@@ -113,12 +113,8 @@ export function WorkflowDashboard() {
     }
     if (!activeVisits) return groups
     for (const visit of activeVisits) {
-      if (visit.isCompleted) {
-        groups["done"].push(visit)
-      } else {
-        const colId = getColumnForStage(visit.currentStage)
-        if (groups[colId]) groups[colId].push(visit)
-      }
+      const colId = getColumnForStage(visit.currentStage)
+      if (groups[colId]) groups[colId].push(visit)
     }
     return groups
   }, [activeVisits])
@@ -166,9 +162,6 @@ export function WorkflowDashboard() {
       }
 
       if (!targetColumnId) return
-
-      // Don't allow dropping into the done column
-      if (targetColumnId === "done") return
 
       // Find source column
       const sourceColumnId = findVisitColumn(visitId)

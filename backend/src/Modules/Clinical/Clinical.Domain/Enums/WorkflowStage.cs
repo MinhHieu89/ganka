@@ -1,7 +1,7 @@
 namespace Clinical.Domain.Enums;
 
 /// <summary>
-/// Represents the 8 stages of a patient's journey through the clinic.
+/// Represents the 9 stages of a patient's journey through the clinic.
 /// Used for Kanban board positioning and workflow tracking.
 /// </summary>
 public enum WorkflowStage
@@ -13,5 +13,6 @@ public enum WorkflowStage
     DoctorReads = 4,
     Rx = 5,
     Cashier = 6,
-    PharmacyOptical = 7
+    PharmacyOptical = 7,
+    Done = 8
 }

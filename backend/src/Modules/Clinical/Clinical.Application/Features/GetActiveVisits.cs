@@ -25,7 +25,7 @@ public static class GetActiveVisitsHandler
             v.VisitDate,
             v.HasAllergies,
             (int)(DateTime.UtcNow - v.VisitDate).TotalMinutes,
-            v.CurrentStage == Clinical.Domain.Enums.WorkflowStage.PharmacyOptical
+            v.CurrentStage == Clinical.Domain.Enums.WorkflowStage.Done
         )).ToList();
     }
 }
