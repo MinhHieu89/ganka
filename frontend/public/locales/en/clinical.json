@@ -21,6 +21,7 @@
   },
   "visit": {
     "title": "Visit - {{name}}",
+    "titlePrefix": "Visit -",
     "patientInfo": "Patient Information",
     "refraction": "Refraction",
     "examinationNotes": "Examination Notes",
