@@ -608,3 +608,18 @@ Plans:
 - [x] 12-01-PLAN.md — Fix Optical.Unit.Tests build failure and Scheduling.Unit.Tests UTC assertions
 - [x] 12-02-PLAN.md — Fix Auth.Integration.Tests Wolverine startup in WebApplicationFactory
 - [ ] 12-03-PLAN.md — PRT-03 integration tests for invoice/receipt print endpoints + VERIFICATION.md
+
+### Phase 13: Clinical workflow overhaul: walk-in visits, kanban/table view, status progression, visit lifecycle, and patient visit history
+
+**Goal:** Staff can use an 8+1 column kanban board or table view for workflow tracking, reverse visit stages with audit trail, see auto-advance on sign-off, view patient visit history timeline, and navigate via patient name links
+**Requirements**: CLN-03, CLN-04
+**Depends on:** Phase 12
+**Plans:** 6 plans
+
+Plans:
+- [ ] 13-01-PLAN.md -- Backend TDD: stage reversal, sign-off auto-advance, done-today filter, visit history query
+- [ ] 13-02-PLAN.md -- Frontend kanban 9 columns, toolbar, view toggle, table view
+- [ ] 13-03-PLAN.md -- Frontend stage reversal dialog + backward drag/table wiring
+- [ ] 13-04-PLAN.md -- Frontend patient visit history tab (timeline + detail panel)
+- [ ] 13-05-PLAN.md -- Frontend folded todos: patient name links, OSDI answers, optical auto-expand, realtime OSDI
+- [ ] 13-06-PLAN.md -- Vietnamese user stories documentation (DOC-01)
