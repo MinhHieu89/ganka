@@ -11,6 +11,7 @@ import { Stage6CashierView } from "@/features/clinical/components/stage-views/St
 import { PostPaymentSuccessView } from "@/features/clinical/components/stage-views/PostPaymentSuccessView"
 import { Stage7aPharmacyView } from "@/features/clinical/components/stage-views/Stage7aPharmacyView"
 import { Stage7bOpticalCenterView } from "@/features/clinical/components/stage-views/Stage7bOpticalCenterView"
+import { Stage9OpticalLabView } from "@/features/clinical/components/stage-views/Stage9OpticalLabView"
 import { requirePermission } from "@/shared/utils/permission-guard"
 
 export const Route = createFileRoute(
@@ -99,6 +100,9 @@ function StageRoute() {
 
     case 8: // OpticalCenter
       return <Stage7bOpticalCenterView visit={visit} />
+
+    case 9: // OpticalLab
+      return <Stage9OpticalLabView visit={visit} />
 
     default: {
       // Placeholder for stages not yet implemented
