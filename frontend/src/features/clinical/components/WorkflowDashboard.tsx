@@ -30,29 +30,35 @@ import { StageReversalDialog } from "@/features/clinical/components/StageReversa
 import { type ViewMode, getStoredViewMode, storeViewMode } from "@/features/clinical/components/ViewToggle"
 
 // -- Kanban column definitions --
-// Each workflow stage gets its own column (8 stages + Done)
+// Each workflow stage gets its own column (11 stages + Done)
+// NO CashierGlasses — single combined payment at Cashier
 
 interface ColumnDef {
   id: string
   titleKey: string
   stages: number[]
   colorAccent: string
+  alwaysVisible: boolean
 }
 
 const KANBAN_COLUMNS: ColumnDef[] = [
-  { id: "reception", titleKey: "workflow.stages.reception", stages: [0], colorAccent: "stone" },
-  { id: "refraction-va", titleKey: "workflow.stages.refractionVa", stages: [1], colorAccent: "blue" },
-  { id: "doctor-exam", titleKey: "workflow.stages.doctorExam", stages: [2], colorAccent: "emerald" },
-  { id: "diagnostics", titleKey: "workflow.stages.diagnostics", stages: [3], colorAccent: "cyan" },
-  { id: "doctor-reads", titleKey: "workflow.stages.doctorReads", stages: [4], colorAccent: "teal" },
-  { id: "rx", titleKey: "workflow.stages.rx", stages: [5], colorAccent: "amber" },
-  { id: "cashier", titleKey: "workflow.stages.cashier", stages: [6], colorAccent: "orange" },
-  { id: "pharmacy-optical", titleKey: "workflow.stages.pharmacyOptical", stages: [7], colorAccent: "violet" },
-  { id: "done", titleKey: "workflow.done", stages: [8], colorAccent: "muted" },
+  { id: "reception", titleKey: "workflow.stages.reception", stages: [0], colorAccent: "stone", alwaysVisible: true },
+  { id: "refraction-va", titleKey: "workflow.stages.refractionVa", stages: [1], colorAccent: "blue", alwaysVisible: true },
+  { id: "doctor-exam", titleKey: "workflow.stages.doctorExam", stages: [2], colorAccent: "emerald", alwaysVisible: true },
+  { id: "imaging", titleKey: "workflow.stages.imaging", stages: [3], colorAccent: "cyan", alwaysVisible: true },
+  { id: "doctor-reviews", titleKey: "workflow.stages.doctorReviewsResults", stages: [4], colorAccent: "teal", alwaysVisible: true },
+  { id: "prescription", titleKey: "workflow.stages.prescription", stages: [5], colorAccent: "amber", alwaysVisible: true },
+  { id: "cashier", titleKey: "workflow.stages.cashier", stages: [6], colorAccent: "orange", alwaysVisible: true },
+  { id: "pharmacy", titleKey: "workflow.stages.pharmacy", stages: [7], colorAccent: "violet", alwaysVisible: false },
+  { id: "optical-center", titleKey: "workflow.stages.opticalCenter", stages: [8], colorAccent: "pink", alwaysVisible: false },
+  { id: "optical-lab", titleKey: "workflow.stages.opticalLab", stages: [9], colorAccent: "indigo", alwaysVisible: false },
+  { id: "return-glasses", titleKey: "workflow.stages.returnGlasses", stages: [10], colorAccent: "emerald", alwaysVisible: false },
+  { id: "done", titleKey: "workflow.done", stages: [], colorAccent: "muted", alwaysVisible: true },
 ]
 
 /** Map a stage number to its column ID */
-function getColumnForStage(stage: number): string {
+function getColumnForStage(stage: number, isCompleted?: boolean): string {
+  if (isCompleted || stage === 99) return "done"
   for (const col of KANBAN_COLUMNS) {
     if (col.stages.includes(stage)) return col.id
   }
@@ -113,11 +119,28 @@ export function WorkflowDashboard() {
     }
     if (!activeVisits) return groups
     for (const visit of activeVisits) {
-      const colId = getColumnForStage(visit.currentStage)
+      const colId = getColumnForStage(visit.currentStage, visit.isCompleted)
       if (groups[colId]) groups[colId].push(visit)
     }
     return groups
   }, [activeVisits])
+
+  // Conditional column visibility: hide optional columns unless patients need them
+  const visibleColumns = useMemo(() => {
+    return KANBAN_COLUMNS.filter((col) => {
+      if (col.alwaysVisible) return true
+      // Pharmacy column: visible if any visit has drugTrackStatus !== 0 (NotApplicable)
+      if (col.id === "pharmacy") {
+        return activeVisits?.some((v) => v.drugTrackStatus !== 0) ?? false
+      }
+      // Optical columns: visible if any visit has glassesTrackStatus !== 0 (NotApplicable)
+      if (["optical-center", "optical-lab", "return-glasses"].includes(col.id)) {
+        return activeVisits?.some((v) => v.glassesTrackStatus !== 0) ?? false
+      }
+      // Fallback: show if any visits are in this column
+      return (columnVisits[col.id]?.length ?? 0) > 0
+    })
+  }, [activeVisits, columnVisits])
 
   const totalPatients = activeVisits?.length ?? 0
 
@@ -154,7 +177,7 @@ export function WorkflowDashboard() {
       let targetColumnId: string | null = null
 
       // Check if dropped on a column directly
-      if (KANBAN_COLUMNS.some((c) => c.id === overId)) {
+      if (visibleColumns.some((c) => c.id === overId)) {
         targetColumnId = overId
       } else {
         // Dropped on a card -- find which column that card is in
@@ -190,7 +213,7 @@ export function WorkflowDashboard() {
         advanceStageMutation.mutate({ visitId, newStage })
       }
     },
-    [activeVisits, findVisitColumn, advanceStageMutation],
+    [activeVisits, findVisitColumn, advanceStageMutation, visibleColumns],
   )
 
   const handleAdvance = useCallback(
@@ -223,7 +246,7 @@ export function WorkflowDashboard() {
         </div>
         <div className="overflow-x-auto pb-4">
           <div className="flex gap-4" style={{ minWidth: "1800px" }}>
-            {KANBAN_COLUMNS.map((col) => (
+            {KANBAN_COLUMNS.filter((col) => col.alwaysVisible).map((col) => (
               <Card key={col.id} className="min-w-[200px] w-[200px] shrink-0 border-t-2">
                 <CardContent className="p-3 space-y-2">
                   <Skeleton className="h-5 w-24" />
@@ -257,8 +280,8 @@ export function WorkflowDashboard() {
           onDragEnd={handleDragEnd}
         >
           <div className="overflow-x-auto pb-4">
-            <div className="flex gap-4" style={{ minWidth: "1800px" }}>
-              {KANBAN_COLUMNS.map((col) => (
+            <div className="flex gap-4" style={{ minWidth: `${visibleColumns.length * 216}px` }}>
+              {visibleColumns.map((col) => (
                 <KanbanColumn
                   key={col.id}
                   id={col.id}

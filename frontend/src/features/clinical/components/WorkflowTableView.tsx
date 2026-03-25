@@ -29,15 +29,18 @@ const STAGE_LABELS: Record<number, string> = {
   0: "workflow.stages.reception",
   1: "workflow.stages.refractionVa",
   2: "workflow.stages.doctorExam",
-  3: "workflow.stages.diagnostics",
-  4: "workflow.stages.doctorReads",
-  5: "workflow.stages.rx",
+  3: "workflow.stages.imaging",
+  4: "workflow.stages.doctorReviewsResults",
+  5: "workflow.stages.prescription",
   6: "workflow.stages.cashier",
-  7: "workflow.stages.pharmacyOptical",
-  8: "workflow.done",
+  7: "workflow.stages.pharmacy",
+  8: "workflow.stages.opticalCenter",
+  9: "workflow.stages.opticalLab",
+  10: "workflow.stages.returnGlasses",
+  99: "workflow.done",
 }
 
-const MAX_STAGE = 8
+const MAX_STAGE = 99
 
 /** Status number to badge variant mapping */
 const STATUS_VARIANT: Record<number, "outline" | "default" | "secondary" | "destructive"> = {

@@ -19,15 +19,16 @@ const stageI18nKeys: Record<number, string> = {
   0: "workflow.stages.reception",
   1: "workflow.stages.refractionVa",
   2: "workflow.stages.doctorExam",
-  3: "workflow.stages.diagnostics",
-  4: "workflow.stages.doctorReads",
-  5: "workflow.stages.rx",
+  3: "workflow.stages.imaging",
+  4: "workflow.stages.doctorReviewsResults",
+  5: "workflow.stages.prescription",
   6: "workflow.stages.cashier",
-  7: "workflow.stages.pharmacyOptical",
-  8: "workflow.done",
+  7: "workflow.stages.pharmacy",
+  8: "workflow.stages.opticalCenter",
+  9: "workflow.stages.opticalLab",
+  10: "workflow.stages.returnGlasses",
+  99: "workflow.done",
 }
-
-const MAX_STAGE = 8
 
 interface PatientCardProps {
   visit: ActiveVisitDto
@@ -78,14 +79,9 @@ export function PatientCard({
     return `${hours}h${mins > 0 ? `${mins}m` : ""}`
   }, [visit.waitMinutes])
 
-  const waitTimeBadgeVariant = useMemo(() => {
-    if (visit.waitMinutes >= 60) return "destructive" as const
-    if (visit.waitMinutes >= 30) return "secondary" as const
-    return "outline" as const
-  }, [visit.waitMinutes])
-
+  // Forward shortcut: ONLY on stage 0 (Reception)
+  const isReception = visit.currentStage === 0
   const stageLabel = t(stageI18nKeys[visit.currentStage] ?? "workflow.stages.reception")
-  const canAdvance = visit.currentStage < MAX_STAGE
 
   const handleCardClick = () => {
     navigate({ to: "/visits/$visitId" as string, params: { visitId: visit.id } } as never)
@@ -93,7 +89,7 @@ export function PatientCard({
 
   const handleAdvance = (e: React.MouseEvent) => {
     e.stopPropagation()
-    if (onAdvance && canAdvance) {
+    if (onAdvance && isReception) {
       onAdvance(visit.id, visit.currentStage + 1)
     }
   }
@@ -120,7 +116,7 @@ export function PatientCard({
           <Link
             to="/patients/$patientId"
             params={{ patientId: visit.patientId }}
-            className="font-semibold text-sm leading-tight truncate flex-1 text-primary hover:underline cursor-pointer"
+            className="font-bold text-[14px] leading-tight truncate flex-1 text-primary hover:underline cursor-pointer"
             onClick={(e: React.MouseEvent) => e.stopPropagation()}
           >
             {visit.patientName}
@@ -135,35 +131,54 @@ export function PatientCard({
           )}
         </div>
 
-        {/* Doctor name + time */}
+        {/* Assigned doctor (muted) + appointment time (right-aligned) */}
         <div className="flex items-center justify-between text-xs text-muted-foreground">
           <span className="truncate">{visit.doctorName}</span>
           <span className="shrink-0">{visitTime}</span>
         </div>
 
-        {/* Stage badge + wait time */}
-        <div className="flex items-center justify-between gap-1.5">
-          <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
-            {stageLabel}
-          </Badge>
-          <Badge variant={waitTimeBadgeVariant} className="text-[10px] px-1.5 py-0">
-            {waitTimeLabel}
-          </Badge>
+        {/* Elapsed wait timer with amber status dot */}
+        <div className="flex items-center gap-1.5">
+          <span className="bg-amber-400 rounded-full w-1.5 h-1.5 animate-pulse shrink-0" />
+          <span className="text-xs text-muted-foreground">{waitTimeLabel}</span>
+        </div>
+
+        {/* Stage pill badges */}
+        <div className="flex items-center flex-wrap gap-1">
+          {visit.refractionSkipped && (
+            <Badge variant="secondary" className="text-[10px] px-1.5 py-0 bg-amber-100 text-amber-700 border-amber-200">
+              {"Đã bỏ qua"}
+            </Badge>
+          )}
+          {visit.status === 1 && (
+            <Badge variant="secondary" className="text-[10px] px-1.5 py-0 bg-green-100 text-green-700 border-green-200">
+              {"Đã ký duyệt"}
+            </Badge>
+          )}
+          {visit.currentStage > 6 && (
+            <Badge variant="secondary" className="text-[10px] px-1.5 py-0 bg-green-100 text-green-700 border-green-200">
+              {"Đã thanh toán"}
+            </Badge>
+          )}
         </div>
       </div>
 
-      {/* Action button */}
-      {canAdvance && (
+      {/* Forward shortcut: ONLY on Reception (stage 0) */}
+      {isReception && !isDone && onAdvance ? (
         <Button
           variant="ghost"
           size="sm"
           className="w-full h-7 text-xs"
           onClick={handleAdvance}
         >
-          {t("card.advanceStage")}
+          {"Chuyển tiếp"}
           <IconChevronRight className="ml-1 h-3 w-3" />
         </Button>
-      )}
+      ) : !isDone && !isReception ? (
+        <p className="text-[10px] text-muted-foreground text-center">
+          {"Nhấn để xem chi tiết \u2192"}
+        </p>
+      ) : null}
     </Card>
   )
 }

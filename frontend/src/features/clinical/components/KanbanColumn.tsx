@@ -18,6 +18,8 @@ const accentColors: Record<string, string> = {
   amber: "border-t-2 border-t-amber-500",
   orange: "border-t-2 border-t-orange-500",
   violet: "border-t-2 border-t-violet-500",
+  pink: "border-t-2 border-t-pink-500",
+  indigo: "border-t-2 border-t-indigo-500",
   muted: "border-t-2 border-t-muted-foreground/20",
   // Legacy colors for backward compatibility
   gray: "border-t-2 border-t-muted-foreground/40",
