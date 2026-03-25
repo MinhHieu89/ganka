@@ -5,6 +5,8 @@ import { Stage2RefractionView } from "@/features/clinical/components/stage-views
 import { Stage3DoctorExamView } from "@/features/clinical/components/stage-views/Stage3DoctorExamView"
 import { Stage4aImagingView } from "@/features/clinical/components/stage-views/Stage4aImagingView"
 import { Stage4bDoctorReviewView } from "@/features/clinical/components/stage-views/Stage4bDoctorReviewView"
+import { Stage5PrescriptionView } from "@/features/clinical/components/stage-views/Stage5PrescriptionView"
+import { PostSigningLockedView } from "@/features/clinical/components/stage-views/PostSigningLockedView"
 import { requirePermission } from "@/shared/utils/permission-guard"
 
 export const Route = createFileRoute(
@@ -63,6 +65,12 @@ function StageRoute() {
 
     case 4: // DoctorReviewsResults
       return <Stage4bDoctorReviewView visit={visit} />
+
+    case 5: // Prescription
+      if (visit.status === 1) {
+        return <PostSigningLockedView visit={visit} />
+      }
+      return <Stage5PrescriptionView visit={visit} />
 
     default: {
       // Placeholder for stages not yet implemented

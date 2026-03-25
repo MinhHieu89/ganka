@@ -615,7 +615,7 @@ Plans:
 **Goal:** Staff can track the full 12-stage clinical visit workflow (reception through prescription, payment, pharmacy, optical, and handoff) on a kanban board with parallel drug/glasses tracks, conditional column visibility, stage detail views with Vietnamese labels, skip path for refraction, imaging loop, sign-off confirmation, and payment with auto-routing
 **Requirements**: CLN-03, CLN-04
 **Depends on:** Phase 12
-**Plans:** 6/18 plans executed
+**Plans:** 12/18 plans executed
 
 Plans:
 - [x] 13-01-PLAN.md -- Backend TDD: stage reversal, sign-off auto-advance, done-today filter, visit history query
@@ -624,12 +624,12 @@ Plans:
 - [x] 13-04-PLAN.md -- Frontend patient visit history tab (timeline + detail panel)
 - [x] 13-05-PLAN.md -- Frontend folded todos: patient name links, OSDI answers, optical auto-expand, realtime OSDI
 - [x] 13-06-PLAN.md -- Vietnamese user stories documentation (DOC-01)
-- [ ] 13-07-PLAN.md -- Gap closure: Fix PharmacyOptical auto-advance to Done (add Done=8 enum)
-- [ ] 13-08-PLAN.md -- Gap closure: Redesign Visit History tab UI
-- [ ] 13-09-PLAN.md -- Backend domain: redesign WorkflowStage enum (12 stages + Done=99), parallel track enums, child entities
-- [ ] 13-10-PLAN.md -- Backend infrastructure: EF Core configs, migration, CQRS handlers for all workflow stages, API endpoints
-- [ ] 13-11-PLAN.md -- Frontend kanban redesign: 13 columns with conditional visibility, card anatomy, API hooks for new endpoints
-- [ ] 13-12-PLAN.md -- Stage detail infrastructure + Stage 2 Refraction view with skip path, validation, undo
+- [x] 13-07-PLAN.md -- Gap closure: Fix PharmacyOptical auto-advance to Done (add Done=8 enum)
+- [x] 13-08-PLAN.md -- Gap closure: Redesign Visit History tab UI
+- [x] 13-09-PLAN.md -- Backend domain: redesign WorkflowStage enum (12 stages + Done=99), parallel track enums, child entities
+- [x] 13-10-PLAN.md -- Backend infrastructure: EF Core configs, migration, CQRS handlers for all workflow stages, API endpoints
+- [x] 13-11-PLAN.md -- Frontend kanban redesign: 13 columns with conditional visibility, card anatomy, API hooks for new endpoints
+- [x] 13-12-PLAN.md -- Stage detail infrastructure + Stage 2 Refraction view with skip path, validation, undo
 - [ ] 13-13-PLAN.md -- Stage 3 Doctor Exam (branch decision), Stage 4a Imaging, Stage 4b Doctor Review
 - [ ] 13-14-PLAN.md -- Stage 5 Prescription: drug Rx, glasses Rx, sign-off confirmation modal, post-signing locked state
 - [ ] 13-15-PLAN.md -- Stage 6 Cashier: invoice, payment flow, glasses split toggle, post-payment auto-routing
