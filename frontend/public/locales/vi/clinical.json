@@ -193,7 +193,22 @@
     "notEnoughVisits": "Cần ít nhất 2 lượt khám có dữ liệu khô mắt",
     "improved": "Cải thiện",
     "worsened": "Xấu hơn",
-    "unchanged": "Không đổi"
+    "unchanged": "Không đổi",
+    "metricCharts": "Biểu đồ chỉ số",
+    "noMetricData": "Chưa có dữ liệu chỉ số",
+    "timeRange": {
+      "3m": "3 tháng",
+      "6m": "6 tháng",
+      "1y": "1 năm",
+      "all": "Tất cả"
+    },
+    "metric": {
+      "TBUT": "TBUT",
+      "Schirmer": "Schirmer",
+      "MeibomianGrading": "Phân độ Meibomian",
+      "TearMeniscus": "Bờ lệ",
+      "StainingScore": "Điểm nhuộm"
+    }
   },
   "osdi": {
     "title": "Bảng câu hỏi OSDI",

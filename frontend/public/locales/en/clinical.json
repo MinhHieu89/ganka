@@ -193,7 +193,22 @@
     "notEnoughVisits": "Need at least 2 visits with dry eye data",
     "improved": "Improved",
     "worsened": "Worsened",
-    "unchanged": "Unchanged"
+    "unchanged": "Unchanged",
+    "metricCharts": "Metric Charts",
+    "noMetricData": "No metric data available",
+    "timeRange": {
+      "3m": "3 months",
+      "6m": "6 months",
+      "1y": "1 year",
+      "all": "All"
+    },
+    "metric": {
+      "TBUT": "TBUT",
+      "Schirmer": "Schirmer",
+      "MeibomianGrading": "Meibomian Grading",
+      "TearMeniscus": "Tear Meniscus",
+      "StainingScore": "Staining Score"
+    }
   },
   "osdi": {
     "title": "OSDI Questionnaire",
