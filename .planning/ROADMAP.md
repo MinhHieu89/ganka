@@ -614,7 +614,7 @@ Plans:
 **Goal:** Staff can use an 8+1 column kanban board or table view for workflow tracking, reverse visit stages with audit trail, see auto-advance on sign-off, view patient visit history timeline, and navigate via patient name links
 **Requirements**: CLN-03, CLN-04
 **Depends on:** Phase 12
-**Plans:** 6/6 plans complete
+**Plans:** 8 plans (6 complete + 2 gap closure)
 
 Plans:
 - [x] 13-01-PLAN.md -- Backend TDD: stage reversal, sign-off auto-advance, done-today filter, visit history query
@@ -623,3 +623,5 @@ Plans:
 - [x] 13-04-PLAN.md -- Frontend patient visit history tab (timeline + detail panel)
 - [x] 13-05-PLAN.md -- Frontend folded todos: patient name links, OSDI answers, optical auto-expand, realtime OSDI
 - [x] 13-06-PLAN.md -- Vietnamese user stories documentation (DOC-01)
+- [ ] 13-07-PLAN.md -- Gap closure: Fix PharmacyOptical auto-advance to Done (add Done=8 enum)
+- [ ] 13-08-PLAN.md -- Gap closure: Redesign Visit History tab UI
