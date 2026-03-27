@@ -636,3 +636,27 @@ Plans:
 - [x] 13-16-PLAN.md -- Stage 7a Pharmacy, Stage 7b Optical Center, Stage 8 Glasses Payment
 - [x] 13-17-PLAN.md -- Stage 9 Optical Lab quality checklist, Stage 10 Return Glasses handoff, visit completion
 - [ ] 13-18-PLAN.md -- Vietnamese user stories + human verification of complete 12-stage workflow
+
+### Phase 14: Implement receptionist role flow
+
+**Goal:** Receptionist can manage front-desk workflow: role-based dashboard with KPI cards and patient queue, patient intake form, appointment booking for existing and guest patients, check-in flows, and context-menu actions (reschedule, cancel, no-show)
+**Requirements**: RCP-01, RCP-02, RCP-03, RCP-04, RCP-05, RCP-06, RCP-07
+**Depends on:** Phase 13
+**Success Criteria** (what must be TRUE):
+  1. Receptionist sees a dedicated dashboard at /dashboard with 4 KPI cards (appointments, waiting, examining, completed) and patient queue table with 15s polling
+  2. Receptionist can register new walk-in patients with 4-section intake form (personal, exam, history, lifestyle) and auto-advance to Pre-Exam
+  3. Receptionist can book appointments for existing patients or phone-in guests (name+phone stored on Appointment, no patient record until check-in)
+  4. Receptionist can check in patients with appointment (complete or incomplete profile) and create walk-in visits for existing patients
+  5. Receptionist can reschedule, cancel, mark no-show, or cancel visits via context menu actions with required reasons
+**Plans:** 9 plans in 5 waves
+
+Plans:
+- [ ] 14-01-PLAN.md -- Domain entities (Appointment, Visit, Patient) + new enums + migrations + Receptionist role seeding + AuthUser roles
+- [ ] 14-02-PLAN.md -- Backend handlers: CheckIn, BookGuest, MarkNoShow, GetSlots, Dashboard, KPI, WalkInVisit, CancelVisitWithReason, Intake handlers (TDD)
+- [ ] 14-03-PLAN.md -- API endpoints: wire all 10 handlers to Minimal API with authorization policies
+- [ ] 14-04-PLAN.md -- Frontend foundation: CSS variables, types, API client, polling hooks + Dashboard (KPI, table, filters, role-based routing)
+- [ ] 14-05-PLAN.md -- Patient intake form (SCR-003): 4 collapsible sections, duplicate phone check, save-and-advance
+- [ ] 14-06-PLAN.md -- Appointment booking page (SCR-004): patient search/guest entry, calendar, time slot grid, confirmation bar
+- [ ] 14-07-PLAN.md -- Check-in dialogs (SCR-005) + action menus with dialogs (SCR-006): all 8 dialog components
+- [ ] 14-08-PLAN.md -- Vietnamese user stories documentation (DOC-01)
+- [ ] 14-09-PLAN.md -- End-to-end verification checkpoint
