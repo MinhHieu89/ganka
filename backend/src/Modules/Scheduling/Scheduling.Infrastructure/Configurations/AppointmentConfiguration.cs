@@ -13,11 +13,20 @@ public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
 
         builder.HasKey(a => a.Id);
 
-        builder.Property(a => a.PatientId).IsRequired();
+        builder.Property(a => a.PatientId).IsRequired(false);
 
         builder.Property(a => a.PatientName)
             .IsRequired()
             .HasMaxLength(200);
+
+        builder.Property(a => a.GuestName)
+            .HasMaxLength(200);
+
+        builder.Property(a => a.GuestPhone)
+            .HasMaxLength(20);
+
+        builder.Property(a => a.GuestReason)
+            .HasMaxLength(500);
 
         builder.Property(a => a.DoctorId).IsRequired();
 
@@ -40,6 +49,13 @@ public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
             .HasMaxLength(500);
 
         builder.Property(a => a.Notes)
+            .HasMaxLength(500);
+
+        builder.Property(a => a.Source)
+            .IsRequired()
+            .HasConversion<int>();
+
+        builder.Property(a => a.NoShowNotes)
             .HasMaxLength(500);
 
         builder.Property(a => a.BranchId)

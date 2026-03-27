@@ -9,7 +9,7 @@ namespace Scheduling.Contracts.Dtos;
 public record AppointmentDto
 {
     public Guid Id { get; init; }
-    public Guid PatientId { get; init; }
+    public Guid? PatientId { get; init; }
     public string PatientName { get; init; }
     public Guid DoctorId { get; init; }
     public string DoctorName { get; init; }
@@ -23,7 +23,7 @@ public record AppointmentDto
     public string? Notes { get; init; }
 
     public AppointmentDto(
-        Guid Id, Guid PatientId, string PatientName,
+        Guid Id, Guid? PatientId, string PatientName,
         Guid DoctorId, string DoctorName,
         DateTime StartTime, DateTime EndTime,
         Guid AppointmentTypeId,
