@@ -5,6 +5,7 @@ import { Skeleton } from "@/shared/components/Skeleton"
 import { useAuthStore } from "@/shared/stores/authStore"
 import { useRecentPatientsStore } from "@/shared/stores/recentPatientsStore"
 import { useDashboardStats } from "@/features/dashboard/api/dashboard-api"
+import { ReceptionistDashboard } from "@/features/receptionist/components/ReceptionistDashboard"
 import {
   IconUsers,
   IconCalendar,
@@ -30,6 +31,17 @@ function StatValue({ value, isLoading }: { value: number | undefined; isLoading:
 }
 
 function DashboardPage() {
+  const user = useAuthStore((s) => s.user)
+  const isReceptionist = user?.roles?.includes("Receptionist") ?? false
+
+  if (isReceptionist) {
+    return <ReceptionistDashboard />
+  }
+
+  return <DefaultDashboard />
+}
+
+function DefaultDashboard() {
   const { t } = useTranslation("common")
   const { t: tAuth } = useTranslation("auth")
   const { t: tPatient } = useTranslation("patient")
@@ -164,7 +176,7 @@ function DashboardPage() {
             </div>
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">{tAuth("admin.role")}</span>
-              <span className="font-medium">{user?.permissions?.[0]?.split(".")?.[0] ?? "—"}</span>
+              <span className="font-medium">{user?.permissions?.[0]?.split(".")?.[0] ?? "---"}</span>
             </div>
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">{t("topbar.language")}</span>
