@@ -57,18 +57,19 @@ Exceptions:
 | Role | Size | Weight | Line Height | Usage |
 |------|------|--------|-------------|-------|
 | Body | 14px | 400 (regular) | 1.5 (20px) | Table cells, form field values, dialog body text |
-| Label | 14px | 500 (medium) | 1.4 (20px) | Form labels, table column headers, KPI card labels |
+| Label | 14px | 600 (semibold) | 1.4 (20px) | Form labels, table column headers, KPI card labels, patient names in table |
 | Heading | 20px | 600 (semibold) | 1.2 (24px) | Page titles ("Dashboard"), dialog headers, section headers |
-| Display | 28px | 700 (bold) | 1.1 (32px) | KPI card numbers only |
+| Display | 28px | 600 (semibold) | 1.1 (32px) | KPI card numbers only |
 
 Additional typography rules:
-- Patient name in table: 14px, weight 500 (medium) -- stands out from regular body
+- Patient name in table: 14px, weight 600 (semibold) -- stands out from regular body
 - Patient code (GK-YYYY-NNNN): 14px, `font-mono` (JetBrains Mono), `text-muted-foreground`
 - Appointment time in table: 14px, weight 400
 - "Chua ro" (unknown reason): 14px, italic, `text-muted-foreground`
 - Not-arrived reason text: 14px, italic
-- Slot availability header: 14px, weight 500
-- Confirmation bar summary: 14px, weight 500
+- Slot availability header: 14px, weight 600
+- Confirmation bar summary: 14px, weight 600
+- Selected time slot text: weight 600
 
 ---
 
@@ -76,11 +77,13 @@ Additional typography rules:
 
 ### Base Palette (from shadcn Stone preset)
 
+Surface color split: 60% `--background`, 30% `--secondary`/`--muted`, 10% `--primary` and semantic accents.
+
 | Role | Value | Usage |
 |------|-------|-------|
 | Dominant (60%) | `--background` (white) | Page background, table rows, form surfaces |
 | Secondary (30%) | `--secondary` / `--muted` (stone-50) | Card backgrounds, sidebar, not-arrived row background, read-only info cards |
-| Primary | `--primary` (stone-900) | Primary filled buttons ("Tiep nhan BN moi"), table header text |
+| Primary (10%) | `--primary` (stone-900) | Primary filled buttons ("Tiep nhan BN moi"), table header text |
 | Destructive | `--destructive` (red) | Cancel/destructive button fills only |
 
 ### Phase-Specific Semantic Colors (custom CSS variables)
@@ -149,7 +152,7 @@ These are NOT in the existing shadcn theme. Add as custom CSS variables in `glob
 | No-show confirm button | `#BA7517` | white | spec |
 | Cancel confirm button | `#A32D2D` | white | spec |
 | Selected calendar date | `#EEEDFE` bg | `#3C3489` text | spec |
-| Selected time slot | `#EEEDFE` bg, `#534AB7` border | `#3C3489` text, weight 500 | spec |
+| Selected time slot | `#EEEDFE` bg, `#534AB7` border | `#3C3489` text, weight 600 | spec |
 | Full time slot | `--secondary` bg | `text-muted-foreground`, `line-through` | spec |
 | Duplicate phone warning bar | `#FAEEDA` | `#633806` | spec |
 | Info note (blue) | `#E6F1FB` | `#0C447C` | spec |
@@ -205,6 +208,8 @@ All copy is in Vietnamese (primary UI language per UI-01).
 
 ### Dashboard (SCR-002a)
 
+**Primary visual anchor:** The "+ Tiep nhan BN moi" button is the focal point of SCR-002a. It uses a filled `--primary` background, positioned top-right of the action bar, and is the first element a receptionist should reach for when a patient arrives.
+
 | Element | Vietnamese Copy |
 |---------|----------------|
 | Page title | "Dashboard" |
@@ -233,8 +238,8 @@ All copy is in Vietnamese (primary UI language per UI-01).
 | Section 2 header | "Thong tin kham" |
 | Section 3 header | "Tien su benh" |
 | Section 4 header | "Lifestyle" |
-| Cancel button | "Huy" |
-| Save button | "Luu" |
+| Cancel button | "Huy nhap lieu" |
+| Save button | "Luu ho so" |
 | Save & advance CTA | "Luu & Chuyen tien kham" |
 | Cancel confirmation | "Ban co chac muon huy? Du lieu chua luu se mat." |
 | Duplicate phone warning | "SDT {phone} da ton tai -- BN: {name} ({year})" |
@@ -262,7 +267,7 @@ All copy is in Vietnamese (primary UI language per UI-01).
 | Morning label | "Sang" |
 | Afternoon label | "Chieu" |
 | Confirmation bar title | "Xac nhan lich hen" |
-| Cancel button | "Huy" |
+| Cancel button | "Huy bo" |
 | Confirm CTA | "Xac nhan dat hen" (filled primary) |
 | Validation: no slot | "Vui long chon khung gio hen" |
 | Success toast | "Da dat hen cho {name} vao {date} luc {time}" |
@@ -274,7 +279,7 @@ All copy is in Vietnamese (primary UI language per UI-01).
 | Dialog header (complete patient) | "Check-in benh nhan" |
 | Info note (complete) | "Xac nhan thong tin voi BN truoc khi check-in. Neu can sua, bam Sua thong tin." |
 | Edit info button | "Sua thong tin" |
-| Cancel button | "Huy" |
+| Cancel button | "Quay lai" |
 | Confirm CTA (complete) | "Xac nhan check-in" (filled, `#534AB7`) |
 | Dialog header (incomplete patient) | "Check-in benh nhan" |
 | Warning banner (incomplete) | "Ho so chua day du -- BN dat hen qua dien thoai, chi co ten + SDT. Can bo sung ngay sinh, gioi tinh va cac thong tin khac truoc khi kham." |
@@ -389,7 +394,7 @@ All copy is in Vietnamese (primary UI language per UI-01).
 | Time slot grid | 2 groups (Sang/Chieu), each group as flex-wrap grid of slot buttons |
 | Slot size | Min 80px wide, 36px tall |
 | Empty slot | Border `--border`, bg white, text foreground |
-| Selected slot | Border `#534AB7`, bg `#EEEDFE`, text `#3C3489`, weight 500 |
+| Selected slot | Border `#534AB7`, bg `#EEEDFE`, text `#3C3489`, weight 600 |
 | Full slot | bg `--secondary`, text `text-muted-foreground`, `line-through`, disabled |
 | Confirmation bar | Sticky bottom card summarizing: patient name, date, time, reason, doctor |
 
