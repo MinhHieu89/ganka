@@ -648,7 +648,7 @@ Plans:
   3. Receptionist can book appointments for existing patients or phone-in guests (name+phone stored on Appointment, no patient record until check-in)
   4. Receptionist can check in patients with appointment (complete or incomplete profile) and create walk-in visits for existing patients
   5. Receptionist can reschedule, cancel, mark no-show, or cancel visits via context menu actions with required reasons
-**Plans:** 7/9 plans executed
+**Plans:** 9/9 plans complete
 
 Plans:
 - [x] 14-01-PLAN.md -- Domain entities (Appointment, Visit, Patient) + new enums + migrations + Receptionist role seeding + AuthUser roles
