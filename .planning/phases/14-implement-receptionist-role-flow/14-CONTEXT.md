@@ -33,7 +33,7 @@ Implement the complete receptionist workflow: role-based dashboard with patient 
 - **D-08:** "Lưu & Chuyển tiền khám" button auto-advances patient to Pre-Exam stage (skips Waiting queue).
 
 ### Appointment Booking UX
-- **D-09:** Full page route at `/appointment/new` for appointment booking (not a dialog).
+- **D-09:** Full page route at `/appointments/new` for appointment booking (not a dialog). *(Updated from singular `/appointment/new` to plural per REST convention — confirmed 2026-03-28)*
 - **D-10:** Hardcode 30-min slot duration. Use existing ClinicSchedule entity for operating hours per day.
 - **D-11:** For new patients (phone booking): store name + phone + reason **on the Appointment record** (GuestName, GuestPhone, GuestReason fields). Do NOT create a patient record until check-in. This overrides the doc's mention of "tạo patient record tạm".
 - **D-12:** Slot capacity is doctor-based: if a doctor is selected, 1 patient per doctor per 30-min slot. If no doctor selected ("BS nào trống"), allow booking in any slot freely.
@@ -41,7 +41,7 @@ Implement the complete receptionist workflow: role-based dashboard with patient 
 ### Action Menus & Status Transitions
 - **D-13:** Dropdown menu (three-dot ⋯) at end of each row. Actions vary by status per spec SCR-006.
 - **D-14:** Cancel Appointment and Cancel Visit: required dropdown reason (per spec). No-Show: optional text note + optional "Đặt hẹn lại" checkbox (per spec).
-- **D-15:** "Đặt hẹn lại" checkbox (on No-Show and Cancel Visit popups) navigates to `/appointment/new` with patient pre-filled. Consistent with D-09.
+- **D-15:** "Đặt hẹn lại" checkbox (on No-Show and Cancel Visit popups) navigates to `/appointments/new` with patient pre-filled. Consistent with D-09.
 
 ### Deferred to Later Phase
 - **D-16:** Keyboard shortcuts (N, H, /, 1-4 on dashboard; Ctrl+S, Ctrl+Enter on forms) — deferred.
