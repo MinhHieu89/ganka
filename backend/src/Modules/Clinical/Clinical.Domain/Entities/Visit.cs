@@ -230,11 +230,14 @@ public class Visit : AggregateRoot, IAuditable
     /// Cancels the visit with a reason and audit trail.
     /// Only Draft visits can be cancelled.
     /// </summary>
-    public void CancelWithReason(string? reason, Guid cancelledBy)
+    public void CancelWithReason(string reason, Guid cancelledBy)
     {
         if (Status != VisitStatus.Draft)
             throw new InvalidOperationException(
                 "Only Draft visits can be cancelled.");
+
+        if (string.IsNullOrWhiteSpace(reason))
+            throw new ArgumentException("Cancellation reason is required.", nameof(reason));
 
         Status = VisitStatus.Cancelled;
         CancelledReason = reason;

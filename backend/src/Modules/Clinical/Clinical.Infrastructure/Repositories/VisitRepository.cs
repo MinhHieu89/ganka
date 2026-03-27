@@ -160,6 +160,21 @@ public sealed class VisitRepository : IVisitRepository
             .ToListAsync(ct);
     }
 
+    public async Task<List<Visit>> GetTodayVisitsAsync(CancellationToken ct = default)
+    {
+        var vietnamTz = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+        var nowVietnam = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vietnamTz);
+        var todayStartUtc = TimeZoneInfo.ConvertTimeToUtc(nowVietnam.Date, vietnamTz);
+        var todayEndUtc = todayStartUtc.AddDays(1);
+
+        return await _dbContext.Visits
+            .AsNoTracking()
+            .Where(v => !v.IsDeleted &&
+                v.VisitDate >= todayStartUtc && v.VisitDate < todayEndUtc)
+            .OrderBy(v => v.VisitDate)
+            .ToListAsync(ct);
+    }
+
     public async Task<List<Visit>> GetActiveVisitsIncludingDoneTodayAsync(CancellationToken ct = default)
     {
         var vietnamTz = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");

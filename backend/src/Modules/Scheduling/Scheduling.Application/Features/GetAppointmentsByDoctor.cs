@@ -30,7 +30,7 @@ public static class GetAppointmentsByDoctorHandler
             typeMap.TryGetValue(a.AppointmentTypeId, out var appointmentType);
             return new AppointmentDto(
                 a.Id,
-                a.PatientId,
+                a.PatientId ?? Guid.Empty,
                 a.PatientName,
                 a.DoctorId,
                 a.DoctorName,

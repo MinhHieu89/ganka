@@ -59,3 +59,37 @@ public record ApproveSelfBookingCommand(
 public record RejectSelfBookingCommand(
     Guid SelfBookingRequestId,
     string Reason);
+
+/// <summary>
+/// Command to check in a confirmed appointment and create a visit.
+/// </summary>
+public record CheckInAppointmentCommand(
+    Guid AppointmentId,
+    Guid UserId);
+
+/// <summary>
+/// Command to book a guest appointment without a patient record (D-11).
+/// </summary>
+public record BookGuestAppointmentCommand(
+    string GuestName,
+    string GuestPhone,
+    string? GuestReason,
+    Guid? DoctorId,
+    string? DoctorName,
+    DateTime StartTime,
+    int Source);
+
+/// <summary>
+/// Command to mark an appointment as no-show.
+/// </summary>
+public record MarkAppointmentNoShowCommand(
+    Guid AppointmentId,
+    Guid UserId,
+    string? Notes);
+
+/// <summary>
+/// Query to get available 30-min time slots for a date (D-10).
+/// </summary>
+public record GetAvailableSlotsQuery(
+    DateTime Date,
+    Guid? DoctorId);

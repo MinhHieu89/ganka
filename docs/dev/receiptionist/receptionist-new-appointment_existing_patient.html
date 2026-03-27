@@ -1,0 +1,207 @@
+<div style="background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 1.5rem;">
+<div style="background: var(--color-background-primary); border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); overflow: hidden; max-width: 820px; margin: 0 auto;">
+
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; border-bottom: 0.5px solid var(--color-border-tertiary);">
+  <div style="display: flex; align-items: center; gap: 8px;">
+    <span style="font-size: 13px; color: var(--color-text-info); cursor: pointer;">&larr; Dashboard</span>
+    <span style="font-size: 13px; color: var(--color-text-tertiary);">/</span>
+    <span style="font-size: 13px; font-weight: 500; color: var(--color-text-primary);">Đặt lịch hẹn</span>
+  </div>
+  <span style="font-size: 12px; color: var(--color-text-tertiary);">Th 4, 26/03/2026</span>
+</div>
+
+<div style="padding: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+
+  <div>
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 0.5px solid var(--color-border-tertiary);">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="#534AB7" stroke-width="1.2"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="#534AB7" stroke-width="1.2" stroke-linecap="round"/></svg>
+      <span style="font-size: 15px; font-weight: 500; color: var(--color-text-primary);">Thông tin bệnh nhân</span>
+    </div>
+
+    <div style="margin-bottom: 14px;">
+      <label style="display: block; font-size: 12px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 4px;">Tìm BN theo SĐT hoặc tên</label>
+      <div style="position: relative;">
+        <input type="text" value="0977 654 321" style="width: 100%; box-sizing: border-box; padding-left: 32px; font-size: 13px;" />
+        <span style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 14px; color: var(--color-text-tertiary);">&#x2315;</span>
+      </div>
+    </div>
+
+    <div style="padding: 10px 14px; background: #E1F5EE; border-radius: var(--border-radius-md); margin-bottom: 14px; display: flex; align-items: center; gap: 10px;">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M6 8l2 2 4-4" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8" cy="8" r="7" stroke="#0F6E56" stroke-width="1.2"/></svg>
+      <div>
+        <span style="font-size: 12px; color: #085041; font-weight: 500;">Lê Minh Châu</span>
+        <span style="font-size: 12px; color: #0F6E56;"> &mdash; Nam, 1978 &mdash; BN-20260110-0045</span>
+      </div>
+    </div>
+
+    <div style="border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 12px 14px; margin-bottom: 14px; background: var(--color-background-secondary);">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; font-size: 12px;">
+        <div>
+          <span style="color: var(--color-text-tertiary);">Họ tên</span>
+          <div style="color: var(--color-text-primary); font-weight: 500; margin-top: 2px;">Lê Minh Châu</div>
+        </div>
+        <div>
+          <span style="color: var(--color-text-tertiary);">SĐT</span>
+          <div style="color: var(--color-text-primary); font-weight: 500; margin-top: 2px;">0977 654 321</div>
+        </div>
+        <div>
+          <span style="color: var(--color-text-tertiary);">Năm sinh</span>
+          <div style="color: var(--color-text-primary); margin-top: 2px;">1978</div>
+        </div>
+        <div>
+          <span style="color: var(--color-text-tertiary);">Giới tính</span>
+          <div style="color: var(--color-text-primary); margin-top: 2px;">Nam</div>
+        </div>
+      </div>
+      <div style="border-top: 0.5px solid var(--color-border-tertiary); margin-top: 10px; padding-top: 10px; font-size: 12px;">
+        <span style="color: var(--color-text-tertiary);">Lần khám gần nhất:</span>
+        <span style="color: var(--color-text-secondary);"> 10/01/2026 &mdash; Dry Eye Syndrome &mdash; BS. Trần</span>
+      </div>
+    </div>
+
+    <div style="margin-bottom: 14px;">
+      <label style="display: block; font-size: 12px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 4px;">Lý do khám <span style="color: #E24B4A;">*</span></label>
+      <textarea placeholder="VD: Tái khám dry eye, kiểm tra mắt định kỳ..." style="width: 100%; box-sizing: border-box; min-height: 64px; resize: vertical; padding: 10px 12px; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); font-size: 13px; font-family: inherit; line-height: 1.5;">Tái khám dry eye theo lịch hẹn BS Trần</textarea>
+    </div>
+
+    <div style="margin-bottom: 14px;">
+      <label style="display: block; font-size: 12px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 4px;">Bác sĩ chỉ định</label>
+      <select style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); font-size: 13px; background: var(--color-background-primary); color: var(--color-text-primary);">
+        <option>BS. Trần Minh Đức</option>
+        <option>BS. Nguyễn Thanh Hà</option>
+        <option>Không chỉ định (BS nào trống)</option>
+      </select>
+    </div>
+
+    <div>
+      <label style="display: block; font-size: 12px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 4px;">Ghi chú</label>
+      <input type="text" placeholder="VD: BN cần đến sớm 15 phút để đo mắt trước..." style="width: 100%; box-sizing: border-box; font-size: 13px;" />
+    </div>
+  </div>
+
+  <div>
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 0.5px solid var(--color-border-tertiary);">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="2" width="14" height="13" rx="2" stroke="#534AB7" stroke-width="1.2"/><path d="M1 6h14" stroke="#534AB7" stroke-width="1.2"/><path d="M5 1v3M11 1v3" stroke="#534AB7" stroke-width="1.2" stroke-linecap="round"/></svg>
+      <span style="font-size: 15px; font-weight: 500; color: var(--color-text-primary);">Chọn ngày &amp; giờ</span>
+    </div>
+
+    <div style="border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 12px; margin-bottom: 16px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+        <span style="font-size: 13px; color: var(--color-text-tertiary); cursor: pointer;">&larr;</span>
+        <span style="font-size: 13px; font-weight: 500; color: var(--color-text-primary);">Tháng 3, 2026</span>
+        <span style="font-size: 13px; color: var(--color-text-primary); cursor: pointer;">&rarr;</span>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center;">
+        <span style="font-size: 11px; color: var(--color-text-tertiary); padding: 4px;">T2</span>
+        <span style="font-size: 11px; color: var(--color-text-tertiary); padding: 4px;">T3</span>
+        <span style="font-size: 11px; color: var(--color-text-tertiary); padding: 4px;">T4</span>
+        <span style="font-size: 11px; color: var(--color-text-tertiary); padding: 4px;">T5</span>
+        <span style="font-size: 11px; color: var(--color-text-tertiary); padding: 4px;">T6</span>
+        <span style="font-size: 11px; color: var(--color-text-tertiary); padding: 4px;">T7</span>
+        <span style="font-size: 11px; color: var(--color-text-tertiary); padding: 4px;">CN</span>
+
+        <span style="font-size: 12px; color: var(--color-text-tertiary); padding: 6px;"></span>
+        <span style="font-size: 12px; color: var(--color-text-tertiary); padding: 6px;"></span>
+        <span style="font-size: 12px; color: var(--color-text-tertiary); padding: 6px;"></span>
+        <span style="font-size: 12px; color: var(--color-text-tertiary); padding: 6px;"></span>
+        <span style="font-size: 12px; color: var(--color-text-tertiary); padding: 6px;"></span>
+        <span style="font-size: 12px; color: var(--color-text-tertiary); padding: 6px;"></span>
+        <span style="font-size: 12px; color: var(--color-text-tertiary); padding: 6px;">1</span>
+
+        <span style="font-size: 12px; color: var(--color-text-tertiary); padding: 6px;">2</span>
+        <span style="font-size: 12px; color: var(--color-text-tertiary); padding: 6px;">3</span>
+        <span style="font-size: 12px; color: var(--color-text-tertiary); padding: 6px;">4</span>
+        <span style="font-size: 12px; color: var(--color-text-tertiary); padding: 6px;">5</span>
+        <span style="font-size: 12px; color: var(--color-text-tertiary); padding: 6px;">6</span>
+        <span style="font-size: 12px; color: var(--color-text-tertiary); padding: 6px;">7</span>
+        <span style="font-size: 12px; color: var(--color-text-tertiary); padding: 6px;">8</span>
+
+        <span style="font-size: 12px; color: var(--color-text-tertiary); padding: 6px;">9</span>
+        <span style="font-size: 12px; color: var(--color-text-tertiary); padding: 6px;">10</span>
+        <span style="font-size: 12px; color: var(--color-text-tertiary); padding: 6px;">11</span>
+        <span style="font-size: 12px; color: var(--color-text-tertiary); padding: 6px;">12</span>
+        <span style="font-size: 12px; color: var(--color-text-tertiary); padding: 6px;">13</span>
+        <span style="font-size: 12px; color: var(--color-text-tertiary); padding: 6px;">14</span>
+        <span style="font-size: 12px; color: var(--color-text-tertiary); padding: 6px;">15</span>
+
+        <span style="font-size: 12px; color: var(--color-text-tertiary); padding: 6px;">16</span>
+        <span style="font-size: 12px; color: var(--color-text-tertiary); padding: 6px;">17</span>
+        <span style="font-size: 12px; color: var(--color-text-tertiary); padding: 6px;">18</span>
+        <span style="font-size: 12px; color: var(--color-text-tertiary); padding: 6px;">19</span>
+        <span style="font-size: 12px; color: var(--color-text-tertiary); padding: 6px;">20</span>
+        <span style="font-size: 12px; color: var(--color-text-tertiary); padding: 6px;">21</span>
+        <span style="font-size: 12px; color: var(--color-text-tertiary); padding: 6px;">22</span>
+
+        <span style="font-size: 12px; color: var(--color-text-tertiary); padding: 6px;">23</span>
+        <span style="font-size: 12px; color: var(--color-text-tertiary); padding: 6px;">24</span>
+        <span style="font-size: 12px; color: var(--color-text-tertiary); padding: 6px;">25</span>
+        <span style="font-size: 12px; padding: 6px; border-bottom: 2px solid var(--color-text-info); color: var(--color-text-info); font-weight: 500;">26</span>
+        <span style="font-size: 12px; color: var(--color-text-primary); padding: 6px; cursor: pointer;">27</span>
+        <span style="font-size: 12px; padding: 6px; background: #EEEDFE; border-radius: 6px; color: #3C3489; font-weight: 500; cursor: pointer;">28</span>
+        <span style="font-size: 12px; color: var(--color-text-primary); padding: 6px; cursor: pointer;">29</span>
+
+        <span style="font-size: 12px; color: var(--color-text-primary); padding: 6px; cursor: pointer;">30</span>
+        <span style="font-size: 12px; color: var(--color-text-primary); padding: 6px; cursor: pointer;">31</span>
+        <span style="font-size: 12px; padding: 6px;"></span>
+        <span style="font-size: 12px; padding: 6px;"></span>
+        <span style="font-size: 12px; padding: 6px;"></span>
+        <span style="font-size: 12px; padding: 6px;"></span>
+        <span style="font-size: 12px; padding: 6px;"></span>
+      </div>
+    </div>
+
+    <div>
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+        <span style="font-size: 13px; font-weight: 500; color: var(--color-text-primary);">Th 7, 28/03/2026</span>
+        <span style="font-size: 11px; color: var(--color-text-tertiary);">6 slot trống / 12</span>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 8px;">
+        <span style="font-size: 11px; font-weight: 500; color: var(--color-text-secondary); width: 36px;">Sáng</span>
+        <div style="display: flex; gap: 6px; flex-wrap: wrap; flex: 1;">
+          <span style="font-size: 12px; padding: 5px 10px; border-radius: var(--border-radius-md); background: var(--color-background-secondary); color: var(--color-text-tertiary); text-decoration: line-through;">08:00</span>
+          <span style="font-size: 12px; padding: 5px 10px; border-radius: var(--border-radius-md); background: var(--color-background-secondary); color: var(--color-text-tertiary); text-decoration: line-through;">08:30</span>
+          <span style="font-size: 12px; padding: 5px 10px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-tertiary); color: var(--color-text-primary); cursor: pointer;">09:00</span>
+          <span style="font-size: 12px; padding: 5px 10px; border-radius: var(--border-radius-md); background: #EEEDFE; border: 0.5px solid #534AB7; color: #3C3489; font-weight: 500; cursor: pointer;">09:30</span>
+          <span style="font-size: 12px; padding: 5px 10px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-tertiary); color: var(--color-text-primary); cursor: pointer;">10:00</span>
+          <span style="font-size: 12px; padding: 5px 10px; border-radius: var(--border-radius-md); background: var(--color-background-secondary); color: var(--color-text-tertiary); text-decoration: line-through;">10:30</span>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 12px;">
+        <span style="font-size: 11px; font-weight: 500; color: var(--color-text-secondary); width: 36px;">Chiều</span>
+        <div style="display: flex; gap: 6px; flex-wrap: wrap; flex: 1;">
+          <span style="font-size: 12px; padding: 5px 10px; border-radius: var(--border-radius-md); background: var(--color-background-secondary); color: var(--color-text-tertiary); text-decoration: line-through;">13:00</span>
+          <span style="font-size: 12px; padding: 5px 10px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-tertiary); color: var(--color-text-primary); cursor: pointer;">13:30</span>
+          <span style="font-size: 12px; padding: 5px 10px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-tertiary); color: var(--color-text-primary); cursor: pointer;">14:00</span>
+          <span style="font-size: 12px; padding: 5px 10px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-tertiary); color: var(--color-text-primary); cursor: pointer;">14:30</span>
+          <span style="font-size: 12px; padding: 5px 10px; border-radius: var(--border-radius-md); background: var(--color-background-secondary); color: var(--color-text-tertiary); text-decoration: line-through;">15:00</span>
+          <span style="font-size: 12px; padding: 5px 10px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-tertiary); color: var(--color-text-primary); cursor: pointer;">15:30</span>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <div style="display: flex; align-items: center; gap: 4px;"><span style="display: inline-block; width: 8px; height: 8px; border-radius: 2px; border: 0.5px solid var(--color-border-tertiary);"></span><span style="font-size: 11px; color: var(--color-text-tertiary);">Trống</span></div>
+        <div style="display: flex; align-items: center; gap: 4px;"><span style="display: inline-block; width: 8px; height: 8px; border-radius: 2px; background: #EEEDFE;"></span><span style="font-size: 11px; color: var(--color-text-tertiary);">Đang chọn</span></div>
+        <div style="display: flex; align-items: center; gap: 4px;"><span style="display: inline-block; width: 8px; height: 8px; border-radius: 2px; background: var(--color-background-secondary);"></span><span style="font-size: 11px; color: var(--color-text-tertiary);">Đã đầy</span></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div style="margin: 0 24px 16px; padding: 14px 16px; background: #EEEDFE; border-radius: var(--border-radius-md); display: flex; align-items: center; justify-content: space-between;">
+  <div style="display: flex; align-items: center; gap: 10px;">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="2" width="14" height="13" rx="2" stroke="#534AB7" stroke-width="1.2"/><path d="M1 6h14" stroke="#534AB7" stroke-width="1.2"/><path d="M5 1v3M11 1v3" stroke="#534AB7" stroke-width="1.2" stroke-linecap="round"/></svg>
+    <div>
+      <div style="font-size: 13px; font-weight: 500; color: #3C3489;">Lê Minh Châu &mdash; Th 7, 28/03/2026 lúc 09:30</div>
+      <div style="font-size: 11px; color: #534AB7; margin-top: 2px;">Tái khám dry eye &mdash; BS. Trần Minh Đức</div>
+    </div>
+  </div>
+</div>
+
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; border-top: 0.5px solid var(--color-border-tertiary); background: var(--color-background-secondary);">
+  <button style="font-size: 13px; padding: 8px 20px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: transparent; color: var(--color-text-secondary); cursor: pointer;">Hủy</button>
+  <button style="font-size: 13px; padding: 8px 24px; border-radius: var(--border-radius-md); border: none; background: #534AB7; color: white; cursor: pointer; font-weight: 500;">Xác nhận đặt hẹn</button>
+</div>
+
+</div>
+</div>

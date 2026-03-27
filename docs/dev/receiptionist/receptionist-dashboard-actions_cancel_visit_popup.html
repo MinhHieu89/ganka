@@ -1,0 +1,76 @@
+<div style="min-height: 400px; background: rgba(0,0,0,0.35); display: flex; align-items: center; justify-content: center; border-radius: var(--border-radius-lg); padding: 2rem;">
+<div style="background: var(--color-background-primary); border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); width: 440px; overflow: hidden;">
+
+  <div style="padding: 16px 20px; border-bottom: 0.5px solid var(--color-border-tertiary); display: flex; align-items: center; justify-content: space-between;">
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#A32D2D" stroke-width="1.2"/><path d="M5.5 5.5l5 5M10.5 5.5l-5 5" stroke="#A32D2D" stroke-width="1.2" stroke-linecap="round"/></svg>
+      <span style="font-size: 15px; font-weight: 500; color: var(--color-text-primary);">Hủy lượt khám</span>
+    </div>
+    <span style="font-size: 18px; color: var(--color-text-tertiary); cursor: pointer; line-height: 1;">&times;</span>
+  </div>
+
+  <div style="padding: 20px;">
+
+    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+      <div style="width: 40px; height: 40px; border-radius: 50%; background: #FCEBEB; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 500; color: #791F1F;">HD</div>
+      <div style="flex: 1;">
+        <div style="font-size: 14px; font-weight: 500; color: var(--color-text-primary);">Phạm Hồng Đào</div>
+        <div style="font-size: 12px; color: var(--color-text-tertiary);">0369 888 777</div>
+      </div>
+      <div style="text-align: right;">
+        <span style="display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 11px; background: #FAEEDA; color: #633806;">Chờ khám</span>
+      </div>
+    </div>
+
+    <div style="padding: 12px 14px; background: var(--color-background-secondary); border-radius: var(--border-radius-md); margin-bottom: 16px; font-size: 13px;">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+        <div>
+          <div style="font-size: 11px; color: var(--color-text-tertiary); margin-bottom: 2px;">Nguồn</div>
+          <div style="color: #534AB7;">Hẹn &mdash; 09:00</div>
+        </div>
+        <div>
+          <div style="font-size: 11px; color: var(--color-text-tertiary); margin-bottom: 2px;">Check-in lúc</div>
+          <div style="color: var(--color-text-primary);">08:52</div>
+        </div>
+      </div>
+      <div style="border-top: 0.5px solid var(--color-border-tertiary); margin-top: 10px; padding-top: 10px;">
+        <div style="font-size: 11px; color: var(--color-text-tertiary); margin-bottom: 2px;">Lý do khám</div>
+        <div style="color: var(--color-text-primary);">Mỏi mắt, nhìn mờ</div>
+      </div>
+    </div>
+
+    <div style="padding: 10px 14px; background: var(--color-background-danger); border-radius: var(--border-radius-md); margin-bottom: 16px;">
+      <span style="font-size: 12px; color: var(--color-text-danger); line-height: 1.5;">BN sẽ bị xóa khỏi hàng đợi hôm nay. Nếu BN có hẹn, lịch hẹn sẽ chuyển thành "Đã hủy". Hành động không thể hoàn tác.</span>
+    </div>
+
+    <div style="margin-bottom: 14px;">
+      <label style="display: block; font-size: 12px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 4px;">Lý do hủy <span style="color: #E24B4A;">*</span></label>
+      <select style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); font-size: 13px; background: var(--color-background-primary); color: var(--color-text-primary);">
+        <option value="">Chọn lý do...</option>
+        <option>BN không muốn chờ, bỏ về</option>
+        <option>BN muốn đổi sang ngày khác</option>
+        <option>Lễ tân check-in nhầm người</option>
+        <option>BN chuyển sang phòng khám khác</option>
+        <option>Khác</option>
+      </select>
+    </div>
+
+    <div>
+      <label style="display: block; font-size: 12px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 4px;">Ghi chú (tùy chọn)</label>
+      <input type="text" placeholder="VD: BN chờ quá lâu, hẹn lại tuần sau..." style="width: 100%; box-sizing: border-box; font-size: 13px;" />
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 8px; margin-top: 14px;">
+      <input type="checkbox" id="rebook2" style="width: 14px; height: 14px;" />
+      <label for="rebook2" style="font-size: 12px; color: var(--color-text-secondary); cursor: pointer;">Đặt hẹn lại cho BN này</label>
+    </div>
+
+  </div>
+
+  <div style="display: flex; align-items: center; justify-content: flex-end; gap: 10px; padding: 14px 20px; border-top: 0.5px solid var(--color-border-tertiary); background: var(--color-background-secondary);">
+    <button style="font-size: 13px; padding: 8px 16px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary); color: var(--color-text-secondary); cursor: pointer;">Quay lại</button>
+    <button style="font-size: 13px; padding: 8px 16px; border-radius: var(--border-radius-md); border: none; background: #A32D2D; color: white; cursor: pointer; font-weight: 500;">Xác nhận hủy lượt khám</button>
+  </div>
+
+</div>
+</div>

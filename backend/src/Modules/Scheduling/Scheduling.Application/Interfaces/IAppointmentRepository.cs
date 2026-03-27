@@ -31,5 +31,10 @@ public interface IAppointmentRepository
     /// </summary>
     Task<int> GetTodayCountAsync(CancellationToken ct = default);
 
+    /// <summary>
+    /// Returns all appointments for today (for receptionist dashboard).
+    /// </summary>
+    Task<List<Appointment>> GetTodayAppointmentsAsync(CancellationToken ct = default);
+
     void Add(Appointment appointment);
 }

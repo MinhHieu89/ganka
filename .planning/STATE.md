@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Milestone complete
-stopped_at: Phase 14 UI-SPEC approved
-last_updated: "2026-03-27T17:05:43.245Z"
+status: Ready to execute
+stopped_at: Completed 14-02-PLAN.md
+last_updated: "2026-03-27T18:32:41.203Z"
 progress:
   total_phases: 23
   completed_phases: 19
-  total_plans: 318
-  completed_plans: 315
+  total_plans: 327
+  completed_plans: 316
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-02-28)
 
 **Core value:** Doctors can manage chronic eye disease patients (Dry Eye, Myopia Control) with structured data tracking, image comparison across visits, and treatment progress reporting
-**Current focus:** Phase 13 — clinical-workflow-overhaul-walk-in-visits-kanban-table-view-status-progression-visit-lifecycle-and-patient-visit-history
+**Current focus:** Phase 14 — implement-receptionist-role-flow
 
 ## Current Position
 
-Phase: 13
-Plan: Not started
+Phase: 14 (implement-receptionist-role-flow) — EXECUTING
+Plan: 4 of 9
 
 ## Performance Metrics
 
@@ -310,6 +310,9 @@ Plan: Not started
 | Phase 13 P16 | 6min | 2 tasks | 3 files |
 | Phase 13 P17 | 3min | 2 tasks | 4 files |
 | Phase 13 P18 | 5 | 1 tasks | 1 files |
+| Phase 14 P01 | 16min | 2 tasks | 31 files |
+| Phase 14 P03 | 5min | 1 tasks | 17 files |
+| Phase 14 P02 | 16min | 3 tasks | 42 files |
 
 ## Accumulated Context
 
@@ -857,6 +860,11 @@ Recent decisions affecting current work:
 - [Phase 13]: No CashierGlasses stage - single combined payment at Cashier per workflow spec
 - [Phase 13]: Reused checklist-gate pattern from Stage 7a for Stage 9 and Stage 10
 - [Phase 13]: Used US-CLN-13-2XX ID series for workflow spec user stories to avoid collision with existing 0XX series
+- [Phase 14]: AppointmentDto.PatientId changed to Guid? to support guest bookings
+- [Phase 14]: Receptionist role: 8 permissions (Patient CRUD, Scheduling CRUD, Clinical View+Create)
+- [Phase 14]: Created /api/scheduling route group for receptionist endpoints separate from /api/appointments
+- [Phase 14]: Cross-module references for CheckIn handler: Scheduling.Application references Clinical.Application + Patient.Application
+- [Phase 14]: Dashboard uses in-memory join of appointments + visits (two queries) for 4-status mapping
 
 ### Roadmap Evolution
 
@@ -891,6 +899,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-27T17:05:43.233Z
-Stopped at: Phase 14 UI-SPEC approved
-Resume file: .planning/phases/14-implement-receptionist-role-flow/14-UI-SPEC.md
+Last session: 2026-03-27T18:32:41.193Z
+Stopped at: Completed 14-02-PLAN.md
+Resume file: None

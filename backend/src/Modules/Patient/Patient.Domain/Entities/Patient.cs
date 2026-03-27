@@ -216,7 +216,9 @@ public class Patient : AggregateRoot, IAuditable
         WorkEnvironment = workEnvironment;
         ContactLensUsage = contactLensUsage;
         LifestyleNotes = lifestyleNotes;
+
         SetUpdatedAt();
+        AddDomainEvent(new PatientUpdatedEvent { PatientId = Id });
     }
 
     /// <summary>

@@ -1,0 +1,162 @@
+<div style="background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 1.5rem;">
+<div style="background: var(--color-background-primary); border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); overflow: hidden; max-width: 760px; margin: 0 auto;">
+
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; border-bottom: 0.5px solid var(--color-border-tertiary);">
+  <div style="display: flex; align-items: center; gap: 8px;">
+    <span style="font-size: 13px; color: var(--color-text-info); cursor: pointer;">&larr; Dashboard</span>
+    <span style="font-size: 13px; color: var(--color-text-tertiary);">/</span>
+    <span style="font-size: 13px; font-weight: 500; color: var(--color-text-primary);">Tiếp nhận bệnh nhân mới</span>
+  </div>
+  <span style="font-size: 12px; color: var(--color-text-tertiary);">Th 4, 26/03/2026 &mdash; 09:32</span>
+</div>
+
+<div style="padding: 24px;">
+
+  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <div style="padding: 6px 14px; background: var(--color-background-info); border-radius: var(--border-radius-md); display: flex; align-items: center; gap: 6px;">
+        <span style="font-size: 12px; color: var(--color-text-info);">Mã BN:</span>
+        <span style="font-size: 14px; font-weight: 500; color: #0C447C; font-family: var(--font-mono);">BN-20260326-0023</span>
+      </div>
+      <span style="font-size: 11px; color: var(--color-text-tertiary);">(tự động)</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 6px;">
+      <div style="width: 6px; height: 6px; border-radius: 50%; background: #E24B4A;"></div>
+      <span style="font-size: 12px; color: var(--color-text-secondary);">Trường có dấu <span style="color: #E24B4A;">*</span> là bắt buộc</span>
+    </div>
+  </div>
+
+  <div style="margin-bottom: 28px;">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 0.5px solid var(--color-border-tertiary);">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="#185FA5" stroke-width="1.2"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="#185FA5" stroke-width="1.2" stroke-linecap="round"/></svg>
+      <span style="font-size: 15px; font-weight: 500; color: var(--color-text-primary);">Thông tin cá nhân</span>
+    </div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px 20px;">
+      <div style="grid-column: 1 / 3;">
+        <label style="display: block; font-size: 12px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 4px;">Họ và tên <span style="color: #E24B4A;">*</span></label>
+        <input type="text" placeholder="Nhập họ và tên đầy đủ" style="width: 100%; box-sizing: border-box;" />
+      </div>
+      <div>
+        <label style="display: block; font-size: 12px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 4px;">Giới tính <span style="color: #E24B4A;">*</span></label>
+        <select style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); font-size: 14px; background: var(--color-background-primary); color: var(--color-text-primary);">
+          <option>Nam</option>
+          <option>Nữ</option>
+          <option>Khác</option>
+        </select>
+      </div>
+      <div>
+        <label style="display: block; font-size: 12px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 4px;">Ngày sinh <span style="color: #E24B4A;">*</span></label>
+        <input type="text" placeholder="dd/mm/yyyy" style="width: 100%; box-sizing: border-box;" />
+      </div>
+      <div>
+        <label style="display: block; font-size: 12px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 4px;">Số điện thoại <span style="color: #E24B4A;">*</span></label>
+        <input type="tel" placeholder="0912 345 678" style="width: 100%; box-sizing: border-box;" />
+      </div>
+      <div>
+        <label style="display: block; font-size: 12px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 4px;">Email</label>
+        <input type="email" placeholder="email@example.com" style="width: 100%; box-sizing: border-box;" />
+      </div>
+      <div style="grid-column: 1 / -1;">
+        <label style="display: block; font-size: 12px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 4px;">Địa chỉ</label>
+        <input type="text" placeholder="Số nhà, đường, quận/huyện, TP" style="width: 100%; box-sizing: border-box;" />
+      </div>
+      <div>
+        <label style="display: block; font-size: 12px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 4px;">Nghề nghiệp</label>
+        <input type="text" placeholder="VD: Nhân viên văn phòng, Sinh viên..." style="width: 100%; box-sizing: border-box;" />
+      </div>
+    </div>
+
+    <div style="margin-top: 12px; padding: 10px 14px; background: #FAEEDA; border-radius: var(--border-radius-md); display: flex; align-items: center; gap: 10px;">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1l7 14H1L8 1z" stroke="#854F0B" stroke-width="1.2" stroke-linejoin="round"/><path d="M8 6v4M8 12v0" stroke="#854F0B" stroke-width="1.2" stroke-linecap="round"/></svg>
+      <span style="font-size: 12px; color: #633806;">SĐT <span style="font-weight: 500;">0912 345 678</span> đã tồn tại &mdash; BN: <span style="font-weight: 500;">Nguyễn Văn An</span> (1985)</span>
+      <button style="margin-left: auto; font-size: 11px; padding: 4px 12px; border-radius: var(--border-radius-md); border: 0.5px solid #BA7517; background: transparent; color: #854F0B; cursor: pointer; white-space: nowrap;">Mở hồ sơ cũ</button>
+    </div>
+  </div>
+
+  <div style="margin-bottom: 28px;">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 0.5px solid var(--color-border-tertiary);">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="#185FA5" stroke-width="1.2"/><path d="M5 6h6M5 8h6M5 10h4" stroke="#185FA5" stroke-width="1.2" stroke-linecap="round"/></svg>
+      <span style="font-size: 15px; font-weight: 500; color: var(--color-text-primary);">Thông tin khám</span>
+    </div>
+    <div>
+      <label style="display: block; font-size: 12px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 4px;">Lý do đến khám <span style="color: #E24B4A;">*</span></label>
+      <textarea placeholder="Mô tả lý do bệnh nhân đến khám. VD: Mắt khô rát 2 tuần, nhìn mờ khi dùng máy tính..." style="width: 100%; box-sizing: border-box; min-height: 72px; resize: vertical; padding: 10px 12px; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); font-size: 14px; font-family: inherit; line-height: 1.5;"></textarea>
+      <span style="font-size: 11px; color: var(--color-text-tertiary); margin-top: 2px; display: block;">Tối đa 500 ký tự. Ghi rõ triệu chứng, thời gian, mức độ nếu BN cung cấp.</span>
+    </div>
+  </div>
+
+  <div style="margin-bottom: 28px;">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 0.5px solid var(--color-border-tertiary);">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1v14M1 8h14" stroke="#185FA5" stroke-width="1.2" stroke-linecap="round"/><circle cx="8" cy="8" r="7" stroke="#185FA5" stroke-width="1.2"/></svg>
+      <span style="font-size: 15px; font-weight: 500; color: var(--color-text-primary);">Tiền sử bệnh</span>
+      <span style="font-size: 11px; color: var(--color-text-tertiary); margin-left: 4px;">(tùy chọn)</span>
+    </div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px 20px;">
+      <div>
+        <label style="display: block; font-size: 12px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 4px;">Tiền sử bệnh mắt</label>
+        <textarea placeholder="VD: Cận thị từ nhỏ, đã Lasik 2020..." style="width: 100%; box-sizing: border-box; min-height: 56px; resize: vertical; padding: 10px 12px; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); font-size: 13px; font-family: inherit; line-height: 1.5;"></textarea>
+      </div>
+      <div>
+        <label style="display: block; font-size: 12px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 4px;">Tiền sử bệnh toàn thân</label>
+        <textarea placeholder="VD: Tiểu đường type 2, cao huyết áp..." style="width: 100%; box-sizing: border-box; min-height: 56px; resize: vertical; padding: 10px 12px; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); font-size: 13px; font-family: inherit; line-height: 1.5;"></textarea>
+      </div>
+      <div>
+        <label style="display: block; font-size: 12px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 4px;">Thuốc đang dùng</label>
+        <input type="text" placeholder="VD: Metformin 500mg, Amlodipine 5mg..." style="width: 100%; box-sizing: border-box; font-size: 13px;" />
+      </div>
+      <div>
+        <label style="display: block; font-size: 12px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 4px;">Dị ứng</label>
+        <input type="text" placeholder="VD: Penicillin, phấn hoa, hải sản..." style="width: 100%; box-sizing: border-box; font-size: 13px;" />
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-bottom: 8px;">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 0.5px solid var(--color-border-tertiary);">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8a6 6 0 1112 0A6 6 0 012 8z" stroke="#185FA5" stroke-width="1.2"/><path d="M8 5v3l2 2" stroke="#185FA5" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span style="font-size: 15px; font-weight: 500; color: var(--color-text-primary);">Lifestyle</span>
+      <span style="font-size: 11px; color: var(--color-text-tertiary); margin-left: 4px;">(tùy chọn)</span>
+    </div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px 20px;">
+      <div>
+        <label style="display: block; font-size: 12px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 4px;">Screen time (giờ/ngày)</label>
+        <input type="number" placeholder="VD: 8" style="width: 100%; box-sizing: border-box; font-size: 13px;" />
+      </div>
+      <div>
+        <label style="display: block; font-size: 12px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 4px;">Môi trường làm việc</label>
+        <select style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); font-size: 13px; background: var(--color-background-primary); color: var(--color-text-secondary);">
+          <option value="" style="color: var(--color-text-tertiary);">Chọn...</option>
+          <option>Văn phòng (máy lạnh)</option>
+          <option>Ngoài trời</option>
+          <option>Nhà xưởng</option>
+          <option>Khác</option>
+        </select>
+      </div>
+      <div>
+        <label style="display: block; font-size: 12px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 4px;">Contact lens</label>
+        <select style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); font-size: 13px; background: var(--color-background-primary); color: var(--color-text-secondary);">
+          <option value="">Chọn...</option>
+          <option>Không đeo</option>
+          <option>Đeo hàng ngày</option>
+          <option>Đeo thỉnh thoảng</option>
+        </select>
+      </div>
+      <div style="grid-column: 1 / -1;">
+        <label style="display: block; font-size: 12px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 4px;">Ghi chú khác về lối sống</label>
+        <input type="text" placeholder="VD: Hay bơi lội, thường xuyên lái xe đêm, dùng thuốc nhỏ mắt hàng ngày..." style="width: 100%; box-sizing: border-box; font-size: 13px;" />
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; border-top: 0.5px solid var(--color-border-tertiary); background: var(--color-background-secondary);">
+  <button style="font-size: 13px; padding: 8px 20px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: transparent; color: var(--color-text-secondary); cursor: pointer;">Hủy</button>
+  <div style="display: flex; gap: 10px;">
+    <button style="font-size: 13px; padding: 8px 20px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary); color: var(--color-text-primary); cursor: pointer; font-weight: 500;">Lưu</button>
+    <button style="font-size: 13px; padding: 8px 20px; border-radius: var(--border-radius-md); border: none; background: #185FA5; color: white; cursor: pointer; font-weight: 500; display: flex; align-items: center; gap: 6px;">Lưu &amp; chuyển Pre-Exam <span style="font-size: 14px;">&rarr;</span></button>
+  </div>
+</div>
+
+</div>
+</div>

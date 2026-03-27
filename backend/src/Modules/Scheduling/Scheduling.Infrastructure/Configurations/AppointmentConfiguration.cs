@@ -28,6 +28,8 @@ public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
         builder.Property(a => a.GuestReason)
             .HasMaxLength(500);
 
+        builder.Property(a => a.CancelledBy);
+
         builder.Property(a => a.DoctorId).IsRequired();
 
         builder.Property(a => a.DoctorName)
@@ -71,7 +73,7 @@ public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
         // Only considers non-cancelled appointments for the same doctor at the same start time.
         builder.HasIndex(a => new { a.DoctorId, a.StartTime })
             .IsUnique()
-            .HasFilter("[Status] != 2");
+            .HasFilter("[Status] NOT IN (2, 4)"); // Exclude Cancelled(2) and NoShow(4)
 
         // Performance indexes
         builder.HasIndex(a => a.PatientId);

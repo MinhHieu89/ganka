@@ -179,6 +179,15 @@ public class VisitConfiguration : IEntityTypeConfiguration<Visit>
             .IsRequired()
             .HasConversion<int>();
 
+        // Receptionist workflow fields
+        builder.Property(v => v.Source)
+            .HasConversion<int>()
+            .HasDefaultValue(VisitSource.Appointment);
+
+        builder.Property(v => v.Reason).HasMaxLength(500);
+        builder.Property(v => v.CancelledReason).HasMaxLength(500);
+        builder.Property(v => v.CancelledBy);
+
         // Performance indexes
         builder.HasIndex(v => v.PatientId);
         builder.HasIndex(v => v.DoctorId);
