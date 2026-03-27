@@ -99,8 +99,8 @@ public static class UpdatePatientFromIntakeHandler
             command.SystemicHistory,
             command.CurrentMedications,
             command.ScreenTimeHours,
-            command.WorkEnvironment,
-            command.ContactLensUsage,
+            Enum.TryParse<Patient.Domain.Enums.WorkEnvironment>(command.WorkEnvironment, true, out var we) ? we : null,
+            Enum.TryParse<Patient.Domain.Enums.ContactLensUsage>(command.ContactLensUsage, true, out var cl) ? cl : null,
             command.LifestyleNotes);
 
         // Sync allergies: remove existing, add new

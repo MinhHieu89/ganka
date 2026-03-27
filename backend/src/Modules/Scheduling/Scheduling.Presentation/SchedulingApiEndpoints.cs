@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Scheduling.Application.Features;
 using Scheduling.Contracts.Dtos;
+using Scheduling.Contracts.Queries;
 using Shared.Domain;
 using Shared.Presentation;
 using Wolverine;
@@ -133,14 +134,14 @@ public static class SchedulingApiEndpoints
         group.MapGet("/receptionist/dashboard", async ([AsParameters] ReceptionistDashboardParams p, IMessageBus bus, CancellationToken ct) =>
         {
             var query = new GetReceptionistDashboardQuery(p.Status, p.Search, p.Page ?? 1, p.PageSize ?? 20);
-            var result = await bus.InvokeAsync<ReceptionistDashboardResult>(query, ct);
+            var result = await bus.InvokeAsync<Result<ReceptionistDashboardDto>>(query, ct);
             return Results.Ok(result);
         }).RequirePermissions(Permissions.Scheduling.View);
 
         // Get receptionist KPI stats (counts per status for today)
         group.MapGet("/receptionist/kpi", async (IMessageBus bus, CancellationToken ct) =>
         {
-            var result = await bus.InvokeAsync<ReceptionistKpiDto>(new GetReceptionistKpiStatsQuery(), ct);
+            var result = await bus.InvokeAsync<Result<ReceptionistKpiDto>>(new GetReceptionistKpiStatsQuery(), ct);
             return Results.Ok(result);
         }).RequirePermissions(Permissions.Scheduling.View);
     }
