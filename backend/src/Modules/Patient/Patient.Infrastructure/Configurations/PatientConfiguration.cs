@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Patient.Domain.Enums;
 
 namespace Patient.Infrastructure.Configurations;
 
@@ -44,6 +45,34 @@ public class PatientConfiguration : IEntityTypeConfiguration<Domain.Entities.Pat
 
         builder.Property(p => p.IsActive)
             .HasDefaultValue(true);
+
+        // Intake form fields
+        builder.Property(p => p.Email)
+            .HasMaxLength(100);
+
+        builder.Property(p => p.Occupation)
+            .HasMaxLength(200);
+
+        builder.Property(p => p.OcularHistory)
+            .HasMaxLength(2000);
+
+        builder.Property(p => p.SystemicHistory)
+            .HasMaxLength(2000);
+
+        builder.Property(p => p.CurrentMedications)
+            .HasMaxLength(2000);
+
+        builder.Property(p => p.ScreenTimeHours)
+            .HasColumnType("decimal(4,1)");
+
+        builder.Property(p => p.WorkEnvironment)
+            .HasConversion<int?>();
+
+        builder.Property(p => p.ContactLensUsage)
+            .HasConversion<int?>();
+
+        builder.Property(p => p.LifestyleNotes)
+            .HasMaxLength(2000);
 
         // Year-scoped sequence for patient code generation
         builder.HasIndex(p => new { p.Year, p.SequenceNumber })

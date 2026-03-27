@@ -25,6 +25,17 @@ public class Patient : AggregateRoot, IAuditable
     public int SequenceNumber { get; private set; }
     public bool IsActive { get; private set; } = true;
 
+    // Intake form fields
+    public string? Email { get; private set; }
+    public string? Occupation { get; private set; }
+    public string? OcularHistory { get; private set; }
+    public string? SystemicHistory { get; private set; }
+    public string? CurrentMedications { get; private set; }
+    public decimal? ScreenTimeHours { get; private set; }
+    public WorkEnvironment? WorkEnvironment { get; private set; }
+    public ContactLensUsage? ContactLensUsage { get; private set; }
+    public string? LifestyleNotes { get; private set; }
+
     /// <summary>
     /// Concurrency token for optimistic concurrency control.
     /// Automatically managed by SQL Server rowversion.
@@ -167,6 +178,45 @@ public class Patient : AggregateRoot, IAuditable
         {
             PatientId = Id
         });
+    }
+
+    /// <summary>
+    /// Updates patient information including intake form fields.
+    /// Used by receptionist during check-in intake.
+    /// </summary>
+    public void UpdateIntake(
+        string fullName,
+        string phone,
+        DateTime? dateOfBirth = null,
+        Gender? gender = null,
+        string? address = null,
+        string? cccd = null,
+        string? email = null,
+        string? occupation = null,
+        string? ocularHistory = null,
+        string? systemicHistory = null,
+        string? currentMedications = null,
+        decimal? screenTimeHours = null,
+        WorkEnvironment? workEnvironment = null,
+        ContactLensUsage? contactLensUsage = null,
+        string? lifestyleNotes = null)
+    {
+        FullName = fullName;
+        Phone = phone;
+        DateOfBirth = dateOfBirth;
+        Gender = gender;
+        Address = address;
+        Cccd = cccd;
+        Email = email;
+        Occupation = occupation;
+        OcularHistory = ocularHistory;
+        SystemicHistory = systemicHistory;
+        CurrentMedications = currentMedications;
+        ScreenTimeHours = screenTimeHours;
+        WorkEnvironment = workEnvironment;
+        ContactLensUsage = contactLensUsage;
+        LifestyleNotes = lifestyleNotes;
+        SetUpdatedAt();
     }
 
     /// <summary>

@@ -33,6 +33,16 @@ public class VisitConfiguration : IEntityTypeConfiguration<Visit>
             .IsRequired()
             .HasConversion<int>();
 
+        builder.Property(v => v.Source)
+            .IsRequired()
+            .HasConversion<int>();
+
+        builder.Property(v => v.Reason)
+            .HasMaxLength(500);
+
+        builder.Property(v => v.CancelledReason)
+            .HasMaxLength(500);
+
         builder.Property(v => v.VisitDate).IsRequired();
 
         builder.Property(v => v.ExaminationNotes)
