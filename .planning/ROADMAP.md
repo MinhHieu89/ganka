@@ -648,15 +648,15 @@ Plans:
   3. Receptionist can book appointments for existing patients or phone-in guests (name+phone stored on Appointment, no patient record until check-in)
   4. Receptionist can check in patients with appointment (complete or incomplete profile) and create walk-in visits for existing patients
   5. Receptionist can reschedule, cancel, mark no-show, or cancel visits via context menu actions with required reasons
-**Plans:** 1/9 plans executed
+**Plans:** 7/9 plans executed
 
 Plans:
 - [x] 14-01-PLAN.md -- Domain entities (Appointment, Visit, Patient) + new enums + migrations + Receptionist role seeding + AuthUser roles
-- [ ] 14-02-PLAN.md -- Backend handlers: CheckIn, BookGuest, MarkNoShow, GetSlots, Dashboard, KPI, WalkInVisit, CancelVisitWithReason, Intake handlers (TDD)
-- [ ] 14-03-PLAN.md -- API endpoints: wire all 10 handlers to Minimal API with authorization policies
-- [ ] 14-04-PLAN.md -- Frontend foundation: CSS variables, types, API client, polling hooks + Dashboard (KPI, table, filters, role-based routing)
-- [ ] 14-05-PLAN.md -- Patient intake form (SCR-003): 4 collapsible sections, duplicate phone check, save-and-advance
-- [ ] 14-06-PLAN.md -- Appointment booking page (SCR-004): patient search/guest entry, calendar, time slot grid, confirmation bar
-- [ ] 14-07-PLAN.md -- Check-in dialogs (SCR-005) + action menus with dialogs (SCR-006): all 8 dialog components
+- [x] 14-02-PLAN.md -- Backend handlers: CheckIn, BookGuest, MarkNoShow, GetSlots, Dashboard, KPI, WalkInVisit, CancelVisitWithReason, Intake handlers (TDD)
+- [x] 14-03-PLAN.md -- API endpoints: wire all 10 handlers to Minimal API with authorization policies
+- [x] 14-04-PLAN.md -- Frontend foundation: CSS variables, types, API client, polling hooks + Dashboard (KPI, table, filters, role-based routing)
+- [x] 14-05-PLAN.md -- Patient intake form (SCR-003): 4 collapsible sections, duplicate phone check, save-and-advance
+- [x] 14-06-PLAN.md -- Appointment booking page (SCR-004): patient search/guest entry, calendar, time slot grid, confirmation bar
+- [x] 14-07-PLAN.md -- Check-in dialogs (SCR-005) + action menus with dialogs (SCR-006): all 8 dialog components
 - [ ] 14-08-PLAN.md -- Vietnamese user stories documentation (DOC-01)
 - [ ] 14-09-PLAN.md -- End-to-end verification checkpoint
