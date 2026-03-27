@@ -23,6 +23,7 @@ public static class ClinicalApiEndpoints
         var group = app.MapGroup("/api/clinical").RequireAuthorization();
 
         MapVisitLifecycleEndpoints(group);
+        MapReceptionistVisitEndpoints(group);
         MapVisitDataEndpoints(group);
         MapWorkflowActionEndpoints(group);
         MapIcd10Endpoints(group);
@@ -96,6 +97,27 @@ public static class ClinicalApiEndpoints
                 new GetPatientVisitHistoryQuery(patientId), ct);
             return Results.Ok(result);
         }).RequirePermissions(Permissions.Clinical.View);
+    }
+
+    private static void MapReceptionistVisitEndpoints(RouteGroupBuilder group)
+    {
+        // Create a walk-in visit for an existing patient (no appointment)
+        group.MapPost("/visits/walk-in", async (CreateWalkInVisitCommand command, IMessageBus bus, CancellationToken ct) =>
+        {
+            var result = await bus.InvokeAsync<Result<Guid>>(command, ct);
+            return result.ToCreatedHttpResult("/api/clinical");
+        }).RequirePermissions(Permissions.Clinical.Create);
+
+        // Cancel a visit with a mandatory reason (receptionist action)
+        group.MapPost("/visits/{id:guid}/cancel-with-reason", async (Guid id, CancelVisitWithReasonRequest request, HttpContext httpContext, IMessageBus bus, CancellationToken ct) =>
+        {
+            if (!httpContext.TryGetUserId(out var userId))
+                return Results.Unauthorized();
+
+            var command = new CancelVisitWithReasonCommand(id, request.Reason, userId);
+            var result = await bus.InvokeAsync<Result>(command, ct);
+            return result.ToHttpResult();
+        }).RequirePermissions(Permissions.Clinical.Update);
     }
 
     private static void MapWorkflowActionEndpoints(RouteGroupBuilder group)
@@ -456,3 +478,8 @@ public class CheckDrugAllergyParams
     public string? DrugName { get; set; }
     public string? GenericName { get; set; }
 }
+
+/// <summary>
+/// Request body for cancel-visit-with-reason endpoint. UserId is extracted from HttpContext.
+/// </summary>
+public record CancelVisitWithReasonRequest(string Reason);

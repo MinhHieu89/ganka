@@ -23,6 +23,7 @@ public static class PatientApiEndpoints
         var group = app.MapGroup("/api/patients").RequireAuthorization();
 
         MapPatientCrudEndpoints(group);
+        MapIntakeEndpoints(group);
         MapAllergyEndpoints(group);
         MapSearchEndpoints(group);
         MapPhotoEndpoints(group);
@@ -80,6 +81,24 @@ public static class PatientApiEndpoints
                 new GetRecentPatientsQuery(count ?? 10), ct);
             return result.ToHttpResult();
         }).RequirePermissions(Permissions.Patient.View);
+    }
+
+    private static void MapIntakeEndpoints(RouteGroupBuilder group)
+    {
+        // Register a new patient from the receptionist intake form
+        group.MapPost("/intake", async (RegisterPatientFromIntakeCommand command, IMessageBus bus, CancellationToken ct) =>
+        {
+            var result = await bus.InvokeAsync<Result<Guid>>(command, ct);
+            return result.ToCreatedHttpResult("/api/patients");
+        }).RequirePermissions(Permissions.Patient.Create);
+
+        // Update an existing patient from the receptionist intake form
+        group.MapPut("/{id:guid}/intake", async (Guid id, UpdatePatientFromIntakeCommand command, IMessageBus bus, CancellationToken ct) =>
+        {
+            var enriched = command with { PatientId = id };
+            var result = await bus.InvokeAsync<Result>(enriched, ct);
+            return result.ToHttpResult();
+        }).RequirePermissions(Permissions.Patient.Update);
     }
 
     private static void MapAllergyEndpoints(RouteGroupBuilder group)

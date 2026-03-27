@@ -23,6 +23,9 @@ public static class SchedulingApiEndpoints
         MapSelfBookingManagementEndpoints(group);
         MapReferenceDataEndpoints(group);
 
+        var schedulingGroup = app.MapGroup("/api/scheduling").RequireAuthorization();
+        MapReceptionistEndpoints(schedulingGroup);
+
         return app;
     }
 
@@ -87,6 +90,61 @@ public static class SchedulingApiEndpoints
         }).RequirePermissions(Permissions.Scheduling.Update);
     }
 
+    private static void MapReceptionistEndpoints(RouteGroupBuilder group)
+    {
+        // Check-in an appointment: marks checked-in and creates a Visit
+        group.MapPost("/appointments/check-in", async (CheckInAppointmentRequest request, HttpContext httpContext, IMessageBus bus, CancellationToken ct) =>
+        {
+            if (!httpContext.TryGetUserId(out var userId))
+                return Results.Unauthorized();
+
+            var command = new CheckInAppointmentCommand(request.AppointmentId, userId);
+            var result = await bus.InvokeAsync<Result<Guid>>(command, ct);
+            return result.ToHttpResult();
+        }).RequirePermissions(Permissions.Scheduling.Update);
+
+        // Book a guest appointment (no patient record yet, per D-11)
+        group.MapPost("/appointments/guest", async (BookGuestAppointmentCommand command, IMessageBus bus, CancellationToken ct) =>
+        {
+            var result = await bus.InvokeAsync<Result<Guid>>(command, ct);
+            return result.ToCreatedHttpResult("/api/scheduling/appointments");
+        }).RequirePermissions(Permissions.Scheduling.Create);
+
+        // Mark appointment as no-show
+        group.MapPost("/appointments/{id:guid}/no-show", async (Guid id, MarkNoShowRequest? request, HttpContext httpContext, IMessageBus bus, CancellationToken ct) =>
+        {
+            if (!httpContext.TryGetUserId(out var userId))
+                return Results.Unauthorized();
+
+            var command = new MarkAppointmentNoShowCommand(id, userId, request?.Notes);
+            var result = await bus.InvokeAsync<Result>(command, ct);
+            return result.ToHttpResult();
+        }).RequirePermissions(Permissions.Scheduling.Update);
+
+        // Get available time slots for a given date and optional doctor
+        group.MapGet("/slots", async (DateTime date, Guid? doctorId, IMessageBus bus, CancellationToken ct) =>
+        {
+            var query = new GetAvailableSlotsQuery(date, doctorId);
+            var slots = await bus.InvokeAsync<List<AvailableSlotDto>>(query, ct);
+            return Results.Ok(slots);
+        }).RequirePermissions(Permissions.Scheduling.View);
+
+        // Get receptionist dashboard (today's patient queue with 4-status mapping)
+        group.MapGet("/receptionist/dashboard", async ([AsParameters] ReceptionistDashboardParams p, IMessageBus bus, CancellationToken ct) =>
+        {
+            var query = new GetReceptionistDashboardQuery(p.Status, p.Search, p.Page ?? 1, p.PageSize ?? 20);
+            var result = await bus.InvokeAsync<ReceptionistDashboardResult>(query, ct);
+            return Results.Ok(result);
+        }).RequirePermissions(Permissions.Scheduling.View);
+
+        // Get receptionist KPI stats (counts per status for today)
+        group.MapGet("/receptionist/kpi", async (IMessageBus bus, CancellationToken ct) =>
+        {
+            var result = await bus.InvokeAsync<ReceptionistKpiDto>(new GetReceptionistKpiStatsQuery(), ct);
+            return Results.Ok(result);
+        }).RequirePermissions(Permissions.Scheduling.View);
+    }
+
     private static void MapReferenceDataEndpoints(RouteGroupBuilder group)
     {
         group.MapGet("/types", async (IMessageBus bus, CancellationToken ct) =>
@@ -103,4 +161,25 @@ public static class SchedulingApiEndpoints
             return Results.Ok(schedule);
         }).RequirePermissions(Permissions.Scheduling.View);
     }
+}
+
+/// <summary>
+/// Request body for check-in endpoint. UserId is extracted from HttpContext.
+/// </summary>
+public record CheckInAppointmentRequest(Guid AppointmentId);
+
+/// <summary>
+/// Request body for mark-no-show endpoint. Notes are optional.
+/// </summary>
+public record MarkNoShowRequest(string? Notes);
+
+/// <summary>
+/// Query string binding for receptionist dashboard endpoint.
+/// </summary>
+public class ReceptionistDashboardParams
+{
+    public string? Status { get; set; }
+    public string? Search { get; set; }
+    public int? Page { get; set; }
+    public int? PageSize { get; set; }
 }
