@@ -8,13 +8,14 @@ import {
   type SortingState,
 } from "@tanstack/react-table"
 import { useState } from "react"
-import { IconDots, IconClipboardList } from "@tabler/icons-react"
+import { IconClipboardList } from "@tabler/icons-react"
 import { Button } from "@/shared/components/Button"
 import { Skeleton } from "@/shared/components/Skeleton"
 import { DataTable } from "@/shared/components/DataTable"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/Select"
 import { StatusBadge } from "./StatusBadge"
 import { SourceBadge } from "./SourceBadge"
+import { RowActionMenu } from "./RowActionMenu"
 import type {
   ReceptionistDashboardRow,
   DashboardFilters,
@@ -123,35 +124,29 @@ export function PatientQueueTable({
       columnHelper.display({
         id: "actions",
         header: "Thao tac",
-        size: 100,
+        size: 120,
         cell: (info) => {
           const row = info.row.original
           if (row.status === "not_arrived") {
             return (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onCheckIn(row)
-                }}
-                className="border-[var(--checkin-confirm)] text-[var(--checkin-confirm)] hover:bg-[var(--status-not-arrived-bg)]"
-              >
-                Check-in
-              </Button>
+              <div className="flex items-center gap-1">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onCheckIn(row)
+                  }}
+                  className="border-[var(--checkin-confirm)] text-[var(--checkin-confirm)] hover:bg-[var(--status-not-arrived-bg)]"
+                >
+                  Check-in
+                </Button>
+                <RowActionMenu row={row} onCheckIn={() => onCheckIn(row)} />
+              </div>
             )
           }
           return (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={(e) => {
-                e.stopPropagation()
-                onActionMenu(row)
-              }}
-            >
-              <IconDots className="h-4 w-4" />
-            </Button>
+            <RowActionMenu row={row} onCheckIn={() => onCheckIn(row)} />
           )
         },
       }),

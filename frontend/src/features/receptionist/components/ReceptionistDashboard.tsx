@@ -4,11 +4,14 @@ import { IconCalendar, IconUserPlus, IconRefresh, IconAlertTriangle } from "@tab
 import { Button } from "@/shared/components/Button"
 import { Input } from "@/shared/components/Input"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/components/Tooltip"
-import { useReceptionistDashboard, useReceptionistKpi, useCheckInMutation } from "@/features/receptionist/api/receptionist-api"
+import { useReceptionistDashboard, useReceptionistKpi } from "@/features/receptionist/api/receptionist-api"
 import { useManualRefresh } from "@/features/receptionist/hooks/useReceptionistPolling"
 import { KpiCards } from "./KpiCards"
 import { StatusFilterPills } from "./StatusFilterPills"
 import { PatientQueueTable } from "./PatientQueueTable"
+import { CheckInDialog } from "./CheckInDialog"
+import { CheckInIncompleteDialog } from "./CheckInIncompleteDialog"
+import { WalkInVisitDialog } from "./WalkInVisitDialog"
 import type { DashboardFilters, ReceptionistDashboardRow, ReceptionistStatus } from "@/features/receptionist/types/receptionist.types"
 
 export function ReceptionistDashboard() {
@@ -17,13 +20,15 @@ export function ReceptionistDashboard() {
     pageSize: 10,
   })
   const [search, setSearch] = useState("")
+  const [checkInRow, setCheckInRow] = useState<ReceptionistDashboardRow | null>(null)
+  const [checkInIncompleteRow, setCheckInIncompleteRow] = useState<ReceptionistDashboardRow | null>(null)
+  const [walkInOpen, setWalkInOpen] = useState(false)
 
   const dashboardQuery = useReceptionistDashboard({
     ...filters,
     search: search || undefined,
   })
   const kpiQuery = useReceptionistKpi()
-  const checkInMutation = useCheckInMutation()
   const { refresh, isRefreshing } = useManualRefresh()
 
   const hasError = dashboardQuery.isError || kpiQuery.isError
@@ -37,16 +42,20 @@ export function ReceptionistDashboard() {
 
   const handleCheckIn = useCallback(
     (row: ReceptionistDashboardRow) => {
-      if (row.appointmentId) {
-        checkInMutation.mutate(row.appointmentId)
+      // Determine if patient is complete or incomplete/guest
+      const isIncomplete = row.isGuestBooking || (!row.birthYear && !row.patientCode)
+      if (isIncomplete) {
+        setCheckInIncompleteRow(row)
+      } else {
+        setCheckInRow(row)
       }
     },
-    [checkInMutation],
+    [],
   )
 
   const handleActionMenu = useCallback(
     (_row: ReceptionistDashboardRow) => {
-      // Action menu will be implemented in plan 14-06
+      // Action menu is now handled directly by RowActionMenu component in the table
     },
     [],
   )
@@ -124,6 +133,28 @@ export function ReceptionistDashboard() {
         onActionMenu={handleActionMenu}
         filters={filters}
         onFiltersChange={setFilters}
+      />
+
+      {/* Check-in dialogs */}
+      {checkInRow && (
+        <CheckInDialog
+          open={!!checkInRow}
+          onOpenChange={(open) => !open && setCheckInRow(null)}
+          row={checkInRow}
+        />
+      )}
+      {checkInIncompleteRow && (
+        <CheckInIncompleteDialog
+          open={!!checkInIncompleteRow}
+          onOpenChange={(open) => !open && setCheckInIncompleteRow(null)}
+          row={checkInIncompleteRow}
+        />
+      )}
+
+      {/* Walk-in dialog */}
+      <WalkInVisitDialog
+        open={walkInOpen}
+        onOpenChange={setWalkInOpen}
       />
     </div>
   )
