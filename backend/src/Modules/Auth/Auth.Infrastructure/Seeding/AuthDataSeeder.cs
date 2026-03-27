@@ -167,10 +167,18 @@ public sealed class AuthDataSeeder : IHostedService
         accountantPerms.AddRange(GetModulePermissions(PermissionModule.Audit, PermissionAction.View, PermissionAction.Export));
         accountant.UpdatePermissions(accountantPerms);
 
-        dbContext.Roles.AddRange(admin, doctor, technician, nurse, cashier, opticalStaff, manager, accountant);
+        // 9. Receptionist — Front desk staff managing patient check-in and appointments
+        var receptionist = new Role("Receptionist", "Front desk receptionist managing patient check-in and appointments", true, branchId);
+        var receptionistPerms = new List<Permission>();
+        receptionistPerms.AddRange(GetModulePermissions(PermissionModule.Patient, PermissionAction.View, PermissionAction.Create, PermissionAction.Update));
+        receptionistPerms.AddRange(GetModulePermissions(PermissionModule.Scheduling, PermissionAction.View, PermissionAction.Create, PermissionAction.Update));
+        receptionistPerms.AddRange(GetModulePermissions(PermissionModule.Clinical, PermissionAction.View, PermissionAction.Create));
+        receptionist.UpdatePermissions(receptionistPerms);
+
+        dbContext.Roles.AddRange(admin, doctor, technician, nurse, cashier, opticalStaff, manager, accountant, receptionist);
         await dbContext.SaveChangesAsync(ct);
 
-        _logger.LogInformation("AuthDataSeeder: Seeded 8 system roles with preset permissions.");
+        _logger.LogInformation("AuthDataSeeder: Seeded 9 system roles with preset permissions.");
     }
 
     private async Task SeedRootAdminAsync(AuthDbContext dbContext, IServiceProvider sp, CancellationToken ct)
