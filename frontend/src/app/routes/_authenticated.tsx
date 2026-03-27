@@ -21,6 +21,7 @@ export const Route = createFileRoute("/_authenticated")({
             id: response.user.id,
             email: response.user.email,
             fullName: response.user.fullName,
+            roles: response.user.roles,
             permissions: response.user.permissions,
             preferredLanguage: response.user.preferredLanguage,
           },

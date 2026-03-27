@@ -38,6 +38,7 @@ const authMiddleware: Middleware = {
             id: result.user.id,
             email: result.user.email,
             fullName: result.user.fullName,
+            roles: result.user.roles,
             permissions: result.user.permissions,
             preferredLanguage: result.user.preferredLanguage,
           },

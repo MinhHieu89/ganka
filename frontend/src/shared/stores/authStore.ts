@@ -5,6 +5,7 @@ export interface AuthUser {
   id: string
   email: string
   fullName: string
+  roles: string[]
   permissions: string[]
   preferredLanguage: string
 }
@@ -44,6 +45,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             id: response.user.id,
             email: response.user.email,
             fullName: response.user.fullName,
+            roles: response.user.roles,
             permissions: response.user.permissions,
             preferredLanguage: response.user.preferredLanguage,
           },

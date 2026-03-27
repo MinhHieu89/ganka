@@ -75,6 +75,34 @@
     --chart-4: oklch(0.828 0.189 84.429);
     --chart-5: oklch(0.769 0.188 70.08);
 
+    /* Receptionist status badges */
+    --status-not-arrived-bg: #EEEDFE;
+    --status-not-arrived-text: #3C3489;
+    --status-waiting-bg: #FAEEDA;
+    --status-waiting-text: #633806;
+    --status-examining-bg: #E6F1FB;
+    --status-examining-text: #0C447C;
+    --status-completed-bg: #E1F5EE;
+    --status-completed-text: #085041;
+    --source-appointment-bg: #EEEDFE;
+    --source-appointment-text: #3C3489;
+    --source-walkin-bg: #FDE8E4;
+    --source-walkin-text: #9C3420;
+    --kpi-appointments: #534AB7;
+    --kpi-waiting: #BA7517;
+    --kpi-examining: #185FA5;
+    --kpi-completed: #0F6E56;
+    --action-reschedule: #534AB7;
+    --action-noshow: #BA7517;
+    --action-cancel: #A32D2D;
+    --checkin-confirm: #534AB7;
+    --avatar-complete-bg: #EEEDFE;
+    --avatar-complete-text: #3C3489;
+    --avatar-incomplete-bg: #FAEEDA;
+    --avatar-incomplete-text: #854F0B;
+    --avatar-cancel-bg: #FDE8E4;
+    --avatar-cancel-text: #A32D2D;
+
     --sidebar: oklch(0.985 0 0);
     --sidebar-foreground: oklch(0.145 0 0);
     --sidebar-primary: oklch(0.205 0 0);
