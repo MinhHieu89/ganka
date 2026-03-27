@@ -107,7 +107,7 @@ export function ReceptionistDashboard() {
             </Link>
           </Button>
           <Button asChild>
-            <Link to={"/receptionist/intake" as string}>
+            <Link to={"/patients/intake" as string}>
               <IconUserPlus className="mr-2 h-4 w-4" />
               Tiep nhan BN moi
             </Link>

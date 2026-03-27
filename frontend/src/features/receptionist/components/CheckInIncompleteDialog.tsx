@@ -40,11 +40,11 @@ export function CheckInIncompleteDialog({
       if (row.patientName) params.set("guestName", row.patientName)
       // Phone is not directly on the row; intake form will handle from appointment
       if (row.appointmentId) params.set("appointmentId", row.appointmentId)
-      navigate({ to: `/receptionist/intake?${params.toString()}` as string })
+      navigate({ to: `/patients/intake?${params.toString()}` as string })
     } else if (row.patientId) {
       // Existing patient with incomplete info: navigate to intake with patientId
       navigate({
-        to: `/receptionist/intake?patientId=${row.patientId}` as string,
+        to: `/patients/intake?patientId=${row.patientId}` as string,
       })
     }
   }
