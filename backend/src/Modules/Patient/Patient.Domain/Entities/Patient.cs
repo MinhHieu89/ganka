@@ -25,6 +25,17 @@ public class Patient : AggregateRoot, IAuditable
     public int SequenceNumber { get; private set; }
     public bool IsActive { get; private set; } = true;
 
+    // Intake form fields
+    public string? Email { get; private set; }
+    public string? Occupation { get; private set; }
+    public string? OcularHistory { get; private set; }
+    public string? SystemicHistory { get; private set; }
+    public string? CurrentMedications { get; private set; }
+    public decimal? ScreenTimeHours { get; private set; }
+    public string? WorkEnvironment { get; private set; }
+    public string? ContactLensUsage { get; private set; }
+    public string? LifestyleNotes { get; private set; }
+
     /// <summary>
     /// Concurrency token for optimistic concurrency control.
     /// Automatically managed by SQL Server rowversion.
@@ -167,6 +178,46 @@ public class Patient : AggregateRoot, IAuditable
         {
             PatientId = Id
         });
+    }
+
+    /// <summary>
+    /// Updates all intake form fields (used during receptionist check-in).
+    /// </summary>
+    public void UpdateIntake(
+        string fullName,
+        string phone,
+        DateTime? dateOfBirth,
+        Gender? gender,
+        string? address,
+        string? cccd,
+        string? email,
+        string? occupation,
+        string? ocularHistory,
+        string? systemicHistory,
+        string? currentMedications,
+        decimal? screenTimeHours,
+        string? workEnvironment,
+        string? contactLensUsage,
+        string? lifestyleNotes)
+    {
+        FullName = fullName;
+        Phone = phone;
+        DateOfBirth = dateOfBirth;
+        Gender = gender;
+        Address = address;
+        Cccd = cccd;
+        Email = email;
+        Occupation = occupation;
+        OcularHistory = ocularHistory;
+        SystemicHistory = systemicHistory;
+        CurrentMedications = currentMedications;
+        ScreenTimeHours = screenTimeHours;
+        WorkEnvironment = workEnvironment;
+        ContactLensUsage = contactLensUsage;
+        LifestyleNotes = lifestyleNotes;
+
+        SetUpdatedAt();
+        AddDomainEvent(new PatientUpdatedEvent { PatientId = Id });
     }
 
     /// <summary>

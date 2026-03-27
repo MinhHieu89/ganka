@@ -11,7 +11,7 @@ namespace Scheduling.Domain.Entities;
 /// </summary>
 public class Appointment : AggregateRoot, IAuditable
 {
-    public Guid PatientId { get; private set; }
+    public Guid? PatientId { get; private set; }
     public string PatientName { get; private set; } = string.Empty;
     public Guid DoctorId { get; private set; }
     public string DoctorName { get; private set; } = string.Empty;
@@ -23,6 +23,21 @@ public class Appointment : AggregateRoot, IAuditable
     public string? CancellationNote { get; private set; }
     public string? Notes { get; private set; }
     public byte[] RowVersion { get; private set; } = [];
+
+    // Guest booking fields (D-11)
+    public string? GuestName { get; private set; }
+    public string? GuestPhone { get; private set; }
+    public string? GuestReason { get; private set; }
+    public AppointmentSource Source { get; private set; }
+
+    // Check-in fields
+    public DateTime? CheckedInAt { get; private set; }
+
+    // No-show fields
+    public DateTime? NoShowAt { get; private set; }
+    public Guid? NoShowBy { get; private set; }
+    public string? NoShowNotes { get; private set; }
+    public Guid? CancelledBy { get; private set; }
 
     private Appointment() { }
 
@@ -64,6 +79,80 @@ public class Appointment : AggregateRoot, IAuditable
         });
 
         return appointment;
+    }
+
+    /// <summary>
+    /// Factory method for creating a guest appointment (no PatientId, D-11).
+    /// </summary>
+    public static Appointment CreateGuest(
+        string guestName,
+        string guestPhone,
+        string? guestReason,
+        Guid doctorId,
+        string doctorName,
+        DateTime startTime,
+        DateTime endTime,
+        Guid appointmentTypeId,
+        BranchId branchId,
+        AppointmentSource source = AppointmentSource.Phone)
+    {
+        var appointment = new Appointment
+        {
+            PatientId = null,
+            PatientName = guestName,
+            DoctorId = doctorId,
+            DoctorName = doctorName,
+            StartTime = startTime,
+            EndTime = endTime,
+            AppointmentTypeId = appointmentTypeId,
+            Status = AppointmentStatus.Confirmed,
+            GuestName = guestName,
+            GuestPhone = guestPhone,
+            GuestReason = guestReason,
+            Source = source
+        };
+
+        appointment.SetBranchId(branchId);
+        appointment.AddDomainEvent(new AppointmentBookedEvent
+        {
+            AppointmentId = appointment.Id,
+            PatientId = Guid.Empty,
+            DoctorId = doctorId,
+            StartTime = startTime
+        });
+
+        return appointment;
+    }
+
+    /// <summary>
+    /// Marks this appointment as checked in.
+    /// Only Confirmed appointments can be checked in.
+    /// </summary>
+    public void CheckIn()
+    {
+        if (Status != AppointmentStatus.Confirmed)
+            throw new InvalidOperationException($"Only confirmed appointments can be checked in. Current status: {Status}.");
+
+        CheckedInAt = DateTime.UtcNow;
+        SetUpdatedAt();
+    }
+
+    /// <summary>
+    /// Marks this appointment as no-show with optional notes.
+    /// </summary>
+    public void MarkNoShow(Guid userId, string? notes)
+    {
+        if (Status == AppointmentStatus.Cancelled)
+            throw new InvalidOperationException("Cannot mark a cancelled appointment as no-show.");
+
+        if (Status == AppointmentStatus.NoShow)
+            throw new InvalidOperationException("Appointment is already marked as no-show.");
+
+        Status = AppointmentStatus.NoShow;
+        NoShowAt = DateTime.UtcNow;
+        NoShowBy = userId;
+        NoShowNotes = notes;
+        SetUpdatedAt();
     }
 
     /// <summary>

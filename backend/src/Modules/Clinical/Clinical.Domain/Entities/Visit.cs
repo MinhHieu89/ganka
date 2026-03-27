@@ -26,6 +26,12 @@ public class Visit : AggregateRoot, IAuditable
     public Guid? SignedById { get; private set; }
     public byte[] RowVersion { get; private set; } = [];
 
+    // Receptionist workflow fields
+    public VisitSource Source { get; private set; }
+    public string? Reason { get; private set; }
+    public string? CancelledReason { get; private set; }
+    public Guid? CancelledBy { get; private set; }
+
     // Parallel track statuses (post-Cashier)
     public TrackStatus DrugTrackStatus { get; private set; } = TrackStatus.NotApplicable;
     public TrackStatus GlassesTrackStatus { get; private set; } = TrackStatus.NotApplicable;
@@ -85,7 +91,9 @@ public class Visit : AggregateRoot, IAuditable
         string doctorName,
         BranchId branchId,
         bool hasAllergies,
-        Guid? appointmentId = null)
+        Guid? appointmentId = null,
+        VisitSource source = VisitSource.Appointment,
+        string? reason = null)
     {
         var visit = new Visit
         {
@@ -97,7 +105,9 @@ public class Visit : AggregateRoot, IAuditable
             CurrentStage = WorkflowStage.Reception,
             Status = VisitStatus.Draft,
             VisitDate = DateTime.UtcNow,
-            HasAllergies = hasAllergies
+            HasAllergies = hasAllergies,
+            Source = source,
+            Reason = reason
         };
 
         visit.SetBranchId(branchId);
@@ -214,6 +224,26 @@ public class Visit : AggregateRoot, IAuditable
                 "Only Draft visits can be cancelled.");
 
         Status = VisitStatus.Cancelled;
+        SetUpdatedAt();
+        AddDomainEvent(new VisitCancelledEvent(Id, BranchId.Value));
+    }
+
+    /// <summary>
+    /// Cancels the visit with a reason and user tracking.
+    /// Only Draft visits can be cancelled.
+    /// </summary>
+    public void CancelWithReason(string reason, Guid cancelledBy)
+    {
+        if (Status != VisitStatus.Draft)
+            throw new InvalidOperationException(
+                "Only Draft visits can be cancelled.");
+
+        if (string.IsNullOrWhiteSpace(reason))
+            throw new ArgumentException("Cancellation reason is required.", nameof(reason));
+
+        Status = VisitStatus.Cancelled;
+        CancelledReason = reason;
+        CancelledBy = cancelledBy;
         SetUpdatedAt();
         AddDomainEvent(new VisitCancelledEvent(Id, BranchId.Value));
     }

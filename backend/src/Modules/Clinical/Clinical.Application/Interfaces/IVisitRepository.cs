@@ -117,6 +117,11 @@ public interface IVisitRepository
     Task<List<Visit>> GetVisitsByPatientIdAsync(Guid patientId, CancellationToken ct = default);
 
     /// <summary>
+    /// Gets all visits created today (for receptionist dashboard).
+    /// </summary>
+    Task<List<Visit>> GetTodayVisitsAsync(CancellationToken ct = default);
+
+    /// <summary>
     /// Gets active visits (Draft/Amended) plus completed-today visits for the done column (D-04/D-10).
     /// </summary>
     Task<List<Visit>> GetActiveVisitsIncludingDoneTodayAsync(CancellationToken ct = default);

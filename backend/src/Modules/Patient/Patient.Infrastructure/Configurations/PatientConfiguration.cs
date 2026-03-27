@@ -61,6 +61,17 @@ public class PatientConfiguration : IEntityTypeConfiguration<Domain.Entities.Pat
             .HasForeignKey(a => a.PatientId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        // Intake form fields
+        builder.Property(p => p.Email).HasMaxLength(200);
+        builder.Property(p => p.Occupation).HasMaxLength(200);
+        builder.Property(p => p.OcularHistory).HasMaxLength(2000);
+        builder.Property(p => p.SystemicHistory).HasMaxLength(2000);
+        builder.Property(p => p.CurrentMedications).HasMaxLength(2000);
+        builder.Property(p => p.ScreenTimeHours).HasPrecision(4, 1);
+        builder.Property(p => p.WorkEnvironment).HasMaxLength(100);
+        builder.Property(p => p.ContactLensUsage).HasMaxLength(100);
+        builder.Property(p => p.LifestyleNotes).HasMaxLength(2000);
+
         // Concurrency token
         builder.Property(p => p.RowVersion)
             .IsRowVersion();
