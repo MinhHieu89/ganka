@@ -48,6 +48,7 @@ const segmentToI18nKey: Record<string, string> = {
   treatments: "sidebar.treatment",
   approvals: "sidebar.treatment",
   templates: "sidebar.treatment",
+  new: "sidebar.new",
 }
 
 export function SiteHeader() {

@@ -113,12 +113,23 @@ export function useBookGuestMutation() {
       guestPhone: string
       reason?: string
       doctorId?: string
+      doctorName?: string
       date: string
       startTime: string
     }) => {
       const { data, error, response } = await api.POST(
-        "/api/scheduling/guest-booking" as never,
-        { body: command } as never,
+        "/api/scheduling/appointments/guest" as never,
+        {
+          body: {
+            guestName: command.guestName,
+            guestPhone: command.guestPhone,
+            guestReason: command.reason,
+            doctorId: command.doctorId || null,
+            doctorName: command.doctorName || null,
+            startTime: command.startTime,
+            source: 0, // Staff
+          },
+        } as never,
       )
       if (error || !response.ok) {
         const status = response.status

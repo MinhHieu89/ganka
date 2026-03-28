@@ -1,8 +1,11 @@
 import { useState, useCallback, useMemo, useEffect } from "react"
 import { useNavigate } from "@tanstack/react-router"
 import { useTranslation } from "react-i18next"
+import { vi, enUS } from "date-fns/locale"
+import type { Locale } from "date-fns"
 import { toast } from "sonner"
 import { IconSearch, IconInfoCircle, IconAlertTriangle } from "@tabler/icons-react"
+import { Button } from "@/shared/components/ui/button"
 import { Calendar } from "@/shared/components/ui/calendar"
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card"
 import { Input } from "@/shared/components/Input"
@@ -32,10 +35,16 @@ import {
   useBookGuestMutation,
 } from "@/features/receptionist/api/receptionist-api"
 import { useBookAppointment, useClinicSchedule } from "@/features/scheduling/api/scheduling-api"
+import { useIsLargeScreen } from "@/shared/hooks/use-mobile"
 import { TimeSlotGrid } from "./TimeSlotGrid"
 import { ConfirmationBar } from "./ConfirmationBar"
 
 const NO_DOCTOR_VALUE = "__no_doctor__"
+
+const localeMap: Record<string, Locale> = {
+  vi,
+  en: enUS,
+}
 
 interface NewAppointmentPageProps {
   initialPatientId?: string
@@ -43,8 +52,10 @@ interface NewAppointmentPageProps {
 
 export function NewAppointmentPage({ initialPatientId }: NewAppointmentPageProps) {
   const navigate = useNavigate()
-  const { t } = useTranslation("scheduling")
+  const { t, i18n } = useTranslation("scheduling")
   const { t: tCommon } = useTranslation("common")
+  const isLargeScreen = useIsLargeScreen()
+  const calendarLocale = localeMap[i18n.language] ?? vi
 
   // Patient search state
   const [searchTerm, setSearchTerm] = useState("")
@@ -200,6 +211,7 @@ export function NewAppointmentPage({ initialPatientId }: NewAppointmentPageProps
             selectedDoctorId && selectedDoctorId !== NO_DOCTOR_VALUE
               ? selectedDoctorId
               : undefined,
+          doctorName: selectedDoctorName,
           date: dateString,
           startTime: selectedSlot,
         })
@@ -253,13 +265,7 @@ export function NewAppointmentPage({ initialPatientId }: NewAppointmentPageProps
 
   return (
     <div className="space-y-6 pb-24">
-      {/* Header / Breadcrumb */}
-      <div>
-        <p className="text-sm text-muted-foreground">
-          {t("booking.breadcrumb")}
-        </p>
-        <h1 className="mt-1 text-xl font-semibold">{t("booking.title")}</h1>
-      </div>
+      <h1 className="text-xl font-semibold">{t("booking.title")}</h1>
 
       {/* 2-column layout */}
       <div className="grid gap-6 lg:grid-cols-5">
@@ -288,7 +294,7 @@ export function NewAppointmentPage({ initialPatientId }: NewAppointmentPageProps
                   </PopoverTrigger>
                   {searchTerm.length >= 2 && (
                     <PopoverContent
-                      className="w-[var(--radix-popover-trigger-width)] p-0"
+                      className="w-(--radix-popover-trigger-width) p-0"
                       align="start"
                       onOpenAutoFocus={(e) => e.preventDefault()}
                     >
@@ -296,13 +302,14 @@ export function NewAppointmentPage({ initialPatientId }: NewAppointmentPageProps
                         <CommandList>
                           {searchResults.length === 0 ? (
                             <CommandEmpty>
-                              <button
+                              <Button
                                 type="button"
-                                className="w-full px-2 py-1.5 text-left text-sm"
+                                variant="ghost"
+                                className="w-full justify-start"
                                 onClick={handleNotFound}
                               >
                                 {t("booking.notFound")}
-                              </button>
+                              </Button>
                             </CommandEmpty>
                           ) : (
                             <CommandGroup>
@@ -442,6 +449,8 @@ export function NewAppointmentPage({ initialPatientId }: NewAppointmentPageProps
                 disabled={(date) =>
                   date < today || date > maxDate || closedDays.has(date.getDay())
                 }
+                locale={calendarLocale}
+                numberOfMonths={isLargeScreen ? 2 : 1}
                 classNames={{
                   today: "underline text-accent-foreground",
                   day: "group/day relative aspect-square h-full w-full select-none p-0 text-center [&:first-child[data-selected=true]_button]:rounded-l-md [&:last-child[data-selected=true]_button]:rounded-r-md",
