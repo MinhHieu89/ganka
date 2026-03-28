@@ -96,10 +96,15 @@ export function PatientIntakeForm({
         }
         toast.success(t("intake.updateSuccess", { name: data.fullName }))
       } else {
-        await registerMutation.mutateAsync({ ...data, appointmentId })
-        // Check in the appointment after patient registration
+        const result = await registerMutation.mutateAsync({ ...data, appointmentId })
         if (appointmentId) {
           await checkInMutation.mutateAsync(appointmentId)
+        } else {
+          // Walk-in: create visit so patient appears on dashboard
+          await createWalkInVisit.mutateAsync({
+            patientId: result.id,
+            reason: data.reason,
+          })
         }
         toast.success(t("intake.saveSuccess", { name: data.fullName }))
       }

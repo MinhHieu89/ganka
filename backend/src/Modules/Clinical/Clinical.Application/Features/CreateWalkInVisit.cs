@@ -12,8 +12,8 @@ namespace Clinical.Application.Features;
 /// </summary>
 public sealed record CreateWalkInVisitCommand(
     Guid PatientId,
-    Guid DoctorId,
-    string DoctorName,
+    Guid? DoctorId,
+    string? DoctorName,
     string? Reason);
 
 /// <summary>
@@ -24,8 +24,6 @@ public class CreateWalkInVisitCommandValidator : AbstractValidator<CreateWalkInV
     public CreateWalkInVisitCommandValidator()
     {
         RuleFor(x => x.PatientId).NotEmpty().WithMessage("Patient is required.");
-        RuleFor(x => x.DoctorId).NotEmpty().WithMessage("Doctor is required.");
-        RuleFor(x => x.DoctorName).NotEmpty().WithMessage("Doctor name is required.");
     }
 }
 
@@ -64,8 +62,8 @@ public static class CreateWalkInVisitHandler
         var visit = Visit.Create(
             command.PatientId,
             patient.FullName,
-            command.DoctorId,
-            command.DoctorName,
+            command.DoctorId ?? Guid.Empty,
+            command.DoctorName ?? string.Empty,
             branchId,
             hasAllergies,
             appointmentId: null,

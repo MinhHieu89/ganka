@@ -212,7 +212,7 @@ export function useCreateWalkInVisitMutation() {
       reason?: string
     }) => {
       const { data, error, response } = await api.POST(
-        "/api/clinical/walk-in" as never,
+        "/api/clinical/visits/walk-in" as never,
         { body: command } as never,
       )
       if (error || !response.ok) throw new Error("Failed to create walk-in visit")
