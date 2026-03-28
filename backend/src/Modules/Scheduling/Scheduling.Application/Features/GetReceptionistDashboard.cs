@@ -52,7 +52,8 @@ public static class GetReceptionistDashboardHandler
                 Reason: apt.GuestReason ?? apt.Notes,
                 Status: status,
                 CheckedInAt: apt.CheckedInAt,
-                IsGuestBooking: apt.PatientId == null));
+                IsGuestBooking: apt.PatientId == null,
+                GuestPhone: apt.GuestPhone));
         }
 
         // Process walk-in visits (no appointment)
@@ -75,7 +76,8 @@ public static class GetReceptionistDashboardHandler
                 Reason: visit.Reason,
                 Status: status,
                 CheckedInAt: visit.VisitDate,
-                IsGuestBooking: false));
+                IsGuestBooking: false,
+                GuestPhone: null));
         }
 
         // Apply filters

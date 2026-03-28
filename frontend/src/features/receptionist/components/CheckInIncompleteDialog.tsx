@@ -138,7 +138,9 @@ export function CheckInIncompleteDialog({
                 <div className="text-xs text-muted-foreground">
                   {t("scheduling:checkIn.phone")}
                 </div>
-                <div className="italic text-muted-foreground">{notAvailable}</div>
+                {row.guestPhone
+                  ? <div className="font-semibold">{row.guestPhone}</div>
+                  : <div className="italic text-muted-foreground">{notAvailable}</div>}
               </div>
               <div>
                 <div className="text-xs text-muted-foreground">

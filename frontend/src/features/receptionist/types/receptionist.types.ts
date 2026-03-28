@@ -18,6 +18,7 @@ export interface ReceptionistDashboardRow {
   status: ReceptionistStatus
   checkedInAt: string | null
   isGuestBooking: boolean
+  guestPhone: string | null
 }
 
 export interface ReceptionistKpi {

@@ -17,4 +17,5 @@ public sealed record ReceptionistDashboardRowDto(
     string? Reason,
     string Status,
     DateTime? CheckedInAt,
-    bool IsGuestBooking);
+    bool IsGuestBooking,
+    string? GuestPhone);
