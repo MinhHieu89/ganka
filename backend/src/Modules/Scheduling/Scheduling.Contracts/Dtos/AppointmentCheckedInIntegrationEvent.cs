@@ -11,4 +11,5 @@ public record AppointmentCheckedInIntegrationEvent(
     Guid DoctorId,
     string DoctorName,
     bool HasAllergies,
-    DateTime CheckedInAt);
+    DateTime CheckedInAt,
+    string? Reason);

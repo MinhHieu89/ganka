@@ -13,6 +13,7 @@ public record VisitDetailDto(
     int CurrentStage,
     int Status,
     DateTime VisitDate,
+    string? Reason,
     string? ExaminationNotes,
     List<RefractionDto> Refractions,
     List<VisitDiagnosisDto> Diagnoses,

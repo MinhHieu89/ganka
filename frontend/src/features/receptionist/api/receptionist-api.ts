@@ -240,6 +240,23 @@ export function useCancelVisitMutation() {
   })
 }
 
+export function useUpdateVisitReasonMutation() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async ({ visitId, reason }: { visitId: string; reason?: string }) => {
+      const { error, response } = await api.PUT(
+        `/api/clinical/visits/${visitId}/reason` as never,
+        { body: { reason } } as never,
+      )
+      if (error || !response.ok) throw new Error("Failed to update visit reason")
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: receptionistKeys.all })
+      queryClient.invalidateQueries({ queryKey: ["clinical"] })
+    },
+  })
+}
+
 function parseAllergiesInput(raw: unknown): { name: string; severity: number }[] | null {
   if (!raw || typeof raw !== "string" || !raw.trim()) return null
   return raw

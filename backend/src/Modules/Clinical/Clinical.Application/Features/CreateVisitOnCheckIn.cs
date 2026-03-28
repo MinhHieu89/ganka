@@ -28,7 +28,8 @@ public static class CreateVisitOnCheckInHandler
             branchId,
             integrationEvent.HasAllergies,
             integrationEvent.AppointmentId,
-            source: VisitSource.Appointment);
+            source: VisitSource.Appointment,
+            reason: integrationEvent.Reason);
 
         await visitRepository.AddAsync(visit, ct);
         await unitOfWork.SaveChangesAsync(ct);

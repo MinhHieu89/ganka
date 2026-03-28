@@ -42,6 +42,7 @@ public static class PublishAppointmentCheckedInIntegrationEventHandler
             DoctorId: appointment.DoctorId,
             DoctorName: appointment.DoctorName,
             HasAllergies: hasAllergies,
-            CheckedInAt: domainEvent.CheckedInAt);
+            CheckedInAt: domainEvent.CheckedInAt,
+            Reason: appointment.GuestReason ?? appointment.Notes);
     }
 }

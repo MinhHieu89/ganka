@@ -28,6 +28,7 @@ public static class GetVisitByIdHandler
             (int)visit.CurrentStage,
             (int)visit.Status,
             visit.VisitDate,
+            visit.Reason,
             visit.ExaminationNotes,
             visit.Refractions.Select(r => new RefractionDto(
                 r.Id,

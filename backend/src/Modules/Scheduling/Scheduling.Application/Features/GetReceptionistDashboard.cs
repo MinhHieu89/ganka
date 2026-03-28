@@ -49,7 +49,7 @@ public static class GetReceptionistDashboardHandler
                 BirthYear: null,
                 AppointmentTime: apt.StartTime,
                 Source: "appointment",
-                Reason: apt.GuestReason ?? apt.Notes,
+                Reason: visit?.Reason ?? apt.GuestReason ?? apt.Notes,
                 Status: status,
                 CheckedInAt: apt.CheckedInAt,
                 IsGuestBooking: apt.PatientId == null,

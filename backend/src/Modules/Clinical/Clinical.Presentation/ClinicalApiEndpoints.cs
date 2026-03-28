@@ -118,6 +118,14 @@ public static class ClinicalApiEndpoints
             var result = await bus.InvokeAsync<Result>(command, ct);
             return result.ToHttpResult();
         }).RequirePermissions(Permissions.Clinical.Update);
+
+        // Update visit reason
+        group.MapPut("/visits/{id:guid}/reason", async (Guid id, UpdateVisitReasonCommand command, IMessageBus bus, CancellationToken ct) =>
+        {
+            var enriched = new UpdateVisitReasonCommand(id, command.Reason);
+            var result = await bus.InvokeAsync<Result>(enriched, ct);
+            return result.ToHttpResult();
+        }).RequirePermissions(Permissions.Clinical.Update);
     }
 
     private static void MapWorkflowActionEndpoints(RouteGroupBuilder group)

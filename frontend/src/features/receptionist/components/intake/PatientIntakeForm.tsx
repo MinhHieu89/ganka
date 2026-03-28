@@ -25,6 +25,7 @@ import {
   useRegisterFromIntakeMutation,
   useUpdateFromIntakeMutation,
   useCheckInMutation,
+  useUpdateVisitReasonMutation,
   useCreateWalkInVisitMutation,
   useAdvanceStageMutation,
 } from "@/features/receptionist/api/receptionist-api"
@@ -35,6 +36,7 @@ import { LifestyleSection } from "./LifestyleSection"
 
 interface PatientIntakeFormProps {
   patientId?: string
+  visitId?: string
   defaultValues?: Partial<IntakeFormValues>
   mode: "create" | "edit"
   appointmentId?: string
@@ -42,6 +44,7 @@ interface PatientIntakeFormProps {
 
 export function PatientIntakeForm({
   patientId,
+  visitId,
   defaultValues,
   mode,
   appointmentId,
@@ -55,6 +58,7 @@ export function PatientIntakeForm({
   const registerMutation = useRegisterFromIntakeMutation()
   const updateMutation = useUpdateFromIntakeMutation()
   const checkInMutation = useCheckInMutation()
+  const updateVisitReason = useUpdateVisitReasonMutation()
   const createWalkInVisit = useCreateWalkInVisitMutation()
   const advanceStage = useAdvanceStageMutation()
 
@@ -87,6 +91,9 @@ export function PatientIntakeForm({
     try {
       if (mode === "edit" && patientId) {
         await updateMutation.mutateAsync({ patientId, ...data })
+        if (visitId) {
+          await updateVisitReason.mutateAsync({ visitId, reason: data.reason })
+        }
         toast.success(t("intake.updateSuccess", { name: data.fullName }))
       } else {
         await registerMutation.mutateAsync({ ...data, appointmentId })
@@ -111,6 +118,9 @@ export function PatientIntakeForm({
 
       if (mode === "edit" && patientId) {
         await updateMutation.mutateAsync({ patientId, ...data })
+        if (visitId) {
+          await updateVisitReason.mutateAsync({ visitId, reason: data.reason })
+        }
         newPatientId = patientId
       } else {
         const result = await registerMutation.mutateAsync({ ...data, appointmentId })

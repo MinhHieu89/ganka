@@ -4,12 +4,14 @@ import { requirePermission } from "@/shared/utils/permission-guard"
 import { PatientIntakeForm } from "@/features/receptionist/components/intake/PatientIntakeForm"
 import { usePatientById } from "@/features/patient/api/patient-api"
 import { useAppointmentById } from "@/features/receptionist/api/receptionist-api"
+import { useVisitById } from "@/features/clinical/api/clinical-api"
 import { Skeleton } from "@/shared/components/Skeleton"
 import { toLocalDateString } from "@/shared/lib/format-date"
 
 const searchSchema = z.object({
   patientId: z.string().optional(),
   appointmentId: z.string().optional(),
+  visitId: z.string().optional(),
 })
 
 export const Route = createFileRoute("/_authenticated/patients/intake")({
@@ -19,10 +21,10 @@ export const Route = createFileRoute("/_authenticated/patients/intake")({
 })
 
 function PatientIntakePage() {
-  const { patientId, appointmentId } = Route.useSearch()
+  const { patientId, appointmentId, visitId } = Route.useSearch()
 
   if (patientId) {
-    return <EditModeIntake patientId={patientId} />
+    return <EditModeIntake patientId={patientId} visitId={visitId} />
   }
 
   if (appointmentId) {
@@ -62,10 +64,11 @@ function GuestIntake({ appointmentId }: { appointmentId: string }) {
   )
 }
 
-function EditModeIntake({ patientId }: { patientId: string }) {
+function EditModeIntake({ patientId, visitId }: { patientId: string; visitId?: string }) {
   const { data: patient, isLoading } = usePatientById(patientId)
+  const { data: visit, isLoading: visitLoading } = useVisitById(visitId)
 
-  if (isLoading) {
+  if (isLoading || visitLoading) {
     return (
       <div className="flex flex-col gap-6 p-6">
         <Skeleton className="h-8 w-64" />
@@ -120,11 +123,13 @@ function EditModeIntake({ patientId }: { patientId: string }) {
     workEnvironment: patient.workEnvironment ? workEnvMap[patient.workEnvironment] : undefined,
     contactLensUsage: patient.contactLensUsage ? contactLensMap[patient.contactLensUsage] : undefined,
     lifestyleNotes: patient.lifestyleNotes ?? "",
+    reason: visit?.reason ?? "",
   }
 
   return (
     <PatientIntakeForm
       patientId={patientId}
+      visitId={visitId}
       defaultValues={defaultValues}
       mode="edit"
     />

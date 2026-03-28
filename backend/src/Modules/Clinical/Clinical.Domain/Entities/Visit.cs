@@ -257,6 +257,16 @@ public class Visit : AggregateRoot, IAuditable
     }
 
     /// <summary>
+    /// Updates the reason for this visit. Requires the visit to be editable.
+    /// </summary>
+    public void UpdateReason(string? reason)
+    {
+        EnsureEditable();
+        Reason = reason;
+        SetUpdatedAt();
+    }
+
+    /// <summary>
     /// Adds a refraction record to the visit. Requires the visit to be editable.
     /// </summary>
     public void AddRefraction(Refraction refraction)

@@ -46,7 +46,10 @@ export function RowActionMenu({ row, onCheckIn }: RowActionMenuProps) {
     if (row.patientId) {
       navigate({
         to: "/patients/intake" as string,
-        search: { patientId: row.patientId } as never,
+        search: {
+          patientId: row.patientId,
+          visitId: row.visitId ?? undefined,
+        } as never,
       })
     }
   }
