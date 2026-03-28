@@ -12,7 +12,16 @@ public sealed record PatientDto(
     Gender? Gender,
     string? Address,
     string? Cccd,
+    string? Email,
+    string? Occupation,
     string? PhotoUrl,
     bool IsActive,
     DateTime CreatedAt,
-    List<AllergyDto> Allergies);
+    List<AllergyDto> Allergies,
+    string? OcularHistory,
+    string? SystemicHistory,
+    string? CurrentMedications,
+    decimal? ScreenTimeHours,
+    string? WorkEnvironment,
+    string? ContactLensUsage,
+    string? LifestyleNotes);

@@ -115,14 +115,15 @@
       "workOptions": {
         "office": "Văn phòng",
         "outdoor": "Ngoài trời",
-        "factory": "Nhà máy",
+        "mixed": "Hỗn hợp",
         "other": "Khác"
       },
       "contactLens": "Sử dụng kính áp tròng",
       "contactLensOptions": {
         "none": "Không",
-        "daily": "Hàng ngày",
-        "occasional": "Thời điểm",
+        "soft": "Kính mềm (Soft)",
+        "rgp": "Kính cứng (RGP)",
+        "orthoK": "Ortho-K",
         "other": "Khác"
       },
       "notes": "Ghi chú khác về lối sống",

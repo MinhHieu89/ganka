@@ -63,7 +63,7 @@ export function LifestyleSection() {
                 <SelectContent>
                   <SelectItem value="office">{t("intake.lifestyle.workOptions.office")}</SelectItem>
                   <SelectItem value="outdoor">{t("intake.lifestyle.workOptions.outdoor")}</SelectItem>
-                  <SelectItem value="mixed">{t("intake.lifestyle.workOptions.factory")}</SelectItem>
+                  <SelectItem value="mixed">{t("intake.lifestyle.workOptions.mixed")}</SelectItem>
                   <SelectItem value="other">{t("intake.lifestyle.workOptions.other")}</SelectItem>
                 </SelectContent>
               </Select>
@@ -86,9 +86,9 @@ export function LifestyleSection() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="none">{t("intake.lifestyle.contactLensOptions.none")}</SelectItem>
-                  <SelectItem value="soft">{t("intake.lifestyle.contactLensOptions.daily")}</SelectItem>
-                  <SelectItem value="rgp">{t("intake.lifestyle.contactLensOptions.occasional")}</SelectItem>
-                  <SelectItem value="ortho_k">Ortho-K</SelectItem>
+                  <SelectItem value="soft">{t("intake.lifestyle.contactLensOptions.soft")}</SelectItem>
+                  <SelectItem value="rgp">{t("intake.lifestyle.contactLensOptions.rgp")}</SelectItem>
+                  <SelectItem value="ortho_k">{t("intake.lifestyle.contactLensOptions.orthoK")}</SelectItem>
                   <SelectItem value="other">{t("intake.lifestyle.contactLensOptions.other")}</SelectItem>
                 </SelectContent>
               </Select>

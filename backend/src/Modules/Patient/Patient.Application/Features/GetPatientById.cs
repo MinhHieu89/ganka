@@ -37,9 +37,18 @@ public static class GetPatientByIdHandler
             patient.Gender?.ToContractEnum(),
             patient.Address,
             patient.Cccd,
+            patient.Email,
+            patient.Occupation,
             patient.PhotoUrl,
             patient.IsActive,
             patient.CreatedAt,
-            patient.Allergies.Select(a => new AllergyDto(a.Id, a.Name, a.Severity.ToContractEnum())).ToList());
+            patient.Allergies.Select(a => new AllergyDto(a.Id, a.Name, a.Severity.ToContractEnum())).ToList(),
+            patient.OcularHistory,
+            patient.SystemicHistory,
+            patient.CurrentMedications,
+            patient.ScreenTimeHours,
+            patient.WorkEnvironment?.ToString(),
+            patient.ContactLensUsage?.ToString(),
+            patient.LifestyleNotes);
     }
 }

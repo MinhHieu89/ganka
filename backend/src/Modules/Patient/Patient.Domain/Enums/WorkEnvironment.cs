@@ -7,6 +7,6 @@ public enum WorkEnvironment
 {
     Office = 0,
     Outdoor = 1,
-    Factory = 2,
+    Mixed = 2,
     Other = 3
 }

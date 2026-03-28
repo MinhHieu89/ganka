@@ -24,6 +24,7 @@ import {
 import {
   useRegisterFromIntakeMutation,
   useUpdateFromIntakeMutation,
+  useCheckInMutation,
   useCreateWalkInVisitMutation,
   useAdvanceStageMutation,
 } from "@/features/receptionist/api/receptionist-api"
@@ -53,6 +54,7 @@ export function PatientIntakeForm({
 
   const registerMutation = useRegisterFromIntakeMutation()
   const updateMutation = useUpdateFromIntakeMutation()
+  const checkInMutation = useCheckInMutation()
   const createWalkInVisit = useCreateWalkInVisitMutation()
   const advanceStage = useAdvanceStageMutation()
 
@@ -87,7 +89,11 @@ export function PatientIntakeForm({
         await updateMutation.mutateAsync({ patientId, ...data })
         toast.success(t("intake.updateSuccess", { name: data.fullName }))
       } else {
-        await registerMutation.mutateAsync(data)
+        await registerMutation.mutateAsync({ ...data, appointmentId })
+        // Check in the appointment after patient registration
+        if (appointmentId) {
+          await checkInMutation.mutateAsync(appointmentId)
+        }
         toast.success(t("intake.saveSuccess", { name: data.fullName }))
       }
       navigate({ to: "/dashboard" })
@@ -107,21 +113,25 @@ export function PatientIntakeForm({
         await updateMutation.mutateAsync({ patientId, ...data })
         newPatientId = patientId
       } else {
-        const result = await registerMutation.mutateAsync(data)
+        const result = await registerMutation.mutateAsync({ ...data, appointmentId })
         newPatientId = result.id
       }
 
-      // Create walk-in visit
-      const visitResult = await createWalkInVisit.mutateAsync({
-        patientId: newPatientId,
-        reason: data.reason,
-      })
+      if (appointmentId) {
+        // Check in the appointment — this creates a visit via domain event
+        await checkInMutation.mutateAsync(appointmentId)
+      } else {
+        // Walk-in: create visit manually
+        const visitResult = await createWalkInVisit.mutateAsync({
+          patientId: newPatientId,
+          reason: data.reason,
+        })
 
-      // Advance to PreExam stage (stage 1)
-      await advanceStage.mutateAsync({
-        visitId: visitResult.id,
-        newStage: 1,
-      })
+        await advanceStage.mutateAsync({
+          visitId: visitResult.id,
+          newStage: 1,
+        })
+      }
 
       toast.success(t("intake.advanceSuccess", { name: data.fullName }))
       navigate({ to: "/dashboard" })
@@ -138,7 +148,7 @@ export function PatientIntakeForm({
     <div className="flex flex-col gap-6 p-6">
       <FormProvider {...form}>
         <form className="flex flex-col gap-6">
-          <PersonalInfoSection />
+          <PersonalInfoSection patientId={patientId} />
           <ExamInfoSection />
           <MedicalHistorySection />
           <LifestyleSection />

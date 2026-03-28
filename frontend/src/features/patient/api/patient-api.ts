@@ -46,10 +46,19 @@ export interface PatientDto {
   gender: Gender | null
   address: string | null
   cccd: string | null
+  email: string | null
+  occupation: string | null
   photoUrl: string | null
   isActive: boolean
   createdAt: string
   allergies: AllergyDto[]
+  ocularHistory: string | null
+  systemicHistory: string | null
+  currentMedications: string | null
+  screenTimeHours: number | null
+  workEnvironment: string | null
+  contactLensUsage: string | null
+  lifestyleNotes: string | null
 }
 
 export interface PagedResult<T> {

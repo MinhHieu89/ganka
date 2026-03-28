@@ -4,6 +4,7 @@ using Patient.Application.Mappers;
 using Patient.Contracts.Dtos;
 using Patient.Contracts.Enums;
 using Shared.Domain;
+using Wolverine;
 
 namespace Patient.Application.Features;
 
@@ -27,7 +28,8 @@ public sealed record RegisterPatientFromIntakeCommand(
     string? WorkEnvironment,
     string? ContactLensUsage,
     string? LifestyleNotes,
-    List<AllergyInput>? Allergies);
+    List<AllergyInput>? Allergies,
+    Guid? AppointmentId);
 
 /// <summary>
 /// Validator for <see cref="RegisterPatientFromIntakeCommand"/>.
@@ -77,6 +79,7 @@ public static class RegisterPatientFromIntakeHandler
         IPatientRepository patientRepository,
         IUnitOfWork unitOfWork,
         IValidator<RegisterPatientFromIntakeCommand> validator,
+        IMessageBus bus,
         CancellationToken cancellationToken)
     {
         var validationResult = await validator.ValidateAsync(command, cancellationToken);
@@ -145,6 +148,15 @@ public static class RegisterPatientFromIntakeHandler
         var nextSequence = maxSequence + 1;
         patient.SetSequence(currentYear, nextSequence);
         await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        // Link patient to originating appointment if this was a guest booking
+        if (command.AppointmentId.HasValue)
+        {
+            await bus.InvokeAsync(
+                new Scheduling.Contracts.Dtos.LinkPatientToAppointmentCommand(
+                    command.AppointmentId.Value, patient.Id, patient.FullName),
+                cancellationToken);
+        }
 
         return patient.Id;
     }

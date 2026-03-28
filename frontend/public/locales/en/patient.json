@@ -115,14 +115,15 @@
       "workOptions": {
         "office": "Office",
         "outdoor": "Outdoor",
-        "factory": "Factory",
+        "mixed": "Mixed",
         "other": "Other"
       },
       "contactLens": "Contact lens usage",
       "contactLensOptions": {
         "none": "None",
-        "daily": "Daily",
-        "occasional": "Occasional",
+        "soft": "Soft lens",
+        "rgp": "RGP (rigid)",
+        "orthoK": "Ortho-K",
         "other": "Other"
       },
       "notes": "Other lifestyle notes",

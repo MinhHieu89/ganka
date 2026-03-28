@@ -17,7 +17,11 @@ import { toLocalDateString } from "@/shared/lib/format-date"
 import { usePatientSearch } from "@/features/patient/hooks/usePatientSearch"
 import type { IntakeFormValues } from "@/features/receptionist/schemas/intake-form.schema"
 
-export function PersonalInfoSection() {
+interface PersonalInfoSectionProps {
+  patientId?: string
+}
+
+export function PersonalInfoSection({ patientId }: PersonalInfoSectionProps) {
   const { control } = useFormContext<IntakeFormValues>()
   const { t } = useTranslation("patient")
 
@@ -98,7 +102,7 @@ export function PersonalInfoSection() {
           )}
         />
 
-        <PhoneFieldWithDuplicateCheck control={control} />
+        <PhoneFieldWithDuplicateCheck control={control} excludePatientId={patientId} />
 
         <Controller
           name="email"
@@ -174,9 +178,11 @@ export function PersonalInfoSection() {
 
 function PhoneFieldWithDuplicateCheck({
   control,
+  excludePatientId,
 }: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   control: any
+  excludePatientId?: string
 }) {
   const { t } = useTranslation("patient")
   const [phoneForSearch, setPhoneForSearch] = useState("")
@@ -186,7 +192,10 @@ function PhoneFieldWithDuplicateCheck({
     enabled: /^0\d{9,10}$/.test(deferredPhone),
   })
 
-  const match = duplicates && duplicates.length > 0 ? duplicates[0] : null
+  const filtered = excludePatientId
+    ? duplicates?.filter((p) => p.id !== excludePatientId)
+    : duplicates
+  const match = filtered && filtered.length > 0 ? filtered[0] : null
 
   return (
     <Controller

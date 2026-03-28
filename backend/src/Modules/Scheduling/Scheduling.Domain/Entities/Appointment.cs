@@ -220,6 +220,16 @@ public class Appointment : AggregateRoot, IAuditable
     }
 
     /// <summary>
+    /// Links a newly registered patient to this guest appointment.
+    /// </summary>
+    public void LinkPatient(Guid patientId, string patientName)
+    {
+        PatientId = patientId;
+        PatientName = patientName;
+        SetUpdatedAt();
+    }
+
+    /// <summary>
     /// Reschedules this appointment to a new time range.
     /// </summary>
     public void Reschedule(DateTime newStart, DateTime newEnd)

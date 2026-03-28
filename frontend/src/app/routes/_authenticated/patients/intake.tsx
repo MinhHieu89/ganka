@@ -84,17 +84,42 @@ function EditModeIntake({ patientId }: { patientId: string }) {
     )
   }
 
+  const allergiesStr = patient.allergies?.length
+    ? patient.allergies.map((a: { name: string }) => a.name).join(", ")
+    : ""
+
+  // Map normalized gender string back to form select value (number string)
+  const genderFormMap: Record<string, string> = {
+    Male: "0", Female: "1", Other: "2",
+  }
+  // Map backend enum strings to frontend form values
+  const workEnvMap: Record<string, string> = {
+    Office: "office", Outdoor: "outdoor", Factory: "mixed", Mixed: "mixed", Other: "other",
+  }
+  const contactLensMap: Record<string, string> = {
+    None: "none", Soft: "soft", Daily: "soft", Rgp: "rgp", Occasional: "rgp",
+    OrthoK: "ortho_k", Ortho_K: "ortho_k", Other: "other",
+  }
+
   const defaultValues = {
     fullName: patient.fullName ?? "",
     phone: patient.phone ?? "",
     dateOfBirth: patient.dateOfBirth
       ? toLocalDateString(new Date(patient.dateOfBirth))
       : "",
-    gender: patient.gender ?? "",
+    gender: patient.gender ? (genderFormMap[patient.gender] ?? "") : "",
     address: patient.address ?? "",
     cccd: patient.cccd ?? "",
     email: patient.email ?? "",
     occupation: patient.occupation ?? "",
+    allergies: allergiesStr,
+    ocularHistory: patient.ocularHistory ?? "",
+    systemicHistory: patient.systemicHistory ?? "",
+    currentMedications: patient.currentMedications ?? "",
+    screenTimeHours: patient.screenTimeHours ?? undefined,
+    workEnvironment: patient.workEnvironment ? workEnvMap[patient.workEnvironment] : undefined,
+    contactLensUsage: patient.contactLensUsage ? contactLensMap[patient.contactLensUsage] : undefined,
+    lifestyleNotes: patient.lifestyleNotes ?? "",
   }
 
   return (

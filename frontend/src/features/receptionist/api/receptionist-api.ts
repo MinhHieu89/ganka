@@ -240,14 +240,23 @@ export function useCancelVisitMutation() {
   })
 }
 
+function parseAllergiesInput(raw: unknown): { name: string; severity: number }[] | null {
+  if (!raw || typeof raw !== "string" || !raw.trim()) return null
+  return raw
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .map((name) => ({ name, severity: 0 }))
+}
+
 export function useRegisterFromIntakeMutation() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (command: Record<string, unknown>) => {
-      // Convert gender string to numeric enum (Male=0, Female=1, Other=2)
       const body = {
         ...command,
         gender: command.gender != null ? Number(command.gender) : null,
+        allergies: parseAllergiesInput(command.allergies),
       }
       const { data, error, response } = await api.POST(
         "/api/patients/intake" as never,
@@ -273,9 +282,10 @@ export function useUpdateFromIntakeMutation() {
       const body = {
         ...command,
         gender: command.gender != null ? Number(command.gender) : null,
+        allergies: parseAllergiesInput(command.allergies),
       }
       const { error, response } = await api.PUT(
-        `/api/patients/intake/${patientId}` as never,
+        `/api/patients/${patientId}/intake` as never,
         { body } as never,
       )
       if (error || !response.ok) {
