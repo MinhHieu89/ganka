@@ -26,12 +26,8 @@ function formatTime(isoString: string): string {
   })
 }
 
-function isSlotFull(slot: AvailableSlot): boolean {
-  // If the slot has no doctor assigned or the doctorId is empty, it is free
-  // The backend returns available slots; a slot is "full" when capacity is reached
-  // For now, we consider all returned slots as available (backend filters)
-  // A full slot would not be returned by the API, but we handle it via a capacity field if present
-  return false
+function isSlotUnavailable(slot: AvailableSlot): boolean {
+  return new Date(slot.startTime).getTime() <= Date.now()
 }
 
 export function TimeSlotGrid({
@@ -106,7 +102,7 @@ export function TimeSlotGrid({
       {groups.map((group) => {
         if (group.slots.length === 0) return null
 
-        const groupAvailable = group.slots.filter((s) => !isSlotFull(s)).length
+        const groupAvailable = group.slots.filter((s) => !isSlotUnavailable(s)).length
 
         return (
           <div key={group.label} className="space-y-2">
@@ -120,7 +116,7 @@ export function TimeSlotGrid({
             <div className="flex flex-wrap gap-2">
               {group.slots.map((slot) => {
                 const time = formatTime(slot.startTime)
-                const full = isSlotFull(slot)
+                const full = isSlotUnavailable(slot)
                 const selected = selectedSlot === slot.startTime
 
                 return (

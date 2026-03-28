@@ -35,7 +35,6 @@ import {
   useBookGuestMutation,
 } from "@/features/receptionist/api/receptionist-api"
 import { useBookAppointment, useClinicSchedule } from "@/features/scheduling/api/scheduling-api"
-import { useIsLargeScreen } from "@/shared/hooks/use-mobile"
 import { TimeSlotGrid } from "./TimeSlotGrid"
 import { ConfirmationBar } from "./ConfirmationBar"
 
@@ -54,7 +53,6 @@ export function NewAppointmentPage({ initialPatientId }: NewAppointmentPageProps
   const navigate = useNavigate()
   const { t, i18n } = useTranslation("scheduling")
   const { t: tCommon } = useTranslation("common")
-  const isLargeScreen = useIsLargeScreen()
   const calendarLocale = localeMap[i18n.language] ?? vi
 
   // Patient search state
@@ -264,13 +262,13 @@ export function NewAppointmentPage({ initialPatientId }: NewAppointmentPageProps
   maxDate.setMonth(maxDate.getMonth() + 3)
 
   return (
-    <div className="space-y-6 pb-24">
+    <div className="mx-auto max-w-5xl space-y-6 pb-24">
       <h1 className="text-xl font-semibold">{t("booking.title")}</h1>
 
       {/* 2-column layout */}
-      <div className="grid gap-6 lg:grid-cols-5">
-        {/* Left column: Patient info (40%) */}
-        <div className="lg:col-span-2 space-y-4">
+      <div className="grid gap-6 lg:grid-cols-2">
+        {/* Left column: Patient info */}
+        <div className="space-y-4">
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-base">{t("booking.patientInfo")}</CardTitle>
@@ -434,8 +432,8 @@ export function NewAppointmentPage({ initialPatientId }: NewAppointmentPageProps
           </Card>
         </div>
 
-        {/* Right column: Calendar + slots (60%) */}
-        <div className="lg:col-span-3 space-y-4">
+        {/* Right column: Calendar + slots */}
+        <div className="space-y-4">
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-base">{t("booking.dateTimeTitle")}</CardTitle>
@@ -450,7 +448,7 @@ export function NewAppointmentPage({ initialPatientId }: NewAppointmentPageProps
                   date < today || date > maxDate || closedDays.has(date.getDay())
                 }
                 locale={calendarLocale}
-                numberOfMonths={isLargeScreen ? 2 : 1}
+                numberOfMonths={1}
                 classNames={{
                   today: "underline text-accent-foreground",
                   day: "group/day relative aspect-square h-full w-full select-none p-0 text-center [&:first-child[data-selected=true]_button]:rounded-l-md [&:last-child[data-selected=true]_button]:rounded-r-md",
