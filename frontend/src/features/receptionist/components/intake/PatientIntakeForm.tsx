@@ -71,6 +71,7 @@ export function PatientIntakeForm({
       ocularHistory: "",
       systemicHistory: "",
       currentMedications: "",
+      allergies: "",
       screenTimeHours: undefined,
       workEnvironment: undefined,
       contactLensUsage: undefined,
@@ -190,7 +191,7 @@ export function PatientIntakeForm({
                 {isSavingAndAdvancing && (
                   <IconLoader2 className="mr-2 h-4 w-4 animate-spin" />
                 )}
-                {t("intake.saveAndAdvance")}
+                {t("intake.saveAndAdvance")} &rarr;
               </Button>
             </div>
           </div>

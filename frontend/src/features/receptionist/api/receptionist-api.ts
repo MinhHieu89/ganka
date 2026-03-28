@@ -97,6 +97,38 @@ export function useAvailableSlots(date: string, doctorId?: string) {
   })
 }
 
+export interface AppointmentDetail {
+  id: string
+  patientId: string | null
+  patientName: string
+  doctorId: string
+  doctorName: string
+  startTime: string
+  endTime: string
+  appointmentTypeId: string
+  status: number
+  notes: string | null
+  guestName: string | null
+  guestPhone: string | null
+  guestReason: string | null
+  source: number
+  checkedInAt: string | null
+}
+
+export function useAppointmentById(appointmentId?: string) {
+  return useQuery({
+    queryKey: ["appointment", appointmentId],
+    queryFn: async (): Promise<AppointmentDetail> => {
+      const { data, error } = await api.GET(
+        `/api/appointments/${appointmentId}` as never,
+      )
+      if (error) throw new Error("Failed to fetch appointment")
+      return data as AppointmentDetail
+    },
+    enabled: !!appointmentId,
+  })
+}
+
 // -- Mutations --
 
 export function useCheckInMutation() {

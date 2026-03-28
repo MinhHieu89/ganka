@@ -51,13 +51,10 @@ export function CheckInIncompleteDialog({
   const handleCheckInAndComplete = () => {
     onOpenChange(false)
 
-    if (row.isGuestBooking) {
-      const params = new URLSearchParams()
-      if (row.patientName) params.set("guestName", row.patientName)
-      if (row.guestPhone) params.set("guestPhone", row.guestPhone)
-      if (row.appointmentId) params.set("appointmentId", row.appointmentId)
-      if (row.reason) params.set("reason", row.reason)
-      navigate({ to: `/patients/intake?${params.toString()}` as string })
+    if (row.isGuestBooking && row.appointmentId) {
+      navigate({
+        to: `/patients/intake?appointmentId=${row.appointmentId}` as string,
+      })
     } else if (row.patientId) {
       navigate({
         to: `/patients/intake?patientId=${row.patientId}` as string,

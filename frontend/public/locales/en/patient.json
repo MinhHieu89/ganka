@@ -69,16 +69,22 @@
     "custom": "Custom"
   },
   "intake": {
+    "optional": "optional",
     "personal": {
-      "title": "Personal information"
+      "title": "Personal information",
+      "fullNamePlaceholder": "Enter full name",
+      "phonePlaceholder": "0912 345 678",
+      "emailPlaceholder": "email@example.com",
+      "addressPlaceholder": "Street, district, city",
+      "occupationPlaceholder": "E.g.: Office worker"
     },
     "breadcrumbNew": "New patient intake",
     "breadcrumbEdit": "Update record",
-    "cancelButton": "Cancel entry",
+    "cancelButton": "Cancel",
     "cancelConfirmTitle": "Confirm cancel",
     "cancelConfirmMessage": "Are you sure you want to cancel? Unsaved data will be lost.",
-    "saveOnly": "Save record",
-    "saveAndAdvance": "Save & proceed to exam",
+    "saveOnly": "Save",
+    "saveAndAdvance": "Save & proceed to Pre-Exam",
     "saveSuccess": "Created record for {{name}}",
     "updateSuccess": "Updated record for {{name}}",
     "advanceSuccess": "Created record and advanced to exam for {{name}}",
@@ -87,13 +93,20 @@
     "openOldRecord": "Open existing record",
     "exam": {
       "title": "Exam information",
-      "reason": "Reason for visit"
+      "reason": "Reason for visit",
+      "reasonPlaceholder": "Describe why the patient is visiting. E.g.: Dry eyes for 2 weeks, blurred vision when using computer...",
+      "reasonHelp": "Max 500 characters. Note symptoms, duration, and severity if provided."
     },
     "history": {
       "title": "Medical history",
       "ocular": "Ocular history",
+      "ocularPlaceholder": "E.g.: Myopia since childhood, had Lasik 2020...",
       "systemic": "Systemic history",
-      "medications": "Current medications"
+      "systemicPlaceholder": "E.g.: Type 2 diabetes, hypertension...",
+      "medications": "Current medications",
+      "medicationsPlaceholder": "E.g.: Metformin 500mg, Amlodipine 5mg...",
+      "allergies": "Allergies",
+      "allergiesPlaceholder": "E.g.: Penicillin, pollen, seafood..."
     },
     "lifestyle": {
       "title": "Lifestyle",
@@ -112,7 +125,10 @@
         "occasional": "Occasional",
         "other": "Other"
       },
-      "notes": "Notes"
+      "notes": "Other lifestyle notes",
+      "notesPlaceholder": "E.g.: Frequent swimming, night driving, daily eye drops...",
+      "screenTimePlaceholder": "E.g.: 8",
+      "selectPlaceholder": "Select..."
     }
   },
   "email": "Email",

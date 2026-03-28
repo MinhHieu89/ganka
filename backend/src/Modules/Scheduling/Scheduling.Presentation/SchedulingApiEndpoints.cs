@@ -65,6 +65,13 @@ public static class SchedulingApiEndpoints
                 new GetAppointmentsByPatientQuery(patientId), ct);
             return Results.Ok(appointments);
         }).RequirePermissions(Permissions.Scheduling.View);
+
+        group.MapGet("/{appointmentId:guid}", async (Guid appointmentId, IMessageBus bus, CancellationToken ct) =>
+        {
+            var result = await bus.InvokeAsync<Result<AppointmentDetailDto>>(
+                new GetAppointmentByIdQuery(appointmentId), ct);
+            return result.ToHttpResult();
+        }).RequirePermissions(Permissions.Scheduling.View);
     }
 
     private static void MapSelfBookingManagementEndpoints(RouteGroupBuilder group)

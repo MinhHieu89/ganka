@@ -69,16 +69,22 @@
     "custom": "Tùy chỉnh"
   },
   "intake": {
+    "optional": "tùy chọn",
     "personal": {
-      "title": "Thông tin cá nhân"
+      "title": "Thông tin cá nhân",
+      "fullNamePlaceholder": "Nhập họ và tên đầy đủ",
+      "phonePlaceholder": "0912 345 678",
+      "emailPlaceholder": "email@example.com",
+      "addressPlaceholder": "Số nhà, đường, quận/huyện, TP",
+      "occupationPlaceholder": "VD: Nhân viên văn phòng"
     },
     "breadcrumbNew": "Tiếp nhận bệnh nhân mới",
     "breadcrumbEdit": "Cập nhật hồ sơ",
-    "cancelButton": "Hủy nhập liệu",
+    "cancelButton": "Hủy",
     "cancelConfirmTitle": "Xác nhận hủy",
     "cancelConfirmMessage": "Bạn có chắc muốn hủy? Dữ liệu chưa lưu sẽ mất.",
-    "saveOnly": "Lưu hồ sơ",
-    "saveAndAdvance": "Lưu & Chuyển tiến khám",
+    "saveOnly": "Lưu",
+    "saveAndAdvance": "Lưu & chuyển Pre-Exam",
     "saveSuccess": "Đã tạo hồ sơ cho {{name}}",
     "updateSuccess": "Đã cập nhật hồ sơ cho {{name}}",
     "advanceSuccess": "Đã tạo hồ sơ và chuyển tiến khám cho {{name}}",
@@ -87,13 +93,20 @@
     "openOldRecord": "Mở hồ sơ cũ",
     "exam": {
       "title": "Thông tin khám",
-      "reason": "Lý do khám"
+      "reason": "Lý do đến khám",
+      "reasonPlaceholder": "Mô tả lý do bệnh nhân đến khám. VD: Mắt khô rát 2 tuần, nhìn mờ khi dùng máy tính...",
+      "reasonHelp": "Tối đa 500 ký tự. Ghi rõ triệu chứng, thời gian, mức độ nếu BN cung cấp."
     },
     "history": {
       "title": "Tiền sử bệnh",
       "ocular": "Tiền sử bệnh mắt",
+      "ocularPlaceholder": "VD: Cận thị từ nhỏ, đã Lasik 2020...",
       "systemic": "Tiền sử bệnh toàn thân",
-      "medications": "Thuốc đang dùng"
+      "systemicPlaceholder": "VD: Tiểu đường type 2, cao huyết áp...",
+      "medications": "Thuốc đang dùng",
+      "medicationsPlaceholder": "VD: Metformin 500mg, Amlodipine 5mg...",
+      "allergies": "Dị ứng",
+      "allergiesPlaceholder": "VD: Penicillin, phấn hoa, hải sản..."
     },
     "lifestyle": {
       "title": "Lối sống",
@@ -112,7 +125,10 @@
         "occasional": "Thời điểm",
         "other": "Khác"
       },
-      "notes": "Ghi chú"
+      "notes": "Ghi chú khác về lối sống",
+      "notesPlaceholder": "VD: Hay bơi lội, thường xuyên lái xe đêm, dùng thuốc nhỏ mắt hàng ngày...",
+      "screenTimePlaceholder": "VD: 8",
+      "selectPlaceholder": "Chọn..."
     }
   },
   "email": "Email",

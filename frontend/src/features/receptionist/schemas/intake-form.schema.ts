@@ -16,6 +16,7 @@ export const intakeFormSchema = z.object({
   ocularHistory: z.string().max(2000).optional(),
   systemicHistory: z.string().max(2000).optional(),
   currentMedications: z.string().max(2000).optional(),
+  allergies: z.string().max(2000).optional(),
   screenTimeHours: z.coerce.number().min(0).optional(),
   workEnvironment: z
     .enum(["office", "outdoor", "mixed", "other"])

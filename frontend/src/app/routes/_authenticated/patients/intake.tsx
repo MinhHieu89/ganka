@@ -3,15 +3,13 @@ import { z } from "zod"
 import { requirePermission } from "@/shared/utils/permission-guard"
 import { PatientIntakeForm } from "@/features/receptionist/components/intake/PatientIntakeForm"
 import { usePatientById } from "@/features/patient/api/patient-api"
+import { useAppointmentById } from "@/features/receptionist/api/receptionist-api"
 import { Skeleton } from "@/shared/components/Skeleton"
 import { toLocalDateString } from "@/shared/lib/format-date"
 
 const searchSchema = z.object({
   patientId: z.string().optional(),
-  guestName: z.string().optional(),
-  guestPhone: z.string().optional(),
   appointmentId: z.string().optional(),
-  reason: z.string().optional(),
 })
 
 export const Route = createFileRoute("/_authenticated/patients/intake")({
@@ -21,26 +19,44 @@ export const Route = createFileRoute("/_authenticated/patients/intake")({
 })
 
 function PatientIntakePage() {
-  const { patientId, guestName, guestPhone, appointmentId, reason } = Route.useSearch()
+  const { patientId, appointmentId } = Route.useSearch()
 
   if (patientId) {
     return <EditModeIntake patientId={patientId} />
   }
 
-  // Pre-fill from guest booking params (from CheckInIncompleteDialog)
-  const guestDefaults =
-    guestName || guestPhone
-      ? {
-          fullName: guestName ?? "",
-          phone: guestPhone ?? "",
-          reason: reason ?? "",
-        }
-      : undefined
+  if (appointmentId) {
+    return <GuestIntake appointmentId={appointmentId} />
+  }
+
+  return <PatientIntakeForm mode="create" />
+}
+
+function GuestIntake({ appointmentId }: { appointmentId: string }) {
+  const { data: appointment, isLoading } = useAppointmentById(appointmentId)
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-6 p-6">
+        <Skeleton className="h-8 w-64" />
+        <Skeleton className="h-48 w-full" />
+        <Skeleton className="h-32 w-full" />
+      </div>
+    )
+  }
+
+  const defaultValues = appointment
+    ? {
+        fullName: appointment.guestName ?? appointment.patientName ?? "",
+        phone: appointment.guestPhone ?? "",
+        reason: appointment.guestReason ?? appointment.notes ?? "",
+      }
+    : undefined
 
   return (
     <PatientIntakeForm
       mode="create"
-      defaultValues={guestDefaults}
+      defaultValues={defaultValues}
       appointmentId={appointmentId}
     />
   )
@@ -56,7 +72,6 @@ function EditModeIntake({ patientId }: { patientId: string }) {
         <Skeleton className="h-48 w-full" />
         <Skeleton className="h-32 w-full" />
         <Skeleton className="h-32 w-full" />
-        <Skeleton className="h-32 w-full" />
       </div>
     )
   }
@@ -69,7 +84,6 @@ function EditModeIntake({ patientId }: { patientId: string }) {
     )
   }
 
-  // Map patient data to intake form defaults
   const defaultValues = {
     fullName: patient.fullName ?? "",
     phone: patient.phone ?? "",
