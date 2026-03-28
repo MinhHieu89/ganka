@@ -354,21 +354,10 @@ export function WalkInVisitDialog({
                       </button>
                     ))
                   ) : (
-                    <div className="flex h-full flex-col items-center justify-center gap-3">
+                    <div className="flex h-full items-center justify-center">
                       <p className="text-sm text-muted-foreground">
                         {t("walkIn.noResults")}
                       </p>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          handleClose()
-                          navigate({ to: "/patients/intake" as string })
-                        }}
-                      >
-                        <IconUserPlus className="mr-2 h-4 w-4" />
-                        {t("walkIn.goToIntake")}
-                      </Button>
                     </div>
                   )}
                 </div>

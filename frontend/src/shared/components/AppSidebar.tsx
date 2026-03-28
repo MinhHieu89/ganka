@@ -8,8 +8,6 @@ import {
   IconFileText,
   IconCalendar,
   IconStethoscope,
-  IconCamera,
-  IconPill,
   IconMedicineSyrup,
   IconReceipt,
   IconEyeglass,
@@ -42,11 +40,6 @@ import {
   SidebarMenuSubItem,
   SidebarRail,
 } from "@/shared/components/Sidebar"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/shared/components/Tooltip"
 import { NavUser } from "@/shared/components/NavUser"
 import { useAuthStore } from "@/shared/stores/authStore"
 import { usePendingCount } from "@/features/pharmacy/api/pharmacy-queries"
@@ -60,7 +53,6 @@ interface NavItem {
   titleKey: string
   to: string
   icon: React.ComponentType<{ className?: string }>
-  disabled?: boolean
   children?: NavSubItem[]
 }
 
@@ -108,18 +100,6 @@ export function AppSidebar({ ...sidebarProps }: ComponentProps<typeof Sidebar>) 
       titleKey: "sidebar.clinical",
       to: "/clinical",
       icon: IconStethoscope,
-    },
-    {
-      titleKey: "sidebar.imaging",
-      to: "/imaging",
-      icon: IconCamera,
-      disabled: true,
-    },
-    {
-      titleKey: "sidebar.prescriptions",
-      to: "/prescriptions",
-      icon: IconPill,
-      disabled: true,
     },
   ]
 
@@ -206,7 +186,7 @@ export function AppSidebar({ ...sidebarProps }: ComponentProps<typeof Sidebar>) 
     if (item.to === "/patients") return hasPatientAccess
     if (item.to === "/appointments") return hasSchedulingAccess
     if (item.to === "/clinical") return hasClinicalAccess
-    return true // disabled/placeholder items show as-is
+    return true
   })
 
   const filteredOperationsItems = operationsItems.filter((item) => {
@@ -228,28 +208,6 @@ export function AppSidebar({ ...sidebarProps }: ComponentProps<typeof Sidebar>) 
   const renderNavItems = (items: NavItem[]) =>
     items.map((item) => {
       const isActive = currentPath === item.to || currentPath.startsWith(item.to + "/")
-
-      if (item.disabled) {
-        return (
-          <SidebarMenuItem key={item.to}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <SidebarMenuButton
-                  disabled
-                  className="opacity-40 cursor-not-allowed"
-                  tooltip={t(item.titleKey)}
-                >
-                  <item.icon className="h-4 w-4" />
-                  <span>{t(item.titleKey)}</span>
-                </SidebarMenuButton>
-              </TooltipTrigger>
-              <TooltipContent side="right">
-                {t("sidebar.comingSoon")}
-              </TooltipContent>
-            </Tooltip>
-          </SidebarMenuItem>
-        )
-      }
 
       if (item.children && item.children.length > 0) {
         const isParentActive = currentPath === item.to || currentPath.startsWith(item.to + "/")
