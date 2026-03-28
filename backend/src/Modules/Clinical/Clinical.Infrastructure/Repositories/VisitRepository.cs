@@ -160,17 +160,25 @@ public sealed class VisitRepository : IVisitRepository
             .ToListAsync(ct);
     }
 
-    public async Task<List<Visit>> GetTodayVisitsAsync(CancellationToken ct = default)
+    public async Task<List<Visit>> GetTodayVisitsAsync(string? search = null, CancellationToken ct = default)
     {
         var vietnamTz = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
         var nowVietnam = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vietnamTz);
         var todayStartUtc = TimeZoneInfo.ConvertTimeToUtc(nowVietnam.Date, vietnamTz);
         var todayEndUtc = todayStartUtc.AddDays(1);
 
-        return await _dbContext.Visits
+        var query = _dbContext.Visits
             .AsNoTracking()
             .Where(v => !v.IsDeleted &&
-                v.VisitDate >= todayStartUtc && v.VisitDate < todayEndUtc)
+                v.VisitDate >= todayStartUtc && v.VisitDate < todayEndUtc);
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var term = search.Trim();
+            query = query.Where(v => v.PatientName.Contains(term));
+        }
+
+        return await query
             .OrderBy(v => v.VisitDate)
             .ToListAsync(ct);
     }

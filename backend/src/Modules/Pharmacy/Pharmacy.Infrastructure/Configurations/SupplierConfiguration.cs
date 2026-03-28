@@ -8,7 +8,7 @@ namespace Pharmacy.Infrastructure.Configurations;
 /// <summary>
 /// EF Core entity configuration for Supplier.
 /// Configures the "Suppliers" table in the pharmacy schema with
-/// Vietnamese_CI_AI collation on the name field for accent-insensitive search.
+/// SQL_Latin1_General_Cp1_CI_AI collation on the name field for accent-insensitive search.
 /// </summary>
 public class SupplierConfiguration : IEntityTypeConfiguration<Supplier>
 {
@@ -21,7 +21,7 @@ public class SupplierConfiguration : IEntityTypeConfiguration<Supplier>
         builder.Property(s => s.Name)
             .IsRequired()
             .HasMaxLength(200)
-            .UseCollation("Vietnamese_CI_AI");
+            .UseCollation("SQL_Latin1_General_Cp1_CI_AI");
 
         builder.Property(s => s.ContactInfo)
             .HasMaxLength(500);

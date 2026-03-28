@@ -20,8 +20,8 @@ public static class GetReceptionistKpiStatsHandler
         IVisitRepository visitRepository,
         CancellationToken ct)
     {
-        var appointments = await appointmentRepository.GetTodayAppointmentsAsync(ct);
-        var visits = await visitRepository.GetTodayVisitsAsync(ct);
+        var appointments = await appointmentRepository.GetTodayAppointmentsAsync(ct: ct);
+        var visits = await visitRepository.GetTodayVisitsAsync(ct: ct);
 
         var visitByAppointment = visits
             .Where(v => v.AppointmentId.HasValue)

@@ -21,9 +21,10 @@ public static class GetReceptionistDashboardHandler
         Patient.Application.Interfaces.IPatientRepository patientRepository,
         CancellationToken ct)
     {
-        // Load today's appointments and visits (two separate queries, join in-memory)
-        var appointments = await appointmentRepository.GetTodayAppointmentsAsync(ct);
-        var visits = await visitRepository.GetTodayVisitsAsync(ct);
+        // Load today's appointments and visits (filtered at DB level when search is provided)
+        var searchTerm = string.IsNullOrWhiteSpace(query.Search) ? null : query.Search.Trim();
+        var appointments = await appointmentRepository.GetTodayAppointmentsAsync(searchTerm, ct);
+        var visits = await visitRepository.GetTodayVisitsAsync(searchTerm, ct);
 
         // Load patient data for birth year and patient code
         var patientIds = appointments
@@ -98,15 +99,6 @@ public static class GetReceptionistDashboardHandler
         // Apply filters
         if (!string.IsNullOrEmpty(query.StatusFilter))
             rows = rows.Where(r => r.Status == query.StatusFilter).ToList();
-
-        if (!string.IsNullOrEmpty(query.Search))
-        {
-            var search = query.Search.ToLowerInvariant();
-            rows = rows.Where(r =>
-                r.PatientName.Contains(search, StringComparison.OrdinalIgnoreCase) ||
-                (r.PatientCode != null && r.PatientCode.Contains(search, StringComparison.OrdinalIgnoreCase))
-            ).ToList();
-        }
 
         // Sort: appointments by time ascending, walk-ins at bottom by created time
         rows = rows

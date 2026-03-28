@@ -17,7 +17,8 @@ public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
 
         builder.Property(a => a.PatientName)
             .IsRequired()
-            .HasMaxLength(200);
+            .HasMaxLength(200)
+            .UseCollation("SQL_Latin1_General_Cp1_CI_AI");
 
         builder.Property(a => a.GuestName)
             .HasMaxLength(200);

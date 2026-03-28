@@ -37,7 +37,7 @@ public sealed class PatientRepository : IPatientRepository
         return await _dbContext.Patients
             .AsNoTracking()
             .Where(p => p.IsActive &&
-                (EF.Functions.Collate(p.FullName, "Vietnamese_CI_AI").Contains(term) ||
+                (p.FullName.Contains(term) ||
                  p.Phone.Contains(term) ||
                  p.PatientCode.Contains(term)))
             .OrderBy(p => p.FullName)
@@ -69,7 +69,7 @@ public sealed class PatientRepository : IPatientRepository
         {
             var term = search.Trim();
             query = query.Where(p =>
-                EF.Functions.Collate(p.FullName, "Vietnamese_CI_AI").Contains(term) ||
+                p.FullName.Contains(term) ||
                 p.Phone.Contains(term) ||
                 p.PatientCode.Contains(term));
         }

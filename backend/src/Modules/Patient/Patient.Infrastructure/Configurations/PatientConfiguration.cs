@@ -15,7 +15,7 @@ public class PatientConfiguration : IEntityTypeConfiguration<Domain.Entities.Pat
         builder.Property(p => p.FullName)
             .IsRequired()
             .HasMaxLength(200)
-            .UseCollation("Vietnamese_CI_AI");
+            .UseCollation("SQL_Latin1_General_Cp1_CI_AI");
 
         builder.Property(p => p.Phone)
             .IsRequired()

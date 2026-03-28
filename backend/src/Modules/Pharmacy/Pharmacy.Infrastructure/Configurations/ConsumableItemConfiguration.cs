@@ -8,7 +8,7 @@ namespace Pharmacy.Infrastructure.Configurations;
 /// EF Core entity configuration for ConsumableItem.
 /// ConsumableItem is the aggregate root for the consumables warehouse (CON-01, CON-02).
 /// Supports two tracking modes: ExpiryTracked (batch-level) and SimpleStock (quantity-only).
-/// Vietnamese_CI_AI collation on name fields for accent-insensitive search.
+/// SQL_Latin1_General_Cp1_CI_AI collation on name fields for accent-insensitive search.
 /// </summary>
 public class ConsumableItemConfiguration : IEntityTypeConfiguration<ConsumableItem>
 {
@@ -22,13 +22,13 @@ public class ConsumableItemConfiguration : IEntityTypeConfiguration<ConsumableIt
         builder.Property(c => c.Name)
             .IsRequired()
             .HasMaxLength(200)
-            .UseCollation("Vietnamese_CI_AI");
+            .UseCollation("SQL_Latin1_General_Cp1_CI_AI");
 
         // Vietnamese name with Vietnamese-collation for accent-insensitive search
         builder.Property(c => c.NameVi)
             .IsRequired()
             .HasMaxLength(200)
-            .UseCollation("Vietnamese_CI_AI");
+            .UseCollation("SQL_Latin1_General_Cp1_CI_AI");
 
         builder.Property(c => c.Unit)
             .IsRequired()

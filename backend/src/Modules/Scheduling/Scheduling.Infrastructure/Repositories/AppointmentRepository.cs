@@ -82,16 +82,26 @@ public sealed class AppointmentRepository : IAppointmentRepository
             .CountAsync(a => a.StartTime >= today && a.StartTime < tomorrow && a.Status != AppointmentStatus.Cancelled, ct);
     }
 
-    public async Task<List<Appointment>> GetTodayAppointmentsAsync(CancellationToken ct = default)
+    public async Task<List<Appointment>> GetTodayAppointmentsAsync(string? search = null, CancellationToken ct = default)
     {
         var vietnamTz = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
         var nowVietnam = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vietnamTz);
         var todayStartUtc = TimeZoneInfo.ConvertTimeToUtc(nowVietnam.Date, vietnamTz);
         var todayEndUtc = todayStartUtc.AddDays(1);
 
-        return await _dbContext.Appointments
+        var query = _dbContext.Appointments
             .AsNoTracking()
-            .Where(a => a.StartTime >= todayStartUtc && a.StartTime < todayEndUtc)
+            .Where(a => a.StartTime >= todayStartUtc && a.StartTime < todayEndUtc);
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var term = search.Trim();
+            query = query.Where(a =>
+                a.PatientName.Contains(term) ||
+                (a.GuestPhone != null && a.GuestPhone.Contains(term)));
+        }
+
+        return await query
             .OrderBy(a => a.StartTime)
             .ToListAsync(ct);
     }

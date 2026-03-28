@@ -8,7 +8,7 @@ namespace Pharmacy.Infrastructure.Repositories;
 
 /// <summary>
 /// EF Core implementation of <see cref="IDrugCatalogItemRepository"/>.
-/// Leverages Vietnamese_CI_AI collation on Name, NameVi, and GenericName columns
+/// Leverages SQL_Latin1_General_Cp1_CI_AI collation on Name, NameVi, and GenericName columns
 /// for accent-insensitive, case-insensitive drug search at the database level.
 /// </summary>
 public sealed class DrugCatalogItemRepository : IDrugCatalogItemRepository

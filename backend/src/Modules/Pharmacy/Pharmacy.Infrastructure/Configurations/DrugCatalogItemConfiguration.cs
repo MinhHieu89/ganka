@@ -8,7 +8,7 @@ namespace Pharmacy.Infrastructure.Configurations;
 /// <summary>
 /// EF Core entity configuration for DrugCatalogItem.
 /// Configures the "DrugCatalogItems" table in the pharmacy schema with
-/// Vietnamese_CI_AI collation on name fields for accent-insensitive search.
+/// SQL_Latin1_General_Cp1_CI_AI collation on name fields for accent-insensitive search.
 /// </summary>
 public class DrugCatalogItemConfiguration : IEntityTypeConfiguration<DrugCatalogItem>
 {
@@ -21,17 +21,17 @@ public class DrugCatalogItemConfiguration : IEntityTypeConfiguration<DrugCatalog
         builder.Property(d => d.Name)
             .IsRequired()
             .HasMaxLength(200)
-            .UseCollation("Vietnamese_CI_AI");
+            .UseCollation("SQL_Latin1_General_Cp1_CI_AI");
 
         builder.Property(d => d.NameVi)
             .IsRequired()
             .HasMaxLength(200)
-            .UseCollation("Vietnamese_CI_AI");
+            .UseCollation("SQL_Latin1_General_Cp1_CI_AI");
 
         builder.Property(d => d.GenericName)
             .IsRequired()
             .HasMaxLength(200)
-            .UseCollation("Vietnamese_CI_AI");
+            .UseCollation("SQL_Latin1_General_Cp1_CI_AI");
 
         builder.Property(d => d.Strength)
             .HasMaxLength(50);

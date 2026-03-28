@@ -44,7 +44,7 @@ public static class GetAvailableSlotsHandler
         }
         else
         {
-            dayAppointments = await appointmentRepository.GetTodayAppointmentsAsync(ct);
+            dayAppointments = await appointmentRepository.GetTodayAppointmentsAsync(ct: ct);
             // Filter to the requested date
             dayAppointments = dayAppointments
                 .Where(a => a.StartTime >= dayStartUtc && a.StartTime < dayEndUtc)

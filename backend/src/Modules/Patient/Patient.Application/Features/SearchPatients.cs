@@ -9,7 +9,7 @@ public sealed record SearchPatientsQuery(string Term);
 
 /// <summary>
 /// Wolverine handler for Vietnamese diacritics-insensitive patient search.
-/// Searches by name (Vietnamese_CI_AI collation), phone prefix, or exact patient code.
+/// Searches by name (SQL_Latin1_General_Cp1_CI_AI collation), phone prefix, or exact patient code.
 /// </summary>
 public static class SearchPatientsHandler
 {

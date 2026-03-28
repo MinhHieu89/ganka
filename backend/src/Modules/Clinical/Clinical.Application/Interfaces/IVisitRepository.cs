@@ -119,7 +119,7 @@ public interface IVisitRepository
     /// <summary>
     /// Gets all visits created today (for receptionist dashboard).
     /// </summary>
-    Task<List<Visit>> GetTodayVisitsAsync(CancellationToken ct = default);
+    Task<List<Visit>> GetTodayVisitsAsync(string? search = null, CancellationToken ct = default);
 
     /// <summary>
     /// Gets active visits (Draft/Amended) plus completed-today visits for the done column (D-04/D-10).
