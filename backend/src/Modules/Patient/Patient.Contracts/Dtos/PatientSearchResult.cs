@@ -7,4 +7,6 @@ public sealed record PatientSearchResult(
     string FullName,
     string Phone,
     string? PatientCode,
-    PatientType PatientType);
+    PatientType PatientType,
+    int? BirthYear,
+    string? Gender);

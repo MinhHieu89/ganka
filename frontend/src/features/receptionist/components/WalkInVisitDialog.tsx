@@ -1,7 +1,8 @@
 import { useState } from "react"
 import { toast } from "sonner"
 import { useTranslation } from "react-i18next"
-import { IconSearch } from "@tabler/icons-react"
+import { useNavigate } from "@tanstack/react-router"
+import { IconSearch, IconUserPlus } from "@tabler/icons-react"
 import {
   Dialog,
   DialogContent,
@@ -15,7 +16,12 @@ import { Input } from "@/shared/components/Input"
 import { Label } from "@/shared/components/Label"
 import { Textarea } from "@/shared/components/Textarea"
 import { Avatar, AvatarFallback } from "@/shared/components/Avatar"
+import { Badge } from "@/shared/components/Badge"
+import { Skeleton } from "@/shared/components/Skeleton"
 import { useCreateWalkInVisitMutation } from "@/features/receptionist/api/receptionist-api"
+import { usePatientById } from "@/features/patient/api/patient-api"
+import { usePatientVisitHistory } from "@/features/clinical/api/clinical-api"
+import { api } from "@/shared/lib/api-client"
 
 interface PatientResult {
   id: string
@@ -36,12 +42,181 @@ function getInitials(name: string): string {
   return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase()
 }
 
+function formatGender(gender: string | null, t: (key: string) => string): string | null {
+  if (!gender) return null
+  const map: Record<string, string> = {
+    Male: t("patient:male"),
+    Female: t("patient:female"),
+    Other: t("patient:other"),
+  }
+  return map[gender] ?? null
+}
+
+function formatVisitDate(dateStr: string): string {
+  try {
+    return new Date(dateStr).toLocaleDateString("vi-VN", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    })
+  } catch {
+    return dateStr
+  }
+}
+
+function SelectedPatientCard({
+  patient,
+  onChange,
+  t,
+  reason,
+  onReasonChange,
+}: {
+  patient: PatientResult
+  onChange: () => void
+  t: (key: string) => string
+  reason: string
+  onReasonChange: (v: string) => void
+}) {
+  const patientQuery = usePatientById(patient.id)
+  const visitHistoryQuery = usePatientVisitHistory(patient.id)
+
+  const full = patientQuery.data
+  const lastVisit = visitHistoryQuery.data?.[0] ?? null
+  const isLoading = patientQuery.isLoading || visitHistoryQuery.isLoading
+
+  const birthYear = full?.dateOfBirth
+    ? new Date(full.dateOfBirth).getFullYear()
+    : patient.birthYear
+
+  return (
+    <div className="space-y-4">
+      {/* Header: avatar + name + badge + change button */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <Avatar className="h-12 w-12">
+            <AvatarFallback
+              className="text-sm font-semibold"
+              style={{
+                backgroundColor: "var(--avatar-complete-bg)",
+                color: "var(--avatar-complete-text)",
+              }}
+            >
+              {getInitials(patient.name)}
+            </AvatarFallback>
+          </Avatar>
+          <div>
+            <div className="text-sm font-semibold">{patient.name}</div>
+            {(full?.patientCode ?? patient.code) && (
+              <div className="font-mono text-xs text-muted-foreground">
+                {full?.patientCode ?? patient.code}
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <Badge variant="outline">{t("receptionist:walkIn.walkInBadge")}</Badge>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onChange}
+            className="h-auto px-2 py-1 text-xs"
+          >
+            {t("receptionist:walkIn.change")}
+          </Button>
+        </div>
+      </div>
+
+      {/* Patient details card */}
+      {isLoading ? (
+        <div className="space-y-2">
+          <Skeleton className="h-24 w-full" />
+          <Skeleton className="h-10 w-full" />
+        </div>
+      ) : (
+        <>
+          <div className="rounded-md border bg-muted/50 p-4 space-y-3 text-sm">
+            {/* Row 1: Birth year + Gender */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <div className="text-xs text-muted-foreground">
+                  {t("scheduling:checkIn.birthYear")}
+                </div>
+                {birthYear
+                  ? <div className="font-semibold">{birthYear}</div>
+                  : <div className="italic text-muted-foreground">{t("scheduling:checkIn.notAvailable")}</div>}
+              </div>
+              <div>
+                <div className="text-xs text-muted-foreground">
+                  {t("scheduling:checkIn.gender")}
+                </div>
+                {formatGender(full?.gender ?? null, t)
+                  ? <div className="font-semibold">{formatGender(full?.gender ?? null, t)}</div>
+                  : <div className="italic text-muted-foreground">{t("scheduling:checkIn.notAvailable")}</div>}
+              </div>
+            </div>
+
+            {/* Row 2: Phone + Occupation */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <div className="text-xs text-muted-foreground">
+                  {t("scheduling:checkIn.phone")}
+                </div>
+                {full?.phone
+                  ? <div className="font-semibold">{full.phone}</div>
+                  : <div className="italic text-muted-foreground">{t("scheduling:checkIn.notAvailable")}</div>}
+              </div>
+              <div>
+                <div className="text-xs text-muted-foreground">
+                  {t("scheduling:checkIn.occupation")}
+                </div>
+                {full?.occupation
+                  ? <div className="font-semibold">{full.occupation}</div>
+                  : <div className="italic text-muted-foreground">{t("scheduling:checkIn.notAvailable")}</div>}
+              </div>
+            </div>
+          </div>
+
+          {/* Last visit */}
+          {lastVisit && (
+            <div className="rounded-md border bg-muted/50 p-4 text-sm">
+              <div className="text-xs text-muted-foreground">
+                {t("scheduling:checkIn.lastVisit")}
+              </div>
+              <div className="font-semibold">
+                {formatVisitDate(lastVisit.visitDate)}
+                {lastVisit.primaryDiagnosisText &&
+                  ` — ${lastVisit.primaryDiagnosisText}`}
+                {lastVisit.doctorName && ` — ${lastVisit.doctorName}`}
+              </div>
+            </div>
+          )}
+        </>
+      )}
+
+      {/* Reason field */}
+      <div className="space-y-2">
+        <Label>
+          {t("receptionist:walkIn.reason")} <span className="text-destructive">*</span>
+        </Label>
+        <Textarea
+          value={reason}
+          onChange={(e) => onReasonChange(e.target.value)}
+          placeholder={t("receptionist:walkIn.reasonPlaceholder")}
+          rows={2}
+          className="resize-none"
+        />
+      </div>
+    </div>
+  )
+}
+
 export function WalkInVisitDialog({
   open,
   onOpenChange,
 }: WalkInVisitDialogProps) {
-  const { t } = useTranslation("receptionist")
+  const { t } = useTranslation(["receptionist", "scheduling", "patient", "common"])
   const { t: tCommon } = useTranslation("common")
+  const navigate = useNavigate()
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedPatient, setSelectedPatient] = useState<PatientResult | null>(
     null,
@@ -61,28 +236,19 @@ export function WalkInVisitDialog({
 
     setIsSearching(true)
     try {
-      // Use fetch directly for patient search since we don't have a dedicated hook
-      const response = await fetch(
-        `/api/patients/search?q=${encodeURIComponent(query)}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken") ?? ""}`,
-          },
-        },
+      const { data } = await api.GET("/api/patients/search" as never, {
+        params: { query: { term: query } },
+      } as never)
+      const patients = Array.isArray(data) ? data : ((data as unknown as Record<string, unknown>)?.data as Record<string, unknown>[]) ?? []
+      setSearchResults(
+        patients.map((p: Record<string, unknown>) => ({
+          id: p.id as string,
+          name: (p.fullName ?? p.name ?? "") as string,
+          code: (p.patientCode ?? p.code ?? null) as string | null,
+          birthYear: (p.birthYear ?? null) as number | null,
+          phone: (p.phone ?? "") as string,
+        })),
       )
-      if (response.ok) {
-        const data = await response.json()
-        const patients = Array.isArray(data) ? data : data?.data ?? []
-        setSearchResults(
-          patients.map((p: Record<string, unknown>) => ({
-            id: p.id as string,
-            name: (p.fullName ?? p.name ?? "") as string,
-            code: (p.patientCode ?? p.code ?? null) as string | null,
-            birthYear: (p.birthYear ?? null) as number | null,
-            phone: (p.phone ?? "") as string,
-          })),
-        )
-      }
     } catch {
       // Silently fail search
     } finally {
@@ -151,122 +317,101 @@ export function WalkInVisitDialog({
                 />
               </div>
 
-              {/* Search results */}
-              {searchResults.length > 0 && (
-                <div className="max-h-48 overflow-y-auto rounded-md border">
-                  {searchResults.map((patient) => (
-                    <button
-                      key={patient.id}
-                      type="button"
-                      onClick={() => handleSelectPatient(patient)}
-                      className="flex w-full items-center gap-3 px-3 py-2 text-left text-sm hover:bg-accent transition-colors"
-                    >
-                      <Avatar className="h-8 w-8">
-                        <AvatarFallback className="text-xs">
-                          {getInitials(patient.name)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <div className="font-medium">{patient.name}</div>
-                        <div className="text-xs text-muted-foreground">
-                          {patient.code && (
-                            <span className="font-mono">{patient.code}</span>
-                          )}
-                          {patient.code && patient.birthYear && " - "}
-                          {patient.birthYear && <span>{patient.birthYear}</span>}
+              {/* Search results — fixed height to prevent dialog resize */}
+              {searchQuery.length >= 2 && (
+                <div className="h-48 overflow-y-auto rounded-md border">
+                  {isSearching ? (
+                    <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+                      {t("walkIn.searching")}
+                    </div>
+                  ) : searchResults.length > 0 ? (
+                    searchResults.map((patient) => (
+                      <button
+                        key={patient.id}
+                        type="button"
+                        onClick={() => handleSelectPatient(patient)}
+                        className="flex w-full items-center gap-3 px-3 py-2 text-left text-sm hover:bg-accent transition-colors"
+                      >
+                        <Avatar className="h-8 w-8">
+                          <AvatarFallback className="text-xs">
+                            {getInitials(patient.name)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="min-w-0 flex-1">
+                          <div className="font-medium">{patient.name}</div>
+                          <div className="flex flex-wrap items-center gap-x-1 text-xs text-muted-foreground">
+                            {patient.code && (
+                              <span><span className="font-mono">{patient.code}</span></span>
+                            )}
+                            {patient.birthYear && (
+                              <span>· NS: {patient.birthYear}</span>
+                            )}
+                            {patient.phone && (
+                              <span>· SĐT: {patient.phone}</span>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    </button>
-                  ))}
+                      </button>
+                    ))
+                  ) : (
+                    <div className="flex h-full flex-col items-center justify-center gap-3">
+                      <p className="text-sm text-muted-foreground">
+                        {t("walkIn.noResults")}
+                      </p>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          handleClose()
+                          navigate({ to: "/patients/intake" as string })
+                        }}
+                      >
+                        <IconUserPlus className="mr-2 h-4 w-4" />
+                        {t("walkIn.goToIntake")}
+                      </Button>
+                    </div>
+                  )}
                 </div>
               )}
-
-              {isSearching && (
-                <div className="text-sm text-muted-foreground text-center py-2">
-                  {t("walkIn.searching")}
-                </div>
-              )}
-
-              {searchQuery.length >= 2 &&
-                !isSearching &&
-                searchResults.length === 0 && (
-                  <div className="text-sm text-muted-foreground text-center py-2">
-                    {t("walkIn.noResults")}
-                  </div>
-                )}
             </div>
           )}
 
           {/* Selected patient info */}
           {selectedPatient && (
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <Label>{t("walkIn.patient")}</Label>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setSelectedPatient(null)}
-                  className="h-auto px-2 py-1 text-xs"
-                >
-                  {t("walkIn.change")}
-                </Button>
-              </div>
-              <div className="flex items-center gap-3 rounded-md border bg-muted/50 p-3">
-                <Avatar className="h-10 w-10">
-                  <AvatarFallback
-                    className="text-sm font-semibold"
-                    style={{
-                      backgroundColor: "var(--avatar-complete-bg)",
-                      color: "var(--avatar-complete-text)",
-                    }}
-                  >
-                    {getInitials(selectedPatient.name)}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <div className="text-sm font-semibold">
-                    {selectedPatient.name}
-                  </div>
-                  <div className="text-xs text-muted-foreground">
-                    {selectedPatient.code && (
-                      <span className="font-mono">{selectedPatient.code}</span>
-                    )}
-                    {selectedPatient.code && selectedPatient.birthYear && " - "}
-                    {selectedPatient.birthYear && (
-                      <span>{selectedPatient.birthYear}</span>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Reason field */}
-          <div className="space-y-2">
-            <Label>{t("walkIn.reason")}</Label>
-            <Textarea
-              value={reason}
-              onChange={(e) => setReason(e.target.value)}
-              rows={2}
-              className="resize-none"
+            <SelectedPatientCard
+              patient={selectedPatient}
+              onChange={() => setSelectedPatient(null)}
+              t={t}
+              reason={reason}
+              onReasonChange={setReason}
             />
-          </div>
+          )}
         </div>
 
         <DialogFooter className="gap-2 sm:justify-end">
           <Button variant="ghost" onClick={handleClose}>
             {tCommon("buttons.cancel")}
           </Button>
-          <Button
-            onClick={handleConfirm}
-            disabled={!selectedPatient || createWalkIn.isPending}
-            style={{ backgroundColor: "#534AB7", color: "white" }}
-            className="hover:opacity-90"
-          >
-            {createWalkIn.isPending
-              ? tCommon("status.processing")
-              : t("walkIn.confirm")}
-          </Button>
+          {selectedPatient ? (
+            <Button
+              onClick={handleConfirm}
+              disabled={createWalkIn.isPending}
+            >
+              {createWalkIn.isPending
+                ? tCommon("status.processing")
+                : t("walkIn.confirm")}
+            </Button>
+          ) : (
+            <Button
+              onClick={() => {
+                handleClose()
+                navigate({ to: "/patients/intake" as string })
+              }}
+            >
+              <IconUserPlus className="mr-2 h-4 w-4" />
+              {t("walkIn.goToIntake")}
+            </Button>
+          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>

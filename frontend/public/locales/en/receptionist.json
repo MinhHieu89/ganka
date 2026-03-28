@@ -66,9 +66,12 @@
     "searchPlaceholder": "Search by phone or name...",
     "searching": "Searching...",
     "noResults": "No patients found",
+    "goToIntake": "Register new patient",
     "patient": "Patient",
     "change": "Change",
     "reason": "Visit reason",
+    "walkInBadge": "Walk-in",
+    "reasonPlaceholder": "E.g.: Dry eye follow-up, blurry vision, routine check-up...",
     "confirm": "Confirm create visit",
     "successToast": "Created visit for {{name}}",
     "errorToast": "Could not create visit. Please try again."

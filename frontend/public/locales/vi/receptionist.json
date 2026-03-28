@@ -66,9 +66,12 @@
     "searchPlaceholder": "Tìm theo SBT hoặc tên BN...",
     "searching": "Đang tìm kiếm...",
     "noResults": "Không tìm thấy bệnh nhân nào",
+    "goToIntake": "Đăng ký bệnh nhân mới",
     "patient": "Bệnh nhân",
     "change": "Đổi",
     "reason": "Lý do khám",
+    "walkInBadge": "Walk-in",
+    "reasonPlaceholder": "VD: Tái khám dry eye, mắt khô trở lại, kiểm tra định kỳ...",
     "confirm": "Xác nhận tạo lượt khám",
     "successToast": "Đã tạo lượt khám cho {{name}}",
     "errorToast": "Không thể tạo lượt khám. Vui lòng thử lại."

@@ -109,11 +109,9 @@ export function ReceptionistDashboard() {
               {t("dashboard.bookAppointment")}
             </Link>
           </Button>
-          <Button asChild>
-            <Link to={"/patients/intake" as string}>
-              <IconUserPlus className="mr-2 h-4 w-4" />
-              {t("dashboard.newPatient")}
-            </Link>
+          <Button onClick={() => setWalkInOpen(true)}>
+            <IconUserPlus className="mr-2 h-4 w-4" />
+            {t("dashboard.newPatient")}
           </Button>
         </div>
       </div>

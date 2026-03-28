@@ -52,11 +52,15 @@ export function PatientQueueTable({
         id: "stt",
         header: "STT",
         size: 48,
-        cell: (info) => (
-          <span className="text-muted-foreground tabular-nums">
-            {info.row.index + 1 + (filters.page - 1) * filters.pageSize}
-          </span>
-        ),
+        cell: (info) => {
+          const sortedRows = info.table.getSortedRowModel().rows
+          const displayIndex = sortedRows.findIndex((r) => r.id === info.row.id)
+          return (
+            <span className="text-muted-foreground tabular-nums">
+              {(displayIndex === -1 ? info.row.index : displayIndex) + 1 + (filters.page - 1) * filters.pageSize}
+            </span>
+          )
+        },
       }),
       columnHelper.accessor("patientName", {
         header: t("table.fullName"),

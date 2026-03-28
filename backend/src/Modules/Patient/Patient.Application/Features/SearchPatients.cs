@@ -28,7 +28,9 @@ public static class SearchPatientsHandler
             p.FullName,
             p.Phone,
             p.PatientCode,
-            p.PatientType.ToContractEnum())).ToList();
+            p.PatientType.ToContractEnum(),
+            p.DateOfBirth?.Year,
+            p.Gender?.ToString())).ToList();
 
         return results;
     }
