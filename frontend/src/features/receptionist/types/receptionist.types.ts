@@ -1,6 +1,6 @@
 // -- Types matching backend Scheduling.Contracts.Dtos for Receptionist --
 
-export type ReceptionistStatus = "not_arrived" | "waiting" | "examining" | "completed"
+export type ReceptionistStatus = "not_arrived" | "waiting" | "examining" | "completed" | "cancelled"
 
 export type ReceptionistSource = "appointment" | "walkin"
 
@@ -27,6 +27,7 @@ export interface ReceptionistKpi {
   waiting: number
   examining: number
   completed: number
+  cancelled: number
 }
 
 export interface AvailableSlot {

@@ -111,7 +111,11 @@ public static class GetReceptionistDashboardHandler
     private static string? MapStatus(Domain.Entities.Appointment apt, Clinical.Domain.Entities.Visit? visit)
     {
         if (apt.Status == AppointmentStatus.Cancelled || apt.Status == AppointmentStatus.NoShow)
-            return visit != null ? MapVisitStatus(visit) : null;
+        {
+            if (visit != null)
+                return MapVisitStatus(visit);
+            return apt.Status == AppointmentStatus.Cancelled ? "cancelled" : null;
+        }
 
         if (visit == null)
             return "not_arrived";
@@ -122,7 +126,7 @@ public static class GetReceptionistDashboardHandler
     private static string? MapVisitStatus(Clinical.Domain.Entities.Visit visit)
     {
         if (visit.Status == VisitStatus.Cancelled)
-            return null;
+            return "cancelled";
 
         if (visit.Status == VisitStatus.Signed || visit.CurrentStage == WorkflowStage.Done)
             return "completed";

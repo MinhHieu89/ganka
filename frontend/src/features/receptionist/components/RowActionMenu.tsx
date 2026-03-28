@@ -134,6 +134,13 @@ export function RowActionMenu({ row, onCheckIn }: RowActionMenuProps) {
               {t("actionMenu.viewRecord")}
             </DropdownMenuItem>
           )}
+
+          {row.status === "cancelled" && row.patientId && (
+            <DropdownMenuItem onClick={handleViewProfile}>
+              <IconFileText className="h-4 w-4" />
+              {t("actionMenu.viewRecord")}
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
 

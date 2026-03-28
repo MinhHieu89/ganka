@@ -26,6 +26,11 @@ const statusConfig: Record<
     bgVar: "var(--status-completed-bg)",
     textVar: "var(--status-completed-text)",
   },
+  cancelled: {
+    labelKey: "status.cancelled",
+    bgVar: "var(--status-cancelled-bg)",
+    textVar: "var(--status-cancelled-text)",
+  },
 }
 
 interface StatusBadgeProps {

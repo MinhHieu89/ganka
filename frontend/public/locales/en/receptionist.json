@@ -25,7 +25,8 @@
     "notArrived": "Not arrived",
     "waiting": "Waiting",
     "examining": "In exam",
-    "done": "Done"
+    "done": "Done",
+    "cancelled": "Cancelled"
   },
   "table": {
     "fullName": "Full name",
@@ -42,7 +43,8 @@
     "notArrived": "Not arrived",
     "waiting": "Waiting",
     "examining": "In exam",
-    "completed": "Completed"
+    "completed": "Completed",
+    "cancelled": "Cancelled"
   },
   "source": {
     "appointment": "Scheduled",

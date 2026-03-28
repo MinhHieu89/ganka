@@ -32,11 +32,22 @@ public static class GetReceptionistKpiStatsHandler
         var waiting = 0;
         var examining = 0;
         var completed = 0;
+        var cancelled = 0;
 
         // Count from appointments
         foreach (var apt in appointments)
         {
-            if (apt.Status == AppointmentStatus.Cancelled || apt.Status == AppointmentStatus.NoShow)
+            if (apt.Status == AppointmentStatus.Cancelled)
+            {
+                var hasLinkedVisit = visitByAppointment.TryGetValue(apt.Id, out var linkedVisit);
+                if (hasLinkedVisit)
+                    CountVisitStatus(linkedVisit!, ref waiting, ref examining, ref completed, ref cancelled);
+                else
+                    cancelled++;
+                continue;
+            }
+
+            if (apt.Status == AppointmentStatus.NoShow)
                 continue;
 
             var hasVisit = visitByAppointment.TryGetValue(apt.Id, out var visit);
@@ -47,24 +58,27 @@ public static class GetReceptionistKpiStatsHandler
                 continue;
             }
 
-            CountVisitStatus(visit!, ref waiting, ref examining, ref completed);
+            CountVisitStatus(visit!, ref waiting, ref examining, ref completed, ref cancelled);
         }
 
         // Count walk-in visits (no appointment)
         var walkInVisits = visits.Where(v => v.AppointmentId == null || !appointments.Any(a => a.Id == v.AppointmentId));
         foreach (var visit in walkInVisits)
         {
-            CountVisitStatus(visit, ref waiting, ref examining, ref completed);
+            CountVisitStatus(visit, ref waiting, ref examining, ref completed, ref cancelled);
         }
 
         return Result<ReceptionistKpiDto>.Success(
-            new ReceptionistKpiDto(todayAppointments, notArrived, waiting, examining, completed));
+            new ReceptionistKpiDto(todayAppointments, notArrived, waiting, examining, completed, cancelled));
     }
 
-    private static void CountVisitStatus(Clinical.Domain.Entities.Visit visit, ref int waiting, ref int examining, ref int completed)
+    private static void CountVisitStatus(Clinical.Domain.Entities.Visit visit, ref int waiting, ref int examining, ref int completed, ref int cancelled)
     {
         if (visit.Status == VisitStatus.Cancelled)
+        {
+            cancelled++;
             return;
+        }
 
         if (visit.Status == VisitStatus.Signed || visit.CurrentStage == WorkflowStage.Done)
         {

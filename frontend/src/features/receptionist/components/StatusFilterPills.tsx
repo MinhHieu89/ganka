@@ -18,6 +18,7 @@ const filters: Array<{
   { value: "waiting", labelKey: "filter.waiting", countKey: "waiting" },
   { value: "examining", labelKey: "filter.examining", countKey: "examining" },
   { value: "completed", labelKey: "filter.done", countKey: "completed" },
+  { value: "cancelled", labelKey: "filter.cancelled", countKey: "cancelled" },
 ]
 
 export function StatusFilterPills({ value, onChange, counts }: StatusFilterPillsProps) {

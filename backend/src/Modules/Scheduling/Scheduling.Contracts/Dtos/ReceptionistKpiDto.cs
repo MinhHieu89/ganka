@@ -8,4 +8,5 @@ public sealed record ReceptionistKpiDto(
     int NotArrived,
     int Waiting,
     int Examining,
-    int Completed);
+    int Completed,
+    int Cancelled);

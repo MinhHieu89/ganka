@@ -84,6 +84,8 @@
     --status-examining-text: #0C447C;
     --status-completed-bg: #E1F5EE;
     --status-completed-text: #085041;
+    --status-cancelled-bg: #FEE2E2;
+    --status-cancelled-text: #991B1B;
     --source-appointment-bg: #EEEDFE;
     --source-appointment-text: #3C3489;
     --source-walkin-bg: #FDE8E4;

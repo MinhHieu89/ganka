@@ -25,7 +25,8 @@
     "notArrived": "Chưa đến",
     "waiting": "Chờ khám",
     "examining": "Đang khám",
-    "done": "Xong"
+    "done": "Xong",
+    "cancelled": "Đã hủy"
   },
   "table": {
     "fullName": "Họ tên",
@@ -42,7 +43,8 @@
     "notArrived": "Chưa đến",
     "waiting": "Chờ khám",
     "examining": "Đang khám",
-    "completed": "Hoàn thành"
+    "completed": "Hoàn thành",
+    "cancelled": "Đã hủy"
   },
   "source": {
     "appointment": "Hẹn",
