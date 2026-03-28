@@ -1,7 +1,15 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "@tanstack/react-router"
-import { IconDotsVertical } from "@tabler/icons-react"
+import {
+  IconDotsVertical,
+  IconLogin,
+  IconFileText,
+  IconPencil,
+  IconCalendarEvent,
+  IconUserOff,
+  IconX,
+} from "@tabler/icons-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -36,7 +44,10 @@ export function RowActionMenu({ row, onCheckIn }: RowActionMenuProps) {
 
   const handleEditInfo = () => {
     if (row.patientId) {
-      navigate({ to: `/patients/${row.patientId}/edit` as string })
+      navigate({
+        to: "/patients/intake" as string,
+        search: { patientId: row.patientId } as never,
+      })
     }
   }
 
@@ -57,29 +68,33 @@ export function RowActionMenu({ row, onCheckIn }: RowActionMenuProps) {
         <DropdownMenuContent align="end" className="min-w-[200px]">
           {row.status === "not_arrived" && (
             <>
+              <DropdownMenuItem onClick={onCheckIn}>
+                <IconLogin className="h-4 w-4" />
+                {t("table.checkIn")}
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleViewProfile}>
+                <IconFileText className="h-4 w-4" />
                 {t("actionMenu.viewRecord")}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={handleEditInfo}>
+                <IconPencil className="h-4 w-4" />
                 {t("actionMenu.editInfo")}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setActiveDialog("reschedule")}>
+                <IconCalendarEvent className="h-4 w-4" />
+                {t("actionMenu.reschedule")}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setActiveDialog("no-show")}>
+                <IconUserOff className="h-4 w-4" />
+                {t("actionMenu.markNoShow")}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                onClick={() => setActiveDialog("reschedule")}
-                style={{ color: "#534AB7" }}
-              >
-                {t("actionMenu.reschedule")}
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => setActiveDialog("no-show")}
-                style={{ color: "#BA7517" }}
-              >
-                {t("actionMenu.markNoShow")}
-              </DropdownMenuItem>
-              <DropdownMenuItem
                 onClick={() => setActiveDialog("cancel-appointment")}
-                style={{ color: "#A32D2D" }}
+                className="text-destructive focus:text-destructive"
               >
+                <IconX className="h-4 w-4" />
                 {t("actionMenu.cancelAppointment")}
               </DropdownMenuItem>
             </>
@@ -88,16 +103,19 @@ export function RowActionMenu({ row, onCheckIn }: RowActionMenuProps) {
           {row.status === "waiting" && (
             <>
               <DropdownMenuItem onClick={handleViewProfile}>
+                <IconFileText className="h-4 w-4" />
                 {t("actionMenu.viewRecord")}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={handleEditInfo}>
+                <IconPencil className="h-4 w-4" />
                 {t("actionMenu.editInfo")}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => setActiveDialog("cancel-visit")}
-                style={{ color: "#A32D2D" }}
+                className="text-destructive focus:text-destructive"
               >
+                <IconX className="h-4 w-4" />
                 {t("actionMenu.cancelVisit")}
               </DropdownMenuItem>
             </>
@@ -105,12 +123,14 @@ export function RowActionMenu({ row, onCheckIn }: RowActionMenuProps) {
 
           {row.status === "examining" && (
             <DropdownMenuItem onClick={handleViewProfile}>
+              <IconFileText className="h-4 w-4" />
               {t("actionMenu.viewRecord")}
             </DropdownMenuItem>
           )}
 
           {row.status === "completed" && (
             <DropdownMenuItem onClick={handleViewProfile}>
+              <IconFileText className="h-4 w-4" />
               {t("actionMenu.viewRecord")}
             </DropdownMenuItem>
           )}

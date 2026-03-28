@@ -104,12 +104,16 @@ export function useCheckInMutation() {
   return useMutation({
     mutationFn: async (appointmentId: string) => {
       const { error, response } = await api.POST(
-        `/api/scheduling/check-in/${appointmentId}` as never,
+        "/api/scheduling/appointments/check-in" as never,
+        { body: { appointmentId } as never },
       )
       if (error || !response.ok) throw new Error("Failed to check in")
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: receptionistKeys.all })
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: receptionistKeys.all }),
+        queryClient.invalidateQueries({ queryKey: ["clinical"] }),
+      ])
     },
   })
 }

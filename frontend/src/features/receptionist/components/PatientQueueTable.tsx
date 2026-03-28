@@ -126,27 +126,9 @@ export function PatientQueueTable({
       columnHelper.display({
         id: "actions",
         header: t("table.actions"),
-        size: 120,
+        size: 60,
         cell: (info) => {
           const row = info.row.original
-          if (row.status === "not_arrived") {
-            return (
-              <div className="flex items-center gap-1">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    onCheckIn(row)
-                  }}
-                  className="border-[var(--checkin-confirm)] text-[var(--checkin-confirm)] hover:bg-[var(--status-not-arrived-bg)]"
-                >
-                  {t("table.checkIn")}
-                </Button>
-                <RowActionMenu row={row} onCheckIn={() => onCheckIn(row)} />
-              </div>
-            )
-          }
           return (
             <RowActionMenu row={row} onCheckIn={() => onCheckIn(row)} />
           )

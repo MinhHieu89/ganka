@@ -1,5 +1,3 @@
-using Clinical.Domain.Entities;
-using Clinical.Domain.Enums;
 using FluentValidation;
 using Scheduling.Application.Interfaces;
 using Scheduling.Contracts.Dtos;
@@ -21,15 +19,14 @@ public class CheckInAppointmentCommandValidator : AbstractValidator<CheckInAppoi
 
 /// <summary>
 /// Wolverine handler for checking in an appointment.
-/// Marks appointment as checked-in and creates a Visit at Reception stage.
+/// Marks appointment as checked-in; Visit creation is handled by Clinical module
+/// via the AppointmentCheckedInIntegrationEvent domain event cascade.
 /// </summary>
 public static class CheckInAppointmentHandler
 {
     public static async Task<Result<Guid>> Handle(
         CheckInAppointmentCommand command,
         IAppointmentRepository appointmentRepository,
-        Clinical.Application.Interfaces.IVisitRepository visitRepository,
-        Patient.Application.Interfaces.IPatientRepository patientRepository,
         IUnitOfWork unitOfWork,
         IValidator<CheckInAppointmentCommand> validator,
         CancellationToken ct)
@@ -56,37 +53,8 @@ public static class CheckInAppointmentHandler
             return Result<Guid>.Failure(Error.Validation(ex.Message));
         }
 
-        // Load patient data for visit creation
-        var hasAllergies = false;
-        var patientName = appointment.PatientName;
-        var patientId = appointment.PatientId ?? Guid.Empty;
-
-        if (appointment.PatientId.HasValue)
-        {
-            var patient = await patientRepository.GetByIdAsync(appointment.PatientId.Value, ct);
-            if (patient is not null)
-            {
-                hasAllergies = patient.Allergies.Count > 0;
-                patientName = patient.FullName;
-            }
-        }
-
-        // Use default branch
-        var branchId = new BranchId(Guid.Parse("00000000-0000-0000-0000-000000000001"));
-
-        var visit = Visit.Create(
-            patientId,
-            patientName,
-            appointment.DoctorId,
-            appointment.DoctorName,
-            branchId,
-            hasAllergies,
-            appointment.Id,
-            source: VisitSource.Appointment);
-
-        await visitRepository.AddAsync(visit, ct);
         await unitOfWork.SaveChangesAsync(ct);
 
-        return visit.Id;
+        return Result<Guid>.Success(command.AppointmentId);
     }
 }

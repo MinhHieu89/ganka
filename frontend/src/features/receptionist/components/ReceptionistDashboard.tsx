@@ -44,8 +44,9 @@ export function ReceptionistDashboard() {
 
   const handleCheckIn = useCallback(
     (row: ReceptionistDashboardRow) => {
-      // Determine if patient is complete or incomplete/guest
-      const isIncomplete = row.isGuestBooking || (!row.birthYear && !row.patientCode)
+      // Existing patients (with patientId) always use the regular check-in dialog.
+      // Only guest/phone bookings without a linked patient record are incomplete.
+      const isIncomplete = !row.patientId && (row.isGuestBooking || (!row.birthYear && !row.patientCode))
       if (isIncomplete) {
         setCheckInIncompleteRow(row)
       } else {

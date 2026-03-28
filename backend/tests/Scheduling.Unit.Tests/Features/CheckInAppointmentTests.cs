@@ -1,9 +1,7 @@
-using Clinical.Application.Interfaces;
 using FluentAssertions;
 using FluentValidation;
 using FluentValidation.Results;
 using NSubstitute;
-using Patient.Application.Interfaces;
 using Scheduling.Application.Features;
 using Scheduling.Application.Interfaces;
 using Scheduling.Contracts.Dtos;
@@ -16,8 +14,6 @@ namespace Scheduling.Unit.Tests.Features;
 public class CheckInAppointmentTests
 {
     private readonly IAppointmentRepository _appointmentRepo = Substitute.For<IAppointmentRepository>();
-    private readonly IVisitRepository _visitRepo = Substitute.For<IVisitRepository>();
-    private readonly IPatientRepository _patientRepo = Substitute.For<IPatientRepository>();
     private readonly Scheduling.Application.Interfaces.IUnitOfWork _unitOfWork = Substitute.For<Scheduling.Application.Interfaces.IUnitOfWork>();
     private readonly IValidator<CheckInAppointmentCommand> _validator = Substitute.For<IValidator<CheckInAppointmentCommand>>();
 
@@ -47,23 +43,13 @@ public class CheckInAppointmentTests
         _appointmentRepo.GetByIdAsync(appointment.Id, Arg.Any<CancellationToken>())
             .Returns(appointment);
 
-        var patient = Patient.Domain.Entities.Patient.Create(
-            "Test Patient", "0901234567", Patient.Domain.Enums.PatientType.Medical,
-            new BranchId(Guid.Parse("00000000-0000-0000-0000-000000000001")),
-            DateTime.UtcNow.AddYears(-30), Patient.Domain.Enums.Gender.Male);
-
-        _patientRepo.GetByIdAsync(appointment.PatientId!.Value, Arg.Any<CancellationToken>())
-            .Returns(patient);
-
         // Act
         var result = await CheckInAppointmentHandler.Handle(
-            command, _appointmentRepo, _visitRepo, _patientRepo, _unitOfWork, _validator, CancellationToken.None);
+            command, _appointmentRepo, _unitOfWork, _validator, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        result.Value.Should().NotBeEmpty();
         appointment.CheckedInAt.Should().NotBeNull();
-        await _visitRepo.Received(1).AddAsync(Arg.Any<Clinical.Domain.Entities.Visit>(), Arg.Any<CancellationToken>());
         await _unitOfWork.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
     }
 
@@ -82,7 +68,7 @@ public class CheckInAppointmentTests
 
         // Act
         var result = await CheckInAppointmentHandler.Handle(
-            command, _appointmentRepo, _visitRepo, _patientRepo, _unitOfWork, _validator, CancellationToken.None);
+            command, _appointmentRepo, _unitOfWork, _validator, CancellationToken.None);
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -101,7 +87,7 @@ public class CheckInAppointmentTests
 
         // Act
         var result = await CheckInAppointmentHandler.Handle(
-            command, _appointmentRepo, _visitRepo, _patientRepo, _unitOfWork, _validator, CancellationToken.None);
+            command, _appointmentRepo, _unitOfWork, _validator, CancellationToken.None);
 
         // Assert
         result.IsFailure.Should().BeTrue();
