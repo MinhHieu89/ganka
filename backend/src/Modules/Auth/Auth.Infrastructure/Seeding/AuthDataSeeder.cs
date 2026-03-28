@@ -90,14 +90,9 @@ public sealed class AuthDataSeeder : IHostedService
 
     private async Task SeedRolesAsync(AuthDbContext dbContext, CancellationToken ct)
     {
-        if (await dbContext.Roles.AnyAsync(ct))
-        {
-            _logger.LogInformation("AuthDataSeeder: Roles already exist, skipping.");
-            return;
-        }
-
         var allPermissions = await dbContext.Permissions.ToListAsync(ct);
         var branchId = new BranchId(Guid.Parse("00000000-0000-0000-0000-000000000001"));
+        var existingRoleNames = await dbContext.Roles.Select(r => r.Name).ToListAsync(ct);
 
         Permission GetPermission(PermissionModule module, PermissionAction action) =>
             allPermissions.First(p => p.Module == module && p.Action == action);
@@ -105,80 +100,124 @@ public sealed class AuthDataSeeder : IHostedService
         List<Permission> GetModulePermissions(PermissionModule module, params PermissionAction[] actions) =>
             actions.Select(a => GetPermission(module, a)).ToList();
 
+        var rolesToAdd = new List<Role>();
+
         // 1. Admin -- ALL permissions
-        var admin = new Role("Admin", "Full system administrator with all permissions", true, branchId);
-        admin.UpdatePermissions(allPermissions);
+        if (!existingRoleNames.Contains("Admin"))
+        {
+            var admin = new Role("Admin", "Full system administrator with all permissions", true, branchId);
+            admin.UpdatePermissions(allPermissions);
+            rolesToAdd.Add(admin);
+        }
 
         // 2. Doctor
-        var doctor = new Role("Doctor", "Medical doctor with clinical and patient access", true, branchId);
-        var doctorPerms = new List<Permission>();
-        doctorPerms.AddRange(GetModulePermissions(PermissionModule.Patient, PermissionAction.View, PermissionAction.Create, PermissionAction.Update));
-        doctorPerms.AddRange(GetModulePermissions(PermissionModule.Clinical, PermissionAction.View, PermissionAction.Create, PermissionAction.Update));
-        doctorPerms.AddRange(GetModulePermissions(PermissionModule.Scheduling, PermissionAction.View, PermissionAction.Create, PermissionAction.Update));
-        doctorPerms.AddRange(GetModulePermissions(PermissionModule.Pharmacy, PermissionAction.View));
-        doctorPerms.AddRange(GetModulePermissions(PermissionModule.Optical, PermissionAction.View));
-        doctorPerms.AddRange(GetModulePermissions(PermissionModule.Billing, PermissionAction.View));
-        doctorPerms.AddRange(GetModulePermissions(PermissionModule.Treatment, PermissionAction.Manage));
-        doctor.UpdatePermissions(doctorPerms);
+        if (!existingRoleNames.Contains("Doctor"))
+        {
+            var doctor = new Role("Doctor", "Medical doctor with clinical and patient access", true, branchId);
+            var doctorPerms = new List<Permission>();
+            doctorPerms.AddRange(GetModulePermissions(PermissionModule.Patient, PermissionAction.View, PermissionAction.Create, PermissionAction.Update));
+            doctorPerms.AddRange(GetModulePermissions(PermissionModule.Clinical, PermissionAction.View, PermissionAction.Create, PermissionAction.Update));
+            doctorPerms.AddRange(GetModulePermissions(PermissionModule.Scheduling, PermissionAction.View, PermissionAction.Create, PermissionAction.Update));
+            doctorPerms.AddRange(GetModulePermissions(PermissionModule.Pharmacy, PermissionAction.View));
+            doctorPerms.AddRange(GetModulePermissions(PermissionModule.Optical, PermissionAction.View));
+            doctorPerms.AddRange(GetModulePermissions(PermissionModule.Billing, PermissionAction.View));
+            doctorPerms.AddRange(GetModulePermissions(PermissionModule.Treatment, PermissionAction.Manage));
+            doctor.UpdatePermissions(doctorPerms);
+            rolesToAdd.Add(doctor);
+        }
 
         // 3. Technician
-        var technician = new Role("Technician", "Clinical technician with patient and clinical access", true, branchId);
-        var techPerms = new List<Permission>();
-        techPerms.AddRange(GetModulePermissions(PermissionModule.Patient, PermissionAction.View, PermissionAction.Create));
-        techPerms.AddRange(GetModulePermissions(PermissionModule.Clinical, PermissionAction.View, PermissionAction.Create));
-        techPerms.AddRange(GetModulePermissions(PermissionModule.Scheduling, PermissionAction.View));
-        technician.UpdatePermissions(techPerms);
+        if (!existingRoleNames.Contains("Technician"))
+        {
+            var technician = new Role("Technician", "Clinical technician with patient and clinical access", true, branchId);
+            var techPerms = new List<Permission>();
+            techPerms.AddRange(GetModulePermissions(PermissionModule.Patient, PermissionAction.View, PermissionAction.Create));
+            techPerms.AddRange(GetModulePermissions(PermissionModule.Clinical, PermissionAction.View, PermissionAction.Create));
+            techPerms.AddRange(GetModulePermissions(PermissionModule.Scheduling, PermissionAction.View));
+            technician.UpdatePermissions(techPerms);
+            rolesToAdd.Add(technician);
+        }
 
         // 4. Nurse
-        var nurse = new Role("Nurse", "Nurse with patient and clinical access", true, branchId);
-        var nursePerms = new List<Permission>();
-        nursePerms.AddRange(GetModulePermissions(PermissionModule.Patient, PermissionAction.View, PermissionAction.Create));
-        nursePerms.AddRange(GetModulePermissions(PermissionModule.Clinical, PermissionAction.View, PermissionAction.Create));
-        nursePerms.AddRange(GetModulePermissions(PermissionModule.Scheduling, PermissionAction.View));
-        nurse.UpdatePermissions(nursePerms);
+        if (!existingRoleNames.Contains("Nurse"))
+        {
+            var nurse = new Role("Nurse", "Nurse with patient and clinical access", true, branchId);
+            var nursePerms = new List<Permission>();
+            nursePerms.AddRange(GetModulePermissions(PermissionModule.Patient, PermissionAction.View, PermissionAction.Create));
+            nursePerms.AddRange(GetModulePermissions(PermissionModule.Clinical, PermissionAction.View, PermissionAction.Create));
+            nursePerms.AddRange(GetModulePermissions(PermissionModule.Scheduling, PermissionAction.View));
+            nurse.UpdatePermissions(nursePerms);
+            rolesToAdd.Add(nurse);
+        }
 
         // 5. Cashier
-        var cashier = new Role("Cashier", "Cashier with billing and pharmacy view access", true, branchId);
-        var cashierPerms = new List<Permission>();
-        cashierPerms.AddRange(GetModulePermissions(PermissionModule.Patient, PermissionAction.View));
-        cashierPerms.AddRange(GetModulePermissions(PermissionModule.Billing, PermissionAction.View, PermissionAction.Create, PermissionAction.Update));
-        cashierPerms.AddRange(GetModulePermissions(PermissionModule.Pharmacy, PermissionAction.View));
-        cashier.UpdatePermissions(cashierPerms);
+        if (!existingRoleNames.Contains("Cashier"))
+        {
+            var cashier = new Role("Cashier", "Cashier with billing and pharmacy view access", true, branchId);
+            var cashierPerms = new List<Permission>();
+            cashierPerms.AddRange(GetModulePermissions(PermissionModule.Patient, PermissionAction.View));
+            cashierPerms.AddRange(GetModulePermissions(PermissionModule.Billing, PermissionAction.View, PermissionAction.Create, PermissionAction.Update));
+            cashierPerms.AddRange(GetModulePermissions(PermissionModule.Pharmacy, PermissionAction.View));
+            cashier.UpdatePermissions(cashierPerms);
+            rolesToAdd.Add(cashier);
+        }
 
         // 6. OpticalStaff
-        var opticalStaff = new Role("OpticalStaff", "Optical center staff with optical and billing access", true, branchId);
-        var opticalPerms = new List<Permission>();
-        opticalPerms.AddRange(GetModulePermissions(PermissionModule.Patient, PermissionAction.View));
-        opticalPerms.AddRange(GetModulePermissions(PermissionModule.Optical, PermissionAction.View, PermissionAction.Create, PermissionAction.Update));
-        opticalPerms.AddRange(GetModulePermissions(PermissionModule.Billing, PermissionAction.View));
-        opticalStaff.UpdatePermissions(opticalPerms);
+        if (!existingRoleNames.Contains("OpticalStaff"))
+        {
+            var opticalStaff = new Role("OpticalStaff", "Optical center staff with optical and billing access", true, branchId);
+            var opticalPerms = new List<Permission>();
+            opticalPerms.AddRange(GetModulePermissions(PermissionModule.Patient, PermissionAction.View));
+            opticalPerms.AddRange(GetModulePermissions(PermissionModule.Optical, PermissionAction.View, PermissionAction.Create, PermissionAction.Update));
+            opticalPerms.AddRange(GetModulePermissions(PermissionModule.Billing, PermissionAction.View));
+            opticalStaff.UpdatePermissions(opticalPerms);
+            rolesToAdd.Add(opticalStaff);
+        }
 
         // 7. Manager — TRT-09: Manager can process treatment cancellations (requires Treatment.Manage)
-        var manager = new Role("Manager", "Clinic manager with broad access except clinical deletion", true, branchId);
-        var managerPerms = allPermissions
-            .Where(p => !(p.Module == PermissionModule.Clinical && p.Action == PermissionAction.Delete))
-            .ToList();
-        manager.UpdatePermissions(managerPerms);
+        if (!existingRoleNames.Contains("Manager"))
+        {
+            var manager = new Role("Manager", "Clinic manager with broad access except clinical deletion", true, branchId);
+            var managerPerms = allPermissions
+                .Where(p => !(p.Module == PermissionModule.Clinical && p.Action == PermissionAction.Delete))
+                .ToList();
+            manager.UpdatePermissions(managerPerms);
+            rolesToAdd.Add(manager);
+        }
 
         // 8. Accountant
-        var accountant = new Role("Accountant", "Accountant with billing and audit view/export access", true, branchId);
-        var accountantPerms = new List<Permission>();
-        accountantPerms.AddRange(GetModulePermissions(PermissionModule.Billing, PermissionAction.View, PermissionAction.Export));
-        accountantPerms.AddRange(GetModulePermissions(PermissionModule.Audit, PermissionAction.View, PermissionAction.Export));
-        accountant.UpdatePermissions(accountantPerms);
+        if (!existingRoleNames.Contains("Accountant"))
+        {
+            var accountant = new Role("Accountant", "Accountant with billing and audit view/export access", true, branchId);
+            var accountantPerms = new List<Permission>();
+            accountantPerms.AddRange(GetModulePermissions(PermissionModule.Billing, PermissionAction.View, PermissionAction.Export));
+            accountantPerms.AddRange(GetModulePermissions(PermissionModule.Audit, PermissionAction.View, PermissionAction.Export));
+            accountant.UpdatePermissions(accountantPerms);
+            rolesToAdd.Add(accountant);
+        }
 
         // 9. Receptionist — Front desk staff managing patient check-in and appointments
-        var receptionist = new Role("Receptionist", "Front desk receptionist managing patient check-in and appointments", true, branchId);
-        var receptionistPerms = new List<Permission>();
-        receptionistPerms.AddRange(GetModulePermissions(PermissionModule.Patient, PermissionAction.View, PermissionAction.Create, PermissionAction.Update));
-        receptionistPerms.AddRange(GetModulePermissions(PermissionModule.Scheduling, PermissionAction.View, PermissionAction.Create, PermissionAction.Update));
-        receptionistPerms.AddRange(GetModulePermissions(PermissionModule.Clinical, PermissionAction.View, PermissionAction.Create));
-        receptionist.UpdatePermissions(receptionistPerms);
+        if (!existingRoleNames.Contains("Receptionist"))
+        {
+            var receptionist = new Role("Receptionist", "Front desk receptionist managing patient check-in and appointments", true, branchId);
+            var receptionistPerms = new List<Permission>();
+            receptionistPerms.AddRange(GetModulePermissions(PermissionModule.Patient, PermissionAction.View, PermissionAction.Create, PermissionAction.Update));
+            receptionistPerms.AddRange(GetModulePermissions(PermissionModule.Scheduling, PermissionAction.View, PermissionAction.Create, PermissionAction.Update));
+            receptionistPerms.AddRange(GetModulePermissions(PermissionModule.Clinical, PermissionAction.View, PermissionAction.Create));
+            receptionist.UpdatePermissions(receptionistPerms);
+            rolesToAdd.Add(receptionist);
+        }
 
-        dbContext.Roles.AddRange(admin, doctor, technician, nurse, cashier, opticalStaff, manager, accountant, receptionist);
+        if (rolesToAdd.Count == 0)
+        {
+            _logger.LogInformation("AuthDataSeeder: All system roles already exist, skipping.");
+            return;
+        }
+
+        dbContext.Roles.AddRange(rolesToAdd);
         await dbContext.SaveChangesAsync(ct);
 
-        _logger.LogInformation("AuthDataSeeder: Seeded 9 system roles with preset permissions.");
+        _logger.LogInformation("AuthDataSeeder: Seeded {Count} new system role(s).", rolesToAdd.Count);
     }
 
     private async Task SeedRootAdminAsync(AuthDbContext dbContext, IServiceProvider sp, CancellationToken ct)

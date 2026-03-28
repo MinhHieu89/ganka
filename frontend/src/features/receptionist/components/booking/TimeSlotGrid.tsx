@@ -1,4 +1,5 @@
 import { useMemo } from "react"
+import { useTranslation } from "react-i18next"
 import { Skeleton } from "@/shared/components/Skeleton"
 import { cn } from "@/shared/lib/utils"
 import type { AvailableSlot } from "@/features/receptionist/types/receptionist.types"
@@ -39,6 +40,7 @@ export function TimeSlotGrid({
   onSelectSlot,
   isLoading,
 }: TimeSlotGridProps) {
+  const { t } = useTranslation("scheduling")
   const groups = useMemo<SlotGroup[]>(() => {
     // Deduplicate slots by startTime (multiple doctors may share the same time)
     const uniqueTimes = new Map<string, AvailableSlot>()
@@ -69,10 +71,10 @@ export function TimeSlotGrid({
     afternoon.sort(sortByTime)
 
     return [
-      { label: "Sang", slots: morning },
-      { label: "Chieu", slots: afternoon },
+      { label: t("slots.morning"), slots: morning },
+      { label: t("slots.afternoon"), slots: afternoon },
     ]
-  }, [slots])
+  }, [slots, t])
 
   if (isLoading) {
     return (
@@ -94,7 +96,7 @@ export function TimeSlotGrid({
   if (slots.length === 0) {
     return (
       <div className="py-8 text-center text-sm text-muted-foreground">
-        Khong co slot trong cho ngay nay
+        {t("slots.noSlots")}
       </div>
     )
   }
@@ -108,7 +110,7 @@ export function TimeSlotGrid({
   return (
     <div className="space-y-4">
       <div className="text-sm font-semibold text-foreground">
-        {availableSlots} slot trong / {totalSlots}
+        {availableSlots} {t("slots.available")} / {totalSlots}
       </div>
 
       {groups.map((group) => {
@@ -121,7 +123,7 @@ export function TimeSlotGrid({
             <div className="flex items-center gap-2">
               <span className="text-sm font-semibold">{group.label}</span>
               <span className="text-xs text-muted-foreground">
-                {groupAvailable} slot trong / {group.slots.length}
+                {groupAvailable} {t("slots.available")} / {group.slots.length}
               </span>
             </div>
 
@@ -165,15 +167,15 @@ export function TimeSlotGrid({
       <div className="flex items-center gap-4 pt-2 text-xs text-muted-foreground">
         <div className="flex items-center gap-1.5">
           <div className="h-4 w-6 rounded border border-[var(--border)] bg-white" />
-          <span>Trong</span>
+          <span>{t("slots.legendEmpty")}</span>
         </div>
         <div className="flex items-center gap-1.5">
           <div className="h-4 w-6 rounded border border-[#534AB7] bg-[#EEEDFE]" />
-          <span>Dang chon</span>
+          <span>{t("slots.legendSelected")}</span>
         </div>
         <div className="flex items-center gap-1.5">
           <div className="h-4 w-6 rounded bg-[var(--secondary)]" />
-          <span>Da day</span>
+          <span>{t("slots.legendFull")}</span>
         </div>
       </div>
     </div>

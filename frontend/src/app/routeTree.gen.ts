@@ -33,6 +33,7 @@ import { Route as AuthenticatedPharmacyQueueRouteImport } from './routes/_authen
 import { Route as AuthenticatedPharmacyOtcSalesRouteImport } from './routes/_authenticated/pharmacy/otc-sales'
 import { Route as AuthenticatedPharmacyDrugCatalogRouteImport } from './routes/_authenticated/pharmacy/drug-catalog'
 import { Route as AuthenticatedPharmacyDispensingHistoryRouteImport } from './routes/_authenticated/pharmacy/dispensing-history'
+import { Route as AuthenticatedPatientsIntakeRouteImport } from './routes/_authenticated/patients/intake'
 import { Route as AuthenticatedPatientsPatientIdRouteImport } from './routes/_authenticated/patients/$patientId'
 import { Route as AuthenticatedOpticalWarrantyRouteImport } from './routes/_authenticated/optical/warranty'
 import { Route as AuthenticatedOpticalStocktakingRouteImport } from './routes/_authenticated/optical/stocktaking'
@@ -42,6 +43,7 @@ import { Route as AuthenticatedOpticalFramesRouteImport } from './routes/_authen
 import { Route as AuthenticatedOpticalCombosRouteImport } from './routes/_authenticated/optical/combos'
 import { Route as AuthenticatedBillingShiftsRouteImport } from './routes/_authenticated/billing/shifts'
 import { Route as AuthenticatedBillingServiceCatalogRouteImport } from './routes/_authenticated/billing/service-catalog'
+import { Route as AuthenticatedAppointmentsNewRouteImport } from './routes/_authenticated/appointments/new'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin/users'
 import { Route as AuthenticatedAdminRolesRouteImport } from './routes/_authenticated/admin/roles'
 import { Route as AuthenticatedAdminClinicSettingsRouteImport } from './routes/_authenticated/admin/clinic-settings'
@@ -187,6 +189,12 @@ const AuthenticatedPharmacyDispensingHistoryRoute =
     path: '/pharmacy/dispensing-history',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedPatientsIntakeRoute =
+  AuthenticatedPatientsIntakeRouteImport.update({
+    id: '/patients/intake',
+    path: '/patients/intake',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedPatientsPatientIdRoute =
   AuthenticatedPatientsPatientIdRouteImport.update({
     id: '/patients/$patientId',
@@ -239,6 +247,12 @@ const AuthenticatedBillingServiceCatalogRoute =
   AuthenticatedBillingServiceCatalogRouteImport.update({
     id: '/billing/service-catalog',
     path: '/billing/service-catalog',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedAppointmentsNewRoute =
+  AuthenticatedAppointmentsNewRouteImport.update({
+    id: '/appointments/new',
+    path: '/appointments/new',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
@@ -299,6 +313,7 @@ export interface FileRoutesByFullPath {
   '/admin/clinic-settings': typeof AuthenticatedAdminClinicSettingsRoute
   '/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/appointments/new': typeof AuthenticatedAppointmentsNewRoute
   '/billing/service-catalog': typeof AuthenticatedBillingServiceCatalogRoute
   '/billing/shifts': typeof AuthenticatedBillingShiftsRoute
   '/optical/combos': typeof AuthenticatedOpticalCombosRoute
@@ -308,6 +323,7 @@ export interface FileRoutesByFullPath {
   '/optical/stocktaking': typeof AuthenticatedOpticalStocktakingRoute
   '/optical/warranty': typeof AuthenticatedOpticalWarrantyRoute
   '/patients/$patientId': typeof AuthenticatedPatientsPatientIdRoute
+  '/patients/intake': typeof AuthenticatedPatientsIntakeRoute
   '/pharmacy/dispensing-history': typeof AuthenticatedPharmacyDispensingHistoryRoute
   '/pharmacy/drug-catalog': typeof AuthenticatedPharmacyDrugCatalogRoute
   '/pharmacy/otc-sales': typeof AuthenticatedPharmacyOtcSalesRoute
@@ -341,6 +357,7 @@ export interface FileRoutesByTo {
   '/admin/clinic-settings': typeof AuthenticatedAdminClinicSettingsRoute
   '/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/appointments/new': typeof AuthenticatedAppointmentsNewRoute
   '/billing/service-catalog': typeof AuthenticatedBillingServiceCatalogRoute
   '/billing/shifts': typeof AuthenticatedBillingShiftsRoute
   '/optical/combos': typeof AuthenticatedOpticalCombosRoute
@@ -349,6 +366,7 @@ export interface FileRoutesByTo {
   '/optical/stocktaking': typeof AuthenticatedOpticalStocktakingRoute
   '/optical/warranty': typeof AuthenticatedOpticalWarrantyRoute
   '/patients/$patientId': typeof AuthenticatedPatientsPatientIdRoute
+  '/patients/intake': typeof AuthenticatedPatientsIntakeRoute
   '/pharmacy/dispensing-history': typeof AuthenticatedPharmacyDispensingHistoryRoute
   '/pharmacy/drug-catalog': typeof AuthenticatedPharmacyDrugCatalogRoute
   '/pharmacy/otc-sales': typeof AuthenticatedPharmacyOtcSalesRoute
@@ -384,6 +402,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/clinic-settings': typeof AuthenticatedAdminClinicSettingsRoute
   '/_authenticated/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/_authenticated/appointments/new': typeof AuthenticatedAppointmentsNewRoute
   '/_authenticated/billing/service-catalog': typeof AuthenticatedBillingServiceCatalogRoute
   '/_authenticated/billing/shifts': typeof AuthenticatedBillingShiftsRoute
   '/_authenticated/optical/combos': typeof AuthenticatedOpticalCombosRoute
@@ -393,6 +412,7 @@ export interface FileRoutesById {
   '/_authenticated/optical/stocktaking': typeof AuthenticatedOpticalStocktakingRoute
   '/_authenticated/optical/warranty': typeof AuthenticatedOpticalWarrantyRoute
   '/_authenticated/patients/$patientId': typeof AuthenticatedPatientsPatientIdRoute
+  '/_authenticated/patients/intake': typeof AuthenticatedPatientsIntakeRoute
   '/_authenticated/pharmacy/dispensing-history': typeof AuthenticatedPharmacyDispensingHistoryRoute
   '/_authenticated/pharmacy/drug-catalog': typeof AuthenticatedPharmacyDrugCatalogRoute
   '/_authenticated/pharmacy/otc-sales': typeof AuthenticatedPharmacyOtcSalesRoute
@@ -428,6 +448,7 @@ export interface FileRouteTypes {
     | '/admin/clinic-settings'
     | '/admin/roles'
     | '/admin/users'
+    | '/appointments/new'
     | '/billing/service-catalog'
     | '/billing/shifts'
     | '/optical/combos'
@@ -437,6 +458,7 @@ export interface FileRouteTypes {
     | '/optical/stocktaking'
     | '/optical/warranty'
     | '/patients/$patientId'
+    | '/patients/intake'
     | '/pharmacy/dispensing-history'
     | '/pharmacy/drug-catalog'
     | '/pharmacy/otc-sales'
@@ -470,6 +492,7 @@ export interface FileRouteTypes {
     | '/admin/clinic-settings'
     | '/admin/roles'
     | '/admin/users'
+    | '/appointments/new'
     | '/billing/service-catalog'
     | '/billing/shifts'
     | '/optical/combos'
@@ -478,6 +501,7 @@ export interface FileRouteTypes {
     | '/optical/stocktaking'
     | '/optical/warranty'
     | '/patients/$patientId'
+    | '/patients/intake'
     | '/pharmacy/dispensing-history'
     | '/pharmacy/drug-catalog'
     | '/pharmacy/otc-sales'
@@ -512,6 +536,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/clinic-settings'
     | '/_authenticated/admin/roles'
     | '/_authenticated/admin/users'
+    | '/_authenticated/appointments/new'
     | '/_authenticated/billing/service-catalog'
     | '/_authenticated/billing/shifts'
     | '/_authenticated/optical/combos'
@@ -521,6 +546,7 @@ export interface FileRouteTypes {
     | '/_authenticated/optical/stocktaking'
     | '/_authenticated/optical/warranty'
     | '/_authenticated/patients/$patientId'
+    | '/_authenticated/patients/intake'
     | '/_authenticated/pharmacy/dispensing-history'
     | '/_authenticated/pharmacy/drug-catalog'
     | '/_authenticated/pharmacy/otc-sales'
@@ -723,6 +749,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPharmacyDispensingHistoryRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/patients/intake': {
+      id: '/_authenticated/patients/intake'
+      path: '/patients/intake'
+      fullPath: '/patients/intake'
+      preLoaderRoute: typeof AuthenticatedPatientsIntakeRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/patients/$patientId': {
       id: '/_authenticated/patients/$patientId'
       path: '/patients/$patientId'
@@ -784,6 +817,13 @@ declare module '@tanstack/react-router' {
       path: '/billing/service-catalog'
       fullPath: '/billing/service-catalog'
       preLoaderRoute: typeof AuthenticatedBillingServiceCatalogRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/appointments/new': {
+      id: '/_authenticated/appointments/new'
+      path: '/appointments/new'
+      fullPath: '/appointments/new'
+      preLoaderRoute: typeof AuthenticatedAppointmentsNewRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/admin/users': {
@@ -868,6 +908,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedAdminClinicSettingsRoute: typeof AuthenticatedAdminClinicSettingsRoute
   AuthenticatedAdminRolesRoute: typeof AuthenticatedAdminRolesRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
+  AuthenticatedAppointmentsNewRoute: typeof AuthenticatedAppointmentsNewRoute
   AuthenticatedBillingServiceCatalogRoute: typeof AuthenticatedBillingServiceCatalogRoute
   AuthenticatedBillingShiftsRoute: typeof AuthenticatedBillingShiftsRoute
   AuthenticatedOpticalCombosRoute: typeof AuthenticatedOpticalCombosRoute
@@ -877,6 +918,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedOpticalStocktakingRoute: typeof AuthenticatedOpticalStocktakingRoute
   AuthenticatedOpticalWarrantyRoute: typeof AuthenticatedOpticalWarrantyRoute
   AuthenticatedPatientsPatientIdRoute: typeof AuthenticatedPatientsPatientIdRoute
+  AuthenticatedPatientsIntakeRoute: typeof AuthenticatedPatientsIntakeRoute
   AuthenticatedPharmacyDispensingHistoryRoute: typeof AuthenticatedPharmacyDispensingHistoryRoute
   AuthenticatedPharmacyDrugCatalogRoute: typeof AuthenticatedPharmacyDrugCatalogRoute
   AuthenticatedPharmacyOtcSalesRoute: typeof AuthenticatedPharmacyOtcSalesRoute
@@ -904,6 +946,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAdminClinicSettingsRoute: AuthenticatedAdminClinicSettingsRoute,
   AuthenticatedAdminRolesRoute: AuthenticatedAdminRolesRoute,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
+  AuthenticatedAppointmentsNewRoute: AuthenticatedAppointmentsNewRoute,
   AuthenticatedBillingServiceCatalogRoute:
     AuthenticatedBillingServiceCatalogRoute,
   AuthenticatedBillingShiftsRoute: AuthenticatedBillingShiftsRoute,
@@ -914,6 +957,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedOpticalStocktakingRoute: AuthenticatedOpticalStocktakingRoute,
   AuthenticatedOpticalWarrantyRoute: AuthenticatedOpticalWarrantyRoute,
   AuthenticatedPatientsPatientIdRoute: AuthenticatedPatientsPatientIdRoute,
+  AuthenticatedPatientsIntakeRoute: AuthenticatedPatientsIntakeRoute,
   AuthenticatedPharmacyDispensingHistoryRoute:
     AuthenticatedPharmacyDispensingHistoryRoute,
   AuthenticatedPharmacyDrugCatalogRoute: AuthenticatedPharmacyDrugCatalogRoute,

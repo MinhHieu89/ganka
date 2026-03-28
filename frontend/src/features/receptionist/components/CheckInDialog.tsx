@@ -1,4 +1,5 @@
 import { toast } from "sonner"
+import { useTranslation } from "react-i18next"
 import { IconUser } from "@tabler/icons-react"
 import { useNavigate } from "@tanstack/react-router"
 import {
@@ -27,6 +28,9 @@ function getInitials(name: string): string {
 }
 
 export function CheckInDialog({ open, onOpenChange, row }: CheckInDialogProps) {
+  const { t } = useTranslation("scheduling")
+  const { t: tCommon } = useTranslation("common")
+  const { t: tPatient } = useTranslation("patient")
   const checkIn = useCheckInMutation()
   const navigate = useNavigate()
 
@@ -35,11 +39,11 @@ export function CheckInDialog({ open, onOpenChange, row }: CheckInDialogProps) {
 
     checkIn.mutate(row.appointmentId, {
       onSuccess: () => {
-        toast.success(`Da check-in cho ${row.patientName}`)
+        toast.success(t("checkIn.successToast", { name: row.patientName }))
         onOpenChange(false)
       },
       onError: () => {
-        toast.error("BN da chuyen sang Dang kham, khong the huy.")
+        toast.error(t("checkIn.alreadyExamining"))
       },
     })
   }
@@ -54,10 +58,10 @@ export function CheckInDialog({ open, onOpenChange, row }: CheckInDialogProps) {
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">
-            Check-in benh nhan
+            {t("checkIn.title")}
           </DialogTitle>
           <DialogDescription className="sr-only">
-            Xac nhan thong tin benh nhan truoc khi check-in
+            {t("checkIn.description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -88,18 +92,18 @@ export function CheckInDialog({ open, onOpenChange, row }: CheckInDialogProps) {
           {/* Patient info card */}
           <div className="rounded-md border bg-muted/50 p-4 space-y-2 text-sm">
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Ho ten</span>
+              <span className="text-muted-foreground">{tPatient("fullName")}</span>
               <span className="font-medium">{row.patientName}</span>
             </div>
             {row.patientCode && (
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Ma BN</span>
+                <span className="text-muted-foreground">{tPatient("patientCode")}</span>
                 <span className="font-mono">{row.patientCode}</span>
               </div>
             )}
             {row.birthYear && (
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Nam sinh</span>
+                <span className="text-muted-foreground">{tPatient("birthYear")}</span>
                 <span>{row.birthYear}</span>
               </div>
             )}
@@ -115,19 +119,18 @@ export function CheckInDialog({ open, onOpenChange, row }: CheckInDialogProps) {
           >
             <IconUser className="mt-0.5 h-4 w-4 shrink-0" />
             <span>
-              Xac nhan thong tin voi BN truoc khi check-in. Neu can sua, bam
-              Sua thong tin.
+              {t("checkIn.infoNote")}
             </span>
           </div>
         </div>
 
         <DialogFooter className="flex-col gap-2 sm:flex-row sm:justify-between">
           <Button variant="outline" onClick={handleEditInfo}>
-            Sua thong tin
+            {tCommon("buttons.edit")}
           </Button>
           <div className="flex gap-2">
             <Button variant="ghost" onClick={() => onOpenChange(false)}>
-              Quay lai
+              {tCommon("buttons.back")}
             </Button>
             <Button
               onClick={handleConfirm}
@@ -135,7 +138,7 @@ export function CheckInDialog({ open, onOpenChange, row }: CheckInDialogProps) {
               style={{ backgroundColor: "#534AB7", color: "white" }}
               className="hover:opacity-90"
             >
-              {checkIn.isPending ? "Dang xu ly..." : "Xac nhan check-in"}
+              {checkIn.isPending ? tCommon("status.processing") : t("checkIn.confirm")}
             </Button>
           </div>
         </DialogFooter>

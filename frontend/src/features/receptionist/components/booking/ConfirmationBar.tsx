@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next"
 import { IconLoader2 } from "@tabler/icons-react"
 import { Button } from "@/shared/components/Button"
 import { Card } from "@/shared/components/Card"
@@ -43,6 +44,8 @@ export function ConfirmationBar({
   onConfirm,
   isSubmitting,
 }: ConfirmationBarProps) {
+  const { t } = useTranslation("scheduling")
+  const { t: tCommon } = useTranslation("common")
   const formattedDate = formatDisplayDate(date)
   const formattedTime = formatDisplayTime(time)
 
@@ -51,16 +54,16 @@ export function ConfirmationBar({
       <div className="flex items-center justify-between gap-4">
         <div className="min-w-0 flex-1">
           <p className="text-sm font-semibold text-[#3C3489]">
-            Xac nhan lich hen
+            {t("booking.confirmTitle")}
           </p>
           <p className="mt-1 truncate text-sm text-foreground">
             <span className="font-semibold">{patientName}</span>
             {" — "}
-            {formattedDate} luc {formattedTime}
+            {formattedDate} {t("booking.confirmAt")} {formattedTime}
           </p>
           <p className="truncate text-sm text-muted-foreground">
-            {reason || "Chua nhap ly do"}
-            {doctorName ? ` — ${doctorName}` : " — Khong chi dinh BS"}
+            {reason || t("booking.noReason")}
+            {doctorName ? ` — ${doctorName}` : ` — ${t("booking.noDoctor")}`}
           </p>
         </div>
 
@@ -71,7 +74,7 @@ export function ConfirmationBar({
             onClick={onCancel}
             disabled={isSubmitting}
           >
-            Huy bo
+            {tCommon("buttons.cancel")}
           </Button>
           <Button
             type="button"
@@ -82,7 +85,7 @@ export function ConfirmationBar({
             {isSubmitting && (
               <IconLoader2 className="mr-2 h-4 w-4 animate-spin" />
             )}
-            Xac nhan dat hen
+            {t("booking.confirmTitle")}
           </Button>
         </div>
       </div>

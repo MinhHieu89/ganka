@@ -97,7 +97,8 @@
     "success": "Success",
     "notFound": "Not found",
     "sessionExpired": "Session Expired",
-    "sessionExpiredDetail": "Your session has expired. Please refresh to continue."
+    "sessionExpiredDetail": "Your session has expired. Please refresh to continue.",
+    "processing": "Processing..."
   },
   "search": {
     "placeholder": "Search...",

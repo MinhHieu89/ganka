@@ -2,6 +2,7 @@ import { useState } from "react"
 import { useForm, FormProvider } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useNavigate } from "@tanstack/react-router"
+import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
 import { IconLoader2 } from "@tabler/icons-react"
 import {
@@ -51,6 +52,8 @@ export function PatientIntakeForm({
   mode,
 }: PatientIntakeFormProps) {
   const navigate = useNavigate()
+  const { t } = useTranslation("patient")
+  const { t: tCommon } = useTranslation("common")
   const [isSaving, setIsSaving] = useState(false)
   const [isSavingAndAdvancing, setIsSavingAndAdvancing] = useState(false)
 
@@ -87,14 +90,14 @@ export function PatientIntakeForm({
     try {
       if (mode === "edit" && patientId) {
         await updateMutation.mutateAsync({ patientId, ...data })
-        toast.success(`Da cap nhat ho so cho ${data.fullName}`)
+        toast.success(t("intake.updateSuccess", { name: data.fullName }))
       } else {
         await registerMutation.mutateAsync(data)
-        toast.success(`Da tao ho so cho ${data.fullName}`)
+        toast.success(t("intake.saveSuccess", { name: data.fullName }))
       }
       navigate({ to: "/dashboard" })
     } catch {
-      toast.error("Luu that bai, vui long thu lai")
+      toast.error(t("intake.saveError"))
     } finally {
       setIsSaving(false)
     }
@@ -125,10 +128,10 @@ export function PatientIntakeForm({
         newStage: 1,
       })
 
-      toast.success(`Da tao ho so va chuyen tien kham cho ${data.fullName}`)
+      toast.success(t("intake.advanceSuccess", { name: data.fullName }))
       navigate({ to: "/dashboard" })
     } catch {
-      toast.error("Luu that bai, vui long thu lai")
+      toast.error(t("intake.saveError"))
     } finally {
       setIsSavingAndAdvancing(false)
     }
@@ -148,8 +151,8 @@ export function PatientIntakeForm({
           <BreadcrumbItem>
             <BreadcrumbPage>
               {mode === "edit"
-                ? "Cap nhat ho so"
-                : "Tiep nhan benh nhan moi"}
+                ? t("intake.breadcrumbEdit")
+                : t("intake.breadcrumbNew")}
             </BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
@@ -169,22 +172,22 @@ export function PatientIntakeForm({
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button type="button" variant="outline" disabled={isSubmitting}>
-                  Huy nhap lieu
+                  {t("intake.cancelButton")}
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Xac nhan huy</AlertDialogTitle>
+                  <AlertDialogTitle>{t("intake.cancelConfirmTitle")}</AlertDialogTitle>
                   <AlertDialogDescription>
-                    Ban co chac muon huy? Du lieu chua luu se mat.
+                    {t("intake.cancelConfirmMessage")}
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Quay lai</AlertDialogCancel>
+                  <AlertDialogCancel>{tCommon("buttons.back")}</AlertDialogCancel>
                   <AlertDialogAction
                     onClick={() => navigate({ to: "/dashboard" })}
                   >
-                    Huy nhap lieu
+                    {t("intake.cancelButton")}
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
@@ -201,7 +204,7 @@ export function PatientIntakeForm({
                 {isSaving && (
                   <IconLoader2 className="mr-2 h-4 w-4 animate-spin" />
                 )}
-                Luu ho so
+                {t("intake.saveOnly")}
               </Button>
               <Button
                 type="button"
@@ -211,7 +214,7 @@ export function PatientIntakeForm({
                 {isSavingAndAdvancing && (
                   <IconLoader2 className="mr-2 h-4 w-4 animate-spin" />
                 )}
-                Luu & Chuyen tien kham
+                {t("intake.saveAndAdvance")}
               </Button>
             </div>
           </div>

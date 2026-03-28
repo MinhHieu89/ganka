@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next"
 import { useNavigate } from "@tanstack/react-router"
 import { IconAlertTriangle } from "@tabler/icons-react"
 import {
@@ -29,6 +30,9 @@ export function CheckInIncompleteDialog({
   onOpenChange,
   row,
 }: CheckInIncompleteDialogProps) {
+  const { t } = useTranslation("scheduling")
+  const { t: tCommon } = useTranslation("common")
+  const { t: tPatient } = useTranslation("patient")
   const navigate = useNavigate()
 
   const handleCheckInAndComplete = () => {
@@ -54,10 +58,10 @@ export function CheckInIncompleteDialog({
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">
-            Check-in benh nhan
+            {t("checkIn.incompleteTitle")}
           </DialogTitle>
           <DialogDescription className="sr-only">
-            Ho so benh nhan chua day du, can bo sung truoc khi check-in
+            {t("checkIn.incompleteDescription")}
           </DialogDescription>
         </DialogHeader>
 
@@ -95,21 +99,19 @@ export function CheckInIncompleteDialog({
           >
             <IconAlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
             <span>
-              Ho so chua day du -- BN dat hen qua dien thoai, chi co ten + SDT.
-              Can bo sung ngay sinh, gioi tinh va cac thong tin khac truoc khi
-              kham.
+              {t("checkIn.incompleteWarning")}
             </span>
           </div>
 
           {/* Patient info (what we have) */}
           <div className="rounded-md border bg-muted/50 p-4 space-y-2 text-sm">
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Ho ten</span>
+              <span className="text-muted-foreground">{tPatient("fullName")}</span>
               <span className="font-medium">{row.patientName}</span>
             </div>
             {row.patientCode && (
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Ma BN</span>
+                <span className="text-muted-foreground">{tPatient("patientCode")}</span>
                 <span className="font-mono">{row.patientCode}</span>
               </div>
             )}
@@ -118,14 +120,14 @@ export function CheckInIncompleteDialog({
 
         <DialogFooter className="gap-2 sm:justify-end">
           <Button variant="ghost" onClick={() => onOpenChange(false)}>
-            Quay lai
+            {tCommon("buttons.back")}
           </Button>
           <Button
             onClick={handleCheckInAndComplete}
             style={{ backgroundColor: "#534AB7", color: "white" }}
             className="hover:opacity-90"
           >
-            Check-in &amp; bo sung ho so
+            {t("checkIn.confirmAndComplete")}
           </Button>
         </DialogFooter>
       </DialogContent>

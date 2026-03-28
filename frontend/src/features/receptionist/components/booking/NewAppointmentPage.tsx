@@ -1,5 +1,6 @@
 import { useState, useCallback, useMemo, useEffect } from "react"
 import { useNavigate } from "@tanstack/react-router"
+import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
 import { IconSearch, IconInfoCircle, IconAlertTriangle } from "@tabler/icons-react"
 import { Calendar } from "@/shared/components/ui/calendar"
@@ -30,7 +31,7 @@ import {
   useAvailableSlots,
   useBookGuestMutation,
 } from "@/features/receptionist/api/receptionist-api"
-import { useBookAppointment } from "@/features/scheduling/api/scheduling-api"
+import { useBookAppointment, useClinicSchedule } from "@/features/scheduling/api/scheduling-api"
 import { TimeSlotGrid } from "./TimeSlotGrid"
 import { ConfirmationBar } from "./ConfirmationBar"
 
@@ -42,6 +43,8 @@ interface NewAppointmentPageProps {
 
 export function NewAppointmentPage({ initialPatientId }: NewAppointmentPageProps) {
   const navigate = useNavigate()
+  const { t } = useTranslation("scheduling")
+  const { t: tCommon } = useTranslation("common")
 
   // Patient search state
   const [searchTerm, setSearchTerm] = useState("")
@@ -65,6 +68,13 @@ export function NewAppointmentPage({ initialPatientId }: NewAppointmentPageProps
   // Search hook
   const { data: searchResults = [] } = usePatientSearch(searchTerm)
   const { data: doctors = [] } = useDoctors()
+  const { data: clinicSchedule } = useClinicSchedule()
+
+  // Days when clinic is closed (for calendar disabled state)
+  const closedDays = useMemo(() => {
+    if (!clinicSchedule) return new Set<number>()
+    return new Set(clinicSchedule.filter((s) => !s.isOpen).map((s) => s.dayOfWeek))
+  }, [clinicSchedule])
 
   // Date string for API
   const dateString = useMemo(() => {
@@ -139,12 +149,12 @@ export function NewAppointmentPage({ initialPatientId }: NewAppointmentPageProps
   const handleConfirm = useCallback(async () => {
     // Validation
     if (!selectedSlot) {
-      toast.error("Vui long chon khung gio hen")
+      toast.error(t("booking.selectSlotError"))
       return
     }
 
     if (!selectedDate) {
-      toast.error("Vui long chon ngay hen")
+      toast.error(t("booking.selectDateError"))
       return
     }
 
@@ -168,17 +178,17 @@ export function NewAppointmentPage({ initialPatientId }: NewAppointmentPageProps
             : doctors[0]?.id ?? "",
           doctorName: doctor?.fullName ?? doctors[0]?.fullName ?? "",
           startTime: selectedSlot,
-          appointmentTypeId: "", // Will use default
+          appointmentTypeId: "00000000-0000-0000-0000-000000000101",
           notes: reason || undefined,
         })
       } else if (isNewPatient) {
         // Guest booking
         if (!guestName.trim()) {
-          toast.error("Vui long nhap ho ten benh nhan")
+          toast.error(t("booking.nameRequired"))
           return
         }
         if (!guestPhone.trim() || !/^0\d{9,10}$/.test(guestPhone)) {
-          toast.error("So dien thoai khong hop le")
+          toast.error(t("booking.phoneInvalid"))
           return
         }
 
@@ -194,16 +204,16 @@ export function NewAppointmentPage({ initialPatientId }: NewAppointmentPageProps
           startTime: selectedSlot,
         })
       } else {
-        toast.error("Vui long tim benh nhan hoac nhap thong tin BN moi")
+        toast.error(t("booking.selectPatientError"))
         return
       }
 
-      toast.success(`Da dat hen cho ${patientDisplayName} vao ${dateString} luc ${slotTime}`)
+      toast.success(t("booking.successToast", { name: patientDisplayName, date: dateString, time: slotTime }))
       navigate({ to: "/dashboard" })
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Dat hen that bai"
+      const message = err instanceof Error ? err.message : ""
       if (message === "DOUBLE_BOOKING") {
-        toast.error("Slot nay vua duoc dat. Vui long chon slot khac.")
+        toast.error(t("booking.doubleBooking"))
       } else {
         toast.error(message)
       }
@@ -228,7 +238,7 @@ export function NewAppointmentPage({ initialPatientId }: NewAppointmentPageProps
   const displayName = selectedPatient
     ? selectedPatient.fullName
     : isNewPatient && guestName
-      ? `BN moi (${guestPhone || "..."})`
+      ? `${t("booking.newPatientLabel")} (${guestPhone || "..."})`
       : "..."
 
   const showConfirmation = selectedDate && selectedSlot
@@ -246,9 +256,9 @@ export function NewAppointmentPage({ initialPatientId }: NewAppointmentPageProps
       {/* Header / Breadcrumb */}
       <div>
         <p className="text-sm text-muted-foreground">
-          Dashboard / Dat lich hen
+          {t("booking.breadcrumb")}
         </p>
-        <h1 className="mt-1 text-xl font-semibold">Dat lich hen</h1>
+        <h1 className="mt-1 text-xl font-semibold">{t("booking.title")}</h1>
       </div>
 
       {/* 2-column layout */}
@@ -257,12 +267,12 @@ export function NewAppointmentPage({ initialPatientId }: NewAppointmentPageProps
         <div className="lg:col-span-2 space-y-4">
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-base">Thong tin benh nhan</CardTitle>
+              <CardTitle className="text-base">{t("booking.patientInfo")}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               {/* Patient search */}
               <div className="space-y-2">
-                <Label>Tim benh nhan</Label>
+                <Label>{t("booking.searchLabel")}</Label>
                 <Popover open={searchOpen} onOpenChange={setSearchOpen}>
                   <PopoverTrigger asChild>
                     <div className="relative">
@@ -271,7 +281,7 @@ export function NewAppointmentPage({ initialPatientId }: NewAppointmentPageProps
                         value={searchTerm}
                         onChange={(e) => handleSearchChange(e.target.value)}
                         className="pl-9"
-                        placeholder="Go SDT hoac ten de tim..."
+                        placeholder={t("booking.searchPlaceholder")}
                         autoFocus
                       />
                     </div>
@@ -291,7 +301,7 @@ export function NewAppointmentPage({ initialPatientId }: NewAppointmentPageProps
                                 className="w-full px-2 py-1.5 text-left text-sm"
                                 onClick={handleNotFound}
                               >
-                                Khong tim thay. Tao hen cho BN moi?
+                                {t("booking.notFound")}
                               </button>
                             </CommandEmpty>
                           ) : (
@@ -325,7 +335,7 @@ export function NewAppointmentPage({ initialPatientId }: NewAppointmentPageProps
                 <div className="flex items-center gap-2 rounded-md bg-[#E1F5EE] px-3 py-2 text-sm text-[#085041]">
                   <IconInfoCircle className="h-4 w-4 shrink-0" />
                   <span>
-                    Da tim thay:{" "}
+                    {t("booking.found")}{" "}
                     <strong>{selectedPatient.fullName}</strong>
                     {" — "}
                     <span className="font-mono">{selectedPatient.patientCode}</span>
@@ -338,7 +348,7 @@ export function NewAppointmentPage({ initialPatientId }: NewAppointmentPageProps
                 <div className="flex items-center gap-2 rounded-md bg-[#FAEEDA] px-3 py-2 text-sm text-[#633806]">
                   <IconAlertTriangle className="h-4 w-4 shrink-0" />
                   <span>
-                    Khong tim thay BN voi SDT nay. Nhap thong tin ben duoi de tao hen cho BN moi.
+                    {t("booking.notFoundWarning")}
                   </span>
                 </div>
               )}
@@ -347,7 +357,7 @@ export function NewAppointmentPage({ initialPatientId }: NewAppointmentPageProps
               {isNewPatient && !selectedPatient && (
                 <div className="space-y-3">
                   <div className="space-y-1.5">
-                    <Label>Ho ten *</Label>
+                    <Label>{t("booking.guestName")}</Label>
                     <Input
                       value={guestName}
                       onChange={(e) => setGuestName(e.target.value)}
@@ -355,7 +365,7 @@ export function NewAppointmentPage({ initialPatientId }: NewAppointmentPageProps
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <Label>So dien thoai *</Label>
+                    <Label>{t("booking.guestPhone")}</Label>
                     <Input
                       value={guestPhone}
                       onChange={(e) => setGuestPhone(e.target.value)}
@@ -367,7 +377,7 @@ export function NewAppointmentPage({ initialPatientId }: NewAppointmentPageProps
                   <div className="flex items-start gap-2 rounded-md bg-[#E6F1FB] px-3 py-2 text-sm text-[#0C447C]">
                     <IconInfoCircle className="mt-0.5 h-4 w-4 shrink-0" />
                     <span>
-                      BN moi chi can ten + SDT + ly do kham de dat hen. Thong tin day du se bo sung khi BN den check-in.
+                      {t("booking.guestInfo")}
                     </span>
                   </div>
                 </div>
@@ -375,7 +385,7 @@ export function NewAppointmentPage({ initialPatientId }: NewAppointmentPageProps
 
               {/* Doctor selector */}
               <div className="space-y-1.5">
-                <Label>Bac si chi dinh</Label>
+                <Label>{t("booking.doctor")}</Label>
                 <Select
                   value={selectedDoctorId ?? NO_DOCTOR_VALUE}
                   onValueChange={(val) => {
@@ -393,7 +403,7 @@ export function NewAppointmentPage({ initialPatientId }: NewAppointmentPageProps
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value={NO_DOCTOR_VALUE}>BS nao trong</SelectItem>
+                    <SelectItem value={NO_DOCTOR_VALUE}>{t("booking.anyDoctor")}</SelectItem>
                     {doctors.map((doc) => (
                       <SelectItem key={doc.id} value={doc.id}>
                         {doc.fullName}
@@ -405,7 +415,7 @@ export function NewAppointmentPage({ initialPatientId }: NewAppointmentPageProps
 
               {/* Reason */}
               <div className="space-y-1.5">
-                <Label>Ly do kham</Label>
+                <Label>{t("booking.reason")}</Label>
                 <Textarea
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
@@ -421,7 +431,7 @@ export function NewAppointmentPage({ initialPatientId }: NewAppointmentPageProps
         <div className="lg:col-span-3 space-y-4">
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-base">Chon ngay & gio</CardTitle>
+              <CardTitle className="text-base">{t("booking.dateTimeTitle")}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               {/* Calendar */}
@@ -429,7 +439,9 @@ export function NewAppointmentPage({ initialPatientId }: NewAppointmentPageProps
                 mode="single"
                 selected={selectedDate}
                 onSelect={(date) => setSelectedDate(date ?? undefined)}
-                disabled={(date) => date < today || date > maxDate}
+                disabled={(date) =>
+                  date < today || date > maxDate || closedDays.has(date.getDay())
+                }
                 classNames={{
                   today: "underline text-accent-foreground",
                   day: "group/day relative aspect-square h-full w-full select-none p-0 text-center [&:first-child[data-selected=true]_button]:rounded-l-md [&:last-child[data-selected=true]_button]:rounded-r-md",

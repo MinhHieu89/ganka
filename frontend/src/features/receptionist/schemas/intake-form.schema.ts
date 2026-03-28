@@ -1,16 +1,16 @@
 import { z } from "zod"
 
 export const intakeFormSchema = z.object({
-  fullName: z.string().min(1, "Ho ten la bat buoc").max(200),
+  fullName: z.string().min(1, "Họ tên là bắt buộc").max(200),
   phone: z
     .string()
-    .min(1, "So dien thoai la bat buoc")
-    .regex(/^0\d{9,10}$/, "So dien thoai khong hop le"),
-  dateOfBirth: z.string().min(1, "Ngay sinh la bat buoc"),
-  gender: z.string().min(1, "Gioi tinh la bat buoc"),
+    .min(1, "Số điện thoại là bắt buộc")
+    .regex(/^0\d{9,10}$/, "Số điện thoại không hợp lệ"),
+  dateOfBirth: z.string().min(1, "Ngày sinh là bắt buộc"),
+  gender: z.string().min(1, "Giới tính là bắt buộc"),
   address: z.string().max(500).optional(),
   cccd: z.string().optional(),
-  email: z.string().email("Email khong hop le").optional().or(z.literal("")),
+  email: z.string().email("Email không hợp lệ").optional().or(z.literal("")),
   occupation: z.string().max(200).optional(),
   reason: z.string().max(500).optional(),
   ocularHistory: z.string().max(2000).optional(),

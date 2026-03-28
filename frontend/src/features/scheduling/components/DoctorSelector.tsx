@@ -19,17 +19,9 @@ function useDoctors() {
   return useQuery({
     queryKey: ["doctors"],
     queryFn: async (): Promise<DoctorOption[]> => {
-      const { data, error } = await api.GET("/api/admin/users" as never)
+      const { data, error } = await api.GET("/api/appointments/doctors" as never)
       if (error) throw new Error("Failed to fetch doctors")
-      // Response is a paginated envelope: { data: UserDto[], totalCount, page, pageSize }
-      const envelope = data as { data: Array<{ id: string; fullName: string; roles?: string[] }> }
-      const users = envelope.data ?? []
-      return users
-        .filter(
-          (u) =>
-            u.roles?.some((r) => r === "Doctor") ?? false,
-        )
-        .map((u) => ({ id: u.id, fullName: u.fullName }))
+      return (data as DoctorOption[]) ?? []
     },
     staleTime: 1000 * 60 * 15, // 15 min
   })

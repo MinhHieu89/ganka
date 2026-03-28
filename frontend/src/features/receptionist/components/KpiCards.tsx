@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next"
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card"
 import { Skeleton } from "@/shared/components/Skeleton"
 import {
@@ -16,39 +17,40 @@ interface KpiCardsProps {
 const kpiConfig = [
   {
     key: "todayAppointments" as const,
-    label: "Lich hen hom nay",
+    labelKey: "kpi.appointmentsToday",
     color: "var(--kpi-appointments)",
     icon: IconCalendar,
     subKey: "notArrived" as const,
-    subLabel: "chua den",
+    subLabelKey: "kpi.notArrived",
   },
   {
     key: "waiting" as const,
-    label: "Cho kham",
+    labelKey: "kpi.waiting",
     color: "var(--kpi-waiting)",
     icon: IconClock,
     subKey: null,
-    subLabel: null,
+    subLabelKey: null,
   },
   {
     key: "examining" as const,
-    label: "Dang kham",
+    labelKey: "kpi.examining",
     color: "var(--kpi-examining)",
     icon: IconStethoscope,
     subKey: null,
-    subLabel: null,
+    subLabelKey: null,
   },
   {
     key: "completed" as const,
-    label: "Hoan thanh",
+    labelKey: "kpi.completed",
     color: "var(--kpi-completed)",
     icon: IconCircleCheck,
     subKey: null,
-    subLabel: null,
+    subLabelKey: null,
   },
 ]
 
 export function KpiCards({ kpi, isLoading }: KpiCardsProps) {
+  const { t } = useTranslation("receptionist")
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {kpiConfig.map((item) => {
@@ -59,7 +61,7 @@ export function KpiCards({ kpi, isLoading }: KpiCardsProps) {
           <Card key={item.key}>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-semibold">
-                {item.label}
+                {t(item.labelKey)}
               </CardTitle>
               <Icon className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
@@ -75,9 +77,9 @@ export function KpiCards({ kpi, isLoading }: KpiCardsProps) {
                   >
                     {value ?? 0}
                   </span>
-                  {subValue != null && (
+                  {subValue != null && item.subLabelKey && (
                     <span className="text-sm text-muted-foreground">
-                      {subValue} {item.subLabel}
+                      {subValue} {t(item.subLabelKey)}
                     </span>
                   )}
                 </div>

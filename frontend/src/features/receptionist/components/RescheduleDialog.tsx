@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { toast } from "sonner"
+import { useTranslation } from "react-i18next"
 import {
   Dialog,
   DialogContent,
@@ -22,10 +23,10 @@ interface RescheduleDialogProps {
   row: ReceptionistDashboardRow
 }
 
-function formatDateTime(isoString: string | null): string {
+function formatDateTime(isoString: string | null, atLabel: string): string {
   if (!isoString) return ""
   const date = new Date(isoString)
-  return `${date.toLocaleDateString("vi-VN")} luc ${date.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit", hour12: false })}`
+  return `${date.toLocaleDateString("vi-VN")} ${atLabel} ${date.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit", hour12: false })}`
 }
 
 function formatDateToISO(date: Date): string {
@@ -37,6 +38,8 @@ export function RescheduleDialog({
   onOpenChange,
   row,
 }: RescheduleDialogProps) {
+  const { t } = useTranslation("scheduling")
+  const { t: tCommon } = useTranslation("common")
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null)
 
@@ -54,14 +57,14 @@ export function RescheduleDialog({
       },
       {
         onSuccess: () => {
-          toast.success(`Da doi lich hen cho ${row.patientName}`)
+          toast.success(t("rescheduleDialog.successToast", { name: row.patientName }))
           onOpenChange(false)
         },
         onError: (error) => {
           if (error.message === "DOUBLE_BOOKING") {
-            toast.error("Lich da bi trung. Vui long chon slot khac.")
+            toast.error(t("rescheduleDialog.doubleBooking"))
           } else {
-            toast.error("Khong the doi lich. Vui long thu lai.")
+            toast.error(t("rescheduleDialog.errorToast"))
           }
         },
       },
@@ -79,10 +82,10 @@ export function RescheduleDialog({
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">
-            Doi lich hen
+            {t("rescheduleDialog.title")}
           </DialogTitle>
           <DialogDescription className="sr-only">
-            Chon ngay va gio moi cho lich hen
+            {t("rescheduleDialog.description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -90,16 +93,16 @@ export function RescheduleDialog({
           {/* Old schedule with strikethrough */}
           {row.appointmentTime && (
             <div className="space-y-1">
-              <Label className="text-muted-foreground">Lich hen hien tai</Label>
+              <Label className="text-muted-foreground">{t("rescheduleDialog.currentSchedule")}</Label>
               <div className="text-sm line-through text-muted-foreground">
-                {formatDateTime(row.appointmentTime)}
+                {formatDateTime(row.appointmentTime, t("rescheduleDialog.at"))}
               </div>
             </div>
           )}
 
           {/* Calendar for new date */}
           <div className="space-y-2">
-            <Label>Chon ngay moi</Label>
+            <Label>{t("rescheduleDialog.selectNewDate")}</Label>
             <Calendar
               mode="single"
               selected={selectedDate}
@@ -115,7 +118,7 @@ export function RescheduleDialog({
           {/* Time slot grid */}
           {selectedDate && (
             <div className="space-y-2">
-              <Label>Chon gio</Label>
+              <Label>{t("rescheduleDialog.selectTime")}</Label>
               <TimeSlotGrid
                 slots={slotsQuery.data ?? []}
                 selectedSlot={selectedSlot}
@@ -128,7 +131,7 @@ export function RescheduleDialog({
 
         <DialogFooter className="gap-2 sm:justify-end">
           <Button variant="ghost" onClick={handleClose}>
-            Huy
+            {tCommon("buttons.cancel")}
           </Button>
           <Button
             onClick={handleConfirm}
@@ -136,7 +139,7 @@ export function RescheduleDialog({
             style={{ backgroundColor: "#534AB7", color: "white" }}
             className="hover:opacity-90"
           >
-            {reschedule.isPending ? "Dang xu ly..." : "Xac nhan doi lich"}
+            {reschedule.isPending ? tCommon("status.processing") : t("rescheduleDialog.confirm")}
           </Button>
         </DialogFooter>
       </DialogContent>

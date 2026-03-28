@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { Controller, useFormContext } from "react-hook-form"
+import { useTranslation } from "react-i18next"
 import { IconChevronDown } from "@tabler/icons-react"
 import {
   Collapsible,
@@ -14,13 +15,14 @@ const MAX_REASON_LENGTH = 500
 
 export function ExamInfoSection() {
   const { control, watch } = useFormContext<IntakeFormValues>()
+  const { t } = useTranslation("patient")
   const [open, setOpen] = useState(true)
   const reasonValue = watch("reason") ?? ""
 
   return (
     <Collapsible open={open} onOpenChange={setOpen}>
       <CollapsibleTrigger className="flex w-full items-center justify-between rounded-lg border bg-card p-4 text-left hover:bg-accent/50 transition-colors">
-        <h2 className="text-xl font-semibold">Thong tin kham</h2>
+        <h2 className="text-xl font-semibold">{t("intake.exam.title")}</h2>
         <IconChevronDown
           className={`h-5 w-5 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`}
         />
@@ -31,7 +33,7 @@ export function ExamInfoSection() {
           control={control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid || undefined}>
-              <FieldLabel htmlFor="reason">Ly do kham</FieldLabel>
+              <FieldLabel htmlFor="reason">{t("intake.exam.reason")}</FieldLabel>
               <Textarea
                 {...field}
                 id="reason"

@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react"
+import { useTranslation } from "react-i18next"
 import { Link } from "@tanstack/react-router"
 import { IconCalendar, IconUserPlus, IconRefresh, IconAlertTriangle } from "@tabler/icons-react"
 import { Button } from "@/shared/components/Button"
@@ -15,6 +16,7 @@ import { WalkInVisitDialog } from "./WalkInVisitDialog"
 import type { DashboardFilters, ReceptionistDashboardRow, ReceptionistStatus } from "@/features/receptionist/types/receptionist.types"
 
 export function ReceptionistDashboard() {
+  const { t } = useTranslation("receptionist")
   const [filters, setFilters] = useState<DashboardFilters>({
     page: 1,
     pageSize: 10,
@@ -69,7 +71,7 @@ export function ReceptionistDashboard() {
       {hasError && (
         <div className="flex items-center gap-2 rounded-md border border-amber-300 bg-amber-50 px-4 py-2 text-sm text-amber-800">
           <IconAlertTriangle className="h-4 w-4 shrink-0" />
-          <span>Mat ket noi. Du lieu co the chua cap nhat.</span>
+          <span>{t("dashboard.connectionLost")}</span>
         </div>
       )}
 
@@ -80,7 +82,7 @@ export function ReceptionistDashboard() {
             type="search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Tim theo SBT hoac ten BN..."
+            placeholder={t("dashboard.searchPlaceholder")}
             className="w-64"
           />
           <Tooltip>
@@ -96,20 +98,20 @@ export function ReceptionistDashboard() {
                 />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Cap nhat du lieu</TooltipContent>
+            <TooltipContent>{t("dashboard.refreshData")}</TooltipContent>
           </Tooltip>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" asChild>
             <Link to={"/appointments/new" as string}>
               <IconCalendar className="mr-2 h-4 w-4" />
-              Dat lich hen
+              {t("dashboard.bookAppointment")}
             </Link>
           </Button>
           <Button asChild>
             <Link to={"/patients/intake" as string}>
               <IconUserPlus className="mr-2 h-4 w-4" />
-              Tiep nhan BN moi
+              {t("dashboard.newPatient")}
             </Link>
           </Button>
         </div>

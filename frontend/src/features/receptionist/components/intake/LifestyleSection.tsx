@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { Controller, useFormContext } from "react-hook-form"
+import { useTranslation } from "react-i18next"
 import { IconChevronDown } from "@tabler/icons-react"
 import {
   Collapsible,
@@ -20,12 +21,13 @@ import type { IntakeFormValues } from "@/features/receptionist/schemas/intake-fo
 
 export function LifestyleSection() {
   const { control } = useFormContext<IntakeFormValues>()
+  const { t } = useTranslation("patient")
   const [open, setOpen] = useState(true)
 
   return (
     <Collapsible open={open} onOpenChange={setOpen}>
       <CollapsibleTrigger className="flex w-full items-center justify-between rounded-lg border bg-card p-4 text-left hover:bg-accent/50 transition-colors">
-        <h2 className="text-xl font-semibold">Lifestyle</h2>
+        <h2 className="text-xl font-semibold">{t("intake.lifestyle.title")}</h2>
         <IconChevronDown
           className={`h-5 w-5 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`}
         />
@@ -39,7 +41,7 @@ export function LifestyleSection() {
             render={({ field }) => (
               <Field>
                 <FieldLabel htmlFor="screenTimeHours">
-                  Thoi gian su dung man hinh (gio/ngay)
+                  {t("intake.lifestyle.screenTime")}
                 </FieldLabel>
                 <NumberInput
                   {...field}
@@ -52,13 +54,13 @@ export function LifestyleSection() {
             )}
           />
 
-          {/* Moi truong lam viec */}
+          {/* Môi trường làm việc */}
           <Controller
             name="workEnvironment"
             control={control}
             render={({ field }) => (
               <Field>
-                <FieldLabel>Moi truong lam viec</FieldLabel>
+                <FieldLabel>{t("intake.lifestyle.workEnvironment")}</FieldLabel>
                 <Select
                   value={field.value ?? ""}
                   onValueChange={(v) => field.onChange(v || undefined)}
@@ -67,23 +69,23 @@ export function LifestyleSection() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="office">Van phong</SelectItem>
-                    <SelectItem value="outdoor">Ngoai troi</SelectItem>
-                    <SelectItem value="mixed">Nha may</SelectItem>
-                    <SelectItem value="other">Khac</SelectItem>
+                    <SelectItem value="office">{t("intake.lifestyle.workOptions.office")}</SelectItem>
+                    <SelectItem value="outdoor">{t("intake.lifestyle.workOptions.outdoor")}</SelectItem>
+                    <SelectItem value="mixed">{t("intake.lifestyle.workOptions.factory")}</SelectItem>
+                    <SelectItem value="other">{t("intake.lifestyle.workOptions.other")}</SelectItem>
                   </SelectContent>
                 </Select>
               </Field>
             )}
           />
 
-          {/* Su dung kinh ap trong */}
+          {/* Sử dụng kính áp tròng */}
           <Controller
             name="contactLensUsage"
             control={control}
             render={({ field }) => (
               <Field>
-                <FieldLabel>Su dung kinh ap trong</FieldLabel>
+                <FieldLabel>{t("intake.lifestyle.contactLens")}</FieldLabel>
                 <Select
                   value={field.value ?? ""}
                   onValueChange={(v) => field.onChange(v || undefined)}
@@ -92,24 +94,24 @@ export function LifestyleSection() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="none">Khong</SelectItem>
-                    <SelectItem value="soft">Hang ngay</SelectItem>
-                    <SelectItem value="rgp">Thoi diem</SelectItem>
+                    <SelectItem value="none">{t("intake.lifestyle.contactLensOptions.none")}</SelectItem>
+                    <SelectItem value="soft">{t("intake.lifestyle.contactLensOptions.daily")}</SelectItem>
+                    <SelectItem value="rgp">{t("intake.lifestyle.contactLensOptions.occasional")}</SelectItem>
                     <SelectItem value="ortho_k">Ortho-K</SelectItem>
-                    <SelectItem value="other">Khac</SelectItem>
+                    <SelectItem value="other">{t("intake.lifestyle.contactLensOptions.other")}</SelectItem>
                   </SelectContent>
                 </Select>
               </Field>
             )}
           />
 
-          {/* Ghi chu */}
+          {/* Ghi chú */}
           <Controller
             name="lifestyleNotes"
             control={control}
             render={({ field }) => (
               <Field>
-                <FieldLabel htmlFor="lifestyleNotes">Ghi chu</FieldLabel>
+                <FieldLabel htmlFor="lifestyleNotes">{t("intake.lifestyle.notes")}</FieldLabel>
                 <Textarea
                   {...field}
                   id="lifestyleNotes"

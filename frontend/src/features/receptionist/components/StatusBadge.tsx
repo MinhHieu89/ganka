@@ -1,27 +1,28 @@
+import { useTranslation } from "react-i18next"
 import { Badge } from "@/shared/components/Badge"
 import type { ReceptionistStatus } from "@/features/receptionist/types/receptionist.types"
 
 const statusConfig: Record<
   ReceptionistStatus,
-  { label: string; bgVar: string; textVar: string }
+  { labelKey: string; bgVar: string; textVar: string }
 > = {
   not_arrived: {
-    label: "Chua den",
+    labelKey: "status.notArrived",
     bgVar: "var(--status-not-arrived-bg)",
     textVar: "var(--status-not-arrived-text)",
   },
   waiting: {
-    label: "Cho kham",
+    labelKey: "status.waiting",
     bgVar: "var(--status-waiting-bg)",
     textVar: "var(--status-waiting-text)",
   },
   examining: {
-    label: "Dang kham",
+    labelKey: "status.examining",
     bgVar: "var(--status-examining-bg)",
     textVar: "var(--status-examining-text)",
   },
   completed: {
-    label: "Hoan thanh",
+    labelKey: "status.completed",
     bgVar: "var(--status-completed-bg)",
     textVar: "var(--status-completed-text)",
   },
@@ -32,6 +33,7 @@ interface StatusBadgeProps {
 }
 
 export function StatusBadge({ status }: StatusBadgeProps) {
+  const { t } = useTranslation("receptionist")
   const config = statusConfig[status]
   return (
     <Badge
@@ -42,7 +44,7 @@ export function StatusBadge({ status }: StatusBadgeProps) {
         color: config.textVar,
       }}
     >
-      {config.label}
+      {t(config.labelKey)}
     </Badge>
   )
 }

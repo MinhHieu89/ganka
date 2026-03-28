@@ -1,17 +1,18 @@
+import { useTranslation } from "react-i18next"
 import { Badge } from "@/shared/components/Badge"
 import type { ReceptionistSource } from "@/features/receptionist/types/receptionist.types"
 
 const sourceConfig: Record<
   ReceptionistSource,
-  { label: string; bgVar: string; textVar: string }
+  { labelKey: string; bgVar: string; textVar: string }
 > = {
   appointment: {
-    label: "Hen",
+    labelKey: "source.appointment",
     bgVar: "var(--source-appointment-bg)",
     textVar: "var(--source-appointment-text)",
   },
   walkin: {
-    label: "Walk-in",
+    labelKey: "source.walkIn",
     bgVar: "var(--source-walkin-bg)",
     textVar: "var(--source-walkin-text)",
   },
@@ -22,6 +23,7 @@ interface SourceBadgeProps {
 }
 
 export function SourceBadge({ source }: SourceBadgeProps) {
+  const { t } = useTranslation("receptionist")
   const config = sourceConfig[source]
   return (
     <Badge
@@ -31,7 +33,7 @@ export function SourceBadge({ source }: SourceBadgeProps) {
         color: config.textVar,
       }}
     >
-      {config.label}
+      {t(config.labelKey)}
     </Badge>
   )
 }

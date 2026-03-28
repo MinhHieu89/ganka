@@ -30,11 +30,13 @@ public static class AuthApiEndpoints
     {
         var authGroup = app.MapGroup("/api/auth");
         var adminGroup = app.MapGroup("/api/admin").RequireAuthorization();
+        var appointmentsGroup = app.MapGroup("/api/appointments").RequireAuthorization();
 
         MapAuthFlowEndpoints(authGroup);
         MapAdminUserEndpoints(adminGroup);
         MapAdminRoleEndpoints(adminGroup);
         MapAdminPermissionEndpoints(adminGroup);
+        MapDoctorEndpoints(appointmentsGroup);
 
         return app;
     }
@@ -231,5 +233,19 @@ public static class AuthApiEndpoints
             var permissions = await bus.InvokeAsync<List<PermissionGroupDto>>(new GetPermissionsQuery(), ct);
             return Results.Ok(permissions);
         }).RequirePermissions(Permissions.Auth.View);
+    }
+
+    private static void MapDoctorEndpoints(RouteGroupBuilder group)
+    {
+        // Doctors list for receptionist booking — requires Scheduling.View (not Auth.View)
+        group.MapGet("/doctors", async (IMessageBus bus, CancellationToken ct = default) =>
+        {
+            var response = await bus.InvokeAsync<GetUsersResponse>(new GetUsersQuery(1, 100), ct);
+            var doctors = response.Users
+                .Where(u => u.Roles.Contains("Doctor") && u.IsActive)
+                .Select(u => new { u.Id, u.FullName })
+                .ToList();
+            return Results.Ok(doctors);
+        }).RequirePermissions(Permissions.Scheduling.View);
     }
 }

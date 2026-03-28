@@ -1,4 +1,5 @@
 import { useMemo } from "react"
+import { useTranslation } from "react-i18next"
 import {
   useReactTable,
   getCoreRowModel,
@@ -40,6 +41,7 @@ export function PatientQueueTable({
   filters,
   onFiltersChange,
 }: PatientQueueTableProps) {
+  const { t } = useTranslation("receptionist")
   const [sorting, setSorting] = useState<SortingState>([
     { id: "appointmentTime", desc: false },
   ])
@@ -57,7 +59,7 @@ export function PatientQueueTable({
         ),
       }),
       columnHelper.accessor("patientName", {
-        header: "Ho ten",
+        header: t("table.fullName"),
         size: 160,
         enableSorting: true,
         cell: (info) => (
@@ -72,14 +74,14 @@ export function PatientQueueTable({
         ),
       }),
       columnHelper.accessor("birthYear", {
-        header: "Nam sinh",
+        header: t("table.birthYear"),
         size: 80,
         enableSorting: true,
         meta: { className: "hidden lg:table-cell" },
         cell: (info) => info.getValue() ?? "—",
       }),
       columnHelper.accessor("appointmentTime", {
-        header: "Gio hen",
+        header: t("table.appointmentTime"),
         size: 80,
         enableSorting: true,
         cell: (info) => {
@@ -97,33 +99,33 @@ export function PatientQueueTable({
         },
       }),
       columnHelper.accessor("source", {
-        header: "Nguon",
+        header: t("table.source"),
         size: 80,
         enableSorting: true,
         meta: { className: "hidden lg:table-cell" },
         cell: (info) => <SourceBadge source={info.getValue()} />,
       }),
       columnHelper.accessor("reason", {
-        header: "Ly do kham",
+        header: t("table.reason"),
         size: 120,
         enableSorting: false,
         cell: (info) => {
           const reason = info.getValue()
           if (!reason) {
-            return <span className="italic text-muted-foreground">Chua ro</span>
+            return <span className="italic text-muted-foreground">{t("table.unknownReason")}</span>
           }
           return <span className="text-sm">{reason}</span>
         },
       }),
       columnHelper.accessor("status", {
-        header: "Trang thai",
+        header: t("table.status"),
         size: 100,
         enableSorting: true,
         cell: (info) => <StatusBadge status={info.getValue()} />,
       }),
       columnHelper.display({
         id: "actions",
-        header: "Thao tac",
+        header: t("table.actions"),
         size: 120,
         cell: (info) => {
           const row = info.row.original
@@ -139,7 +141,7 @@ export function PatientQueueTable({
                   }}
                   className="border-[var(--checkin-confirm)] text-[var(--checkin-confirm)] hover:bg-[var(--status-not-arrived-bg)]"
                 >
-                  Check-in
+                  {t("table.checkIn")}
                 </Button>
                 <RowActionMenu row={row} onCheckIn={() => onCheckIn(row)} />
               </div>
@@ -151,7 +153,7 @@ export function PatientQueueTable({
         },
       }),
     ],
-    [onCheckIn, onActionMenu, filters.page, filters.pageSize],
+    [onCheckIn, onActionMenu, filters.page, filters.pageSize, t],
   )
 
   const tableData = useMemo(() => data ?? [], [data])
@@ -186,10 +188,10 @@ export function PatientQueueTable({
           <IconClipboardList className="h-7 w-7 text-muted-foreground" />
         </div>
         <h3 className="text-base font-semibold mb-1">
-          Chua co benh nhan nao hom nay
+          {t("dashboard.emptyTitle")}
         </h3>
         <p className="text-sm text-muted-foreground max-w-sm">
-          Bat dau tiep nhan benh nhan moi hoac cho benh nhan da hen den.
+          {t("dashboard.emptyDescription")}
         </p>
       </div>
     )
@@ -208,7 +210,7 @@ export function PatientQueueTable({
       />
       <div className="flex items-center justify-between text-sm text-muted-foreground">
         <span>
-          Hien thi {Math.min(table.getRowModel().rows.length, filters.pageSize)} / {totalRows} benh nhan hom nay
+          {t("dashboard.showing")} {Math.min(table.getRowModel().rows.length, filters.pageSize)} / {totalRows} {t("dashboard.patientsToday")}
         </span>
         <div className="flex items-center gap-2">
           <Select
@@ -236,7 +238,7 @@ export function PatientQueueTable({
                 onFiltersChange({ ...filters, page: filters.page - 1 })
               }}
             >
-              Truoc
+              {t("dashboard.previous")}
             </Button>
             <Button
               variant="outline"
@@ -247,7 +249,7 @@ export function PatientQueueTable({
                 onFiltersChange({ ...filters, page: filters.page + 1 })
               }}
             >
-              Sau
+              {t("dashboard.next")}
             </Button>
           </div>
         </div>

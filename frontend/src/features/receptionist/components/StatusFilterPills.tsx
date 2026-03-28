@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next"
 import { ToggleGroup, ToggleGroupItem } from "@/shared/components/ToggleGroup"
 import type { ReceptionistKpi, ReceptionistStatus } from "@/features/receptionist/types/receptionist.types"
 
@@ -9,17 +10,18 @@ interface StatusFilterPillsProps {
 
 const filters: Array<{
   value: string
-  label: string
+  labelKey: string
   countKey: keyof ReceptionistKpi | null
 }> = [
-  { value: "all", label: "Tat ca", countKey: null },
-  { value: "not_arrived", label: "Chua den", countKey: "notArrived" },
-  { value: "waiting", label: "Cho kham", countKey: "waiting" },
-  { value: "examining", label: "Dang kham", countKey: "examining" },
-  { value: "completed", label: "Xong", countKey: "completed" },
+  { value: "all", labelKey: "filter.all", countKey: null },
+  { value: "not_arrived", labelKey: "filter.notArrived", countKey: "notArrived" },
+  { value: "waiting", labelKey: "filter.waiting", countKey: "waiting" },
+  { value: "examining", labelKey: "filter.examining", countKey: "examining" },
+  { value: "completed", labelKey: "filter.done", countKey: "completed" },
 ]
 
 export function StatusFilterPills({ value, onChange, counts }: StatusFilterPillsProps) {
+  const { t } = useTranslation("receptionist")
   return (
     <ToggleGroup
       type="single"
@@ -39,7 +41,7 @@ export function StatusFilterPills({ value, onChange, counts }: StatusFilterPills
             value={filter.value}
             className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
           >
-            {filter.label}
+            {t(filter.labelKey)}
             {count != null && ` (${count})`}
           </ToggleGroupItem>
         )

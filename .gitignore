@@ -1,3 +1,4 @@
 .playwright-cli/
 .claude/skills/playwright-cli/
 .env
+.claude/worktrees/

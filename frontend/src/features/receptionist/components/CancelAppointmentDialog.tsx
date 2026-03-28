@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { toast } from "sonner"
+import { useTranslation } from "react-i18next"
 import { IconAlertTriangle } from "@tabler/icons-react"
 import {
   Dialog,
@@ -31,11 +32,11 @@ interface CancelAppointmentDialogProps {
   row: ReceptionistDashboardRow
 }
 
-const CANCEL_REASONS = [
-  { value: "0", label: "BN yeu cau huy" },
-  { value: "1", label: "BN doi phong kham" },
-  { value: "2", label: "Le tan dat nham" },
-  { value: "3", label: "Khac" },
+const CANCEL_REASON_KEYS = [
+  { value: "0", labelKey: "cancelDialog.reasons.patientRequest" },
+  { value: "1", labelKey: "cancelDialog.reasons.changeClinic" },
+  { value: "2", labelKey: "cancelDialog.reasons.wrongBooking" },
+  { value: "3", labelKey: "cancelDialog.reasons.other" },
 ] as const
 
 function getInitials(name: string): string {
@@ -49,6 +50,8 @@ export function CancelAppointmentDialog({
   onOpenChange,
   row,
 }: CancelAppointmentDialogProps) {
+  const { t } = useTranslation("scheduling")
+  const { t: tCommon } = useTranslation("common")
   const [reason, setReason] = useState("")
   const [note, setNote] = useState("")
   const queryClient = useQueryClient()
@@ -65,12 +68,12 @@ export function CancelAppointmentDialog({
       },
       {
         onSuccess: () => {
-          toast.success(`Da huy hen cho ${row.patientName}`)
+          toast.success(t("cancelDialog.successToast", { name: row.patientName }))
           queryClient.invalidateQueries({ queryKey: receptionistKeys.all })
           handleClose()
         },
         onError: () => {
-          toast.error("Khong the huy hen. Vui long thu lai.")
+          toast.error(t("cancelDialog.errorToast"))
         },
       },
     )
@@ -82,15 +85,15 @@ export function CancelAppointmentDialog({
     onOpenChange(false)
   }
 
-  const selectedLabel = CANCEL_REASONS.find((r) => r.value === reason)?.label
+  const isOtherReason = reason === "3"
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold">Huy hen</DialogTitle>
+          <DialogTitle className="text-xl font-semibold">{t("cancelDialog.title")}</DialogTitle>
           <DialogDescription className="sr-only">
-            Xac nhan huy lich hen cho benh nhan
+            {t("cancelDialog.description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -128,34 +131,33 @@ export function CancelAppointmentDialog({
           >
             <IconAlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
             <span>
-              Hen se bi xoa hoan toan. BN se khong con xuat hien tren Dashboard
-              ngay nay. Hanh dong khong the hoan tac.
+              {t("cancelDialog.warning")}
             </span>
           </div>
 
           {/* Reason dropdown */}
           <div className="space-y-2">
             <Label>
-              Ly do huy <span className="text-destructive">*</span>
+              {t("cancelDialog.reasonLabel")} <span className="text-destructive">*</span>
             </Label>
             <Select value={reason} onValueChange={setReason}>
               <SelectTrigger>
-                <SelectValue placeholder="Chon ly do" />
+                <SelectValue placeholder={t("cancelDialog.reasonPlaceholder")} />
               </SelectTrigger>
               <SelectContent>
-                {CANCEL_REASONS.map((r) => (
+                {CANCEL_REASON_KEYS.map((r) => (
                   <SelectItem key={r.value} value={r.value}>
-                    {r.label}
+                    {t(r.labelKey)}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
 
-          {/* Note field when "Khac" selected */}
-          {selectedLabel === "Khac" && (
+          {/* Note field when "Khác" selected */}
+          {isOtherReason && (
             <div className="space-y-2">
-              <Label>Ghi chu</Label>
+              <Label>{t("cancelDialog.notes")}</Label>
               <Textarea
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
@@ -168,7 +170,7 @@ export function CancelAppointmentDialog({
 
         <DialogFooter className="gap-2 sm:justify-end">
           <Button variant="ghost" onClick={handleClose}>
-            Huy
+            {tCommon("buttons.cancel")}
           </Button>
           <Button
             onClick={handleConfirm}
@@ -177,8 +179,8 @@ export function CancelAppointmentDialog({
             className="hover:opacity-90"
           >
             {cancelAppointment.isPending
-              ? "Dang xu ly..."
-              : "Xac nhan huy hen"}
+              ? tCommon("status.processing")
+              : t("cancelDialog.confirm")}
           </Button>
         </DialogFooter>
       </DialogContent>

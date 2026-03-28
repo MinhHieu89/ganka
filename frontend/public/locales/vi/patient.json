@@ -68,6 +68,52 @@
     "environmental": "Môi trường",
     "custom": "Tùy chỉnh"
   },
+  "intake": {
+    "breadcrumbNew": "Tiếp nhận bệnh nhân mới",
+    "breadcrumbEdit": "Cập nhật hồ sơ",
+    "cancelButton": "Hủy nhập liệu",
+    "cancelConfirmTitle": "Xác nhận hủy",
+    "cancelConfirmMessage": "Bạn có chắc muốn hủy? Dữ liệu chưa lưu sẽ mất.",
+    "saveOnly": "Lưu hồ sơ",
+    "saveAndAdvance": "Lưu & Chuyển tiến khám",
+    "saveSuccess": "Đã tạo hồ sơ cho {{name}}",
+    "updateSuccess": "Đã cập nhật hồ sơ cho {{name}}",
+    "advanceSuccess": "Đã tạo hồ sơ và chuyển tiến khám cho {{name}}",
+    "saveError": "Lưu thất bại, vui lòng thử lại",
+    "phoneDuplicate": "SDT {{phone}} đã tồn tại -- BN: {{name}} ({{code}})",
+    "openOldRecord": "Mở hồ sơ cũ",
+    "exam": {
+      "title": "Thông tin khám",
+      "reason": "Lý do khám"
+    },
+    "history": {
+      "title": "Tiền sử bệnh",
+      "ocular": "Tiền sử bệnh mắt",
+      "systemic": "Tiền sử bệnh toàn thân",
+      "medications": "Thuốc đang dùng"
+    },
+    "lifestyle": {
+      "title": "Lối sống",
+      "screenTime": "Thời gian sử dụng màn hình (giờ/ngày)",
+      "workEnvironment": "Môi trường làm việc",
+      "workOptions": {
+        "office": "Văn phòng",
+        "outdoor": "Ngoài trời",
+        "factory": "Nhà máy",
+        "other": "Khác"
+      },
+      "contactLens": "Sử dụng kính áp tròng",
+      "contactLensOptions": {
+        "none": "Không",
+        "daily": "Hàng ngày",
+        "occasional": "Thời điểm",
+        "other": "Khác"
+      },
+      "notes": "Ghi chú"
+    }
+  },
+  "email": "Email",
+  "occupation": "Nghề nghiệp",
   "validation": {
     "dobRequired": "Ngày sinh là bắt buộc đối với bệnh nhân khám bệnh",
     "genderRequired": "Giới tính là bắt buộc đối với bệnh nhân khám bệnh",

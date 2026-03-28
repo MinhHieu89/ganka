@@ -61,7 +61,7 @@ public static class BookGuestAppointmentHandler
 
         // Use default branch and a default appointment type ID for guest bookings
         var branchId = new BranchId(Guid.Parse("00000000-0000-0000-0000-000000000001"));
-        var defaultAppointmentTypeId = Guid.Parse("00000000-0000-0000-0000-000000000001");
+        var defaultAppointmentTypeId = Guid.Parse("00000000-0000-0000-0000-000000000101");
 
         var source = (AppointmentSource)command.Source;
         var doctorId = command.DoctorId ?? Guid.Empty;

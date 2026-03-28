@@ -1,0 +1,105 @@
+{
+  "dashboard": {
+    "title": "Dashboard",
+    "connectionLost": "Connection lost. Data may not be up to date.",
+    "searchPlaceholder": "Search by phone or patient name...",
+    "refreshData": "Refresh data",
+    "bookAppointment": "Book appointment",
+    "newPatient": "New patient intake",
+    "emptyTitle": "No patients today",
+    "emptyDescription": "Start accepting new patients or wait for scheduled appointments.",
+    "showing": "Showing",
+    "patientsToday": "patients today",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "kpi": {
+    "appointmentsToday": "Appointments today",
+    "notArrived": "not arrived",
+    "waiting": "Waiting",
+    "examining": "In exam",
+    "completed": "Completed"
+  },
+  "filter": {
+    "all": "All",
+    "notArrived": "Not arrived",
+    "waiting": "Waiting",
+    "examining": "In exam",
+    "done": "Done"
+  },
+  "table": {
+    "fullName": "Full name",
+    "birthYear": "Birth year",
+    "appointmentTime": "Appt. time",
+    "source": "Source",
+    "reason": "Reason",
+    "unknownReason": "Unknown",
+    "status": "Status",
+    "actions": "Actions",
+    "checkIn": "Check-in"
+  },
+  "status": {
+    "notArrived": "Not arrived",
+    "waiting": "Waiting",
+    "examining": "In exam",
+    "completed": "Completed"
+  },
+  "source": {
+    "appointment": "Scheduled",
+    "walkIn": "Walk-in"
+  },
+  "actionMenu": {
+    "label": "Action menu",
+    "viewRecord": "View record",
+    "editInfo": "Edit info",
+    "reschedule": "Reschedule",
+    "markNoShow": "Mark no-show",
+    "cancelAppointment": "Cancel appointment",
+    "cancelVisit": "Cancel visit"
+  },
+  "walkIn": {
+    "title": "Create new visit",
+    "description": "Search and select a patient to create a walk-in visit",
+    "searchLabel": "Search patient",
+    "searchPlaceholder": "Search by phone or name...",
+    "searching": "Searching...",
+    "noResults": "No patients found",
+    "patient": "Patient",
+    "change": "Change",
+    "reason": "Visit reason",
+    "confirm": "Confirm create visit",
+    "successToast": "Created visit for {{name}}",
+    "errorToast": "Could not create visit. Please try again."
+  },
+  "noShow": {
+    "title": "Mark no-show",
+    "description": "Confirm patient did not arrive for appointment",
+    "warning": "Patient will be recorded as no-show. The appointment will be kept in the system for statistics. You can rebook for the patient later.",
+    "notes": "Notes",
+    "notesPlaceholder": "E.g.: Called but could not reach...",
+    "rebook": "Rebook for this patient",
+    "confirm": "Confirm no-show",
+    "successToast": "Marked {{name}} as no-show",
+    "errorToast": "Could not mark no-show. Please try again."
+  },
+  "cancelVisit": {
+    "title": "Cancel visit",
+    "description": "Confirm cancellation of visit for patient",
+    "warning": "Patient will be removed from today's queue. If the patient had an appointment, it will be marked as cancelled. This action cannot be undone.",
+    "reasonLabel": "Cancellation reason",
+    "reasonPlaceholder": "Select reason",
+    "reasons": {
+      "leftWithoutWaiting": "Patient left without waiting",
+      "changeDateRequest": "Patient wants different date",
+      "wrongCheckIn": "Receptionist checked in wrong person",
+      "changeClinic": "Patient switching clinics",
+      "other": "Other"
+    },
+    "notes": "Notes",
+    "rebook": "Rebook for this patient",
+    "confirm": "Confirm cancel visit",
+    "successToast": "Cancelled visit for {{name}}",
+    "alreadyExamining": "Patient has moved to In exam, cannot cancel.",
+    "errorToast": "Could not cancel visit. Please try again."
+  }
+}

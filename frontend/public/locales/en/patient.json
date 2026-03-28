@@ -68,6 +68,52 @@
     "environmental": "Environmental",
     "custom": "Custom"
   },
+  "intake": {
+    "breadcrumbNew": "New patient intake",
+    "breadcrumbEdit": "Update record",
+    "cancelButton": "Cancel entry",
+    "cancelConfirmTitle": "Confirm cancel",
+    "cancelConfirmMessage": "Are you sure you want to cancel? Unsaved data will be lost.",
+    "saveOnly": "Save record",
+    "saveAndAdvance": "Save & proceed to exam",
+    "saveSuccess": "Created record for {{name}}",
+    "updateSuccess": "Updated record for {{name}}",
+    "advanceSuccess": "Created record and advanced to exam for {{name}}",
+    "saveError": "Save failed, please try again",
+    "phoneDuplicate": "Phone {{phone}} already exists -- Patient: {{name}} ({{code}})",
+    "openOldRecord": "Open existing record",
+    "exam": {
+      "title": "Exam information",
+      "reason": "Reason for visit"
+    },
+    "history": {
+      "title": "Medical history",
+      "ocular": "Ocular history",
+      "systemic": "Systemic history",
+      "medications": "Current medications"
+    },
+    "lifestyle": {
+      "title": "Lifestyle",
+      "screenTime": "Screen time (hours/day)",
+      "workEnvironment": "Work environment",
+      "workOptions": {
+        "office": "Office",
+        "outdoor": "Outdoor",
+        "factory": "Factory",
+        "other": "Other"
+      },
+      "contactLens": "Contact lens usage",
+      "contactLensOptions": {
+        "none": "None",
+        "daily": "Daily",
+        "occasional": "Occasional",
+        "other": "Other"
+      },
+      "notes": "Notes"
+    }
+  },
+  "email": "Email",
+  "occupation": "Occupation",
   "validation": {
     "dobRequired": "Date of birth is required for Medical patients",
     "genderRequired": "Gender is required for Medical patients",

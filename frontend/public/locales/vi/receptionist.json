@@ -1,0 +1,105 @@
+{
+  "dashboard": {
+    "title": "Dashboard",
+    "connectionLost": "Mất kết nối. Dữ liệu có thể chưa cập nhật.",
+    "searchPlaceholder": "Tìm theo SBT hoặc tên BN...",
+    "refreshData": "Cập nhật dữ liệu",
+    "bookAppointment": "Đặt lịch hẹn",
+    "newPatient": "Tiếp nhận BN mới",
+    "emptyTitle": "Chưa có bệnh nhân nào hôm nay",
+    "emptyDescription": "Bắt đầu tiếp nhận bệnh nhân mới hoặc chờ bệnh nhân đã hẹn đến.",
+    "showing": "Hiển thị",
+    "patientsToday": "bệnh nhân hôm nay",
+    "previous": "Trước",
+    "next": "Sau"
+  },
+  "kpi": {
+    "appointmentsToday": "Lịch hẹn hôm nay",
+    "notArrived": "chưa đến",
+    "waiting": "Chờ khám",
+    "examining": "Đang khám",
+    "completed": "Hoàn thành"
+  },
+  "filter": {
+    "all": "Tất cả",
+    "notArrived": "Chưa đến",
+    "waiting": "Chờ khám",
+    "examining": "Đang khám",
+    "done": "Xong"
+  },
+  "table": {
+    "fullName": "Họ tên",
+    "birthYear": "Năm sinh",
+    "appointmentTime": "Giờ hẹn",
+    "source": "Nguồn",
+    "reason": "Lý do khám",
+    "unknownReason": "Chưa rõ",
+    "status": "Trạng thái",
+    "actions": "Thao tác",
+    "checkIn": "Check-in"
+  },
+  "status": {
+    "notArrived": "Chưa đến",
+    "waiting": "Chờ khám",
+    "examining": "Đang khám",
+    "completed": "Hoàn thành"
+  },
+  "source": {
+    "appointment": "Hẹn",
+    "walkIn": "Walk-in"
+  },
+  "actionMenu": {
+    "label": "Menu hành động",
+    "viewRecord": "Xem hồ sơ",
+    "editInfo": "Sửa thông tin",
+    "reschedule": "Đổi lịch hẹn",
+    "markNoShow": "Đánh dấu không đến",
+    "cancelAppointment": "Hủy hẹn",
+    "cancelVisit": "Hủy lượt khám"
+  },
+  "walkIn": {
+    "title": "Tạo lượt khám mới",
+    "description": "Tìm và chọn bệnh nhân để tạo lượt khám walk-in",
+    "searchLabel": "Tìm bệnh nhân",
+    "searchPlaceholder": "Tìm theo SBT hoặc tên BN...",
+    "searching": "Đang tìm kiếm...",
+    "noResults": "Không tìm thấy bệnh nhân nào",
+    "patient": "Bệnh nhân",
+    "change": "Đổi",
+    "reason": "Lý do khám",
+    "confirm": "Xác nhận tạo lượt khám",
+    "successToast": "Đã tạo lượt khám cho {{name}}",
+    "errorToast": "Không thể tạo lượt khám. Vui lòng thử lại."
+  },
+  "noShow": {
+    "title": "Đánh dấu không đến",
+    "description": "Xác nhận bệnh nhân không đến khám",
+    "warning": "BN sẽ được ghi nhận là no-show. Hẹn vẫn giữ trong hệ thống để thống kê. Lễ tân có thể đặt hẹn lại cho BN sau.",
+    "notes": "Ghi chú",
+    "notesPlaceholder": "VD: Đã gọi nhưng không liên lạc được...",
+    "rebook": "Đặt hẹn lại cho BN này",
+    "confirm": "Xác nhận no-show",
+    "successToast": "Đã đánh dấu không đến cho {{name}}",
+    "errorToast": "Không thể đánh dấu không đến. Vui lòng thử lại."
+  },
+  "cancelVisit": {
+    "title": "Hủy lượt khám",
+    "description": "Xác nhận hủy lượt khám cho bệnh nhân",
+    "warning": "BN sẽ bị xóa khỏi hàng đợi hôm nay. Nếu BN có hẹn, lịch hẹn sẽ chuyển thành Đã hủy. Hành động không thể hoàn tác.",
+    "reasonLabel": "Lý do hủy",
+    "reasonPlaceholder": "Chọn lý do",
+    "reasons": {
+      "leftWithoutWaiting": "BN không muốn chờ, bỏ về",
+      "changeDateRequest": "BN muốn đổi sang ngày khác",
+      "wrongCheckIn": "Lễ tân check-in nhầm người",
+      "changeClinic": "BN chuyển sang phòng khám khác",
+      "other": "Khác"
+    },
+    "notes": "Ghi chú",
+    "rebook": "Đặt hẹn lại cho BN này",
+    "confirm": "Xác nhận hủy lượt khám",
+    "successToast": "Đã hủy lượt khám cho {{name}}",
+    "alreadyExamining": "BN đã chuyển sang Đang khám, không thể hủy.",
+    "errorToast": "Không thể hủy lượt khám. Vui lòng thử lại."
+  }
+}

@@ -188,9 +188,14 @@ export function useRegisterFromIntakeMutation() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (command: Record<string, unknown>) => {
+      // Convert gender string to numeric enum (Male=0, Female=1, Other=2)
+      const body = {
+        ...command,
+        gender: command.gender != null ? Number(command.gender) : null,
+      }
       const { data, error, response } = await api.POST(
         "/api/patients/intake" as never,
-        { body: command } as never,
+        { body } as never,
       )
       if (error || !response.ok) {
         const err = error as Record<string, unknown> | undefined
@@ -209,9 +214,13 @@ export function useUpdateFromIntakeMutation() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async ({ patientId, ...command }: Record<string, unknown> & { patientId: string }) => {
+      const body = {
+        ...command,
+        gender: command.gender != null ? Number(command.gender) : null,
+      }
       const { error, response } = await api.PUT(
         `/api/patients/intake/${patientId}` as never,
-        { body: command } as never,
+        { body } as never,
       )
       if (error || !response.ok) {
         const err = error as Record<string, unknown> | undefined

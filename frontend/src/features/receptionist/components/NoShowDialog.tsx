@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { toast } from "sonner"
+import { useTranslation } from "react-i18next"
 import { useNavigate } from "@tanstack/react-router"
 import { IconAlertTriangle } from "@tabler/icons-react"
 import {
@@ -31,6 +32,8 @@ function getInitials(name: string): string {
 }
 
 export function NoShowDialog({ open, onOpenChange, row }: NoShowDialogProps) {
+  const { t } = useTranslation("receptionist")
+  const { t: tCommon } = useTranslation("common")
   const [note, setNote] = useState("")
   const [rebook, setRebook] = useState(false)
   const navigate = useNavigate()
@@ -41,7 +44,7 @@ export function NoShowDialog({ open, onOpenChange, row }: NoShowDialogProps) {
 
     markNoShow.mutate(row.appointmentId, {
       onSuccess: () => {
-        toast.success(`Da danh dau khong den cho ${row.patientName}`)
+        toast.success(t("noShow.successToast", { name: row.patientName }))
         handleClose()
 
         if (rebook && row.patientId) {
@@ -51,7 +54,7 @@ export function NoShowDialog({ open, onOpenChange, row }: NoShowDialogProps) {
         }
       },
       onError: () => {
-        toast.error("Khong the danh dau khong den. Vui long thu lai.")
+        toast.error(t("noShow.errorToast"))
       },
     })
   }
@@ -67,10 +70,10 @@ export function NoShowDialog({ open, onOpenChange, row }: NoShowDialogProps) {
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">
-            Danh dau khong den
+            {t("noShow.title")}
           </DialogTitle>
           <DialogDescription className="sr-only">
-            Xac nhan benh nhan khong den kham
+            {t("noShow.description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -108,18 +111,17 @@ export function NoShowDialog({ open, onOpenChange, row }: NoShowDialogProps) {
           >
             <IconAlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
             <span>
-              BN se duoc ghi nhan la no-show. Hen van giu trong he thong de
-              thong ke. Le tan co the dat hen lai cho BN sau.
+              {t("noShow.warning")}
             </span>
           </div>
 
           {/* Note textarea */}
           <div className="space-y-2">
-            <Label>Ghi chu</Label>
+            <Label>{t("noShow.notes")}</Label>
             <Textarea
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              placeholder="VD: Da goi nhung khong lien lac duoc..."
+              placeholder={t("noShow.notesPlaceholder")}
               rows={2}
               className="resize-none"
             />
@@ -133,14 +135,14 @@ export function NoShowDialog({ open, onOpenChange, row }: NoShowDialogProps) {
               onCheckedChange={(checked) => setRebook(checked === true)}
             />
             <Label htmlFor="rebook-noshow" className="cursor-pointer">
-              Dat hen lai cho BN nay
+              {t("noShow.rebook")}
             </Label>
           </div>
         </div>
 
         <DialogFooter className="gap-2 sm:justify-end">
           <Button variant="ghost" onClick={handleClose}>
-            Huy
+            {tCommon("buttons.cancel")}
           </Button>
           <Button
             onClick={handleConfirm}
@@ -148,7 +150,7 @@ export function NoShowDialog({ open, onOpenChange, row }: NoShowDialogProps) {
             style={{ backgroundColor: "#BA7517", color: "white" }}
             className="hover:opacity-90"
           >
-            {markNoShow.isPending ? "Dang xu ly..." : "Xac nhan no-show"}
+            {markNoShow.isPending ? tCommon("status.processing") : t("noShow.confirm")}
           </Button>
         </DialogFooter>
       </DialogContent>

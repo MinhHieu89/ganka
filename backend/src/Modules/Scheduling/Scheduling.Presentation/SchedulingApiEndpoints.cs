@@ -126,8 +126,8 @@ public static class SchedulingApiEndpoints
         group.MapGet("/slots", async (DateTime date, Guid? doctorId, IMessageBus bus, CancellationToken ct) =>
         {
             var query = new GetAvailableSlotsQuery(date, doctorId);
-            var slots = await bus.InvokeAsync<List<AvailableSlotDto>>(query, ct);
-            return Results.Ok(slots);
+            var result = await bus.InvokeAsync<Result<List<AvailableSlotDto>>>(query, ct);
+            return result.ToHttpResult();
         }).RequirePermissions(Permissions.Scheduling.View);
 
         // Get receptionist dashboard (today's patient queue with 4-status mapping)
@@ -161,6 +161,7 @@ public static class SchedulingApiEndpoints
                 new GetClinicScheduleQuery(), ct);
             return Results.Ok(schedule);
         }).RequirePermissions(Permissions.Scheduling.View);
+
     }
 }
 

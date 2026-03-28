@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { useNavigate } from "@tanstack/react-router"
 import { IconDotsVertical } from "@tabler/icons-react"
 import {
@@ -23,6 +24,7 @@ interface RowActionMenuProps {
 type DialogType = "reschedule" | "cancel-appointment" | "no-show" | "cancel-visit" | null
 
 export function RowActionMenu({ row, onCheckIn }: RowActionMenuProps) {
+  const { t } = useTranslation("receptionist")
   const navigate = useNavigate()
   const [activeDialog, setActiveDialog] = useState<DialogType>(null)
 
@@ -49,36 +51,36 @@ export function RowActionMenu({ row, onCheckIn }: RowActionMenuProps) {
             onClick={(e) => e.stopPropagation()}
           >
             <IconDotsVertical className="h-4 w-4" />
-            <span className="sr-only">Menu hanh dong</span>
+            <span className="sr-only">{t("actionMenu.label")}</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="min-w-[200px]">
           {row.status === "not_arrived" && (
             <>
               <DropdownMenuItem onClick={handleViewProfile}>
-                Xem ho so
+                {t("actionMenu.viewRecord")}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={handleEditInfo}>
-                Sua thong tin
+                {t("actionMenu.editInfo")}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => setActiveDialog("reschedule")}
                 style={{ color: "#534AB7" }}
               >
-                Doi lich hen
+                {t("actionMenu.reschedule")}
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => setActiveDialog("no-show")}
                 style={{ color: "#BA7517" }}
               >
-                Danh dau khong den
+                {t("actionMenu.markNoShow")}
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => setActiveDialog("cancel-appointment")}
                 style={{ color: "#A32D2D" }}
               >
-                Huy hen
+                {t("actionMenu.cancelAppointment")}
               </DropdownMenuItem>
             </>
           )}
@@ -86,30 +88,30 @@ export function RowActionMenu({ row, onCheckIn }: RowActionMenuProps) {
           {row.status === "waiting" && (
             <>
               <DropdownMenuItem onClick={handleViewProfile}>
-                Xem ho so
+                {t("actionMenu.viewRecord")}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={handleEditInfo}>
-                Sua thong tin
+                {t("actionMenu.editInfo")}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => setActiveDialog("cancel-visit")}
                 style={{ color: "#A32D2D" }}
               >
-                Huy luot kham
+                {t("actionMenu.cancelVisit")}
               </DropdownMenuItem>
             </>
           )}
 
           {row.status === "examining" && (
             <DropdownMenuItem onClick={handleViewProfile}>
-              Xem ho so
+              {t("actionMenu.viewRecord")}
             </DropdownMenuItem>
           )}
 
           {row.status === "completed" && (
             <DropdownMenuItem onClick={handleViewProfile}>
-              Xem ho so
+              {t("actionMenu.viewRecord")}
             </DropdownMenuItem>
           )}
         </DropdownMenuContent>

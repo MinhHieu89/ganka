@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { toast } from "sonner"
+import { useTranslation } from "react-i18next"
 import { IconSearch } from "@tabler/icons-react"
 import {
   Dialog,
@@ -39,6 +40,8 @@ export function WalkInVisitDialog({
   open,
   onOpenChange,
 }: WalkInVisitDialogProps) {
+  const { t } = useTranslation("receptionist")
+  const { t: tCommon } = useTranslation("common")
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedPatient, setSelectedPatient] = useState<PatientResult | null>(
     null,
@@ -103,11 +106,11 @@ export function WalkInVisitDialog({
       },
       {
         onSuccess: () => {
-          toast.success(`Da tao luot kham cho ${selectedPatient.name}`)
+          toast.success(t("walkIn.successToast", { name: selectedPatient.name }))
           handleClose()
         },
         onError: () => {
-          toast.error("Khong the tao luot kham. Vui long thu lai.")
+          toast.error(t("walkIn.errorToast"))
         },
       },
     )
@@ -126,10 +129,10 @@ export function WalkInVisitDialog({
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">
-            Tao luot kham moi
+            {t("walkIn.title")}
           </DialogTitle>
           <DialogDescription className="sr-only">
-            Tim va chon benh nhan de tao luot kham walk-in
+            {t("walkIn.description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -137,13 +140,13 @@ export function WalkInVisitDialog({
           {/* Patient search */}
           {!selectedPatient && (
             <div className="space-y-2">
-              <Label>Tim benh nhan</Label>
+              <Label>{t("walkIn.searchLabel")}</Label>
               <div className="relative">
                 <IconSearch className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   value={searchQuery}
                   onChange={(e) => handleSearch(e.target.value)}
-                  placeholder="Tim theo SBT hoac ten BN..."
+                  placeholder={t("walkIn.searchPlaceholder")}
                   className="pl-9"
                 />
               </div>
@@ -180,7 +183,7 @@ export function WalkInVisitDialog({
 
               {isSearching && (
                 <div className="text-sm text-muted-foreground text-center py-2">
-                  Dang tim kiem...
+                  {t("walkIn.searching")}
                 </div>
               )}
 
@@ -188,7 +191,7 @@ export function WalkInVisitDialog({
                 !isSearching &&
                 searchResults.length === 0 && (
                   <div className="text-sm text-muted-foreground text-center py-2">
-                    Khong tim thay benh nhan nao
+                    {t("walkIn.noResults")}
                   </div>
                 )}
             </div>
@@ -198,14 +201,14 @@ export function WalkInVisitDialog({
           {selectedPatient && (
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <Label>Benh nhan</Label>
+                <Label>{t("walkIn.patient")}</Label>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => setSelectedPatient(null)}
                   className="h-auto px-2 py-1 text-xs"
                 >
-                  Doi
+                  {t("walkIn.change")}
                 </Button>
               </div>
               <div className="flex items-center gap-3 rounded-md border bg-muted/50 p-3">
@@ -240,7 +243,7 @@ export function WalkInVisitDialog({
 
           {/* Reason field */}
           <div className="space-y-2">
-            <Label>Ly do kham</Label>
+            <Label>{t("walkIn.reason")}</Label>
             <Textarea
               value={reason}
               onChange={(e) => setReason(e.target.value)}
@@ -252,7 +255,7 @@ export function WalkInVisitDialog({
 
         <DialogFooter className="gap-2 sm:justify-end">
           <Button variant="ghost" onClick={handleClose}>
-            Huy
+            {tCommon("buttons.cancel")}
           </Button>
           <Button
             onClick={handleConfirm}
@@ -261,8 +264,8 @@ export function WalkInVisitDialog({
             className="hover:opacity-90"
           >
             {createWalkIn.isPending
-              ? "Dang xu ly..."
-              : "Xac nhan tao luot kham"}
+              ? tCommon("status.processing")
+              : t("walkIn.confirm")}
           </Button>
         </DialogFooter>
       </DialogContent>

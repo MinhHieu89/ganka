@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { toast } from "sonner"
+import { useTranslation } from "react-i18next"
 import { useNavigate } from "@tanstack/react-router"
 import { IconAlertTriangle } from "@tabler/icons-react"
 import {
@@ -32,17 +33,11 @@ interface CancelVisitDialogProps {
 }
 
 const CANCEL_VISIT_REASONS = [
-  { value: "BN khong muon cho, bo ve", label: "BN khong muon cho, bo ve" },
-  { value: "BN muon doi sang ngay khac", label: "BN muon doi sang ngay khac" },
-  {
-    value: "Le tan check-in nham nguoi",
-    label: "Le tan check-in nham nguoi",
-  },
-  {
-    value: "BN chuyen sang phong kham khac",
-    label: "BN chuyen sang phong kham khac",
-  },
-  { value: "Khac", label: "Khac" },
+  { value: "BN không muốn chờ, bỏ về", labelKey: "cancelVisit.reasons.leftWithoutWaiting" },
+  { value: "BN muốn đổi sang ngày khác", labelKey: "cancelVisit.reasons.changeDateRequest" },
+  { value: "Lễ tân check-in nhầm người", labelKey: "cancelVisit.reasons.wrongCheckIn" },
+  { value: "BN chuyển sang phòng khám khác", labelKey: "cancelVisit.reasons.changeClinic" },
+  { value: "Khác", labelKey: "cancelVisit.reasons.other" },
 ] as const
 
 function getInitials(name: string): string {
@@ -56,6 +51,8 @@ export function CancelVisitDialog({
   onOpenChange,
   row,
 }: CancelVisitDialogProps) {
+  const { t } = useTranslation("receptionist")
+  const { t: tCommon } = useTranslation("common")
   const [reason, setReason] = useState("")
   const [note, setNote] = useState("")
   const [rebook, setRebook] = useState(false)
@@ -65,7 +62,7 @@ export function CancelVisitDialog({
   const handleConfirm = () => {
     if (!row.visitId || !reason) return
 
-    const fullReason = reason === "Khac" && note ? `${reason}: ${note}` : reason
+    const fullReason = reason === "Khác" && note ? `${reason}: ${note}` : reason
 
     cancelVisit.mutate(
       {
@@ -74,7 +71,7 @@ export function CancelVisitDialog({
       },
       {
         onSuccess: () => {
-          toast.success(`Da huy luot kham cho ${row.patientName}`)
+          toast.success(t("cancelVisit.successToast", { name: row.patientName }))
           handleClose()
 
           if (rebook && row.patientId) {
@@ -88,9 +85,9 @@ export function CancelVisitDialog({
             error.message.includes("409") ||
             error.message.includes("conflict")
           ) {
-            toast.error("BN da chuyen sang Dang kham, khong the huy.")
+            toast.error(t("cancelVisit.alreadyExamining"))
           } else {
-            toast.error("Khong the huy luot kham. Vui long thu lai.")
+            toast.error(t("cancelVisit.errorToast"))
           }
         },
       },
@@ -109,10 +106,10 @@ export function CancelVisitDialog({
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">
-            Huy luot kham
+            {t("cancelVisit.title")}
           </DialogTitle>
           <DialogDescription className="sr-only">
-            Xac nhan huy luot kham cho benh nhan
+            {t("cancelVisit.description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -150,34 +147,33 @@ export function CancelVisitDialog({
           >
             <IconAlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
             <span>
-              BN se bi xoa khoi hang doi hom nay. Neu BN co hen, lich hen se
-              chuyen thanh Da huy. Hanh dong khong the hoan tac.
+              {t("cancelVisit.warning")}
             </span>
           </div>
 
           {/* Reason dropdown */}
           <div className="space-y-2">
             <Label>
-              Ly do huy <span className="text-destructive">*</span>
+              {t("cancelVisit.reasonLabel")} <span className="text-destructive">*</span>
             </Label>
             <Select value={reason} onValueChange={setReason}>
               <SelectTrigger>
-                <SelectValue placeholder="Chon ly do" />
+                <SelectValue placeholder={t("cancelVisit.reasonPlaceholder")} />
               </SelectTrigger>
               <SelectContent>
                 {CANCEL_VISIT_REASONS.map((r) => (
                   <SelectItem key={r.value} value={r.value}>
-                    {r.label}
+                    {t(r.labelKey)}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
 
-          {/* Note field when "Khac" selected */}
-          {reason === "Khac" && (
+          {/* Note field when "Khác" selected */}
+          {reason === "Khác" && (
             <div className="space-y-2">
-              <Label>Ghi chu</Label>
+              <Label>{t("cancelVisit.notes")}</Label>
               <Textarea
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
@@ -195,14 +191,14 @@ export function CancelVisitDialog({
               onCheckedChange={(checked) => setRebook(checked === true)}
             />
             <Label htmlFor="rebook-cancel-visit" className="cursor-pointer">
-              Dat hen lai cho BN nay
+              {t("cancelVisit.rebook")}
             </Label>
           </div>
         </div>
 
         <DialogFooter className="gap-2 sm:justify-end">
           <Button variant="ghost" onClick={handleClose}>
-            Huy
+            {tCommon("buttons.cancel")}
           </Button>
           <Button
             onClick={handleConfirm}
@@ -211,8 +207,8 @@ export function CancelVisitDialog({
             className="hover:opacity-90"
           >
             {cancelVisit.isPending
-              ? "Dang xu ly..."
-              : "Xac nhan huy luot kham"}
+              ? tCommon("status.processing")
+              : t("cancelVisit.confirm")}
           </Button>
         </DialogFooter>
       </DialogContent>

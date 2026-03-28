@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { Controller, useFormContext } from "react-hook-form"
+import { useTranslation } from "react-i18next"
 import { IconChevronDown } from "@tabler/icons-react"
 import {
   Collapsible,
@@ -12,26 +13,27 @@ import type { IntakeFormValues } from "@/features/receptionist/schemas/intake-fo
 
 export function MedicalHistorySection() {
   const { control } = useFormContext<IntakeFormValues>()
+  const { t } = useTranslation("patient")
   const [open, setOpen] = useState(true)
 
   return (
     <Collapsible open={open} onOpenChange={setOpen}>
       <CollapsibleTrigger className="flex w-full items-center justify-between rounded-lg border bg-card p-4 text-left hover:bg-accent/50 transition-colors">
-        <h2 className="text-xl font-semibold">Tien su benh</h2>
+        <h2 className="text-xl font-semibold">{t("intake.history.title")}</h2>
         <IconChevronDown
           className={`h-5 w-5 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`}
         />
       </CollapsibleTrigger>
       <CollapsibleContent className="rounded-lg border border-t-0 p-4">
         <div className="flex flex-col gap-4">
-          {/* Tien su benh mat */}
+          {/* Tiền sử bệnh mắt */}
           <Controller
             name="ocularHistory"
             control={control}
             render={({ field }) => (
               <Field>
                 <FieldLabel htmlFor="ocularHistory">
-                  Tien su benh mat
+                  {t("intake.history.ocular")}
                 </FieldLabel>
                 <Textarea
                   {...field}
@@ -43,14 +45,14 @@ export function MedicalHistorySection() {
             )}
           />
 
-          {/* Tien su benh toan than */}
+          {/* Tiền sử bệnh toàn thân */}
           <Controller
             name="systemicHistory"
             control={control}
             render={({ field }) => (
               <Field>
                 <FieldLabel htmlFor="systemicHistory">
-                  Tien su benh toan than
+                  {t("intake.history.systemic")}
                 </FieldLabel>
                 <Textarea
                   {...field}
@@ -62,14 +64,14 @@ export function MedicalHistorySection() {
             )}
           />
 
-          {/* Thuoc dang dung */}
+          {/* Thuốc đang dùng */}
           <Controller
             name="currentMedications"
             control={control}
             render={({ field }) => (
               <Field>
                 <FieldLabel htmlFor="currentMedications">
-                  Thuoc dang dung
+                  {t("intake.history.medications")}
                 </FieldLabel>
                 <Textarea
                   {...field}
