@@ -203,7 +203,7 @@ public sealed class AuthDataSeeder : IHostedService
             var receptionistPerms = new List<Permission>();
             receptionistPerms.AddRange(GetModulePermissions(PermissionModule.Patient, PermissionAction.View, PermissionAction.Create, PermissionAction.Update));
             receptionistPerms.AddRange(GetModulePermissions(PermissionModule.Scheduling, PermissionAction.View, PermissionAction.Create, PermissionAction.Update));
-            receptionistPerms.AddRange(GetModulePermissions(PermissionModule.Clinical, PermissionAction.View, PermissionAction.Create));
+            receptionistPerms.AddRange(GetModulePermissions(PermissionModule.Clinical, PermissionAction.View, PermissionAction.Create, PermissionAction.Update));
             receptionist.UpdatePermissions(receptionistPerms);
             rolesToAdd.Add(receptionist);
         }

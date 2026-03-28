@@ -197,8 +197,8 @@ export function useCancelVisitMutation() {
   return useMutation({
     mutationFn: async ({ visitId, reason }: { visitId: string; reason: string }) => {
       const { error, response } = await api.POST(
-        `/api/clinical/cancel-visit` as never,
-        { body: { visitId, reason } } as never,
+        `/api/clinical/visits/${visitId}/cancel-with-reason` as never,
+        { body: { reason } } as never,
       )
       if (error || !response.ok) throw new Error("Failed to cancel visit")
     },
