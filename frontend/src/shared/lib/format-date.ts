@@ -1,4 +1,4 @@
-import { format } from "date-fns"
+import { format, formatISO } from "date-fns"
 import { TZDate } from "@date-fns/tz"
 
 /**
@@ -30,4 +30,13 @@ export function formatVietnamDate(
   formatStr: string = "dd/MM/yyyy HH:mm",
 ): string {
   return format(toVietnamDate(utcDateStr), formatStr)
+}
+
+/**
+ * Format a Date to "yyyy-MM-dd" using the local date components.
+ * Unlike `date.toISOString().split("T")[0]`, this does NOT shift to UTC,
+ * so it always returns the date the user actually selected.
+ */
+export function toLocalDateString(date: Date): string {
+  return formatISO(date, { representation: "date" })
 }

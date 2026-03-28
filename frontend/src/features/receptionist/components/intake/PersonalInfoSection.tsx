@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from "@/shared/components/Select"
 import { DatePicker } from "@/shared/components/DatePicker"
+import { toLocalDateString } from "@/shared/lib/format-date"
 import { usePatientSearch } from "@/features/patient/hooks/usePatientSearch"
 import type { IntakeFormValues } from "@/features/receptionist/schemas/intake-form.schema"
 
@@ -98,7 +99,7 @@ export function PersonalInfoSection() {
                 <DatePicker
                   value={field.value ? new Date(field.value) : undefined}
                   onChange={(date) =>
-                    field.onChange(date ? date.toISOString().split("T")[0] : "")
+                    field.onChange(date ? toLocalDateString(date) : "")
                   }
                   className="w-full"
                 />

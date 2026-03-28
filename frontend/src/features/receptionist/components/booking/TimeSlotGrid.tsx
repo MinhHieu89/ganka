@@ -101,18 +101,8 @@ export function TimeSlotGrid({
     )
   }
 
-  const totalSlots = groups.reduce((sum, g) => sum + g.slots.length, 0)
-  const availableSlots = groups.reduce(
-    (sum, g) => sum + g.slots.filter((s) => !isSlotFull(s)).length,
-    0,
-  )
-
   return (
     <div className="space-y-4">
-      <div className="text-sm font-semibold text-foreground">
-        {availableSlots} {t("slots.available")} / {totalSlots}
-      </div>
-
       {groups.map((group) => {
         if (group.slots.length === 0) return null
 

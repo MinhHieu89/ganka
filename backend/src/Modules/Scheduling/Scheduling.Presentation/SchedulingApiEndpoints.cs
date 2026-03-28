@@ -135,14 +135,14 @@ public static class SchedulingApiEndpoints
         {
             var query = new GetReceptionistDashboardQuery(p.Status, p.Search, p.Page ?? 1, p.PageSize ?? 20);
             var result = await bus.InvokeAsync<Result<ReceptionistDashboardDto>>(query, ct);
-            return Results.Ok(result);
+            return result.ToHttpResult();
         }).RequirePermissions(Permissions.Scheduling.View);
 
         // Get receptionist KPI stats (counts per status for today)
         group.MapGet("/receptionist/kpi", async (IMessageBus bus, CancellationToken ct) =>
         {
             var result = await bus.InvokeAsync<Result<ReceptionistKpiDto>>(new GetReceptionistKpiStatsQuery(), ct);
-            return Results.Ok(result);
+            return result.ToHttpResult();
         }).RequirePermissions(Permissions.Scheduling.View);
     }
 

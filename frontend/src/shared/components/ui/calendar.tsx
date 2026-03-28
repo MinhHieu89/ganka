@@ -5,9 +5,13 @@ import {
   ChevronRightIcon,
 } from "lucide-react"
 import { DayButton, DayPicker, getDefaultClassNames } from "react-day-picker"
+import { useTranslation } from "react-i18next"
+import { vi, enUS } from "date-fns/locale"
 
 import { cn } from "@/shared/lib/utils"
 import { Button, buttonVariants } from "@/shared/components/ui/button"
+
+const localeMap: Record<string, typeof vi> = { vi, en: enUS }
 
 function Calendar({
   className,
@@ -17,11 +21,13 @@ function Calendar({
   buttonVariant = "ghost",
   formatters,
   components,
-  locale,
+  locale: localeProp,
   ...props
 }: React.ComponentProps<typeof DayPicker> & {
   buttonVariant?: React.ComponentProps<typeof Button>["variant"]
 }) {
+  const { i18n } = useTranslation()
+  const locale = localeProp ?? localeMap[i18n.language] ?? enUS
   const defaultClassNames = getDefaultClassNames()
 
   return (

@@ -34,6 +34,7 @@ import { Label } from "@/shared/components/Label"
 import { DatePicker } from "@/shared/components/DatePicker"
 import { Separator } from "@/shared/components/Separator"
 import { formatVND } from "@/shared/lib/format-vnd"
+import { toLocalDateString } from "@/shared/lib/format-date"
 import { usePatientList } from "@/features/patient/api/patient-api"
 import { useCreateGlassesOrder, useComboPackages, useFrames, useLensCatalog } from "@/features/optical/api/optical-queries"
 import { useActiveVisits } from "@/features/clinical/api/clinical-api"
@@ -233,7 +234,7 @@ export function CreateGlassesOrderForm({ open, onOpenChange }: CreateGlassesOrde
         opticalPrescriptionId: values.opticalPrescriptionId,
         processingType: values.processingType,
         estimatedDeliveryDate: values.estimatedDeliveryDate
-          ? values.estimatedDeliveryDate.toISOString().split("T")[0]
+          ? toLocalDateString(values.estimatedDeliveryDate)
           : null,
         frameId: values.items.find((i) => i.frameId)?.frameId ?? null,
         lensCatalogItemId: values.items.find((i) => i.lensCatalogItemId)?.lensCatalogItemId ?? null,

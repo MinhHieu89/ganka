@@ -38,9 +38,14 @@ export function useReceptionistDashboard(filters: DashboardFilters) {
         } as never,
       )
       if (error) throw new Error("Failed to fetch receptionist dashboard")
-      // Backend returns Result<ReceptionistDashboardDto> with data property
-      const result = data as { data?: ReceptionistDashboardRow[] } | ReceptionistDashboardRow[]
-      return (Array.isArray(result) ? result : result?.data) ?? []
+      // Backend returns ReceptionistDashboardDto via ToHttpResult() with items property
+      const result = data as
+        | { items?: ReceptionistDashboardRow[]; value?: { items?: ReceptionistDashboardRow[] } }
+        | ReceptionistDashboardRow[]
+      if (Array.isArray(result)) return result
+      if (result && "items" in result && result.items) return result.items
+      if (result && "value" in result && result.value?.items) return result.value.items
+      return []
     },
     refetchInterval: 15_000,
   })
@@ -54,9 +59,13 @@ export function useReceptionistKpi() {
         "/api/scheduling/receptionist/kpi" as never,
       )
       if (error) throw new Error("Failed to fetch receptionist KPI")
-      const result = data as { data?: ReceptionistKpi } | ReceptionistKpi
-      if (result && "todayAppointments" in result) return result
-      return (result as { data?: ReceptionistKpi })?.data ?? {
+      const result = data as
+        | { value?: ReceptionistKpi; todayAppointments?: number }
+        | ReceptionistKpi
+      // Backend now returns DTO directly via ToHttpResult(), but handle legacy wrapper too
+      if (result && "todayAppointments" in result) return result as ReceptionistKpi
+      if (result && "value" in result && result.value) return result.value
+      return {
         todayAppointments: 0,
         notArrived: 0,
         waiting: 0,

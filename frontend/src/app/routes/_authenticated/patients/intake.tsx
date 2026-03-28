@@ -4,6 +4,7 @@ import { requirePermission } from "@/shared/utils/permission-guard"
 import { PatientIntakeForm } from "@/features/receptionist/components/intake/PatientIntakeForm"
 import { usePatientById } from "@/features/patient/api/patient-api"
 import { Skeleton } from "@/shared/components/Skeleton"
+import { toLocalDateString } from "@/shared/lib/format-date"
 
 const searchSchema = z.object({
   patientId: z.string().optional(),
@@ -53,7 +54,7 @@ function EditModeIntake({ patientId }: { patientId: string }) {
     fullName: patient.fullName ?? "",
     phone: patient.phone ?? "",
     dateOfBirth: patient.dateOfBirth
-      ? new Date(patient.dateOfBirth).toISOString().split("T")[0]
+      ? toLocalDateString(new Date(patient.dateOfBirth))
       : "",
     gender: patient.gender ?? "",
     address: patient.address ?? "",

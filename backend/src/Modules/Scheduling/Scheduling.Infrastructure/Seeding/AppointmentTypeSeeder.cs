@@ -48,7 +48,7 @@ public sealed class AppointmentTypeSeeder : IHostedService
                 new AppointmentType(NewPatientId, "New Patient", "Bệnh nhân mới", 30, "#3b82f6"),
                 new AppointmentType(FollowUpId, "Follow-Up", "Tái khám", 20, "#22c55e"),
                 new AppointmentType(TreatmentId, "Treatment", "Điều trị", 30, "#f97316"),
-                new AppointmentType(OrthoKId, "Ortho-K", "Ortho-K", 60, "#a855f7")
+                new AppointmentType(OrthoKId, "Ortho-K", "Ortho-K", 30, "#a855f7")
             );
 
             await dbContext.SaveChangesAsync(cancellationToken);

@@ -14,6 +14,7 @@ import { Label } from "@/shared/components/Label"
 import { Calendar } from "@/shared/components/ui/calendar"
 import { useAvailableSlots } from "@/features/receptionist/api/receptionist-api"
 import { useRescheduleAppointment } from "@/features/scheduling/api/scheduling-api"
+import { toLocalDateString } from "@/shared/lib/format-date"
 import { TimeSlotGrid } from "./booking/TimeSlotGrid"
 import type { ReceptionistDashboardRow } from "@/features/receptionist/types/receptionist.types"
 
@@ -29,10 +30,6 @@ function formatDateTime(isoString: string | null, atLabel: string): string {
   return `${date.toLocaleDateString("vi-VN")} ${atLabel} ${date.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit", hour12: false })}`
 }
 
-function formatDateToISO(date: Date): string {
-  return date.toISOString().split("T")[0]
-}
-
 export function RescheduleDialog({
   open,
   onOpenChange,
@@ -43,7 +40,7 @@ export function RescheduleDialog({
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null)
 
-  const dateStr = selectedDate ? formatDateToISO(selectedDate) : ""
+  const dateStr = selectedDate ? toLocalDateString(selectedDate) : ""
   const slotsQuery = useAvailableSlots(dateStr)
   const reschedule = useRescheduleAppointment()
 
@@ -79,7 +76,7 @@ export function RescheduleDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="sm:max-w-3xl">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">
             {t("rescheduleDialog.title")}
@@ -89,19 +86,19 @@ export function RescheduleDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4 py-2">
-          {/* Old schedule with strikethrough */}
-          {row.appointmentTime && (
-            <div className="space-y-1">
-              <Label className="text-muted-foreground">{t("rescheduleDialog.currentSchedule")}</Label>
-              <div className="text-sm line-through text-muted-foreground">
-                {formatDateTime(row.appointmentTime, t("rescheduleDialog.at"))}
-              </div>
+        {/* Old schedule with strikethrough */}
+        {row.appointmentTime && (
+          <div className="space-y-1">
+            <Label>{t("rescheduleDialog.currentSchedule")}</Label>
+            <div className="text-sm line-through text-muted-foreground">
+              {formatDateTime(row.appointmentTime, t("rescheduleDialog.at"))}
             </div>
-          )}
+          </div>
+        )}
 
+        <div className="flex gap-8 py-2">
           {/* Calendar for new date */}
-          <div className="space-y-2">
+          <div className="space-y-4 shrink-0">
             <Label>{t("rescheduleDialog.selectNewDate")}</Label>
             <Calendar
               mode="single"
@@ -117,7 +114,7 @@ export function RescheduleDialog({
 
           {/* Time slot grid */}
           {selectedDate && (
-            <div className="space-y-2">
+            <div className="space-y-4 min-w-0 flex-1">
               <Label>{t("rescheduleDialog.selectTime")}</Label>
               <TimeSlotGrid
                 slots={slotsQuery.data ?? []}
@@ -134,10 +131,9 @@ export function RescheduleDialog({
             {tCommon("buttons.cancel")}
           </Button>
           <Button
+            variant="default"
             onClick={handleConfirm}
             disabled={!selectedSlot || reschedule.isPending}
-            style={{ backgroundColor: "#534AB7", color: "white" }}
-            className="hover:opacity-90"
           >
             {reschedule.isPending ? tCommon("status.processing") : t("rescheduleDialog.confirm")}
           </Button>
