@@ -123,6 +123,14 @@ public sealed class PatientRepository : IPatientRepository
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<List<Domain.Entities.Patient>> GetByIdsAsync(List<Guid> ids, CancellationToken cancellationToken = default)
+    {
+        if (ids.Count == 0) return [];
+        return await _dbContext.Patients
+            .Where(p => ids.Contains(p.Id))
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<bool> ExistsAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await _dbContext.Patients.AnyAsync(p => p.Id == id, cancellationToken);

@@ -18,11 +18,22 @@ public static class GetReceptionistDashboardHandler
         GetReceptionistDashboardQuery query,
         IAppointmentRepository appointmentRepository,
         IVisitRepository visitRepository,
+        Patient.Application.Interfaces.IPatientRepository patientRepository,
         CancellationToken ct)
     {
         // Load today's appointments and visits (two separate queries, join in-memory)
         var appointments = await appointmentRepository.GetTodayAppointmentsAsync(ct);
         var visits = await visitRepository.GetTodayVisitsAsync(ct);
+
+        // Load patient data for birth year and patient code
+        var patientIds = appointments
+            .Where(a => a.PatientId.HasValue)
+            .Select(a => a.PatientId!.Value)
+            .Union(visits.Select(v => v.PatientId))
+            .Distinct()
+            .ToList();
+        var patients = await patientRepository.GetByIdsAsync(patientIds, ct);
+        var patientLookup = patients.ToDictionary(p => p.Id);
 
         // Build lookup: appointmentId -> visit
         var visitByAppointment = visits
@@ -37,7 +48,9 @@ public static class GetReceptionistDashboardHandler
             var hasVisit = visitByAppointment.TryGetValue(apt.Id, out var visit);
             var status = MapStatus(apt, visit);
 
-            if (status == null) continue; // Skip cancelled/noshow appointments without visits
+            if (status == null) continue;
+
+            var pat = apt.PatientId.HasValue && patientLookup.TryGetValue(apt.PatientId.Value, out var p) ? p : null;
 
             rows.Add(new ReceptionistDashboardRowDto(
                 Id: hasVisit ? visit!.Id : apt.Id,
@@ -45,8 +58,8 @@ public static class GetReceptionistDashboardHandler
                 VisitId: hasVisit ? visit!.Id : null,
                 PatientId: apt.PatientId,
                 PatientName: apt.PatientName,
-                PatientCode: null, // Would need cross-module query for patient code
-                BirthYear: null,
+                PatientCode: pat?.PatientCode,
+                BirthYear: pat?.DateOfBirth?.Year,
                 AppointmentTime: apt.StartTime,
                 Source: "appointment",
                 Reason: visit?.Reason ?? apt.GuestReason ?? apt.Notes,
@@ -63,14 +76,16 @@ public static class GetReceptionistDashboardHandler
             var status = MapVisitStatus(visit);
             if (status == null) continue;
 
+            var wiPat = patientLookup.TryGetValue(visit.PatientId, out var wp) ? wp : null;
+
             rows.Add(new ReceptionistDashboardRowDto(
                 Id: visit.Id,
                 AppointmentId: null,
                 VisitId: visit.Id,
                 PatientId: visit.PatientId,
                 PatientName: visit.PatientName,
-                PatientCode: null,
-                BirthYear: null,
+                PatientCode: wiPat?.PatientCode,
+                BirthYear: wiPat?.DateOfBirth?.Year,
                 AppointmentTime: null,
                 Source: "walkin",
                 Reason: visit.Reason,

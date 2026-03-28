@@ -22,6 +22,7 @@ public interface IPatientRepository
     Task<bool> PhoneExistsAsync(string phone, CancellationToken cancellationToken = default);
     Task<int> GetMaxSequenceNumberForYearAsync(int year, CancellationToken cancellationToken = default);
     Task<List<Domain.Entities.Patient>> GetRecentAsync(int count = 10, CancellationToken cancellationToken = default);
+    Task<List<Domain.Entities.Patient>> GetByIdsAsync(List<Guid> ids, CancellationToken cancellationToken = default);
     Task<bool> ExistsAsync(Guid id, CancellationToken cancellationToken = default);
     Task<int> GetActiveCountAsync(CancellationToken cancellationToken = default);
     void Add(Domain.Entities.Patient patient);
