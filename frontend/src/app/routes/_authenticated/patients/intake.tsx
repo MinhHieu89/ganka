@@ -8,6 +8,10 @@ import { toLocalDateString } from "@/shared/lib/format-date"
 
 const searchSchema = z.object({
   patientId: z.string().optional(),
+  guestName: z.string().optional(),
+  guestPhone: z.string().optional(),
+  appointmentId: z.string().optional(),
+  reason: z.string().optional(),
 })
 
 export const Route = createFileRoute("/_authenticated/patients/intake")({
@@ -17,13 +21,29 @@ export const Route = createFileRoute("/_authenticated/patients/intake")({
 })
 
 function PatientIntakePage() {
-  const { patientId } = Route.useSearch()
+  const { patientId, guestName, guestPhone, appointmentId, reason } = Route.useSearch()
 
   if (patientId) {
     return <EditModeIntake patientId={patientId} />
   }
 
-  return <PatientIntakeForm mode="create" />
+  // Pre-fill from guest booking params (from CheckInIncompleteDialog)
+  const guestDefaults =
+    guestName || guestPhone
+      ? {
+          fullName: guestName ?? "",
+          phone: guestPhone ?? "",
+          reason: reason ?? "",
+        }
+      : undefined
+
+  return (
+    <PatientIntakeForm
+      mode="create"
+      defaultValues={guestDefaults}
+      appointmentId={appointmentId}
+    />
+  )
 }
 
 function EditModeIntake({ patientId }: { patientId: string }) {

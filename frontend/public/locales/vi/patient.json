@@ -69,6 +69,9 @@
     "custom": "Tùy chỉnh"
   },
   "intake": {
+    "personal": {
+      "title": "Thông tin cá nhân"
+    },
     "breadcrumbNew": "Tiếp nhận bệnh nhân mới",
     "breadcrumbEdit": "Cập nhật hồ sơ",
     "cancelButton": "Hủy nhập liệu",

@@ -49,6 +49,7 @@ const segmentToI18nKey: Record<string, string> = {
   approvals: "sidebar.treatment",
   templates: "sidebar.treatment",
   new: "sidebar.new",
+  intake: "sidebar.intake",
 }
 
 export function SiteHeader() {

@@ -5,14 +5,6 @@ import { useNavigate } from "@tanstack/react-router"
 import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
 import { IconLoader2 } from "@tabler/icons-react"
-import {
-  Breadcrumb,
-  BreadcrumbList,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbSeparator,
-  BreadcrumbPage,
-} from "@/shared/components/Breadcrumb"
 import { Button } from "@/shared/components/Button"
 import {
   AlertDialog,
@@ -44,12 +36,14 @@ interface PatientIntakeFormProps {
   patientId?: string
   defaultValues?: Partial<IntakeFormValues>
   mode: "create" | "edit"
+  appointmentId?: string
 }
 
 export function PatientIntakeForm({
   patientId,
   defaultValues,
   mode,
+  appointmentId,
 }: PatientIntakeFormProps) {
   const navigate = useNavigate()
   const { t } = useTranslation("patient")
@@ -141,24 +135,6 @@ export function PatientIntakeForm({
 
   return (
     <div className="flex flex-col gap-6 p-6">
-      {/* Breadcrumb */}
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>
-              {mode === "edit"
-                ? t("intake.breadcrumbEdit")
-                : t("intake.breadcrumbNew")}
-            </BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
-
-      {/* Form */}
       <FormProvider {...form}>
         <form className="flex flex-col gap-6">
           <PersonalInfoSection />
