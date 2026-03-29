@@ -4,7 +4,7 @@ using Shared.Domain;
 namespace Clinical.Domain.Entities;
 
 /// <summary>
-/// Records when a workflow stage is skipped (e.g., RefractionVA skip for follow-ups).
+/// Records when a workflow stage is skipped (e.g., PreExam skip for follow-ups).
 /// Captures the reason, actor, and supports undo.
 /// </summary>
 public class StageSkip : Entity

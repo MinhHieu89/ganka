@@ -24,7 +24,7 @@ public class VisitTests
     {
         // Arrange — advance through no-imaging drug-only path
         var visit = CreateVisit();
-        visit.AdvanceStage(WorkflowStage.RefractionVA);
+        visit.AdvanceStage(WorkflowStage.PreExam);
         visit.AdvanceStage(WorkflowStage.DoctorExam);
         visit.AdvanceStage(WorkflowStage.Prescription);
         visit.AdvanceStage(WorkflowStage.Cashier);
@@ -42,7 +42,7 @@ public class VisitTests
     {
         // Arrange — visit at Cashier, advance directly to Done
         var visit = CreateVisit();
-        visit.AdvanceStage(WorkflowStage.RefractionVA);
+        visit.AdvanceStage(WorkflowStage.PreExam);
         visit.AdvanceStage(WorkflowStage.DoctorExam);
         visit.AdvanceStage(WorkflowStage.Prescription);
         visit.AdvanceStage(WorkflowStage.Cashier);
@@ -59,7 +59,7 @@ public class VisitTests
     {
         // Arrange
         var visit = CreateVisit();
-        visit.AdvanceStage(WorkflowStage.RefractionVA);
+        visit.AdvanceStage(WorkflowStage.PreExam);
         visit.AdvanceStage(WorkflowStage.DoctorExam);
         visit.AdvanceStage(WorkflowStage.Prescription);
         visit.AdvanceStage(WorkflowStage.Cashier);

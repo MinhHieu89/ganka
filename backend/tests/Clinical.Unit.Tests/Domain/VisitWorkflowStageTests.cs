@@ -15,7 +15,7 @@ public class VisitWorkflowStageTests
 
     [Theory]
     [InlineData("Reception", 0)]
-    [InlineData("RefractionVA", 1)]
+    [InlineData("PreExam", 1)]
     [InlineData("DoctorExam", 2)]
     [InlineData("Imaging", 3)]
     [InlineData("DoctorReviewsResults", 4)]
@@ -121,11 +121,11 @@ public class VisitWorkflowStageTests
     {
         var actorId = Guid.NewGuid();
         var visitId = Guid.NewGuid();
-        var skip = StageSkip.Create(visitId, WorkflowStage.RefractionVA,
+        var skip = StageSkip.Create(visitId, WorkflowStage.PreExam,
             SkipReason.PatientRefused, "Patient refused refraction", actorId, "Dr. Test");
 
         skip.VisitId.Should().Be(visitId);
-        skip.Stage.Should().Be(WorkflowStage.RefractionVA);
+        skip.Stage.Should().Be(WorkflowStage.PreExam);
         skip.Reason.Should().Be(SkipReason.PatientRefused);
         skip.FreeTextNote.Should().Be("Patient refused refraction");
         skip.ActorId.Should().Be(actorId);
@@ -138,7 +138,7 @@ public class VisitWorkflowStageTests
     public void StageSkip_FreeTextNote_MaxLength200()
     {
         var longNote = new string('x', 201);
-        var act = () => StageSkip.Create(Guid.NewGuid(), WorkflowStage.RefractionVA,
+        var act = () => StageSkip.Create(Guid.NewGuid(), WorkflowStage.PreExam,
             SkipReason.Other, longNote, Guid.NewGuid(), "Dr. Test");
 
         act.Should().Throw<InvalidOperationException>()

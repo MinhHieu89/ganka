@@ -171,6 +171,15 @@ public class VisitConfiguration : IEntityTypeConfiguration<Visit>
         builder.Navigation(v => v.HandoffChecklists)
             .UsePropertyAccessMode(PropertyAccessMode.Field);
 
+        // Technician orders navigation
+        builder.HasMany(v => v.TechnicianOrders)
+            .WithOne()
+            .HasForeignKey(to => to.VisitId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Navigation(v => v.TechnicianOrders)
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
+
         // Workflow branching properties
         builder.Property(v => v.DrugTrackStatus)
             .IsRequired()

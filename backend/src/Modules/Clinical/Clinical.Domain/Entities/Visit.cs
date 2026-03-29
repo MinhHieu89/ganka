@@ -76,6 +76,9 @@ public class Visit : AggregateRoot, IAuditable
     private readonly List<HandoffChecklist> _handoffChecklists = [];
     public IReadOnlyCollection<HandoffChecklist> HandoffChecklists => _handoffChecklists.AsReadOnly();
 
+    private readonly List<TechnicianOrder> _technicianOrders = [];
+    public IReadOnlyCollection<TechnicianOrder> TechnicianOrders => _technicianOrders.AsReadOnly();
+
     private Visit() { }
 
     /// <summary>
@@ -168,8 +171,8 @@ public class Visit : AggregateRoot, IAuditable
     /// </summary>
     private static readonly Dictionary<WorkflowStage, HashSet<WorkflowStage>> AllowedReversals = new()
     {
-        [WorkflowStage.RefractionVA] = [WorkflowStage.Reception],
-        [WorkflowStage.DoctorExam] = [WorkflowStage.RefractionVA],
+        [WorkflowStage.PreExam] = [WorkflowStage.Reception],
+        [WorkflowStage.DoctorExam] = [WorkflowStage.PreExam],
         [WorkflowStage.Imaging] = [WorkflowStage.DoctorExam],
         [WorkflowStage.DoctorReviewsResults] = [WorkflowStage.Imaging, WorkflowStage.DoctorExam],
         [WorkflowStage.Prescription] = [WorkflowStage.DoctorExam, WorkflowStage.DoctorReviewsResults],
@@ -417,16 +420,16 @@ public class Visit : AggregateRoot, IAuditable
     // ===================== Refraction Skip =====================
 
     /// <summary>
-    /// Skips the RefractionVA stage with a mandatory reason.
+    /// Skips the PreExam stage with a mandatory reason.
     /// Creates a StageSkip audit entity.
     /// </summary>
     public void SkipRefraction(SkipReason reason, string? freeTextNote, Guid actorId, string actorName)
     {
-        if (CurrentStage != WorkflowStage.RefractionVA)
-            throw new InvalidOperationException("Can only skip refraction when at RefractionVA stage.");
+        if (CurrentStage != WorkflowStage.PreExam)
+            throw new InvalidOperationException("Can only skip refraction when at PreExam stage.");
 
         RefractionSkipped = true;
-        var skip = StageSkip.Create(Id, WorkflowStage.RefractionVA, reason, freeTextNote, actorId, actorName);
+        var skip = StageSkip.Create(Id, WorkflowStage.PreExam, reason, freeTextNote, actorId, actorName);
         _stageSkips.Add(skip);
         SetUpdatedAt();
     }
@@ -438,16 +441,32 @@ public class Visit : AggregateRoot, IAuditable
     {
         if (!RefractionSkipped)
             throw new InvalidOperationException("Refraction has not been skipped.");
-        if (CurrentStage != WorkflowStage.RefractionVA)
-            throw new InvalidOperationException("Can only undo refraction skip when at RefractionVA stage.");
+        if (CurrentStage != WorkflowStage.PreExam)
+            throw new InvalidOperationException("Can only undo refraction skip when at PreExam stage.");
 
         RefractionSkipped = false;
         var latestSkip = _stageSkips
-            .Where(s => s.Stage == WorkflowStage.RefractionVA && !s.IsUndone)
+            .Where(s => s.Stage == WorkflowStage.PreExam && !s.IsUndone)
             .OrderByDescending(s => s.SkippedAt)
             .FirstOrDefault();
         latestSkip?.MarkUndone();
         SetUpdatedAt();
+    }
+
+    // ===================== Technician Orders =====================
+
+    /// <summary>
+    /// Creates a PreExam technician order for this visit.
+    /// Throws if a PreExam order already exists (idempotency guard).
+    /// </summary>
+    public TechnicianOrder CreatePreExamOrder()
+    {
+        if (_technicianOrders.Any(o => o.OrderType == TechnicianOrderType.PreExam))
+            throw new InvalidOperationException("PreExam order already exists for this visit");
+
+        var order = TechnicianOrder.CreatePreExam(Id);
+        _technicianOrders.Add(order);
+        return order;
     }
 
     // ===================== Post-Payment Tracks =====================

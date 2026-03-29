@@ -4,6 +4,7 @@ using Clinical.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Clinical.Infrastructure.Migrations
 {
     [DbContext(typeof(ClinicalDbContext))]
-    partial class ClinicalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260329045304_AddTechnicianOrder")]
+    partial class AddTechnicianOrder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -972,8 +975,7 @@ namespace Clinical.Infrastructure.Migrations
                     b.Property<string>("PatientName")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
-                        .UseCollation("SQL_Latin1_General_Cp1_CI_AI");
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("Reason")
                         .HasMaxLength(500)

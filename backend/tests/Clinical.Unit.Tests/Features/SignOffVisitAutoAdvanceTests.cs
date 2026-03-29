@@ -34,7 +34,7 @@ public class SignOffVisitAutoAdvanceTests
         {
             var imgVisit = Visit.Create(Guid.NewGuid(), "Test Patient", Guid.NewGuid(), "Dr. Test",
                 DefaultBranchId, false);
-            imgVisit.AdvanceStage(WorkflowStage.RefractionVA);
+            imgVisit.AdvanceStage(WorkflowStage.PreExam);
             imgVisit.AdvanceStage(WorkflowStage.DoctorExam);
             imgVisit.RequestImaging(Guid.NewGuid(), null, new List<string> { "OCT" });
             imgVisit.AdvanceStage(WorkflowStage.Imaging);
@@ -49,7 +49,7 @@ public class SignOffVisitAutoAdvanceTests
         // No-imaging path
         WorkflowStage[] noImagingPath =
         [
-            WorkflowStage.RefractionVA, WorkflowStage.DoctorExam,
+            WorkflowStage.PreExam, WorkflowStage.DoctorExam,
             WorkflowStage.Prescription, WorkflowStage.Cashier, WorkflowStage.Pharmacy
         ];
 

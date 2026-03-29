@@ -29,7 +29,7 @@ public class SkipRefractionHandlerTests
         var visit = Visit.Create(Guid.NewGuid(), "Patient A", Guid.NewGuid(), "Dr. A",
             DefaultBranchId, false);
 
-        WorkflowStage[] path = [WorkflowStage.RefractionVA, WorkflowStage.DoctorExam,
+        WorkflowStage[] path = [WorkflowStage.PreExam, WorkflowStage.DoctorExam,
             WorkflowStage.Prescription, WorkflowStage.Cashier];
 
         foreach (var s in path)
@@ -42,10 +42,10 @@ public class SkipRefractionHandlerTests
     }
 
     [Fact]
-    public async Task Handle_AtRefractionVA_SkipsAndAdvancesToDoctorExam()
+    public async Task Handle_AtPreExam_SkipsAndAdvancesToDoctorExam()
     {
         // Arrange
-        var visit = CreateVisitAtStage(WorkflowStage.RefractionVA);
+        var visit = CreateVisitAtStage(WorkflowStage.PreExam);
         var command = new SkipRefractionCommand(visit.Id, (int)SkipReason.FollowUpExisting, null);
         _visitRepository.GetByIdAsync(visit.Id, Arg.Any<CancellationToken>()).Returns(visit);
 
@@ -61,7 +61,7 @@ public class SkipRefractionHandlerTests
     }
 
     [Fact]
-    public async Task Handle_NotAtRefractionVA_ReturnsError()
+    public async Task Handle_NotAtPreExam_ReturnsError()
     {
         // Arrange
         var visit = CreateVisitAtStage(WorkflowStage.DoctorExam);
@@ -96,7 +96,7 @@ public class SkipRefractionHandlerTests
     public async Task Handle_WithFreeTextNote_CreatesStageSkipRecord()
     {
         // Arrange
-        var visit = CreateVisitAtStage(WorkflowStage.RefractionVA);
+        var visit = CreateVisitAtStage(WorkflowStage.PreExam);
         var command = new SkipRefractionCommand(visit.Id, (int)SkipReason.Other, "Patient came for OTC only");
         _visitRepository.GetByIdAsync(visit.Id, Arg.Any<CancellationToken>()).Returns(visit);
 

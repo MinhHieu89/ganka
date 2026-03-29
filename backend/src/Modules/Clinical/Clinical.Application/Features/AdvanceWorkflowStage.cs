@@ -26,6 +26,13 @@ public static class AdvanceWorkflowStageHandler
         try
         {
             visit.AdvanceStage(newStage);
+
+            // Auto-create TechnicianOrder when advancing to PreExam
+            if (newStage == WorkflowStage.PreExam)
+            {
+                try { visit.CreatePreExamOrder(); }
+                catch (InvalidOperationException) { /* idempotent -- order already exists */ }
+            }
         }
         catch (InvalidOperationException ex)
         {
