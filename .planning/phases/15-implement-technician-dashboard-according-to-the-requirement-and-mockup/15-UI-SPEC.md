@@ -35,7 +35,7 @@ Declared values (multiples of 4, consistent with existing receptionist dashboard
 |-------|-------|-------|
 | xs | 4px | Icon gaps, inline badge padding |
 | sm | 8px | Compact element spacing, pill gap |
-| md | 12px | KPI card grid gap, table cell padding |
+| md | 12px | KPI card grid gap, table cell padding (**project-specific extension** -- not in strict 8-point set; inherited from receptionist dashboard grid pattern) |
 | lg | 16px | Default section padding, card padding |
 | xl | 24px | Section gaps (KPI to banner, banner to toolbar) |
 | 2xl | 32px | Page horizontal padding |
@@ -47,14 +47,21 @@ Exceptions: KPI card grid uses 12px gap (per spec Section 4). Banner border-radi
 
 ## Typography
 
+4 sizes, 2 weights only.
+
 | Role | Size | Weight | Line Height | Usage |
 |------|------|--------|-------------|-------|
-| Page title | 22px | 500 (medium) | 1.2 | "Pre-Exam dashboard" h1 |
+| Page title | 22px | 700 (bold) | 1.2 | "Pre-Exam dashboard" h1 |
 | KPI value | 24px | 700 (bold) | 1.2 | KPI card numeric values |
-| Body | 14px | 400 (regular) | 1.5 | Table cells, banner info, general text |
-| Label / Sub-text | 12px | 500 (medium) | 1.4 | KPI labels, banner label, filter pill labels |
-| Hint | 11px | 400 (regular) | 1.4 | KPI sub-text, "Loai" pill text |
-| User name | 13px | 400 (regular) | 1.5 | Header technician name (text-secondary) |
+| Body | 14px | 400 (regular) | 1.5 | Table cells, banner info, general text, header technician name, patient name in table |
+| Label / Sub-text | 12px | 400 (regular) | 1.4 | KPI labels, KPI sub-text, banner label, filter pill labels, "Loai" pill text |
+
+**Weight scale:** 400 (regular) and 700 (bold). No 500 medium -- use bold for emphasis, regular for everything else.
+
+**Merges applied (from 6-size / 3-weight original):**
+- 13px user-name merged into 14px body (1px difference has no hierarchy value, both 400-weight secondary text)
+- 11px hint merged into 12px label/sub-text (both small metadata)
+- 500 medium removed: page title promoted to 700 bold, KPI labels and banner label demoted to 400 regular, patient name in table uses 400 regular (bold reserved for KPI values and page title only)
 
 Source: technician-dashboard.md spec Sections 3, 4, 7.
 
@@ -72,6 +79,8 @@ Source: technician-dashboard.md spec Sections 3, 4, 7.
 | Destructive | `#A32D2D` | Red flag menu item, red flag badge text, wait time >= 25min |
 
 Accent reserved for: "Tiep tuc do" banner button background, "Nhan BN" dropdown menu item text color, primary action contexts only.
+
+**Primary focal point:** In-progress banner (when visible); KPI cards (when no patient in progress). The banner's blue background and purple CTA button create the strongest visual pull. When the banner is absent, the four KPI cards with colored numeric values serve as the primary scan target.
 
 ### Status Badge Colors (CSS variables, extend existing pattern)
 
@@ -132,7 +141,7 @@ Source: technician-dashboard.md Section 7.5, CONTEXT.md specifics.
 | 3 | `IconCircleCheck` | Hoan tat Pre-Exam | Pre-Exam Completed | COUNT(status=completed) today | "hom nay" |
 | 4 | `IconAlertTriangle` | Red flag | Red Flag | COUNT(is_red_flag=true) today | "fast-track hom nay" |
 
-Layout: 4-column grid, gap 12px. Each card: label 12px muted, value 24px bold colored, sub-text 11px hint.
+Layout: 4-column grid, gap 12px. Each card: label 12px regular, value 24px bold colored, sub-text 12px regular hint.
 
 ### Banner "Dang thuc hien Pre-Exam"
 
@@ -150,12 +159,12 @@ Layout: 4-column grid, gap 12px. Each card: label 12px muted, value 24px bold co
 | # | Column | Width | Content |
 |---|--------|-------|---------|
 | 1 | # | 32px | Row index |
-| 2 | Ho ten | 22% | Patient name (font-weight 500; red `#A32D2D` if red flag) |
+| 2 | Ho ten | 22% | Patient name (font-weight 400 regular; red `#A32D2D` if red flag) |
 | 3 | Sinh | 46px | Birth year (4 digits) |
 | 4 | Check-in | 60px | HH:mm format |
 | 5 | Cho | 54px | Wait time in minutes, updated every 60s client-side |
 | 6 | Ly do kham | auto | Chief complaint (text-ellipsis; red if red flag) |
-| 7 | Loai | 54px | "Moi" or "Tai kham" pill (11px, border, small) |
+| 7 | Loai | 54px | "Moi" or "Tai kham" pill (12px, border, small) |
 | 8 | Trang thai | 82px | Status badge (colored per status table above) |
 | 9 | Actions | 40px | Vertical 3-dot icon, opens DropdownMenu |
 
@@ -165,8 +174,8 @@ Sort: FIFO by check-in time. "Dang do" pinned top. "Hoan tat" dimmed at 0.55 opa
 
 | Action | Available When | Style | Behavior |
 |--------|---------------|-------|----------|
-| Nhan BN | Cho kham | Text `#534AB7`, weight 500 | Accept + navigate to stub Pre-Exam |
-| Tiep tuc do | Dang do (own) | Text `#534AB7`, weight 500 | Navigate to stub Pre-Exam |
+| Nhan BN | Cho kham | Text `#534AB7`, weight 700 | Accept + navigate to stub Pre-Exam |
+| Tiep tuc do | Dang do (own) | Text `#534AB7`, weight 700 | Navigate to stub Pre-Exam |
 | Hoan tat chuyen BS | Dang do | Normal + check icon | Complete order, advance visit |
 | Tra lai hang doi | Dang do | Normal | Opens confirmation AlertDialog |
 | --- separator --- | | | |
