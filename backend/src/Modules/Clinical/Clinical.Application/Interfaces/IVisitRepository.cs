@@ -117,6 +117,12 @@ public interface IVisitRepository
     Task<List<Visit>> GetVisitsByPatientIdAsync(Guid patientId, CancellationToken ct = default);
 
     /// <summary>
+    /// Gets a visit by its TechnicianOrder ID, including the TechnicianOrders collection.
+    /// Used by technician action command handlers.
+    /// </summary>
+    Task<Visit?> GetByTechnicianOrderIdAsync(Guid orderId, CancellationToken ct = default);
+
+    /// <summary>
     /// Gets all visits created today (for receptionist dashboard).
     /// </summary>
     Task<List<Visit>> GetTodayVisitsAsync(string? search = null, CancellationToken ct = default);

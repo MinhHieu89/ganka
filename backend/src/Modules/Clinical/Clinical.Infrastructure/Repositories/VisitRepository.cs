@@ -64,6 +64,13 @@ public sealed class VisitRepository : IVisitRepository
                 (v.Status == VisitStatus.Draft || v.Status == VisitStatus.Amended), ct);
     }
 
+    public async Task<Visit?> GetByTechnicianOrderIdAsync(Guid orderId, CancellationToken ct = default)
+    {
+        return await _dbContext.Visits
+            .Include(v => v.TechnicianOrders)
+            .FirstOrDefaultAsync(v => v.TechnicianOrders.Any(o => o.Id == orderId), ct);
+    }
+
     public void AddRefraction(Refraction refraction)
     {
         _dbContext.Refractions.Add(refraction);

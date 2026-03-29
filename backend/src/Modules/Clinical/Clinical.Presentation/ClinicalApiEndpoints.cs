@@ -31,6 +31,7 @@ public static class ClinicalApiEndpoints
         MapMedicalImageEndpoints(group);
         MapPrescriptionEndpoints(group);
         MapPrintEndpoints(group);
+        MapTechnicianEndpoints(group);
 
         return app;
     }
@@ -463,7 +464,79 @@ public static class ClinicalApiEndpoints
             }
         }).RequirePermissions(Permissions.Clinical.View);
     }
+
+    private static void MapTechnicianEndpoints(RouteGroupBuilder group)
+    {
+        var tech = group.MapGroup("/technician");
+
+        tech.MapGet("/dashboard", async (
+            [AsParameters] GetTechnicianDashboardQuery query,
+            HttpContext httpContext,
+            IMessageBus bus, CancellationToken ct) =>
+        {
+            if (!httpContext.TryGetUserId(out var userId))
+                return Results.Unauthorized();
+
+            var enriched = query with { CurrentTechnicianId = userId };
+            var result = await bus.InvokeAsync<TechnicianDashboardDto>(enriched, ct);
+            return Results.Ok(result);
+        }).RequirePermissions(Permissions.Clinical.View);
+
+        tech.MapGet("/kpi", async (HttpContext httpContext, IMessageBus bus, CancellationToken ct) =>
+        {
+            if (!httpContext.TryGetUserId(out var userId))
+                return Results.Unauthorized();
+
+            var result = await bus.InvokeAsync<TechnicianKpiDto>(
+                new GetTechnicianKpiQuery(userId), ct);
+            return Results.Ok(result);
+        }).RequirePermissions(Permissions.Clinical.View);
+
+        tech.MapPost("/orders/{orderId:guid}/accept", async (
+            Guid orderId, HttpContext httpContext, IMessageBus bus, CancellationToken ct) =>
+        {
+            if (!httpContext.TryGetUserId(out var userId))
+                return Results.Unauthorized();
+
+            var fullName = httpContext.User.FindFirst("FullName")?.Value
+                ?? httpContext.User.FindFirst("name")?.Value
+                ?? "Unknown";
+
+            var result = await bus.InvokeAsync<Result>(
+                new AcceptTechnicianOrderCommand(orderId, userId, fullName), ct);
+            return result.ToHttpResult();
+        }).RequirePermissions(Permissions.Clinical.View);
+
+        tech.MapPost("/orders/{orderId:guid}/complete", async (
+            Guid orderId, IMessageBus bus, CancellationToken ct) =>
+        {
+            var result = await bus.InvokeAsync<Result>(
+                new CompleteTechnicianOrderCommand(orderId), ct);
+            return result.ToHttpResult();
+        }).RequirePermissions(Permissions.Clinical.View);
+
+        tech.MapPost("/orders/{orderId:guid}/return-to-queue", async (
+            Guid orderId, IMessageBus bus, CancellationToken ct) =>
+        {
+            var result = await bus.InvokeAsync<Result>(
+                new ReturnToQueueCommand(orderId), ct);
+            return result.ToHttpResult();
+        }).RequirePermissions(Permissions.Clinical.View);
+
+        tech.MapPost("/orders/{orderId:guid}/red-flag", async (
+            Guid orderId, RedFlagRequest request, IMessageBus bus, CancellationToken ct) =>
+        {
+            var result = await bus.InvokeAsync<Result>(
+                new RedFlagTechnicianOrderCommand(orderId, request.Reason), ct);
+            return result.ToHttpResult();
+        }).RequirePermissions(Permissions.Clinical.View);
+    }
 }
+
+/// <summary>
+/// Request body for red-flag endpoint.
+/// </summary>
+public record RedFlagRequest(string Reason);
 
 /// <summary>
 /// Form data binding for image upload parameters.
