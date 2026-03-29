@@ -1,0 +1,102 @@
+{
+  "pageTitle": "Pre-Exam Dashboard",
+  "kpi": {
+    "waiting": "Waiting",
+    "waitingSub": "in queue",
+    "inProgress": "In Progress",
+    "inProgressSub": "my patients",
+    "completed": "Pre-Exam Completed",
+    "completedSub": "today",
+    "redFlag": "Red Flag",
+    "redFlagSub": "fast-tracked today"
+  },
+  "banner": {
+    "label": "Performing Pre-Exam",
+    "continueBtn": "Continue Exam"
+  },
+  "filter": {
+    "all": "All",
+    "waiting": "Waiting",
+    "inProgress": "In Progress",
+    "completed": "Completed",
+    "redFlag": "Red Flag"
+  },
+  "search": {
+    "placeholder": "Search by name, phone..."
+  },
+  "table": {
+    "index": "#",
+    "name": "Full Name",
+    "birthYear": "Birth",
+    "checkin": "Check-in",
+    "wait": "Wait",
+    "reason": "Visit Reason",
+    "type": "Type",
+    "status": "Status",
+    "actions": ""
+  },
+  "visitType": {
+    "new": "New",
+    "followUp": "Follow-up",
+    "additional": "Additional"
+  },
+  "status": {
+    "waiting": "Waiting",
+    "inProgress": "In Progress",
+    "redFlag": "Red Flag",
+    "completed": "Completed"
+  },
+  "actions": {
+    "accept": "Accept Patient",
+    "continue": "Continue Exam",
+    "complete": "Complete & Transfer to Doctor",
+    "returnToQueue": "Return to Queue",
+    "redFlag": "Transfer to Doctor Now",
+    "viewResults": "View Results"
+  },
+  "dialog": {
+    "returnTitle": "Return to Queue",
+    "returnMessage": "Return {{name}} to queue? Data entered will be preserved.",
+    "returnConfirm": "Confirm",
+    "returnCancel": "Cancel",
+    "redFlagTitle": "Transfer to Doctor Now (Red Flag)",
+    "redFlagConfirm": "Transfer to Doctor Now",
+    "redFlagCancel": "Cancel",
+    "redFlagReasonLabel": "Reason",
+    "redFlagReasonRequired": "Please select a reason",
+    "redFlagCustomRequired": "Please enter a reason",
+    "redFlagReasons": {
+      "eyePain": "Severe eye pain",
+      "visionLoss": "Sudden vision loss",
+      "unilateral": "Notable unilateral symptoms",
+      "other": "Other"
+    },
+    "pauseTitle": "Pause Current Patient",
+    "pauseMessage": "You are measuring {{name}}. Pause and accept new patient?",
+    "pauseConfirm": "Pause & Accept New Patient",
+    "pauseCancel": "Cancel"
+  },
+  "empty": {
+    "title": "No patients waiting",
+    "message": "Queue is currently empty. New patients will appear automatically when checked in."
+  },
+  "error": {
+    "acceptRace": "Patient already accepted by {{name}}",
+    "network": "Could not load data. Please try again."
+  },
+  "toast": {
+    "completeSuccess": "Transferred {{name}} to doctor",
+    "returnSuccess": "Returned {{name}} to queue",
+    "redFlagSuccess": "Transferred {{name}} to doctor (Red flag)"
+  },
+  "stub": {
+    "title": "Pre-Exam screen is under development",
+    "backBtn": "Back to Dashboard"
+  },
+  "panel": {
+    "title": "Patient Results",
+    "personalInfo": "Personal Information",
+    "visitHistory": "Visit History",
+    "preExamData": "Pre-Exam Data"
+  }
+}

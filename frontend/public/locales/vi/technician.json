@@ -1,0 +1,102 @@
+{
+  "pageTitle": "Pre-Exam Dashboard",
+  "kpi": {
+    "waiting": "Ch\u1edd kh\u00e1m",
+    "waitingSub": "trong h\u00e0ng \u0111\u1ee3i",
+    "inProgress": "\u0110ang \u0111o",
+    "inProgressSub": "BN c\u1ee7a t\u00f4i",
+    "completed": "Ho\u00e0n t\u1ea5t Pre-Exam",
+    "completedSub": "h\u00f4m nay",
+    "redFlag": "Red flag",
+    "redFlagSub": "fast-track h\u00f4m nay"
+  },
+  "banner": {
+    "label": "\u0110ang th\u1ef1c hi\u1ec7n Pre-Exam",
+    "continueBtn": "Ti\u1ebfp t\u1ee5c \u0111o"
+  },
+  "filter": {
+    "all": "T\u1ea5t c\u1ea3",
+    "waiting": "Ch\u1edd kh\u00e1m",
+    "inProgress": "\u0110ang \u0111o",
+    "completed": "Ho\u00e0n t\u1ea5t",
+    "redFlag": "Red flag"
+  },
+  "search": {
+    "placeholder": "T\u00ecm BN theo t\u00ean, S\u0110T..."
+  },
+  "table": {
+    "index": "#",
+    "name": "H\u1ecd t\u00ean",
+    "birthYear": "Sinh",
+    "checkin": "Check-in",
+    "wait": "Ch\u1edd",
+    "reason": "L\u00fd do kh\u00e1m",
+    "type": "Lo\u1ea1i",
+    "status": "Tr\u1ea1ng th\u00e1i",
+    "actions": ""
+  },
+  "visitType": {
+    "new": "M\u1edbi",
+    "followUp": "T\u00e1i kh\u00e1m",
+    "additional": "\u0110o b\u1ed5 sung"
+  },
+  "status": {
+    "waiting": "Ch\u1edd kh\u00e1m",
+    "inProgress": "\u0110ang \u0111o",
+    "redFlag": "Red flag",
+    "completed": "Ho\u00e0n t\u1ea5t"
+  },
+  "actions": {
+    "accept": "Nh\u1eadn BN",
+    "continue": "Ti\u1ebfp t\u1ee5c \u0111o",
+    "complete": "Ho\u00e0n t\u1ea5t chuy\u1ec3n BS",
+    "returnToQueue": "Tr\u1ea3 l\u1ea1i h\u00e0ng \u0111\u1ee3i",
+    "redFlag": "Chuy\u1ec3n BS ngay",
+    "viewResults": "Xem k\u1ebft qu\u1ea3"
+  },
+  "dialog": {
+    "returnTitle": "Tr\u1ea3 l\u1ea1i h\u00e0ng \u0111\u1ee3i",
+    "returnMessage": "Tr\u1ea3 BN {{name}} v\u1ec1 h\u00e0ng \u0111\u1ee3i? D\u1eef li\u1ec7u \u0111\u00e3 nh\u1eadp s\u1ebd \u0111\u01b0\u1ee3c gi\u1eef nguy\u00ean.",
+    "returnConfirm": "X\u00e1c nh\u1eadn",
+    "returnCancel": "H\u1ee7y",
+    "redFlagTitle": "Chuy\u1ec3n BS ngay (Red Flag)",
+    "redFlagConfirm": "Chuy\u1ec3n BS ngay",
+    "redFlagCancel": "H\u1ee7y",
+    "redFlagReasonLabel": "L\u00fd do",
+    "redFlagReasonRequired": "Vui l\u00f2ng ch\u1ecdn l\u00fd do",
+    "redFlagCustomRequired": "Vui l\u00f2ng nh\u1eadp l\u00fd do",
+    "redFlagReasons": {
+      "eyePain": "\u0110au m\u1eaft nhi\u1ec1u",
+      "visionLoss": "Gi\u1ea3m th\u1ecb l\u1ef1c \u0111\u1ed9t ng\u1ed9t",
+      "unilateral": "Tri\u1ec7u ch\u1ee9ng l\u1ec7ch 1 b\u00ean r\u00f5",
+      "other": "Kh\u00e1c"
+    },
+    "pauseTitle": "T\u1ea1m d\u1eebng b\u1ec7nh nh\u00e2n hi\u1ec7n t\u1ea1i",
+    "pauseMessage": "B\u1ea1n \u0111ang \u0111o BN {{name}}. Mu\u1ed1n t\u1ea1m d\u1eebng v\u00e0 nh\u1eadn BN m\u1edbi?",
+    "pauseConfirm": "T\u1ea1m d\u1eebng & nh\u1eadn BN m\u1edbi",
+    "pauseCancel": "H\u1ee7y"
+  },
+  "empty": {
+    "title": "Kh\u00f4ng c\u00f3 b\u1ec7nh nh\u00e2n ch\u1edd kh\u00e1m",
+    "message": "H\u00e0ng \u0111\u1ee3i hi\u1ec7n t\u1ea1i tr\u1ed1ng. BN m\u1edbi s\u1ebd t\u1ef1 \u0111\u1ed9ng xu\u1ea5t hi\u1ec7n khi \u0111\u01b0\u1ee3c ti\u1ebfp nh\u1eadn."
+  },
+  "error": {
+    "acceptRace": "BN \u0111\u00e3 \u0111\u01b0\u1ee3c nh\u1eadn b\u1edfi {{name}}",
+    "network": "Kh\u00f4ng th\u1ec3 t\u1ea3i d\u1eef li\u1ec7u. Vui l\u00f2ng th\u1eed l\u1ea1i."
+  },
+  "toast": {
+    "completeSuccess": "\u0110\u00e3 chuy\u1ec3n BN {{name}} sang b\u00e1c s\u0129",
+    "returnSuccess": "\u0110\u00e3 tr\u1ea3 BN {{name}} v\u1ec1 h\u00e0ng \u0111\u1ee3i",
+    "redFlagSuccess": "\u0110\u00e3 chuy\u1ec3n BN {{name}} sang BS (Red flag)"
+  },
+  "stub": {
+    "title": "M\u00e0n h\u00ecnh Pre-Exam \u0111ang \u0111\u01b0\u1ee3c ph\u00e1t tri\u1ec3n",
+    "backBtn": "Quay l\u1ea1i Dashboard"
+  },
+  "panel": {
+    "title": "K\u1ebft qu\u1ea3 b\u1ec7nh nh\u00e2n",
+    "personalInfo": "Th\u00f4ng tin c\u00e1 nh\u00e2n",
+    "visitHistory": "L\u1ecbch s\u1eed kh\u00e1m",
+    "preExamData": "D\u1eef li\u1ec7u Pre-Exam"
+  }
+}
