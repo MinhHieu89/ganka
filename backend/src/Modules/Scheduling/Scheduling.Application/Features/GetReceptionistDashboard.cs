@@ -146,7 +146,7 @@ public static class GetReceptionistDashboardHandler
         if (visit.Status == VisitStatus.Signed || visit.CurrentStage == WorkflowStage.Done)
             return "completed";
 
-        if (visit.CurrentStage >= WorkflowStage.RefractionVA)
+        if (visit.CurrentStage >= WorkflowStage.PreExam)
             return "examining";
 
         if (visit.CurrentStage == WorkflowStage.Reception)

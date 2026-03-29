@@ -29,7 +29,7 @@ public class AdvanceWorkflowStageHandlerTests
         // No-imaging path: DoctorExam -> Prescription (skips Imaging/DoctorReviewsResults)
         WorkflowStage[] noImagingPath =
         [
-            WorkflowStage.RefractionVA, WorkflowStage.DoctorExam,
+            WorkflowStage.PreExam, WorkflowStage.DoctorExam,
             WorkflowStage.Prescription, WorkflowStage.Cashier, WorkflowStage.Pharmacy
         ];
 
@@ -43,11 +43,11 @@ public class AdvanceWorkflowStageHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ReceptionToRefractionVA_StageUpdated()
+    public async Task Handle_ReceptionToPreExam_StageUpdated()
     {
         // Arrange
         var visit = CreateVisitAtStage(WorkflowStage.Reception);
-        var command = new AdvanceWorkflowStageCommand(visit.Id, (int)WorkflowStage.RefractionVA);
+        var command = new AdvanceWorkflowStageCommand(visit.Id, (int)WorkflowStage.PreExam);
         _visitRepository.GetByIdAsync(visit.Id, Arg.Any<CancellationToken>()).Returns(visit);
 
         // Act
@@ -56,7 +56,7 @@ public class AdvanceWorkflowStageHandlerTests
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        visit.CurrentStage.Should().Be(WorkflowStage.RefractionVA);
+        visit.CurrentStage.Should().Be(WorkflowStage.PreExam);
     }
 
     [Fact]
@@ -98,7 +98,7 @@ public class AdvanceWorkflowStageHandlerTests
     public async Task Handle_VisitNotFound_ReturnsNotFoundError()
     {
         // Arrange
-        var command = new AdvanceWorkflowStageCommand(Guid.NewGuid(), (int)WorkflowStage.RefractionVA);
+        var command = new AdvanceWorkflowStageCommand(Guid.NewGuid(), (int)WorkflowStage.PreExam);
         _visitRepository.GetByIdAsync(command.VisitId, Arg.Any<CancellationToken>()).Returns((Visit?)null);
 
         // Act
@@ -115,7 +115,7 @@ public class AdvanceWorkflowStageHandlerTests
     {
         // Arrange
         var visit = CreateVisitAtStage(WorkflowStage.Reception);
-        var command = new AdvanceWorkflowStageCommand(visit.Id, (int)WorkflowStage.RefractionVA);
+        var command = new AdvanceWorkflowStageCommand(visit.Id, (int)WorkflowStage.PreExam);
         _visitRepository.GetByIdAsync(visit.Id, Arg.Any<CancellationToken>()).Returns(visit);
 
         // Act

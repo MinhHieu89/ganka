@@ -38,8 +38,8 @@ public class GetReceptionistDashboardTests
         if (stage > WorkflowStage.Reception)
         {
             // We need to advance through stages
-            if (stage >= WorkflowStage.RefractionVA)
-                visit.AdvanceStage(WorkflowStage.RefractionVA);
+            if (stage >= WorkflowStage.PreExam)
+                visit.AdvanceStage(WorkflowStage.PreExam);
             if (stage >= WorkflowStage.DoctorExam)
                 visit.AdvanceStage(WorkflowStage.DoctorExam);
         }
@@ -181,7 +181,7 @@ public class GetReceptionistKpiStatsTests
             DefaultBranch, false, apt2.Id);
         var visit3 = Visit.Create(apt3.PatientId!.Value, "P3", Guid.NewGuid(), "Dr. A",
             DefaultBranch, false, apt3.Id);
-        visit3.AdvanceStage(WorkflowStage.RefractionVA);
+        visit3.AdvanceStage(WorkflowStage.PreExam);
 
         _appointmentRepo.GetTodayAppointmentsAsync(Arg.Any<CancellationToken>())
             .Returns([apt1, apt2, apt3]);

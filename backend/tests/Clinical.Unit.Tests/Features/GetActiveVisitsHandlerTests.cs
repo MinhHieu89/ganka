@@ -149,7 +149,7 @@ public class GetActiveVisitsHandlerTests
         var visit = Visit.Create(
             Guid.NewGuid(), "Completed Patient", Guid.NewGuid(), "Dr. F",
             DefaultBranchId, false);
-        visit.AdvanceStage(WorkflowStage.RefractionVA);
+        visit.AdvanceStage(WorkflowStage.PreExam);
         visit.AdvanceStage(WorkflowStage.DoctorExam);
         visit.AdvanceStage(WorkflowStage.Prescription);
         visit.AdvanceStage(WorkflowStage.Cashier);
@@ -178,7 +178,7 @@ public class GetActiveVisitsHandlerTests
         var doneVisit = Visit.Create(
             Guid.NewGuid(), "Done", Guid.NewGuid(), "Dr. H",
             DefaultBranchId, false);
-        doneVisit.AdvanceStage(WorkflowStage.RefractionVA);
+        doneVisit.AdvanceStage(WorkflowStage.PreExam);
         doneVisit.AdvanceStage(WorkflowStage.DoctorExam);
         doneVisit.AdvanceStage(WorkflowStage.Prescription);
         doneVisit.AdvanceStage(WorkflowStage.Cashier);

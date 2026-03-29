@@ -23,7 +23,7 @@ public class VisitReverseStageTests
         {
             var imgVisit = Visit.Create(Guid.NewGuid(), "Test Patient", Guid.NewGuid(), "Dr. Test",
                 DefaultBranchId, false);
-            imgVisit.AdvanceStage(WorkflowStage.RefractionVA);
+            imgVisit.AdvanceStage(WorkflowStage.PreExam);
             imgVisit.AdvanceStage(WorkflowStage.DoctorExam);
             imgVisit.RequestImaging(Guid.NewGuid(), null, new List<string> { "OCT" });
             imgVisit.AdvanceStage(WorkflowStage.Imaging);
@@ -39,7 +39,7 @@ public class VisitReverseStageTests
         // No-imaging path: DoctorExam -> Prescription (skips Imaging/DoctorReviewsResults)
         WorkflowStage[] noImagingPath =
         [
-            WorkflowStage.RefractionVA, WorkflowStage.DoctorExam,
+            WorkflowStage.PreExam, WorkflowStage.DoctorExam,
             WorkflowStage.Prescription, WorkflowStage.Cashier, WorkflowStage.Pharmacy
         ];
 
@@ -53,10 +53,10 @@ public class VisitReverseStageTests
     }
 
     [Fact]
-    public void ReverseStage_FromRefractionVA_ToReception_Succeeds()
+    public void ReverseStage_FromPreExam_ToReception_Succeeds()
     {
         // Arrange
-        var visit = CreateVisitAtStage(WorkflowStage.RefractionVA);
+        var visit = CreateVisitAtStage(WorkflowStage.PreExam);
 
         // Act
         visit.ReverseStage(WorkflowStage.Reception, "Wrong patient");
@@ -66,16 +66,16 @@ public class VisitReverseStageTests
     }
 
     [Fact]
-    public void ReverseStage_FromDoctorExam_ToRefractionVA_Succeeds()
+    public void ReverseStage_FromDoctorExam_ToPreExam_Succeeds()
     {
         // Arrange
         var visit = CreateVisitAtStage(WorkflowStage.DoctorExam);
 
         // Act
-        visit.ReverseStage(WorkflowStage.RefractionVA, "Need re-refraction");
+        visit.ReverseStage(WorkflowStage.PreExam, "Need re-refraction");
 
         // Assert
-        visit.CurrentStage.Should().Be(WorkflowStage.RefractionVA);
+        visit.CurrentStage.Should().Be(WorkflowStage.PreExam);
     }
 
     [Fact]
@@ -134,7 +134,7 @@ public class VisitReverseStageTests
         // Arrange
         var visit = CreateVisitAtStage(WorkflowStage.DoctorExam);
 
-        // Act & Assert -- DoctorExam can only go to RefractionVA, not Reception
+        // Act & Assert -- DoctorExam can only go to PreExam, not Reception
         var act = () => visit.ReverseStage(WorkflowStage.Reception, "Some reason");
         act.Should().Throw<InvalidOperationException>()
             .WithMessage("*not allowed*");
@@ -144,7 +144,7 @@ public class VisitReverseStageTests
     public void ReverseStage_WithEmptyReason_ThrowsReasonRequired()
     {
         // Arrange
-        var visit = CreateVisitAtStage(WorkflowStage.RefractionVA);
+        var visit = CreateVisitAtStage(WorkflowStage.PreExam);
 
         // Act & Assert
         var act = () => visit.ReverseStage(WorkflowStage.Reception, "");
@@ -156,7 +156,7 @@ public class VisitReverseStageTests
     public void ReverseStage_WithNullReason_ThrowsReasonRequired()
     {
         // Arrange
-        var visit = CreateVisitAtStage(WorkflowStage.RefractionVA);
+        var visit = CreateVisitAtStage(WorkflowStage.PreExam);
 
         // Act & Assert
         var act = () => visit.ReverseStage(WorkflowStage.Reception, null!);

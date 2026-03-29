@@ -25,11 +25,11 @@ public class ReverseWorkflowStageHandlerTests
     [Fact]
     public async Task Handle_ValidReversal_ReturnsSuccessAndUpdatesStage()
     {
-        // Arrange -- visit at RefractionVA, reverse to Reception
+        // Arrange -- visit at PreExam, reverse to Reception
         var visit = Visit.Create(
             Guid.NewGuid(), "Patient A", Guid.NewGuid(), "Dr. A",
             DefaultBranchId, false);
-        visit.AdvanceStage(WorkflowStage.RefractionVA);
+        visit.AdvanceStage(WorkflowStage.PreExam);
 
         _visitRepository.GetByIdAsync(visit.Id, Arg.Any<CancellationToken>()).Returns(visit);
 
@@ -69,7 +69,7 @@ public class ReverseWorkflowStageHandlerTests
         var visit = Visit.Create(
             Guid.NewGuid(), "Patient B", Guid.NewGuid(), "Dr. B",
             DefaultBranchId, false);
-        visit.AdvanceStage(WorkflowStage.RefractionVA);
+        visit.AdvanceStage(WorkflowStage.PreExam);
         visit.AdvanceStage(WorkflowStage.DoctorExam);
         visit.AdvanceStage(WorkflowStage.Prescription);
         visit.AdvanceStage(WorkflowStage.Cashier);
@@ -94,7 +94,7 @@ public class ReverseWorkflowStageHandlerTests
         var visit = Visit.Create(
             Guid.NewGuid(), "Patient C", Guid.NewGuid(), "Dr. C",
             DefaultBranchId, false);
-        visit.AdvanceStage(WorkflowStage.RefractionVA);
+        visit.AdvanceStage(WorkflowStage.PreExam);
 
         _visitRepository.GetByIdAsync(visit.Id, Arg.Any<CancellationToken>()).Returns(visit);
 

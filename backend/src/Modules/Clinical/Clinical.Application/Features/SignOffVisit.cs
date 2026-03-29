@@ -68,8 +68,8 @@ public static class SignOffVisitHandler
     {
         return current switch
         {
-            WorkflowStage.Reception => WorkflowStage.RefractionVA,
-            WorkflowStage.RefractionVA => WorkflowStage.DoctorExam,
+            WorkflowStage.Reception => WorkflowStage.PreExam,
+            WorkflowStage.PreExam => WorkflowStage.DoctorExam,
             WorkflowStage.DoctorExam => imagingRequested ? WorkflowStage.Imaging : WorkflowStage.Prescription,
             WorkflowStage.Imaging => WorkflowStage.DoctorReviewsResults,
             WorkflowStage.DoctorReviewsResults => WorkflowStage.Prescription,

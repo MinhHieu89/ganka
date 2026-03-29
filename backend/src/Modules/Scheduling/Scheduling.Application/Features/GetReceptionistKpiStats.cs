@@ -86,7 +86,7 @@ public static class GetReceptionistKpiStatsHandler
             return;
         }
 
-        if (visit.CurrentStage >= WorkflowStage.RefractionVA)
+        if (visit.CurrentStage >= WorkflowStage.PreExam)
         {
             examining++;
             return;

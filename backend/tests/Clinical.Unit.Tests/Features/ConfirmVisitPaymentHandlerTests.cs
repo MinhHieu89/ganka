@@ -30,7 +30,7 @@ public class ConfirmVisitPaymentHandlerTests
             DefaultBranchId, false);
 
         // Advance through no-imaging path to Cashier
-        visit.AdvanceStage(WorkflowStage.RefractionVA);
+        visit.AdvanceStage(WorkflowStage.PreExam);
         visit.AdvanceStage(WorkflowStage.DoctorExam);
         visit.AdvanceStage(WorkflowStage.Prescription);
 
@@ -118,7 +118,7 @@ public class ConfirmVisitPaymentHandlerTests
         // Arrange
         var visit = Visit.Create(Guid.NewGuid(), "Patient A", Guid.NewGuid(), "Dr. A",
             DefaultBranchId, false);
-        visit.AdvanceStage(WorkflowStage.RefractionVA);
+        visit.AdvanceStage(WorkflowStage.PreExam);
         var command = new ConfirmVisitPaymentCommand(visit.Id, 500, 0, 500, false);
         _visitRepository.GetByIdWithDetailsAsync(visit.Id, Arg.Any<CancellationToken>()).Returns(visit);
 

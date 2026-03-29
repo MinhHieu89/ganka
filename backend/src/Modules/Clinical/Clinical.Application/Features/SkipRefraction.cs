@@ -7,7 +7,7 @@ using Shared.Domain;
 namespace Clinical.Application.Features;
 
 /// <summary>
-/// Wolverine handler for skipping the RefractionVA stage.
+/// Wolverine handler for skipping the PreExam stage.
 /// Creates a StageSkip audit record, sets RefractionSkipped flag, and advances to DoctorExam.
 /// </summary>
 public static class SkipRefractionHandler

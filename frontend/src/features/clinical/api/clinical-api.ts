@@ -1370,8 +1370,8 @@ export function useCompleteHandoff() {
 
 /** Allowed backward transitions (mirrors backend ReverseWorkflowStageHandler) */
 export const ALLOWED_REVERSALS: Record<number, number[]> = {
-  1: [0],       // RefractionVA -> Reception
-  2: [1],       // DoctorExam -> RefractionVA
+  1: [0],       // PreExam -> Reception
+  2: [1],       // DoctorExam -> PreExam
   3: [2],       // Imaging -> DoctorExam
   4: [3, 2],    // DoctorReviewsResults -> Imaging, DoctorExam
   5: [2, 4],    // Prescription -> DoctorExam, DoctorReviewsResults

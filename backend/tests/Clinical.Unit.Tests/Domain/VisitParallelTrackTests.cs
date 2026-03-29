@@ -15,7 +15,7 @@ public class VisitParallelTrackTests
 
     /// <summary>
     /// Creates a visit at the specified stage using the no-imaging path:
-    /// Reception -> RefractionVA -> DoctorExam -> Prescription -> Cashier -> Pharmacy
+    /// Reception -> PreExam -> DoctorExam -> Prescription -> Cashier -> Pharmacy
     /// For Imaging/DoctorReviewsResults stages, uses the imaging path with RequestImaging.
     /// </summary>
     private static Visit CreateVisitAtStage(WorkflowStage stage)
@@ -30,7 +30,7 @@ public class VisitParallelTrackTests
         // No-imaging path: DoctorExam skips directly to Prescription
         WorkflowStage[] noImagingPath =
         [
-            WorkflowStage.RefractionVA, WorkflowStage.DoctorExam,
+            WorkflowStage.PreExam, WorkflowStage.DoctorExam,
             WorkflowStage.Prescription, WorkflowStage.Cashier, WorkflowStage.Pharmacy
         ];
 
@@ -48,7 +48,7 @@ public class VisitParallelTrackTests
         var visit = Visit.Create(
             Guid.NewGuid(), "Test Patient", Guid.NewGuid(), "Dr. Test",
             DefaultBranchId, false);
-        visit.AdvanceStage(WorkflowStage.RefractionVA);
+        visit.AdvanceStage(WorkflowStage.PreExam);
         visit.AdvanceStage(WorkflowStage.DoctorExam);
         visit.RequestImaging(Guid.NewGuid(), null, new List<string> { "OCT" });
         visit.AdvanceStage(WorkflowStage.Imaging);
@@ -108,7 +108,7 @@ public class VisitParallelTrackTests
     [Fact]
     public void RequestImaging_NotAtDoctorExam_Throws()
     {
-        var visit = CreateVisitAtStage(WorkflowStage.RefractionVA);
+        var visit = CreateVisitAtStage(WorkflowStage.PreExam);
 
         var act = () => visit.RequestImaging(Guid.NewGuid(), "Note", new List<string> { "OCT" });
 
@@ -169,7 +169,7 @@ public class VisitParallelTrackTests
     [Fact]
     public void SkipRefraction_SetsRefractionSkippedTrue_CreatesStageSkip()
     {
-        var visit = CreateVisitAtStage(WorkflowStage.RefractionVA);
+        var visit = CreateVisitAtStage(WorkflowStage.PreExam);
         var actorId = Guid.NewGuid();
 
         visit.SkipRefraction(SkipReason.FollowUpExisting, "Follow-up", actorId, "Dr. Test");
@@ -182,7 +182,7 @@ public class VisitParallelTrackTests
     [Fact]
     public void UndoRefractionSkip_SetsRefractionSkippedFalse()
     {
-        var visit = CreateVisitAtStage(WorkflowStage.RefractionVA);
+        var visit = CreateVisitAtStage(WorkflowStage.PreExam);
         visit.SkipRefraction(SkipReason.FollowUpExisting, null, Guid.NewGuid(), "Dr. Test");
 
         visit.UndoRefractionSkip();
@@ -192,9 +192,9 @@ public class VisitParallelTrackTests
     }
 
     [Fact]
-    public void AdvanceStage_FromRefractionVA_ToDoctorExam_SucceedsEvenIfSkipped()
+    public void AdvanceStage_FromPreExam_ToDoctorExam_SucceedsEvenIfSkipped()
     {
-        var visit = CreateVisitAtStage(WorkflowStage.RefractionVA);
+        var visit = CreateVisitAtStage(WorkflowStage.PreExam);
         visit.SkipRefraction(SkipReason.PatientRefused, null, Guid.NewGuid(), "Dr. Test");
 
         visit.AdvanceStage(WorkflowStage.DoctorExam);

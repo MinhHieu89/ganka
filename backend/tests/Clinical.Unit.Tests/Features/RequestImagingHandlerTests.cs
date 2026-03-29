@@ -28,7 +28,7 @@ public class RequestImagingHandlerTests
         var visit = Visit.Create(Guid.NewGuid(), "Patient A", Guid.NewGuid(), "Dr. A",
             DefaultBranchId, false);
 
-        WorkflowStage[] path = [WorkflowStage.RefractionVA, WorkflowStage.DoctorExam,
+        WorkflowStage[] path = [WorkflowStage.PreExam, WorkflowStage.DoctorExam,
             WorkflowStage.Prescription, WorkflowStage.Cashier];
 
         foreach (var s in path)
@@ -66,7 +66,7 @@ public class RequestImagingHandlerTests
     public async Task Handle_NotAtDoctorExam_ReturnsError()
     {
         // Arrange
-        var visit = CreateVisitAtStage(WorkflowStage.RefractionVA);
+        var visit = CreateVisitAtStage(WorkflowStage.PreExam);
         var command = new RequestImagingCommand(visit.Id, null, new List<string> { "OCT" });
         _visitRepository.GetByIdAsync(visit.Id, Arg.Any<CancellationToken>()).Returns(visit);
 

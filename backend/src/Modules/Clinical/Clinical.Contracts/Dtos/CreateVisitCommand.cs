@@ -202,7 +202,7 @@ public record GetPatientVisitHistoryQuery(Guid PatientId);
 // ===================== Workflow Action Commands =====================
 
 /// <summary>
-/// Command to skip refraction (RefractionVA) stage for a visit.
+/// Command to skip refraction (PreExam) stage for a visit.
 /// </summary>
 public record SkipRefractionCommand(
     Guid VisitId,
