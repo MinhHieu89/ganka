@@ -105,6 +105,35 @@
     --avatar-cancel-bg: #FDE8E4;
     --avatar-cancel-text: #A32D2D;
 
+    /* Technician status badges */
+    --tech-status-waiting-bg: #FAEEDA;
+    --tech-status-waiting-text: #854F0B;
+    --tech-status-in-progress-bg: #E6F1FB;
+    --tech-status-in-progress-text: #0C447C;
+    --tech-status-red-flag-bg: #FCEBEB;
+    --tech-status-red-flag-text: #791F1F;
+    --tech-status-completed-bg: #E1F5EE;
+    --tech-status-completed-text: #085041;
+
+    /* Technician KPI accents */
+    --tech-kpi-waiting: #BA7517;
+    --tech-kpi-in-progress: #185FA5;
+    --tech-kpi-completed: #0F6E56;
+    --tech-kpi-red-flag: #A32D2D;
+
+    /* Technician banner */
+    --tech-banner-bg: #E6F1FB;
+    --tech-banner-border: #B5D4F4;
+    --tech-banner-text: #0C447C;
+
+    /* Technician action accent */
+    --tech-action-primary: #534AB7;
+    --tech-action-destructive: #A32D2D;
+
+    /* Technician wait time */
+    --tech-wait-default: #BA7517;
+    --tech-wait-urgent: #A32D2D;
+
     --sidebar: oklch(0.985 0 0);
     --sidebar-foreground: oklch(0.145 0 0);
     --sidebar-primary: oklch(0.205 0 0);

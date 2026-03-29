@@ -11,7 +11,7 @@ i18n
     fallbackLng: 'vi',
     load: 'languageOnly',
     defaultNS: 'common',
-    ns: ['common', 'auth', 'audit', 'patient', 'scheduling', 'clinical', 'pharmacy', 'consumables', 'billing', 'optical', 'treatment', 'receptionist'],
+    ns: ['common', 'auth', 'audit', 'patient', 'scheduling', 'clinical', 'pharmacy', 'consumables', 'billing', 'optical', 'treatment', 'receptionist', 'technician'],
     interpolation: {
       escapeValue: false,
     },
