@@ -6,6 +6,7 @@ import { useAuthStore } from "@/shared/stores/authStore"
 import { useRecentPatientsStore } from "@/shared/stores/recentPatientsStore"
 import { useDashboardStats } from "@/features/dashboard/api/dashboard-api"
 import { ReceptionistDashboard } from "@/features/receptionist/components/ReceptionistDashboard"
+import { TechnicianDashboard } from "@/features/technician/components/TechnicianDashboard"
 import {
   IconUsers,
   IconCalendar,
@@ -32,8 +33,13 @@ function StatValue({ value, isLoading }: { value: number | undefined; isLoading:
 
 function DashboardPage() {
   const user = useAuthStore((s) => s.user)
-  const isReceptionist = user?.roles?.includes("Receptionist") ?? false
 
+  const isTechnician = user?.roles?.includes("Technician") ?? false
+  if (isTechnician) {
+    return <TechnicianDashboard />
+  }
+
+  const isReceptionist = user?.roles?.includes("Receptionist") ?? false
   if (isReceptionist) {
     return <ReceptionistDashboard />
   }
