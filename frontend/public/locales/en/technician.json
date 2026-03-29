@@ -27,7 +27,7 @@
   "table": {
     "index": "#",
     "name": "Full Name",
-    "birthYear": "Birth",
+    "birthYear": "Birth Year",
     "checkin": "Check-in",
     "wait": "Wait",
     "reason": "Visit Reason",
@@ -47,7 +47,7 @@
     "completed": "Completed"
   },
   "actions": {
-    "accept": "Accept Patient",
+    "accept": "Start Exam",
     "continue": "Continue Exam",
     "complete": "Complete & Transfer to Doctor",
     "returnToQueue": "Return to Queue",

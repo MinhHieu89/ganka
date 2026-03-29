@@ -73,16 +73,23 @@ export function TechnicianQueueTable({
         cell: (info) => {
           const row = info.row.original
           return (
-            <span
-              className="text-sm"
-              style={
-                row.isRedFlag
-                  ? { color: "var(--tech-action-destructive)" }
-                  : undefined
-              }
-            >
-              {info.getValue()}
-            </span>
+            <div>
+              <div
+                className="text-sm font-semibold"
+                style={
+                  row.isRedFlag
+                    ? { color: "var(--tech-action-destructive)" }
+                    : undefined
+                }
+              >
+                {info.getValue()}
+              </div>
+              {row.patientCode && (
+                <div className="font-mono text-xs text-muted-foreground">
+                  {row.patientCode}
+                </div>
+              )}
+            </div>
           )
         },
       }),

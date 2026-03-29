@@ -1,6 +1,7 @@
 using Clinical.Application.Interfaces;
 using Clinical.Contracts.Dtos;
 using Clinical.Domain.Enums;
+using Patient.Application.Interfaces;
 
 namespace Clinical.Application.Features;
 
@@ -14,6 +15,7 @@ public static class GetTechnicianDashboardHandler
     public static async Task<TechnicianDashboardDto> Handle(
         GetTechnicianDashboardQuery query,
         ITechnicianOrderQueryService queryService,
+        IPatientRepository patientRepository,
         CancellationToken ct)
     {
         var searchTerm = string.IsNullOrWhiteSpace(query.Search) ? null : query.Search.Trim();
@@ -23,20 +25,25 @@ public static class GetTechnicianDashboardHandler
         var patientIds = rawData.Select(x => x.PatientId).Distinct().ToList();
         var visitCountsByPatient = await queryService.GetVisitCountsByPatientIdsAsync(patientIds, ct);
 
+        // Get patient details for PatientCode and BirthYear
+        var patients = await patientRepository.GetByIdsAsync(patientIds, ct);
+        var patientLookup = patients.ToDictionary(p => p.Id);
+
         var rows = rawData.Select(x =>
         {
             var status = DeriveStatus(x.TechnicianId, x.TechnicianName, x.CompletedAt,
                 x.IsRedFlag, query.CurrentTechnicianId);
             var visitType = DeriveVisitType(x.OrderType, x.PatientId, visitCountsByPatient);
             var waitMinutes = (int)(DateTime.UtcNow - x.OrderedAt).TotalMinutes;
+            patientLookup.TryGetValue(x.PatientId, out var pat);
 
             return new TechnicianDashboardRowDto(
                 OrderId: x.OrderId,
                 VisitId: x.VisitId,
                 PatientId: x.PatientId,
                 PatientName: x.PatientName,
-                PatientCode: null,
-                BirthYear: null,
+                PatientCode: pat?.PatientCode,
+                BirthYear: pat?.DateOfBirth?.Year,
                 CheckinTime: x.VisitDate,
                 WaitMinutes: waitMinutes,
                 Reason: x.Reason,

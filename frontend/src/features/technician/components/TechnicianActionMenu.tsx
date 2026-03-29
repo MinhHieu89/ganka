@@ -3,6 +3,10 @@ import {
   IconDotsVertical,
   IconCircleCheck,
   IconEye,
+  IconPlayerPlay,
+
+  IconArrowBackUp,
+  IconAlertTriangle,
 } from "@tabler/icons-react"
 import {
   DropdownMenu,
@@ -40,29 +44,16 @@ export function TechnicianActionMenu({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="min-w-[200px]">
         {row.status === "waiting" && (
-          <>
-            <DropdownMenuItem
-              onClick={() => onAction("accept", row)}
-              className="font-bold"
-              style={{ color: "var(--tech-action-primary)" }}
-            >
-              {t("actions.accept")}
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => onAction("viewResults", row)}>
-              <IconEye className="h-4 w-4 mr-2" />
-              {t("actions.viewResults")}
-            </DropdownMenuItem>
-          </>
+          <DropdownMenuItem onClick={() => onAction("accept", row)}>
+            <IconPlayerPlay className="h-4 w-4 mr-2" />
+            {t("actions.accept")}
+          </DropdownMenuItem>
         )}
 
         {row.status === "in_progress" && (
           <>
-            <DropdownMenuItem
-              onClick={() => onAction("continue", row)}
-              className="font-bold"
-              style={{ color: "var(--tech-action-primary)" }}
-            >
+            <DropdownMenuItem onClick={() => onAction("continue", row)}>
+              <IconPlayerPlay className="h-4 w-4 mr-2" />
               {t("actions.continue")}
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => onAction("complete", row)}>
@@ -70,6 +61,7 @@ export function TechnicianActionMenu({
               {t("actions.complete")}
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => onAction("returnToQueue", row)}>
+              <IconArrowBackUp className="h-4 w-4 mr-2" />
               {t("actions.returnToQueue")}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
@@ -77,6 +69,7 @@ export function TechnicianActionMenu({
               onClick={() => onAction("redFlag", row)}
               style={{ color: "var(--tech-action-destructive)" }}
             >
+              <IconAlertTriangle className="h-4 w-4 mr-2" />
               {t("actions.redFlag")}
             </DropdownMenuItem>
             <DropdownMenuSeparator />

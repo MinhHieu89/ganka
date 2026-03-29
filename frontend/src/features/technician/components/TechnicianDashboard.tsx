@@ -48,16 +48,21 @@ export function TechnicianDashboard() {
   const dashboardQuery = useTechnicianDashboard(filters)
   const kpiQuery = useTechnicianKpi()
 
+  // Separate unfiltered query to always find in-progress patient for the banner
+  const allQuery = useTechnicianDashboard(
+    useMemo(() => ({ status: "in_progress" as TechnicianStatus, page: 1, pageSize: 1 }), []),
+  )
+
   // Mutations
   const acceptOrder = useAcceptOrder()
   const completeOrder = useCompleteOrder()
   const returnToQueue = useReturnToQueue()
   const redFlagOrder = useRedFlagOrder()
 
-  // Derive current in-progress patient
+  // Derive current in-progress patient from unfiltered query
   const currentPatient = useMemo(
-    () => dashboardQuery.data?.find((r) => r.status === "in_progress") ?? null,
-    [dashboardQuery.data],
+    () => allQuery.data?.find((r) => r.status === "in_progress") ?? null,
+    [allQuery.data],
   )
 
   // Filter counts from KPI data

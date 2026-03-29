@@ -65,7 +65,7 @@ export function TechnicianBanner({
         size="sm"
         onClick={onContinue}
         style={{
-          backgroundColor: "var(--tech-action-primary)",
+          backgroundColor: "var(--tech-banner-text)",
           color: "white",
         }}
       >

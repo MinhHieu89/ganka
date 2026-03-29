@@ -7,6 +7,8 @@ using Clinical.Infrastructure;
 using Clinical.Infrastructure.Services;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using NSubstitute;
+using Patient.Application.Interfaces;
 using Shared.Domain;
 
 namespace Clinical.Unit.Tests.Features;
@@ -21,6 +23,7 @@ public class GetTechnicianDashboardTests : IDisposable
     private static readonly BranchId DefaultBranchId = new(Guid.Parse("00000000-0000-0000-0000-000000000001"));
     private readonly ClinicalDbContext _dbContext;
     private readonly ITechnicianOrderQueryService _queryService;
+    private readonly IPatientRepository _patientRepository;
     private readonly Guid _technicianId = Guid.NewGuid();
 
     public GetTechnicianDashboardTests()
@@ -30,6 +33,9 @@ public class GetTechnicianDashboardTests : IDisposable
             .Options;
         _dbContext = new ClinicalDbContext(options);
         _queryService = new TechnicianOrderQueryService(_dbContext);
+        _patientRepository = Substitute.For<IPatientRepository>();
+        _patientRepository.GetByIdsAsync(Arg.Any<List<Guid>>(), Arg.Any<CancellationToken>())
+            .Returns(new List<Patient.Domain.Entities.Patient>());
     }
 
     public void Dispose()
@@ -63,7 +69,7 @@ public class GetTechnicianDashboardTests : IDisposable
         await SeedVisitWithOrder(visit);
 
         var query = new GetTechnicianDashboardQuery(null, null, CurrentTechnicianId: _technicianId);
-        var result = await GetTechnicianDashboardHandler.Handle(query, _queryService, CancellationToken.None);
+        var result = await GetTechnicianDashboardHandler.Handle(query, _queryService, _patientRepository, CancellationToken.None);
 
         result.Items.Should().HaveCount(1);
         result.Items[0].Status.Should().Be("waiting");
@@ -76,7 +82,7 @@ public class GetTechnicianDashboardTests : IDisposable
         await SeedVisitWithOrder(visit, order => order.Accept(_technicianId, "Tech A"));
 
         var query = new GetTechnicianDashboardQuery(null, null, CurrentTechnicianId: _technicianId);
-        var result = await GetTechnicianDashboardHandler.Handle(query, _queryService, CancellationToken.None);
+        var result = await GetTechnicianDashboardHandler.Handle(query, _queryService, _patientRepository, CancellationToken.None);
 
         result.Items.Should().ContainSingle(r => r.Status == "in_progress");
     }
@@ -92,7 +98,7 @@ public class GetTechnicianDashboardTests : IDisposable
         });
 
         var query = new GetTechnicianDashboardQuery(null, null, CurrentTechnicianId: _technicianId);
-        var result = await GetTechnicianDashboardHandler.Handle(query, _queryService, CancellationToken.None);
+        var result = await GetTechnicianDashboardHandler.Handle(query, _queryService, _patientRepository, CancellationToken.None);
 
         result.Items.Should().ContainSingle(r => r.Status == "red_flag");
     }
@@ -108,7 +114,7 @@ public class GetTechnicianDashboardTests : IDisposable
         });
 
         var query = new GetTechnicianDashboardQuery(null, null, CurrentTechnicianId: _technicianId);
-        var result = await GetTechnicianDashboardHandler.Handle(query, _queryService, CancellationToken.None);
+        var result = await GetTechnicianDashboardHandler.Handle(query, _queryService, _patientRepository, CancellationToken.None);
 
         result.Items.Should().ContainSingle(r => r.Status == "completed");
     }
@@ -126,7 +132,7 @@ public class GetTechnicianDashboardTests : IDisposable
         });
 
         var query = new GetTechnicianDashboardQuery("waiting", null, CurrentTechnicianId: _technicianId);
-        var result = await GetTechnicianDashboardHandler.Handle(query, _queryService, CancellationToken.None);
+        var result = await GetTechnicianDashboardHandler.Handle(query, _queryService, _patientRepository, CancellationToken.None);
 
         result.Items.Should().HaveCount(1);
         result.Items[0].Status.Should().Be("waiting");
@@ -141,7 +147,7 @@ public class GetTechnicianDashboardTests : IDisposable
         await SeedVisitWithOrder(visit2);
 
         var query = new GetTechnicianDashboardQuery(null, "Nguyen", CurrentTechnicianId: _technicianId);
-        var result = await GetTechnicianDashboardHandler.Handle(query, _queryService, CancellationToken.None);
+        var result = await GetTechnicianDashboardHandler.Handle(query, _queryService, _patientRepository, CancellationToken.None);
 
         result.Items.Should().HaveCount(1);
         result.Items[0].PatientName.Should().Be("Nguyen Van A");
@@ -155,7 +161,7 @@ public class GetTechnicianDashboardTests : IDisposable
         await SeedVisitWithOrder(visit);
 
         var query = new GetTechnicianDashboardQuery(null, null, CurrentTechnicianId: _technicianId);
-        var result = await GetTechnicianDashboardHandler.Handle(query, _queryService, CancellationToken.None);
+        var result = await GetTechnicianDashboardHandler.Handle(query, _queryService, _patientRepository, CancellationToken.None);
 
         var row = result.Items[0];
         row.PatientId.Should().Be(patientId);
@@ -173,7 +179,7 @@ public class GetTechnicianDashboardTests : IDisposable
         await SeedVisitWithOrder(visit);
 
         var query = new GetTechnicianDashboardQuery(null, null, CurrentTechnicianId: _technicianId);
-        var result = await GetTechnicianDashboardHandler.Handle(query, _queryService, CancellationToken.None);
+        var result = await GetTechnicianDashboardHandler.Handle(query, _queryService, _patientRepository, CancellationToken.None);
 
         result.Items[0].VisitType.Should().Be("new");
     }
@@ -195,7 +201,7 @@ public class GetTechnicianDashboardTests : IDisposable
         await SeedVisitWithOrder(visit);
 
         var query = new GetTechnicianDashboardQuery(null, null, CurrentTechnicianId: _technicianId);
-        var result = await GetTechnicianDashboardHandler.Handle(query, _queryService, CancellationToken.None);
+        var result = await GetTechnicianDashboardHandler.Handle(query, _queryService, _patientRepository, CancellationToken.None);
 
         result.Items.Should().ContainSingle(r => r.VisitType == "follow_up");
     }
@@ -210,7 +216,7 @@ public class GetTechnicianDashboardTests : IDisposable
         await SeedVisitWithOrder(visit2, order => order.Accept(_technicianId, "Tech A"));
 
         var query = new GetTechnicianDashboardQuery(null, null, CurrentTechnicianId: _technicianId);
-        var result = await GetTechnicianDashboardHandler.Handle(query, _queryService, CancellationToken.None);
+        var result = await GetTechnicianDashboardHandler.Handle(query, _queryService, _patientRepository, CancellationToken.None);
 
         result.Items[0].Status.Should().Be("in_progress");
     }
