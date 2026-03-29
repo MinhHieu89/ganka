@@ -27,6 +27,7 @@ import { Route as AuthenticatedVisitsVisitIdRouteImport } from './routes/_authen
 import { Route as AuthenticatedTreatmentsTemplatesRouteImport } from './routes/_authenticated/treatments/templates'
 import { Route as AuthenticatedTreatmentsApprovalsRouteImport } from './routes/_authenticated/treatments/approvals'
 import { Route as AuthenticatedTreatmentsPackageIdRouteImport } from './routes/_authenticated/treatments/$packageId'
+import { Route as AuthenticatedTechnicianPreExamRouteImport } from './routes/_authenticated/technician/pre-exam'
 import { Route as AuthenticatedPharmacySuppliersRouteImport } from './routes/_authenticated/pharmacy/suppliers'
 import { Route as AuthenticatedPharmacyStockImportRouteImport } from './routes/_authenticated/pharmacy/stock-import'
 import { Route as AuthenticatedPharmacyQueueRouteImport } from './routes/_authenticated/pharmacy/queue'
@@ -151,6 +152,12 @@ const AuthenticatedTreatmentsPackageIdRoute =
   AuthenticatedTreatmentsPackageIdRouteImport.update({
     id: '/treatments/$packageId',
     path: '/treatments/$packageId',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedTechnicianPreExamRoute =
+  AuthenticatedTechnicianPreExamRouteImport.update({
+    id: '/technician/pre-exam',
+    path: '/technician/pre-exam',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 const AuthenticatedPharmacySuppliersRoute =
@@ -330,6 +337,7 @@ export interface FileRoutesByFullPath {
   '/pharmacy/queue': typeof AuthenticatedPharmacyQueueRoute
   '/pharmacy/stock-import': typeof AuthenticatedPharmacyStockImportRoute
   '/pharmacy/suppliers': typeof AuthenticatedPharmacySuppliersRoute
+  '/technician/pre-exam': typeof AuthenticatedTechnicianPreExamRoute
   '/treatments/$packageId': typeof AuthenticatedTreatmentsPackageIdRoute
   '/treatments/approvals': typeof AuthenticatedTreatmentsApprovalsRoute
   '/treatments/templates': typeof AuthenticatedTreatmentsTemplatesRoute
@@ -373,6 +381,7 @@ export interface FileRoutesByTo {
   '/pharmacy/queue': typeof AuthenticatedPharmacyQueueRoute
   '/pharmacy/stock-import': typeof AuthenticatedPharmacyStockImportRoute
   '/pharmacy/suppliers': typeof AuthenticatedPharmacySuppliersRoute
+  '/technician/pre-exam': typeof AuthenticatedTechnicianPreExamRoute
   '/treatments/$packageId': typeof AuthenticatedTreatmentsPackageIdRoute
   '/treatments/approvals': typeof AuthenticatedTreatmentsApprovalsRoute
   '/treatments/templates': typeof AuthenticatedTreatmentsTemplatesRoute
@@ -419,6 +428,7 @@ export interface FileRoutesById {
   '/_authenticated/pharmacy/queue': typeof AuthenticatedPharmacyQueueRoute
   '/_authenticated/pharmacy/stock-import': typeof AuthenticatedPharmacyStockImportRoute
   '/_authenticated/pharmacy/suppliers': typeof AuthenticatedPharmacySuppliersRoute
+  '/_authenticated/technician/pre-exam': typeof AuthenticatedTechnicianPreExamRoute
   '/_authenticated/treatments/$packageId': typeof AuthenticatedTreatmentsPackageIdRoute
   '/_authenticated/treatments/approvals': typeof AuthenticatedTreatmentsApprovalsRoute
   '/_authenticated/treatments/templates': typeof AuthenticatedTreatmentsTemplatesRoute
@@ -465,6 +475,7 @@ export interface FileRouteTypes {
     | '/pharmacy/queue'
     | '/pharmacy/stock-import'
     | '/pharmacy/suppliers'
+    | '/technician/pre-exam'
     | '/treatments/$packageId'
     | '/treatments/approvals'
     | '/treatments/templates'
@@ -508,6 +519,7 @@ export interface FileRouteTypes {
     | '/pharmacy/queue'
     | '/pharmacy/stock-import'
     | '/pharmacy/suppliers'
+    | '/technician/pre-exam'
     | '/treatments/$packageId'
     | '/treatments/approvals'
     | '/treatments/templates'
@@ -553,6 +565,7 @@ export interface FileRouteTypes {
     | '/_authenticated/pharmacy/queue'
     | '/_authenticated/pharmacy/stock-import'
     | '/_authenticated/pharmacy/suppliers'
+    | '/_authenticated/technician/pre-exam'
     | '/_authenticated/treatments/$packageId'
     | '/_authenticated/treatments/approvals'
     | '/_authenticated/treatments/templates'
@@ -705,6 +718,13 @@ declare module '@tanstack/react-router' {
       path: '/treatments/$packageId'
       fullPath: '/treatments/$packageId'
       preLoaderRoute: typeof AuthenticatedTreatmentsPackageIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/technician/pre-exam': {
+      id: '/_authenticated/technician/pre-exam'
+      path: '/technician/pre-exam'
+      fullPath: '/technician/pre-exam'
+      preLoaderRoute: typeof AuthenticatedTechnicianPreExamRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/pharmacy/suppliers': {
@@ -925,6 +945,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedPharmacyQueueRoute: typeof AuthenticatedPharmacyQueueRoute
   AuthenticatedPharmacyStockImportRoute: typeof AuthenticatedPharmacyStockImportRoute
   AuthenticatedPharmacySuppliersRoute: typeof AuthenticatedPharmacySuppliersRoute
+  AuthenticatedTechnicianPreExamRoute: typeof AuthenticatedTechnicianPreExamRoute
   AuthenticatedTreatmentsPackageIdRoute: typeof AuthenticatedTreatmentsPackageIdRoute
   AuthenticatedTreatmentsApprovalsRoute: typeof AuthenticatedTreatmentsApprovalsRoute
   AuthenticatedTreatmentsTemplatesRoute: typeof AuthenticatedTreatmentsTemplatesRoute
@@ -965,6 +986,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedPharmacyQueueRoute: AuthenticatedPharmacyQueueRoute,
   AuthenticatedPharmacyStockImportRoute: AuthenticatedPharmacyStockImportRoute,
   AuthenticatedPharmacySuppliersRoute: AuthenticatedPharmacySuppliersRoute,
+  AuthenticatedTechnicianPreExamRoute: AuthenticatedTechnicianPreExamRoute,
   AuthenticatedTreatmentsPackageIdRoute: AuthenticatedTreatmentsPackageIdRoute,
   AuthenticatedTreatmentsApprovalsRoute: AuthenticatedTreatmentsApprovalsRoute,
   AuthenticatedTreatmentsTemplatesRoute: AuthenticatedTreatmentsTemplatesRoute,

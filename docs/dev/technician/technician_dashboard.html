@@ -1,0 +1,366 @@
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+.dash{font-family:var(--font-sans);color:var(--color-text-primary);max-width:100%;padding:1rem 0}
+.header{display:flex;justify-content:space-between;align-items:center;padding:0 0 16px}
+.header h1{font-size:22px;font-weight:500}
+.role-badge{font-size:12px;padding:4px 12px;border-radius:var(--border-radius-md);background:#E6F1FB;color:#0C447C}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:20px}
+.kpi{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:14px 16px}
+.kpi-label{font-size:12px;color:var(--color-text-secondary);margin-bottom:4px}
+.kpi-val{font-size:24px;font-weight:500}
+.kpi-sub{font-size:11px;color:var(--color-text-tertiary);margin-top:2px}
+.kpi--amber .kpi-val{color:#BA7517}
+.kpi--blue .kpi-val{color:#185FA5}
+.kpi--teal .kpi-val{color:#0F6E56}
+.kpi--red .kpi-val{color:#A32D2D}
+.current-banner{display:flex;align-items:center;gap:12px;padding:12px 16px;background:#E6F1FB;border-radius:var(--border-radius-md);margin-bottom:16px;border:0.5px solid #B5D4F4}
+.current-banner .label{font-size:12px;color:#0C447C;font-weight:500}
+.current-banner .name{font-size:14px;font-weight:500;color:#042C53}
+.current-banner .info{font-size:12px;color:#185FA5;font-weight:400}
+.current-banner .resume-btn{margin-left:auto;font-size:12px;padding:6px 18px;border-radius:var(--border-radius-md);background:#534AB7;color:#fff;border:none;cursor:pointer;font-weight:500;font-family:var(--font-sans);white-space:nowrap}
+.toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:12px;flex-wrap:wrap}
+.pills{display:flex;gap:6px}
+.pill{font-size:13px;padding:5px 14px;border-radius:20px;border:0.5px solid var(--color-border-tertiary);background:transparent;color:var(--color-text-secondary);cursor:pointer;font-family:var(--font-sans)}
+.pill.active{background:var(--color-text-primary);color:var(--color-background-primary);border-color:var(--color-text-primary)}
+.pill .count{font-size:11px;margin-left:4px;opacity:.7}
+.search-box{display:flex;align-items:center;gap:6px;padding:6px 12px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);font-size:13px;color:var(--color-text-secondary);min-width:180px}
+.search-box input{border:none;background:transparent;outline:none;font-size:13px;color:var(--color-text-primary);flex:1;font-family:var(--font-sans)}
+table{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}
+thead th{text-align:left;padding:10px 8px;font-weight:500;font-size:12px;color:var(--color-text-secondary);border-bottom:0.5px solid var(--color-border-tertiary)}
+tbody td{padding:10px 8px;border-bottom:0.5px solid var(--color-border-tertiary);vertical-align:middle;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+tbody tr:hover{background:var(--color-background-secondary)}
+.badge{display:inline-block;font-size:11px;padding:3px 10px;border-radius:12px;font-weight:500;white-space:nowrap}
+.badge--amber{background:#FAEEDA;color:#854F0B}
+.badge--blue{background:#E6F1FB;color:#0C447C}
+.badge--teal{background:#E1F5EE;color:#085041}
+.badge--red{background:#FCEBEB;color:#791F1F}
+.type-tag{font-size:11px;padding:2px 8px;border-radius:4px;border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary)}
+.wait{font-size:12px;color:#BA7517;font-weight:500}
+.wait--long{color:#A32D2D}
+.wait--na{color:var(--color-text-tertiary);font-weight:400}
+.dots-btn{width:28px;height:28px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--color-text-secondary);position:relative;font-family:var(--font-sans)}
+.dots-btn:hover{background:var(--color-background-secondary);border-color:var(--color-border-secondary)}
+.dots-btn.open{background:var(--color-background-secondary);border-color:var(--color-border-secondary)}
+.menu{display:none;position:absolute;top:32px;right:0;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);min-width:180px;z-index:10;padding:4px 0}
+.menu.show{display:block}
+.menu-item{display:flex;align-items:center;gap:8px;padding:8px 14px;font-size:13px;cursor:pointer;color:var(--color-text-primary);white-space:nowrap}
+.menu-item:hover{background:var(--color-background-secondary)}
+.menu-item svg{width:14px;height:14px;flex-shrink:0}
+.menu-item--primary{color:#534AB7;font-weight:500}
+.menu-item--red{color:#A32D2D}
+.menu-sep{height:0.5px;background:var(--color-border-tertiary);margin:4px 0}
+.row-muted td{opacity:.55}
+.row-muted td:last-child{opacity:1}
+.row-red td.name-cell{color:#A32D2D}
+.row-red td.reason-cell{color:#A32D2D}
+.footer-note{font-size:11px;color:var(--color-text-tertiary);margin-top:12px;text-align:center}
+</style>
+
+<div class="dash">
+  <div class="header">
+    <h1>Pre-Exam dashboard</h1>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span class="role-badge">Technician</span>
+      <span style="font-size:13px;color:var(--color-text-secondary)">Nguyễn Văn A</span>
+    </div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi kpi--amber">
+      <div class="kpi-label">Chờ khám</div>
+      <div class="kpi-val">7</div>
+      <div class="kpi-sub">trong hàng đợi</div>
+    </div>
+    <div class="kpi kpi--blue">
+      <div class="kpi-label">Đang đo</div>
+      <div class="kpi-val">1</div>
+      <div class="kpi-sub">BN của tôi</div>
+    </div>
+    <div class="kpi kpi--teal">
+      <div class="kpi-label">Hoàn tất Pre-Exam</div>
+      <div class="kpi-val">12</div>
+      <div class="kpi-sub">hôm nay</div>
+    </div>
+    <div class="kpi kpi--red">
+      <div class="kpi-label">Red flag</div>
+      <div class="kpi-val">1</div>
+      <div class="kpi-sub">fast-track hôm nay</div>
+    </div>
+  </div>
+
+  <div class="current-banner">
+    <div>
+      <div class="label">Đang thực hiện Pre-Exam</div>
+      <div class="name">Trần Thị Mai — <span class="info">1985 · Refraction · check-in 09:15</span></div>
+    </div>
+    <button class="resume-btn">Tiếp tục đo</button>
+  </div>
+
+  <div class="toolbar">
+    <div class="pills" id="pills">
+      <button class="pill active" data-f="all">Tất cả<span class="count">21</span></button>
+      <button class="pill" data-f="cho">Chờ khám<span class="count">7</span></button>
+      <button class="pill" data-f="dang">Đang đo<span class="count">1</span></button>
+      <button class="pill" data-f="xong">Hoàn tất<span class="count">12</span></button>
+      <button class="pill" data-f="red">Red flag<span class="count">1</span></button>
+    </div>
+    <div class="search-box">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><line x1="9.5" y1="9.5" x2="13" y2="13"/></svg>
+      <input placeholder="Tìm BN theo tên, SĐT..." />
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width:32px">#</th>
+        <th style="width:22%">Họ tên</th>
+        <th style="width:46px">Sinh</th>
+        <th style="width:60px">Check-in</th>
+        <th style="width:54px">Chờ</th>
+        <th>Lý do khám</th>
+        <th style="width:54px">Loại</th>
+        <th style="width:82px">Trạng thái</th>
+        <th style="width:40px"></th>
+      </tr>
+    </thead>
+    <tbody id="tbody">
+      <tr data-s="dang">
+        <td>1</td>
+        <td class="name-cell" style="font-weight:500">Trần Thị Mai</td>
+        <td>1985</td>
+        <td>09:15</td>
+        <td class="wait">40 ph</td>
+        <td>Mờ mắt, nhức đầu</td>
+        <td><span class="type-tag">Tái khám</span></td>
+        <td><span class="badge badge--blue">Đang đo</span></td>
+        <td style="position:relative">
+          <button class="dots-btn" onclick="toggleMenu(this)">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="3" r="1.5"/><circle cx="8" cy="8" r="1.5"/><circle cx="8" cy="13" r="1.5"/></svg>
+          </button>
+          <div class="menu">
+            <div class="menu-item menu-item--primary">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 8h8M8 4v8"/></svg>
+              Tiếp tục đo
+            </div>
+            <div class="menu-item">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8l4 4 8-8"/></svg>
+              Hoàn tất chuyển BS
+            </div>
+            <div class="menu-sep"></div>
+            <div class="menu-item">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 13h10M8 3v7M5 7l3 3 3-3"/></svg>
+              Trả lại hàng đợi
+            </div>
+            <div class="menu-item menu-item--red">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 3v6M8 11.5v.5"/></svg>
+              Chuyển BS ngay
+            </div>
+            <div class="menu-sep"></div>
+            <div class="menu-item">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="5.5"/><path d="M8 5.5v5M5.5 8h5"/></svg>
+              Xem kết quả
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr data-s="red" class="row-red">
+        <td>2</td>
+        <td class="name-cell" style="font-weight:500">Lê Văn Hùng</td>
+        <td>1970</td>
+        <td>09:20</td>
+        <td class="wait--na">—</td>
+        <td class="reason-cell">Giảm thị lực đột ngột MP</td>
+        <td><span class="type-tag">Mới</span></td>
+        <td><span class="badge badge--red">Red flag</span></td>
+        <td style="position:relative">
+          <button class="dots-btn" onclick="toggleMenu(this)">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="3" r="1.5"/><circle cx="8" cy="8" r="1.5"/><circle cx="8" cy="13" r="1.5"/></svg>
+          </button>
+          <div class="menu">
+            <div class="menu-item">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="5.5"/><path d="M8 5.5v5M5.5 8h5"/></svg>
+              Xem kết quả
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr data-s="cho">
+        <td>3</td>
+        <td class="name-cell" style="font-weight:500">Nguyễn Hoàng Nam</td>
+        <td>2015</td>
+        <td>09:30</td>
+        <td class="wait wait--long">25 ph</td>
+        <td>Kiểm soát cận thị</td>
+        <td><span class="type-tag">Tái khám</span></td>
+        <td><span class="badge badge--amber">Chờ khám</span></td>
+        <td style="position:relative">
+          <button class="dots-btn" onclick="toggleMenu(this)">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="3" r="1.5"/><circle cx="8" cy="8" r="1.5"/><circle cx="8" cy="13" r="1.5"/></svg>
+          </button>
+          <div class="menu">
+            <div class="menu-item menu-item--primary">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8l4 4 8-8"/></svg>
+              Nhận BN
+            </div>
+            <div class="menu-sep"></div>
+            <div class="menu-item">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="5.5"/><path d="M8 5.5v5M5.5 8h5"/></svg>
+              Xem kết quả
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr data-s="cho">
+        <td>4</td>
+        <td class="name-cell" style="font-weight:500">Phạm Thu Hà</td>
+        <td>1992</td>
+        <td>09:32</td>
+        <td class="wait">23 ph</td>
+        <td>Khô mắt, rát mắt</td>
+        <td><span class="type-tag">Mới</span></td>
+        <td><span class="badge badge--amber">Chờ khám</span></td>
+        <td style="position:relative">
+          <button class="dots-btn" onclick="toggleMenu(this)">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="3" r="1.5"/><circle cx="8" cy="8" r="1.5"/><circle cx="8" cy="13" r="1.5"/></svg>
+          </button>
+          <div class="menu">
+            <div class="menu-item menu-item--primary">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8l4 4 8-8"/></svg>
+              Nhận BN
+            </div>
+            <div class="menu-sep"></div>
+            <div class="menu-item">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="5.5"/><path d="M8 5.5v5M5.5 8h5"/></svg>
+              Xem kết quả
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr data-s="cho">
+        <td>5</td>
+        <td class="name-cell" style="font-weight:500">Đỗ Minh Tuấn</td>
+        <td>1988</td>
+        <td>09:40</td>
+        <td class="wait">15 ph</td>
+        <td>Đo kính mới</td>
+        <td><span class="type-tag">Mới</span></td>
+        <td><span class="badge badge--amber">Chờ khám</span></td>
+        <td style="position:relative">
+          <button class="dots-btn" onclick="toggleMenu(this)">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="3" r="1.5"/><circle cx="8" cy="8" r="1.5"/><circle cx="8" cy="13" r="1.5"/></svg>
+          </button>
+          <div class="menu">
+            <div class="menu-item menu-item--primary">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8l4 4 8-8"/></svg>
+              Nhận BN
+            </div>
+            <div class="menu-sep"></div>
+            <div class="menu-item">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="5.5"/><path d="M8 5.5v5M5.5 8h5"/></svg>
+              Xem kết quả
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr data-s="cho">
+        <td>6</td>
+        <td class="name-cell" style="font-weight:500">Vũ Thị Lan</td>
+        <td>1968</td>
+        <td>09:45</td>
+        <td class="wait">10 ph</td>
+        <td>Mờ mắt</td>
+        <td><span class="type-tag">Mới</span></td>
+        <td><span class="badge badge--amber">Chờ khám</span></td>
+        <td style="position:relative">
+          <button class="dots-btn" onclick="toggleMenu(this)">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="3" r="1.5"/><circle cx="8" cy="8" r="1.5"/><circle cx="8" cy="13" r="1.5"/></svg>
+          </button>
+          <div class="menu">
+            <div class="menu-item menu-item--primary">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8l4 4 8-8"/></svg>
+              Nhận BN
+            </div>
+            <div class="menu-sep"></div>
+            <div class="menu-item">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="5.5"/><path d="M8 5.5v5M5.5 8h5"/></svg>
+              Xem kết quả
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr data-s="xong" class="row-muted">
+        <td>7</td>
+        <td class="name-cell" style="font-weight:500">Hoàng Văn Đức</td>
+        <td>1975</td>
+        <td>08:30</td>
+        <td class="wait--na">—</td>
+        <td>Tái khám sau mổ</td>
+        <td><span class="type-tag">Tái khám</span></td>
+        <td><span class="badge badge--teal">Hoàn tất</span></td>
+        <td style="position:relative">
+          <button class="dots-btn" onclick="toggleMenu(this)">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="3" r="1.5"/><circle cx="8" cy="8" r="1.5"/><circle cx="8" cy="13" r="1.5"/></svg>
+          </button>
+          <div class="menu">
+            <div class="menu-item">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="5.5"/><path d="M8 5.5v5M5.5 8h5"/></svg>
+              Xem kết quả
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr data-s="xong" class="row-muted">
+        <td>8</td>
+        <td class="name-cell" style="font-weight:500">Bùi Thị Hương</td>
+        <td>2000</td>
+        <td>08:15</td>
+        <td class="wait--na">—</td>
+        <td>Đo kính cận</td>
+        <td><span class="type-tag">Mới</span></td>
+        <td><span class="badge badge--teal">Hoàn tất</span></td>
+        <td style="position:relative">
+          <button class="dots-btn" onclick="toggleMenu(this)">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="3" r="1.5"/><circle cx="8" cy="8" r="1.5"/><circle cx="8" cy="13" r="1.5"/></svg>
+          </button>
+          <div class="menu">
+            <div class="menu-item">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="5.5"/><path d="M8 5.5v5M5.5 8h5"/></svg>
+              Xem kết quả
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="footer-note">Sắp xếp theo thời gian check-in (FIFO) · Cập nhật realtime</div>
+</div>
+
+<script>
+function toggleMenu(btn){
+  var wasOpen = btn.classList.contains('open');
+  document.querySelectorAll('.dots-btn').forEach(function(b){b.classList.remove('open')});
+  document.querySelectorAll('.menu').forEach(function(m){m.classList.remove('show')});
+  if(!wasOpen){
+    btn.classList.add('open');
+    btn.parentElement.querySelector('.menu').classList.add('show');
+  }
+}
+document.addEventListener('click',function(e){
+  if(!e.target.closest('.dots-btn')&&!e.target.closest('.menu')){
+    document.querySelectorAll('.dots-btn').forEach(function(b){b.classList.remove('open')});
+    document.querySelectorAll('.menu').forEach(function(m){m.classList.remove('show')});
+  }
+});
+document.getElementById('pills').addEventListener('click',function(e){
+  var btn=e.target.closest('.pill');
+  if(!btn)return;
+  document.querySelectorAll('.pill').forEach(function(p){p.classList.remove('active')});
+  btn.classList.add('active');
+  var f=btn.dataset.f;
+  document.querySelectorAll('#tbody tr').forEach(function(tr){
+    tr.style.display=(f==='all'||tr.dataset.s===f)?'':'none';
+  });
+});
+</script>
