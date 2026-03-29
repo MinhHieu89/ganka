@@ -24,6 +24,9 @@ public static class IoC
         // Unit of Work
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+        // Query Services
+        services.AddScoped<ITechnicianOrderQueryService, TechnicianOrderQueryService>();
+
         // Services
         services.AddScoped<IDocumentService, DocumentService>();
         services.AddSingleton<IOsdiNotificationService, OsdiNotificationService>();
