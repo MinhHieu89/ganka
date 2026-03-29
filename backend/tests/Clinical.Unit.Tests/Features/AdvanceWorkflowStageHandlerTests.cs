@@ -125,4 +125,24 @@ public class AdvanceWorkflowStageHandlerTests
         // Assert
         await _unitOfWork.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
     }
+
+    [Fact]
+    public async Task Handle_AdvanceToPreExam_AutoCreatesTechnicianOrder()
+    {
+        // Arrange
+        var visit = CreateVisitAtStage(WorkflowStage.Reception);
+        var command = new AdvanceWorkflowStageCommand(visit.Id, (int)WorkflowStage.PreExam);
+        _visitRepository.GetByIdAsync(visit.Id, Arg.Any<CancellationToken>()).Returns(visit);
+
+        // Act
+        var result = await AdvanceWorkflowStageHandler.Handle(
+            command, _visitRepository, _unitOfWork, CancellationToken.None);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        visit.TechnicianOrders.Should().HaveCount(1);
+        visit.TechnicianOrders.First().OrderType.Should().Be(WorkflowStage.PreExam == WorkflowStage.PreExam
+            ? Clinical.Domain.Enums.TechnicianOrderType.PreExam
+            : Clinical.Domain.Enums.TechnicianOrderType.AdditionalExam);
+    }
 }

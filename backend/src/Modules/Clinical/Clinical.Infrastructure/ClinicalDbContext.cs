@@ -29,6 +29,7 @@ public class ClinicalDbContext : DbContext
     public DbSet<DispensingLineItem> DispensingLineItems => Set<DispensingLineItem>();
     public DbSet<OpticalOrder> OpticalOrders => Set<OpticalOrder>();
     public DbSet<HandoffChecklist> HandoffChecklists => Set<HandoffChecklist>();
+    public DbSet<TechnicianOrder> TechnicianOrders => Set<TechnicianOrder>();
 
     public ClinicalDbContext(DbContextOptions<ClinicalDbContext> options) : base(options)
     {

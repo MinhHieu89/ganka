@@ -76,6 +76,9 @@ public class Visit : AggregateRoot, IAuditable
     private readonly List<HandoffChecklist> _handoffChecklists = [];
     public IReadOnlyCollection<HandoffChecklist> HandoffChecklists => _handoffChecklists.AsReadOnly();
 
+    private readonly List<TechnicianOrder> _technicianOrders = [];
+    public IReadOnlyCollection<TechnicianOrder> TechnicianOrders => _technicianOrders.AsReadOnly();
+
     private Visit() { }
 
     /// <summary>
@@ -448,6 +451,22 @@ public class Visit : AggregateRoot, IAuditable
             .FirstOrDefault();
         latestSkip?.MarkUndone();
         SetUpdatedAt();
+    }
+
+    // ===================== Technician Orders =====================
+
+    /// <summary>
+    /// Creates a PreExam technician order for this visit.
+    /// Throws if a PreExam order already exists (idempotency guard).
+    /// </summary>
+    public TechnicianOrder CreatePreExamOrder()
+    {
+        if (_technicianOrders.Any(o => o.OrderType == TechnicianOrderType.PreExam))
+            throw new InvalidOperationException("PreExam order already exists for this visit");
+
+        var order = TechnicianOrder.CreatePreExam(Id);
+        _technicianOrders.Add(order);
+        return order;
     }
 
     // ===================== Post-Payment Tracks =====================
