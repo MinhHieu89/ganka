@@ -660,3 +660,23 @@ Plans:
 - [x] 14-07-PLAN.md -- Check-in dialogs (SCR-005) + action menus with dialogs (SCR-006): all 8 dialog components
 - [ ] 14-08-PLAN.md -- Vietnamese user stories documentation (DOC-01)
 - [ ] 14-09-PLAN.md -- End-to-end verification checkpoint
+
+### Phase 15: implement technician dashboard according to the requirement and mockup
+
+**Goal:** Technician can manage pre-exam patient queue via dedicated dashboard with KPI cards, filter pills, action menus, slide-over results panel, and all status transitions (accept, complete, return-to-queue, red-flag)
+**Requirements**: TECH-01, TECH-02, TECH-03, TECH-04, TECH-05, TECH-06, TECH-07, TECH-08, TECH-09, TECH-10, TECH-11, TECH-12, TECH-13, TECH-14, DOC-01
+**Depends on:** Phase 14
+**Success Criteria** (what must be TRUE):
+  1. Technician sees dedicated dashboard at /dashboard with 4 KPI cards and patient queue table with 15s polling
+  2. TechnicianOrder entity auto-created when visit advances to PreExam stage
+  3. Technician can accept patients, complete pre-exam, return to queue, and red-flag with reason
+  4. Slide-over panel shows patient results, stub Pre-Exam page exists as navigation target
+  5. WorkflowStage.RefractionVA renamed to PreExam across entire codebase
+**Plans:** 5 plans in 3 waves
+
+Plans:
+- [ ] 15-01-PLAN.md -- Enum rename (RefractionVA -> PreExam) + TechnicianOrder entity + migration + auto-creation hook
+- [ ] 15-02-PLAN.md -- Backend TDD: dashboard query, KPI stats, action handlers (accept/complete/return/red-flag) + API endpoints
+- [ ] 15-03-PLAN.md -- Frontend foundation: TypeScript types, API hooks, CSS variables, i18n translations
+- [ ] 15-04-PLAN.md -- Frontend dashboard UI: KPI cards, banner, toolbar, queue table, action menus, dialogs + route wiring
+- [ ] 15-05-PLAN.md -- Slide-over panel, stub Pre-Exam page, Vietnamese user stories, end-to-end verification
