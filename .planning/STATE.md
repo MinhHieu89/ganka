@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Milestone complete
-stopped_at: Phase 15 context gathered
-last_updated: "2026-03-29T03:53:57.873Z"
+status: Ready to execute
+stopped_at: Completed 15-04-PLAN.md
+last_updated: "2026-03-29T05:21:31.985Z"
 progress:
   total_phases: 24
   completed_phases: 20
-  total_plans: 327
-  completed_plans: 324
+  total_plans: 332
+  completed_plans: 327
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-02-28)
 
 **Core value:** Doctors can manage chronic eye disease patients (Dry Eye, Myopia Control) with structured data tracking, image comparison across visits, and treatment progress reporting
-**Current focus:** Phase 14 — implement-receptionist-role-flow
+**Current focus:** Phase 15 — implement-technician-dashboard-according-to-the-requirement-and-mockup
 
 ## Current Position
 
-Phase: 14
-Plan: Not started
+Phase: 15 (implement-technician-dashboard-according-to-the-requirement-and-mockup) — EXECUTING
+Plan: 5 of 5
 
 ## Performance Metrics
 
@@ -319,6 +319,10 @@ Plan: Not started
 | Phase 14 P07 | 8min | 2 tasks | 10 files |
 | Phase 14 P08 | 4min | 1 tasks | 1 files |
 | Phase 14 P09 | 5min | 1 tasks | 0 files |
+| Phase 15 P01 | 11min | 2 tasks | 25 files |
+| Phase 15 P03 | 3min | 2 tasks | 6 files |
+| Phase 15 P02 | 11min | 2 tasks | 20 files |
+| Phase 15 P04 | 5min | 2 tasks | 11 files |
 
 ## Accumulated Context
 
@@ -878,6 +882,11 @@ Recent decisions affecting current work:
 - [Phase 14]: RowActionMenu manages dialog state locally rather than lifting to dashboard
 - [Phase 14]: Followed Phase 13 user story format for Vietnamese user stories consistency
 - [Phase 14]: Pre-existing integration test failures out of scope for receptionist verification
+- [Phase 15]: Idempotency for TechnicianOrder creation enforced via DB unique filtered index rather than in-memory check
+- [Phase 15]: i18n files placed in frontend/public/locales/ following existing project convention
+- [Phase 15]: Used ITechnicianOrderQueryService CQRS read-side pattern to avoid Application<->Infrastructure circular dependency
+- [Phase 15]: Technician role check placed before Receptionist in dashboard route
+- [Phase 15]: Simplified RedFlagDialog validation with local state instead of RHF+Zod
 
 ### Roadmap Evolution
 
@@ -913,6 +922,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-29T03:53:57.862Z
-Stopped at: Phase 15 context gathered
-Resume file: .planning/phases/15-implement-technician-dashboard-according-to-the-requirement-and-mockup/15-CONTEXT.md
+Last session: 2026-03-29T05:21:31.973Z
+Stopped at: Completed 15-04-PLAN.md
+Resume file: None

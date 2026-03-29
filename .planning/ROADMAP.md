@@ -672,11 +672,11 @@ Plans:
   3. Technician can accept patients, complete pre-exam, return to queue, and red-flag with reason
   4. Slide-over panel shows patient results, stub Pre-Exam page exists as navigation target
   5. WorkflowStage.RefractionVA renamed to PreExam across entire codebase
-**Plans:** 5 plans in 3 waves
+**Plans:** 5/5 plans complete
 
 Plans:
-- [ ] 15-01-PLAN.md -- Enum rename (RefractionVA -> PreExam) + TechnicianOrder entity + migration + auto-creation hook
-- [ ] 15-02-PLAN.md -- Backend TDD: dashboard query, KPI stats, action handlers (accept/complete/return/red-flag) + API endpoints
-- [ ] 15-03-PLAN.md -- Frontend foundation: TypeScript types, API hooks, CSS variables, i18n translations
-- [ ] 15-04-PLAN.md -- Frontend dashboard UI: KPI cards, banner, toolbar, queue table, action menus, dialogs + route wiring
-- [ ] 15-05-PLAN.md -- Slide-over panel, stub Pre-Exam page, Vietnamese user stories, end-to-end verification
+- [x] 15-01-PLAN.md -- Enum rename (RefractionVA -> PreExam) + TechnicianOrder entity + migration + auto-creation hook
+- [x] 15-02-PLAN.md -- Backend TDD: dashboard query, KPI stats, action handlers (accept/complete/return/red-flag) + API endpoints
+- [x] 15-03-PLAN.md -- Frontend foundation: TypeScript types, API hooks, CSS variables, i18n translations
+- [x] 15-04-PLAN.md -- Frontend dashboard UI: KPI cards, banner, toolbar, queue table, action menus, dialogs + route wiring
+- [x] 15-05-PLAN.md -- Slide-over panel, stub Pre-Exam page, Vietnamese user stories, end-to-end verification
