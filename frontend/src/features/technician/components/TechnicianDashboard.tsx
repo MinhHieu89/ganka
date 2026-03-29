@@ -22,6 +22,7 @@ import { TechnicianQueueTable } from "./TechnicianQueueTable"
 import { RedFlagDialog } from "./RedFlagDialog"
 import { ReturnToQueueDialog } from "./ReturnToQueueDialog"
 import { PausePatientDialog } from "./PausePatientDialog"
+import { PatientResultsPanel } from "./PatientResultsPanel"
 
 export function TechnicianDashboard() {
   const { t } = useTranslation("technician")
@@ -76,6 +77,8 @@ export function TechnicianDashboard() {
   const [pauseOpen, setPauseOpen] = useState(false)
   const [selectedRow, setSelectedRow] = useState<TechnicianDashboardRow | null>(null)
   const [pendingAcceptRow, setPendingAcceptRow] = useState<TechnicianDashboardRow | null>(null)
+  const [resultsOpen, setResultsOpen] = useState(false)
+  const [resultsRow, setResultsRow] = useState<TechnicianDashboardRow | null>(null)
 
   // Navigate to pre-exam stub page
   const navigateToPreExam = useCallback(() => {
@@ -130,7 +133,8 @@ export function TechnicianDashboard() {
           break
 
         case "viewResults":
-          // Plan 05 will implement the slide-over panel
+          setResultsRow(row)
+          setResultsOpen(true)
           break
       }
     },
@@ -252,6 +256,13 @@ export function TechnicianDashboard() {
           isLoading={acceptOrder.isPending}
         />
       )}
+
+      {/* Patient results slide-over panel */}
+      <PatientResultsPanel
+        open={resultsOpen}
+        onOpenChange={setResultsOpen}
+        row={resultsRow}
+      />
     </div>
   )
 }

@@ -96,7 +96,14 @@
   "panel": {
     "title": "Patient Results",
     "personalInfo": "Personal Information",
+    "patientCode": "Patient Code",
+    "birthYear": "Birth Year",
+    "gender": "Gender",
     "visitHistory": "Visit History",
-    "preExamData": "Pre-Exam Data"
+    "visitOn": "Visit on {{date}}",
+    "reason": "Reason",
+    "preExamData": "Pre-Exam Data",
+    "noPreExamData": "No Pre-Exam data yet",
+    "noData": "N/A"
   }
 }

@@ -96,7 +96,14 @@
   "panel": {
     "title": "K\u1ebft qu\u1ea3 b\u1ec7nh nh\u00e2n",
     "personalInfo": "Th\u00f4ng tin c\u00e1 nh\u00e2n",
+    "patientCode": "M\u00e3 b\u1ec7nh nh\u00e2n",
+    "birthYear": "N\u0103m sinh",
+    "gender": "Gi\u1edbi t\u00ednh",
     "visitHistory": "L\u1ecbch s\u1eed kh\u00e1m",
-    "preExamData": "D\u1eef li\u1ec7u Pre-Exam"
+    "visitOn": "Kh\u00e1m ng\u00e0y {{date}}",
+    "reason": "L\u00fd do",
+    "preExamData": "D\u1eef li\u1ec7u Pre-Exam",
+    "noPreExamData": "Ch\u01b0a c\u00f3 d\u1eef li\u1ec7u Pre-Exam",
+    "noData": "N/A"
   }
 }
