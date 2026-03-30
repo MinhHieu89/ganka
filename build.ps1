@@ -1,7 +1,7 @@
 param(
     [string]$Tag = "latest",
     [string]$Registry = "harbor.labs.local/ganka",
-    [string]$ApiUrl = "https://ganka-api.gosei.sbs"
+    [string]$ApiUrl = "https://ganka-api.gosei.space"
 )
 
 $ErrorActionPreference = "Stop"
